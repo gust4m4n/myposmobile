@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+
+import '../models/product_model.dart';
+
+class ProductItemWidget extends StatelessWidget {
+  final ProductModel product;
+  final VoidCallback onTap;
+  final double iconSize;
+  final double fontSize;
+  final double priceSize;
+  final double padding;
+
+  const ProductItemWidget({
+    super.key,
+    required this.product,
+    required this.onTap,
+    this.iconSize = 36,
+    this.fontSize = 13,
+    this.priceSize = 12,
+    this.padding = 12,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade200, width: 1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: EdgeInsets.all(padding),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 2,
+                  child: Icon(
+                    product.category == 'Makanan'
+                        ? Icons.restaurant
+                        : Icons.local_drink,
+                    size: iconSize,
+                    color: const Color(0xFF007AFF),
+                  ),
+                ),
+                SizedBox(height: padding / 2),
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    product.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: fontSize,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(height: padding / 3),
+                Flexible(
+                  flex: 1,
+                  child: Text(
+                    'Rp ${product.price.toStringAsFixed(0)}',
+                    style: TextStyle(
+                      color: const Color(0xFF34C759),
+                      fontWeight: FontWeight.w600,
+                      fontSize: priceSize,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
