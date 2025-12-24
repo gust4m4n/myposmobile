@@ -38,4 +38,8 @@ const Map<String, String> en = {
   'language': 'Language',
   'english': 'English',
   'indonesian': 'Indonesian',
+
+  // Sidebar
+  'profile': 'Profile',
+  'logout': 'Logout',
 };

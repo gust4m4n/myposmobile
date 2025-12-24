@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/product_model.dart';
+import '../utils/currency_formatter.dart';
 
 class ProductItemWidget extends StatelessWidget {
   final ProductModel product;
@@ -70,7 +71,7 @@ class ProductItemWidget extends StatelessWidget {
                 Flexible(
                   flex: 1,
                   child: Text(
-                    'Rp ${product.price.toStringAsFixed(0)}',
+                    CurrencyFormatter.format(product.price),
                     style: TextStyle(
                       color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.w600,

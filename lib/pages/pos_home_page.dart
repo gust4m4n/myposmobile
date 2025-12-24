@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/product_model.dart';
 import '../utils/app_localizations.dart';
+import '../utils/currency_formatter.dart';
 import '../widgets/product_section_widget.dart';
 
 class POSHomePage extends StatefulWidget {
@@ -23,6 +24,7 @@ class POSHomePage extends StatefulWidget {
 }
 
 class _POSHomePageState extends State<POSHomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final List<CartItemModel> _cart = [];
   String? _selectedCategory;
 
@@ -129,7 +131,7 @@ class _POSHomePageState extends State<POSHomePage> {
           ),
           title: Text(localizations.checkoutTitle),
           content: Text(
-            localizations.totalPayment('Rp ${_totalPrice.toStringAsFixed(0)}'),
+            localizations.totalPayment(CurrencyFormatter.format(_totalPrice)),
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -283,7 +285,7 @@ class _POSHomePageState extends State<POSHomePage> {
                             ),
                           ),
                           subtitle: Text(
-                            'Rp ${item.product.price.toStringAsFixed(0)} x ${item.quantity}',
+                            '${CurrencyFormatter.format(item.product.price)} x ${item.quantity}',
                             style: TextStyle(
                               color: isDark
                                   ? Colors.grey.shade400
@@ -295,7 +297,7 @@ class _POSHomePageState extends State<POSHomePage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Rp ${item.total.toStringAsFixed(0)}',
+                                CurrencyFormatter.format(item.total),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,
@@ -342,7 +344,7 @@ class _POSHomePageState extends State<POSHomePage> {
                       ),
                     ),
                     Text(
-                      'Rp ${_totalPrice.toStringAsFixed(0)}',
+                      CurrencyFormatter.format(_totalPrice),
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
@@ -391,8 +393,16 @@ class _POSHomePageState extends State<POSHomePage> {
     final localizations = AppLocalizations.of(widget.languageCode);
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          tooltip: 'Menu',
+        ),
         title: Text(
           localizations.appTitle,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
@@ -582,7 +592,7 @@ class _POSHomePageState extends State<POSHomePage> {
                                         ),
                                       ),
                                       subtitle: Text(
-                                        'Rp ${item.product.price.toStringAsFixed(0)} x ${item.quantity}',
+                                        '${CurrencyFormatter.format(item.product.price)} x ${item.quantity}',
                                         style: TextStyle(
                                           color: isDark
                                               ? Colors.grey.shade400
@@ -594,7 +604,9 @@ class _POSHomePageState extends State<POSHomePage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            'Rp ${item.total.toStringAsFixed(0)}',
+                                            CurrencyFormatter.format(
+                                              item.total,
+                                            ),
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 15,
@@ -639,7 +651,7 @@ class _POSHomePageState extends State<POSHomePage> {
                                   ),
                                 ),
                                 Text(
-                                  'Rp ${_totalPrice.toStringAsFixed(0)}',
+                                  CurrencyFormatter.format(_totalPrice),
                                   style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
@@ -725,11 +737,90 @@ class _POSHomePageState extends State<POSHomePage> {
                 ],
               ),
               label: Text(
-                'Rp ${_totalPrice.toStringAsFixed(0)}',
+                CurrencyFormatter.format(_totalPrice),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             )
           : null,
+      drawer: Drawer(
+        child: Container(
+          color: theme.scaffoldBackgroundColor,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(color: theme.colorScheme.primary),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person,
+                        size: 35,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'User Name',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.person_outline,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  localizations.profile,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  // TODO: Navigate to profile page
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${localizations.profile} - Coming soon'),
+                    ),
+                  );
+                },
+              ),
+              Divider(color: theme.dividerColor, height: 1),
+              ListTile(
+                leading: Icon(Icons.logout, color: theme.colorScheme.error),
+                title: Text(
+                  localizations.logout,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  // TODO: Implement logout functionality
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${localizations.logout} - Coming soon'),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

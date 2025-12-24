@@ -57,4 +57,8 @@ class AppLocalizations {
   String get english => _translate('english');
   String get indonesian => _translate('indonesian');
   String get language => _translate('language');
+
+  // Sidebar
+  String get profile => _translate('profile');
+  String get logout => _translate('logout');
 }
