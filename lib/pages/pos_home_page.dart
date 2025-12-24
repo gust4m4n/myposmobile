@@ -286,13 +286,37 @@ class _POSHomePageState extends State<POSHomePage> {
                               fontSize: 15,
                             ),
                           ),
-                          subtitle: Text(
-                            '${CurrencyFormatter.format(item.product.price)} x ${item.quantity}',
-                            style: TextStyle(
-                              color: isDark
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600,
-                              fontSize: 13,
+                          subtitle: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: CurrencyFormatter.format(
+                                    item.product.price,
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.orange.shade700,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' x ',
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.grey.shade600,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '${item.quantity}',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.primary,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           trailing: Row(
@@ -593,13 +617,38 @@ class _POSHomePageState extends State<POSHomePage> {
                                           fontSize: 15,
                                         ),
                                       ),
-                                      subtitle: Text(
-                                        '${CurrencyFormatter.format(item.product.price)} x ${item.quantity}',
-                                        style: TextStyle(
-                                          color: isDark
-                                              ? Colors.grey.shade400
-                                              : Colors.grey.shade600,
-                                          fontSize: 13,
+                                      subtitle: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: CurrencyFormatter.format(
+                                                item.product.price,
+                                              ),
+                                              style: TextStyle(
+                                                color: Colors.orange.shade700,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: ' x ',
+                                              style: TextStyle(
+                                                color: isDark
+                                                    ? Colors.grey.shade500
+                                                    : Colors.grey.shade600,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: '${item.quantity}',
+                                              style: TextStyle(
+                                                color:
+                                                    theme.colorScheme.primary,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       trailing: Row(

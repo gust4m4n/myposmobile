@@ -1,9 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:screen_retriever/screen_retriever.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'pages/login_page.dart';
 import 'pages/pos_home_page.dart';
+import 'utils/http_client.dart';
+import 'utils/storage_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  // Initialize storage
+  final storage = await StorageService.getInstance();
+
+  // Restore window size or calculate 80% of screen
+  final savedWidth = storage.getWindowWidth();
+  final savedHeight = storage.getWindowHeight();
+
+  double defaultWidth = 1200;
+  double defaultHeight = 800;
+  bool shouldCenter = true;
+
+  if (savedWidth == null || savedHeight == null) {
+    // Get screen size and calculate 80%
+    final primaryDisplay = await screenRetriever.getPrimaryDisplay();
+    defaultWidth = primaryDisplay.size.width * 0.8;
+    defaultHeight = primaryDisplay.size.height * 0.8;
+    shouldCenter = true;
+  } else {
+    defaultWidth = savedWidth;
+    defaultHeight = savedHeight;
+    shouldCenter = false;
+  }
+
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(defaultWidth, defaultHeight),
+    minimumSize: const Size(800, 600),
+    center: shouldCenter,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.normal,
+  );
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   runApp(const MyPOSMobileApp());
 }
 
@@ -14,33 +58,92 @@ class MyPOSMobileApp extends StatefulWidget {
   State<MyPOSMobileApp> createState() => _MyPOSMobileAppState();
 }
 
-class _MyPOSMobileAppState extends State<MyPOSMobileApp> {
+class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
   bool _isDarkMode = false;
   String _languageCode = 'id'; // Default to Indonesian
   String? _authToken;
+  bool _isLoading = true;
 
-  void _toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-    });
+  @override
+  void initState() {
+    super.initState();
+    windowManager.addListener(this);
+    _loadSavedData();
   }
 
-  void _toggleLanguage() {
-    setState(() {
-      _languageCode = _languageCode == 'en' ? 'id' : 'en';
-    });
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
   }
 
-  void _handleLoginSuccess(String token) {
+  @override
+  void onWindowResize() async {
+    final size = await windowManager.getSize();
+    final storage = await StorageService.getInstance();
+    await storage.saveWindowSize(size.width, size.height);
+  }
+
+  Future<void> _loadSavedData() async {
+    final storage = await StorageService.getInstance();
+    final savedToken = storage.getToken();
+    final savedLanguage = storage.getLanguageCode();
+    final savedDarkMode = storage.getDarkMode();
+
+    setState(() {
+      _authToken = savedToken;
+      _languageCode = savedLanguage;
+      _isDarkMode = savedDarkMode;
+      _isLoading = false;
+    });
+
+    // Set token to HttpClient if exists
+    if (savedToken != null) {
+      HttpClient().setAuthToken(savedToken);
+    }
+  }
+
+  Future<void> _toggleTheme() async {
+    final newDarkMode = !_isDarkMode;
+    setState(() {
+      _isDarkMode = newDarkMode;
+    });
+
+    // Save dark mode preference
+    final storage = await StorageService.getInstance();
+    await storage.saveDarkMode(newDarkMode);
+  }
+
+  Future<void> _toggleLanguage() async {
+    final newLanguage = _languageCode == 'en' ? 'id' : 'en';
+    setState(() {
+      _languageCode = newLanguage;
+    });
+
+    // Save language preference
+    final storage = await StorageService.getInstance();
+    await storage.saveLanguageCode(newLanguage);
+  }
+
+  Future<void> _handleLoginSuccess(String token) async {
     setState(() {
       _authToken = token;
     });
+
+    // Save token to storage
+    final storage = await StorageService.getInstance();
+    await storage.saveToken(token);
   }
 
-  void _handleLogout() {
+  Future<void> _handleLogout() async {
     setState(() {
       _authToken = null;
     });
+
+    // Clear token from storage and HttpClient
+    final storage = await StorageService.getInstance();
+    await storage.clearToken();
+    HttpClient().clearAuthToken();
   }
 
   @override
@@ -91,7 +194,9 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> {
         useMaterial3: true,
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: _authToken == null
+      home: _isLoading
+          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+          : _authToken == null
           ? LoginPage(
               isDarkMode: _isDarkMode,
               onThemeToggle: _toggleTheme,
