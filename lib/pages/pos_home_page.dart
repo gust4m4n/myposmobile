@@ -4,6 +4,8 @@ import '../models/product_model.dart';
 import '../utils/app_localizations.dart';
 import '../utils/currency_formatter.dart';
 import '../widgets/product_section_widget.dart';
+import 'change_password_page.dart';
+import 'profile_page.dart';
 
 class POSHomePage extends StatefulWidget {
   final bool isDarkMode;
@@ -840,10 +842,36 @@ class _POSHomePageState extends State<POSHomePage> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Navigate to profile page
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${localizations.profile} - Coming soon'),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(
+                        isDarkMode: widget.isDarkMode,
+                        languageCode: widget.languageCode,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.lock_outline,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'Change Password',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ChangePasswordPage(languageCode: widget.languageCode),
                     ),
                   );
                 },

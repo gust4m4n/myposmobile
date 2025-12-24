@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../services/dev_branches_service.dart';
+import '../services/dev_tenants_service.dart';
 import '../services/login_service.dart';
 import '../utils/app_localizations.dart';
 
@@ -25,20 +28,100 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _tenantCodeController = TextEditingController(text: 'supertenant');
-  final _branchCodeController = TextEditingController(text: 'superbranch');
-  final _usernameController = TextEditingController(text: 'superadmin');
-  final _passwordController = TextEditingController(text: '123456');
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _loginService = LoginService();
 
   bool _isLoading = false;
+  bool _isLoadingTenants = false;
+  bool _isLoadingBranches = false;
   bool _obscurePassword = true;
   String? _errorMessage;
 
+  // Dropdown data
+  List<Map<String, dynamic>> _tenants = [];
+  List<Map<String, dynamic>> _branches = [];
+  Map<String, dynamic>? _selectedTenant;
+  Map<String, dynamic>? _selectedBranch;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTenants();
+
+    // Prefill credentials in debug mode
+    if (kDebugMode) {
+      _usernameController.text = 'branchadmin';
+      _passwordController.text = '123456';
+    }
+  }
+
+  Future<void> _loadTenants() async {
+    setState(() {
+      _isLoadingTenants = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final response = await DevTenantsService.getDevTenants();
+
+      if (!mounted) return;
+
+      if (response.isSuccess && response.data != null) {
+        setState(() {
+          _tenants = response.data!;
+          _isLoadingTenants = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = response.error ?? 'Failed to load tenants';
+          _isLoadingTenants = false;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'Error loading tenants: $e';
+        _isLoadingTenants = false;
+      });
+    }
+  }
+
+  Future<void> _loadBranches(int tenantId) async {
+    setState(() {
+      _isLoadingBranches = true;
+      _selectedBranch = null;
+      _branches = [];
+      _errorMessage = null;
+    });
+
+    try {
+      final response = await DevBranchesService.getDevBranches(tenantId);
+
+      if (!mounted) return;
+
+      if (response.isSuccess && response.data != null) {
+        setState(() {
+          _branches = response.data!;
+          _isLoadingBranches = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = response.error ?? 'Failed to load branches';
+          _isLoadingBranches = false;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'Error loading branches: $e';
+        _isLoadingBranches = false;
+      });
+    }
+  }
+
   @override
   void dispose() {
-    _tenantCodeController.dispose();
-    _branchCodeController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -46,6 +129,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (_selectedTenant == null || _selectedBranch == null) {
+      setState(() {
+        _errorMessage = 'Please select tenant and branch';
+      });
       return;
     }
 
@@ -58,8 +148,8 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await _loginService.login(
-        tenantCode: _tenantCodeController.text.trim(),
-        branchCode: _branchCodeController.text.trim(),
+        tenantCode: _selectedTenant!['code'] as String,
+        branchCode: _selectedBranch!['code'] as String,
         username: _usernameController.text.trim(),
         password: _passwordController.text,
       );
@@ -180,9 +270,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 48),
 
-                  // Tenant Code Field
-                  TextFormField(
-                    controller: _tenantCodeController,
+                  // Tenant Dropdown
+                  DropdownButtonFormField<Map<String, dynamic>>(
+                    value: _selectedTenant,
                     decoration: InputDecoration(
                       labelText: localizations.tenantCode,
                       prefixIcon: const Icon(Icons.business),
@@ -192,19 +282,51 @@ class _LoginPageState extends State<LoginPage> {
                       filled: true,
                       fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
                     ),
+                    hint: _isLoadingTenants
+                        ? const Row(
+                            children: [
+                              SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text('Loading tenants...'),
+                            ],
+                          )
+                        : const Text('Select Tenant'),
+                    items: _tenants.map((tenant) {
+                      return DropdownMenuItem<Map<String, dynamic>>(
+                        value: tenant,
+                        child: Text('${tenant['name']} (${tenant['code']})'),
+                      );
+                    }).toList(),
+                    onChanged: _isLoading || _isLoadingTenants
+                        ? null
+                        : (value) {
+                            setState(() {
+                              _selectedTenant = value;
+                              _selectedBranch = null;
+                              _branches = [];
+                            });
+                            if (value != null) {
+                              _loadBranches(value['id'] as int);
+                            }
+                          },
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null) {
                         return localizations.pleaseEnterTenantCode;
                       }
                       return null;
                     },
-                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: 16),
 
-                  // Branch Code Field
-                  TextFormField(
-                    controller: _branchCodeController,
+                  // Branch Dropdown
+                  DropdownButtonFormField<Map<String, dynamic>>(
+                    value: _selectedBranch,
                     decoration: InputDecoration(
                       labelText: localizations.branchCode,
                       prefixIcon: const Icon(Icons.storefront),
@@ -214,13 +336,47 @@ class _LoginPageState extends State<LoginPage> {
                       filled: true,
                       fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
                     ),
+                    hint: _isLoadingBranches
+                        ? const Row(
+                            children: [
+                              SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text('Loading branches...'),
+                            ],
+                          )
+                        : Text(
+                            _selectedTenant == null
+                                ? 'Select tenant first'
+                                : 'Select Branch',
+                          ),
+                    items: _branches.map((branch) {
+                      return DropdownMenuItem<Map<String, dynamic>>(
+                        value: branch,
+                        child: Text('${branch['name']} (${branch['code']})'),
+                      );
+                    }).toList(),
+                    onChanged:
+                        _isLoading ||
+                            _isLoadingBranches ||
+                            _selectedTenant == null
+                        ? null
+                        : (value) {
+                            setState(() {
+                              _selectedBranch = value;
+                            });
+                          },
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null) {
                         return localizations.pleaseEnterBranchCode;
                       }
                       return null;
                     },
-                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: 16),
 
