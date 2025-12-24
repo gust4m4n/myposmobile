@@ -24,6 +24,12 @@ class ApiConfig {
   // Product endpoints
   static const String products = '$apiPrefix/products';
 
+  // Order endpoints
+  static const String orders = '$apiPrefix/orders';
+
+  // Payment endpoints
+  static const String payments = '$apiPrefix/payments';
+
   // Superadmin endpoints
   static const String superadminDashboard = '$apiPrefix/superadmin/dashboard';
   static const String superadminTenants = '$apiPrefix/superadmin/tenants';

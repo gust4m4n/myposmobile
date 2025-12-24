@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../models/product_model.dart';
+import '../services/orders_service.dart';
+import '../services/payments_service.dart';
 import '../services/products_service.dart';
 import '../utils/app_localizations.dart';
 import '../utils/currency_formatter.dart';
 import '../widgets/product_section_widget.dart';
 import 'change_password_page.dart';
+import 'orders_page.dart';
+import 'payments_page.dart';
 import 'profile_page.dart';
 
 class POSHomePage extends StatefulWidget {
@@ -149,14 +153,9 @@ class _POSHomePageState extends State<POSHomePage> {
               child: Text(localizations.cancel),
             ),
             ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _cart.clear();
-                });
+              onPressed: () async {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(localizations.transactionSuccess)),
-                );
+                await _processCheckout();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
@@ -172,6 +171,83 @@ class _POSHomePageState extends State<POSHomePage> {
         );
       },
     );
+  }
+
+  Future<void> _processCheckout() async {
+    final localizations = AppLocalizations.of(widget.languageCode);
+
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      // Prepare order items
+      final items = _cart.map((cartItem) {
+        return {
+          'product_id': cartItem.product.id,
+          'quantity': cartItem.quantity,
+          'price': cartItem.product.price,
+        };
+      }).toList();
+
+      // Create order
+      final orderResponse = await OrdersService.createOrder(
+        items: items,
+        notes: 'POS Order',
+      );
+
+      if (!orderResponse.isSuccess || orderResponse.data == null) {
+        throw Exception(orderResponse.error ?? 'Failed to create order');
+      }
+
+      final orderId = orderResponse.data!['id'];
+      final totalAmount = _totalPrice;
+
+      // Create payment
+      final paymentResponse = await PaymentsService.createPayment(
+        orderId: orderId,
+        amount: totalAmount,
+        paymentMethod: 'cash',
+        notes: 'POS Payment',
+      );
+
+      if (!paymentResponse.isSuccess) {
+        throw Exception(paymentResponse.error ?? 'Failed to create payment');
+      }
+
+      // Close loading
+      if (mounted) Navigator.pop(context);
+
+      // Clear cart and show success
+      setState(() {
+        _cart.clear();
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(localizations.transactionSuccess),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading
+      if (mounted) Navigator.pop(context);
+
+      // Show error
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Transaction failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _showCartBottomSheet(BuildContext context) {
@@ -892,6 +968,52 @@ class _POSHomePageState extends State<POSHomePage> {
                     MaterialPageRoute(
                       builder: (context) =>
                           ChangePasswordPage(languageCode: widget.languageCode),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.shopping_bag_outlined,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  localizations.orders,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          OrdersPage(languageCode: widget.languageCode),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.payment_outlined,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  localizations.payments,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PaymentsPage(languageCode: widget.languageCode),
                     ),
                   );
                 },

@@ -42,8 +42,22 @@ const Map<String, String> en = {
 
   // Sidebar
   'profile': 'Profile',
+  'orders': 'Orders',
+  'payments': 'Payments',
   'logout': 'Logout',
   'logoutConfirmation': 'Are you sure you want to logout?',
+
+  // Orders
+  'noOrders': 'No orders yet',
+  'orderDetails': 'Order Details',
+  'orderItems': 'Order Items',
+  'orderId': 'Order ID',
+  'close': 'Close',
+  'price': 'Price',
+
+  // Payments
+  'noPayments': 'No payments yet',
+  'method': 'Method',
 
   // Login
   'login': 'Login',

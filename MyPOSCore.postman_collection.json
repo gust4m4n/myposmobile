@@ -713,6 +713,248 @@
 			]
 		},
 		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"product_id\": 27,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 42,\n      \"quantity\": 3\n    }\n  ],\n  \"notes\": \"Customer order from table 5\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						},
+						"description": "Create a new order with multiple products. Order will be automatically assigned to tenant and branch from JWT token.\n\nRequest body:\n- items: Array of products with quantity\n  - product_id: ID of product to order\n  - quantity: Number of items\n- notes: Optional order notes\n\nResponse includes:\n- Order details with generated order number\n- Total amount calculated from product prices\n- Order items with product details"
+					},
+					"response": []
+				},
+				{
+					"name": "List Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						},
+						"description": "Get list of all orders for the authenticated tenant and branch. Orders are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of orders with complete details\n- Each order includes all order items\n- Orders sorted by creation date (newest first)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"3"
+							]
+						},
+						"description": "Get order details by ID. Replace '3' with actual order ID. Order must belong to authenticated tenant.\n\nReturns:\n- Complete order information\n- All order items with product details\n- Current order status"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payments by Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/3/payments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"3",
+								"payments"
+							]
+						},
+						"description": "Get all payments for a specific order. Replace '3' with actual order ID.\n\nUseful for:\n- Viewing payment history for an order\n- Checking if order has been paid\n- Tracking multiple payments (partial payments)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Create Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order_id\": 3,\n  \"amount\": 85000,\n  \"payment_method\": \"cash\",\n  \"notes\": \"Cash payment\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						},
+						"description": "Create payment for an order. Payment amount must be equal to or greater than order total.\n\nRequest body:\n- order_id: ID of order to pay\n- amount: Payment amount (must be >= order total)\n- payment_method: Method of payment (cash, debit, credit, transfer, etc)\n- notes: Optional payment notes\n\nEffect:\n- Creates payment record\n- Updates order status to 'completed'\n- Cannot pay cancelled orders\n- Cannot pay already completed orders"
+					},
+					"response": []
+				},
+				{
+					"name": "List Payments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						},
+						"description": "Get list of all payments for the authenticated tenant and branch. Payments are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of payments with complete details\n- Payment status and method\n- Sorted by creation date (newest first)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"1"
+							]
+						},
+						"description": "Get payment details by ID. Replace '1' with actual payment ID. Payment must belong to authenticated tenant.\n\nReturns:\n- Complete payment information\n- Associated order ID\n- Payment method and status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Superadmin",
 			"item": [
 				{

@@ -42,8 +42,22 @@ const Map<String, String> id = {
 
   // Sidebar
   'profile': 'Profil',
+  'orders': 'Pesanan',
+  'payments': 'Pembayaran',
   'logout': 'Keluar',
   'logoutConfirmation': 'Apakah Anda yakin ingin keluar?',
+
+  // Orders
+  'noOrders': 'Belum ada pesanan',
+  'orderDetails': 'Detail Pesanan',
+  'orderItems': 'Item Pesanan',
+  'orderId': 'ID Pesanan',
+  'close': 'Tutup',
+  'price': 'Harga',
+
+  // Payments
+  'noPayments': 'Belum ada pembayaran',
+  'method': 'Metode',
 
   // Login
   'login': 'Masuk',

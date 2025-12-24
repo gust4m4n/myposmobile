@@ -61,8 +61,22 @@ class AppLocalizations {
 
   // Sidebar
   String get profile => _translate('profile');
+  String get orders => _translate('orders');
+  String get payments => _translate('payments');
   String get logout => _translate('logout');
   String get logoutConfirmation => _translate('logoutConfirmation');
+
+  // Orders
+  String get noOrders => _translate('noOrders');
+  String get orderDetails => _translate('orderDetails');
+  String get orderItems => _translate('orderItems');
+  String get orderId => _translate('orderId');
+  String get close => _translate('close');
+  String get price => _translate('price');
+
+  // Payments
+  String get noPayments => _translate('noPayments');
+  String get method => _translate('method');
 
   // Login
   String get login => _translate('login');
