@@ -10,7 +10,7 @@ class CategoryFilterWidget extends StatelessWidget {
     super.key,
     required this.selectedCategory,
     required this.onCategorySelected,
-    this.categories = const ['Semua', 'Makanan', 'Minuman'],
+    required this.categories,
     this.isMobile = false,
   });
 

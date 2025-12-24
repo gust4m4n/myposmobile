@@ -15,10 +15,17 @@ class MyPOSMobileApp extends StatefulWidget {
 
 class _MyPOSMobileAppState extends State<MyPOSMobileApp> {
   bool _isDarkMode = false;
+  String _languageCode = 'id'; // Default to Indonesian
 
   void _toggleTheme() {
     setState(() {
       _isDarkMode = !_isDarkMode;
+    });
+  }
+
+  void _toggleLanguage() {
+    setState(() {
+      _languageCode = _languageCode == 'en' ? 'id' : 'en';
     });
   }
 
@@ -70,7 +77,12 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> {
         useMaterial3: true,
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: POSHomePage(isDarkMode: _isDarkMode, onThemeToggle: _toggleTheme),
+      home: POSHomePage(
+        isDarkMode: _isDarkMode,
+        onThemeToggle: _toggleTheme,
+        languageCode: _languageCode,
+        onLanguageToggle: _toggleLanguage,
+      ),
     );
   }
 }

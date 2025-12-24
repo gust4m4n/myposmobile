@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../models/product_model.dart';
+import '../utils/app_localizations.dart';
 import '../widgets/product_section_widget.dart';
 
 class POSHomePage extends StatefulWidget {
   final bool isDarkMode;
   final VoidCallback onThemeToggle;
+  final String languageCode;
+  final VoidCallback onLanguageToggle;
 
   const POSHomePage({
     super.key,
     required this.isDarkMode,
     required this.onThemeToggle,
+    required this.languageCode,
+    required this.onLanguageToggle,
   });
 
   @override
@@ -18,19 +23,67 @@ class POSHomePage extends StatefulWidget {
 }
 
 class _POSHomePageState extends State<POSHomePage> {
-  final List<ProductModel> _products = [
-    ProductModel(name: 'Nasi Goreng', price: 25000, category: 'Makanan'),
-    ProductModel(name: 'Mie Goreng', price: 20000, category: 'Makanan'),
-    ProductModel(name: 'Ayam Goreng', price: 30000, category: 'Makanan'),
-    ProductModel(name: 'Sate Ayam', price: 35000, category: 'Makanan'),
-    ProductModel(name: 'Es Teh', price: 5000, category: 'Minuman'),
-    ProductModel(name: 'Es Jeruk', price: 7000, category: 'Minuman'),
-    ProductModel(name: 'Kopi', price: 10000, category: 'Minuman'),
-    ProductModel(name: 'Jus Alpukat', price: 15000, category: 'Minuman'),
-  ];
-
   final List<CartItemModel> _cart = [];
-  String _selectedCategory = 'Semua';
+  String? _selectedCategory;
+
+  String get selectedCategory {
+    final localizations = AppLocalizations.of(widget.languageCode);
+    return _selectedCategory ?? localizations.all;
+  }
+
+  List<String> get _categories {
+    final localizations = AppLocalizations.of(widget.languageCode);
+    return [localizations.all, localizations.food, localizations.drinks];
+  }
+
+  List<ProductModel> get _products {
+    final localizations = AppLocalizations.of(widget.languageCode);
+    final foodCategory = localizations.food;
+    final drinksCategory = localizations.drinks;
+
+    return [
+      ProductModel(
+        name: localizations.friedRice,
+        price: 25000,
+        category: foodCategory,
+      ),
+      ProductModel(
+        name: localizations.friedNoodles,
+        price: 20000,
+        category: foodCategory,
+      ),
+      ProductModel(
+        name: localizations.friedChicken,
+        price: 30000,
+        category: foodCategory,
+      ),
+      ProductModel(
+        name: localizations.chickenSatay,
+        price: 35000,
+        category: foodCategory,
+      ),
+      ProductModel(
+        name: localizations.icedTea,
+        price: 5000,
+        category: drinksCategory,
+      ),
+      ProductModel(
+        name: localizations.orangeJuice,
+        price: 7000,
+        category: drinksCategory,
+      ),
+      ProductModel(
+        name: localizations.coffee,
+        price: 10000,
+        category: drinksCategory,
+      ),
+      ProductModel(
+        name: localizations.avocadoJuice,
+        price: 15000,
+        category: drinksCategory,
+      ),
+    ];
+  }
 
   void _addToCart(ProductModel product) {
     setState(() {
@@ -65,6 +118,8 @@ class _POSHomePageState extends State<POSHomePage> {
     if (_cart.isEmpty) return;
 
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(widget.languageCode);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -72,15 +127,15 @@ class _POSHomePageState extends State<POSHomePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          title: const Text('Checkout'),
+          title: Text(localizations.checkoutTitle),
           content: Text(
-            'Total pembayaran: Rp ${_totalPrice.toStringAsFixed(0)}',
+            localizations.totalPayment('Rp ${_totalPrice.toStringAsFixed(0)}'),
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Batal'),
+              child: Text(localizations.cancel),
             ),
             ElevatedButton(
               onPressed: () {
@@ -89,7 +144,7 @@ class _POSHomePageState extends State<POSHomePage> {
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Transaksi berhasil!')),
+                  SnackBar(content: Text(localizations.transactionSuccess)),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -100,7 +155,7 @@ class _POSHomePageState extends State<POSHomePage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Bayar'),
+              child: Text(localizations.pay),
             ),
           ],
         );
@@ -109,10 +164,11 @@ class _POSHomePageState extends State<POSHomePage> {
   }
 
   List<ProductModel> get _filteredProducts {
-    if (_selectedCategory == 'Semua') {
+    final localizations = AppLocalizations.of(widget.languageCode);
+    if (selectedCategory == localizations.all) {
       return _products;
     }
-    return _products.where((p) => p.category == _selectedCategory).toList();
+    return _products.where((p) => p.category == selectedCategory).toList();
   }
 
   void _showCartBottomSheet(BuildContext context) {
@@ -134,6 +190,7 @@ class _POSHomePageState extends State<POSHomePage> {
   Widget _buildCartContent({ScrollController? scrollController}) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final localizations = AppLocalizations.of(widget.languageCode);
 
     return Container(
       decoration: BoxDecoration(
@@ -158,9 +215,12 @@ class _POSHomePageState extends State<POSHomePage> {
               children: [
                 const Icon(Icons.shopping_cart),
                 const SizedBox(width: 8),
-                const Text(
-                  'Keranjang Belanja',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  localizations.cart,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Spacer(),
                 if (scrollController != null)
@@ -173,19 +233,22 @@ class _POSHomePageState extends State<POSHomePage> {
           ),
           Expanded(
             child: _cart.isEmpty
-                ? const Center(
+                ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.shopping_cart_outlined,
                           size: 64,
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Text(
-                          'Keranjang Kosong',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          localizations.emptyCart,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
                         ),
                       ],
                     ),
@@ -271,9 +334,9 @@ class _POSHomePageState extends State<POSHomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Total:',
-                      style: TextStyle(
+                    Text(
+                      localizations.total,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -302,9 +365,9 @@ class _POSHomePageState extends State<POSHomePage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Checkout',
-                      style: TextStyle(
+                    child: Text(
+                      localizations.checkout,
+                      style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
@@ -325,13 +388,14 @@ class _POSHomePageState extends State<POSHomePage> {
     final isTabletOrDesktop = screenWidth >= 768;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final localizations = AppLocalizations.of(widget.languageCode);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
-          'MyPOSMobile',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        title: Text(
+          localizations.appTitle,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
         foregroundColor: theme.appBarTheme.foregroundColor,
@@ -342,10 +406,47 @@ class _POSHomePageState extends State<POSHomePage> {
           child: Container(color: theme.dividerColor, height: 1),
         ),
         actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.language),
+            tooltip: localizations.language,
+            onSelected: (value) {
+              widget.onLanguageToggle();
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'en',
+                child: Row(
+                  children: [
+                    if (widget.languageCode == 'en')
+                      const Icon(Icons.check, size: 20)
+                    else
+                      const SizedBox(width: 20),
+                    const SizedBox(width: 8),
+                    Text(localizations.english),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'id',
+                child: Row(
+                  children: [
+                    if (widget.languageCode == 'id')
+                      const Icon(Icons.check, size: 20)
+                    else
+                      const SizedBox(width: 20),
+                    const SizedBox(width: 8),
+                    Text(localizations.indonesian),
+                  ],
+                ),
+              ),
+            ],
+          ),
           IconButton(
             icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode),
             onPressed: widget.onThemeToggle,
-            tooltip: widget.isDarkMode ? 'Light Mode' : 'Dark Mode',
+            tooltip: widget.isDarkMode
+                ? localizations.lightMode
+                : localizations.darkMode,
           ),
           if (!isTabletOrDesktop)
             Stack(
@@ -391,7 +492,8 @@ class _POSHomePageState extends State<POSHomePage> {
                   flex: 2,
                   child: ProductSectionWidget(
                     products: _filteredProducts,
-                    selectedCategory: _selectedCategory,
+                    selectedCategory: selectedCategory,
+                    categories: _categories,
                     onCategorySelected: (category) {
                       setState(() {
                         _selectedCategory = category;
@@ -414,13 +516,13 @@ class _POSHomePageState extends State<POSHomePage> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         color: theme.cardColor,
-                        child: const Row(
+                        child: Row(
                           children: [
-                            Icon(Icons.shopping_cart),
-                            SizedBox(width: 8),
+                            const Icon(Icons.shopping_cart),
+                            const SizedBox(width: 8),
                             Text(
-                              'Keranjang Belanja',
-                              style: TextStyle(
+                              localizations.cart,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -430,19 +532,19 @@ class _POSHomePageState extends State<POSHomePage> {
                       ),
                       Expanded(
                         child: _cart.isEmpty
-                            ? const Center(
+                            ? Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.shopping_cart_outlined,
                                       size: 64,
                                       color: Colors.grey,
                                     ),
-                                    SizedBox(height: 16),
+                                    const SizedBox(height: 16),
                                     Text(
-                                      'Keranjang Kosong',
-                                      style: TextStyle(
+                                      localizations.emptyCart,
+                                      style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 16,
                                       ),
@@ -529,9 +631,9 @@ class _POSHomePageState extends State<POSHomePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Total:',
-                                  style: TextStyle(
+                                Text(
+                                  localizations.total,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -560,8 +662,8 @@ class _POSHomePageState extends State<POSHomePage> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                child: const Text(
-                                  'Checkout',
+                                child: Text(
+                                  localizations.checkout,
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600,
@@ -579,7 +681,8 @@ class _POSHomePageState extends State<POSHomePage> {
             )
           : ProductSectionWidget(
               products: _filteredProducts,
-              selectedCategory: _selectedCategory,
+              selectedCategory: selectedCategory,
+              categories: _categories,
               onCategorySelected: (category) {
                 setState(() {
                   _selectedCategory = category;

@@ -10,6 +10,7 @@ class ProductSectionWidget extends StatelessWidget {
   final ValueChanged<String> onCategorySelected;
   final Function(ProductModel) onProductTap;
   final bool isMobile;
+  final List<String> categories;
 
   const ProductSectionWidget({
     super.key,
@@ -18,6 +19,7 @@ class ProductSectionWidget extends StatelessWidget {
     required this.onCategorySelected,
     required this.onProductTap,
     this.isMobile = false,
+    required this.categories,
   });
 
   @override
@@ -28,6 +30,7 @@ class ProductSectionWidget extends StatelessWidget {
           selectedCategory: selectedCategory,
           onCategorySelected: onCategorySelected,
           isMobile: isMobile,
+          categories: categories,
         ),
         Expanded(
           child: ProductGridWidget(
