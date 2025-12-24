@@ -42,4 +42,20 @@ const Map<String, String> en = {
   // Sidebar
   'profile': 'Profile',
   'logout': 'Logout',
+  'logoutConfirmation': 'Are you sure you want to logout?',
+
+  // Login
+  'login': 'Login',
+  'tenantCode': 'Tenant Code',
+  'branchCode': 'Branch Code',
+  'username': 'Username',
+  'password': 'Password',
+  'loginButton': 'Login',
+  'loggingIn': 'Logging in...',
+  'loginSuccess': 'Login successful!',
+  'loginFailed': 'Login failed',
+  'pleaseEnterTenantCode': 'Please enter tenant code',
+  'pleaseEnterBranchCode': 'Please enter branch code',
+  'pleaseEnterUsername': 'Please enter username',
+  'pleaseEnterPassword': 'Please enter password',
 };

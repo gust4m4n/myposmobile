@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'pages/login_page.dart';
 import 'pages/pos_home_page.dart';
 
 void main() {
@@ -16,6 +17,7 @@ class MyPOSMobileApp extends StatefulWidget {
 class _MyPOSMobileAppState extends State<MyPOSMobileApp> {
   bool _isDarkMode = false;
   String _languageCode = 'id'; // Default to Indonesian
+  String? _authToken;
 
   void _toggleTheme() {
     setState(() {
@@ -26,6 +28,18 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> {
   void _toggleLanguage() {
     setState(() {
       _languageCode = _languageCode == 'en' ? 'id' : 'en';
+    });
+  }
+
+  void _handleLoginSuccess(String token) {
+    setState(() {
+      _authToken = token;
+    });
+  }
+
+  void _handleLogout() {
+    setState(() {
+      _authToken = null;
     });
   }
 
@@ -77,12 +91,21 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> {
         useMaterial3: true,
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: POSHomePage(
-        isDarkMode: _isDarkMode,
-        onThemeToggle: _toggleTheme,
-        languageCode: _languageCode,
-        onLanguageToggle: _toggleLanguage,
-      ),
+      home: _authToken == null
+          ? LoginPage(
+              isDarkMode: _isDarkMode,
+              onThemeToggle: _toggleTheme,
+              languageCode: _languageCode,
+              onLanguageToggle: _toggleLanguage,
+              onLoginSuccess: _handleLoginSuccess,
+            )
+          : POSHomePage(
+              isDarkMode: _isDarkMode,
+              onThemeToggle: _toggleTheme,
+              languageCode: _languageCode,
+              onLanguageToggle: _toggleLanguage,
+              onLogout: _handleLogout,
+            ),
     );
   }
 }

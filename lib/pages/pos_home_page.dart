@@ -10,6 +10,7 @@ class POSHomePage extends StatefulWidget {
   final VoidCallback onThemeToggle;
   final String languageCode;
   final VoidCallback onLanguageToggle;
+  final VoidCallback onLogout;
 
   const POSHomePage({
     super.key,
@@ -17,6 +18,7 @@ class POSHomePage extends StatefulWidget {
     required this.onThemeToggle,
     required this.languageCode,
     required this.onLanguageToggle,
+    required this.onLogout,
   });
 
   @override
@@ -807,14 +809,33 @@ class _POSHomePageState extends State<POSHomePage> {
                     color: theme.colorScheme.error,
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  // TODO: Implement logout functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${localizations.logout} - Coming soon'),
+                  // Show confirmation dialog
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(localizations.logout),
+                      content: Text(localizations.logoutConfirmation),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: Text(localizations.cancel),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style: TextButton.styleFrom(
+                            foregroundColor: theme.colorScheme.error,
+                          ),
+                          child: Text(localizations.logout),
+                        ),
+                      ],
                     ),
                   );
+
+                  if (confirmed == true) {
+                    widget.onLogout();
+                  }
                 },
               ),
             ],

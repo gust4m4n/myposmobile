@@ -61,4 +61,20 @@ class AppLocalizations {
   // Sidebar
   String get profile => _translate('profile');
   String get logout => _translate('logout');
+  String get logoutConfirmation => _translate('logoutConfirmation');
+
+  // Login
+  String get login => _translate('login');
+  String get tenantCode => _translate('tenantCode');
+  String get branchCode => _translate('branchCode');
+  String get username => _translate('username');
+  String get password => _translate('password');
+  String get loginButton => _translate('loginButton');
+  String get loggingIn => _translate('loggingIn');
+  String get loginSuccess => _translate('loginSuccess');
+  String get loginFailed => _translate('loginFailed');
+  String get pleaseEnterTenantCode => _translate('pleaseEnterTenantCode');
+  String get pleaseEnterBranchCode => _translate('pleaseEnterBranchCode');
+  String get pleaseEnterUsername => _translate('pleaseEnterUsername');
+  String get pleaseEnterPassword => _translate('pleaseEnterPassword');
 }

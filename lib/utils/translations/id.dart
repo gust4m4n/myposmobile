@@ -42,4 +42,20 @@ const Map<String, String> id = {
   // Sidebar
   'profile': 'Profil',
   'logout': 'Keluar',
+  'logoutConfirmation': 'Apakah Anda yakin ingin keluar?',
+
+  // Login
+  'login': 'Masuk',
+  'tenantCode': 'Kode Tenant',
+  'branchCode': 'Kode Cabang',
+  'username': 'Username',
+  'password': 'Password',
+  'loginButton': 'Masuk',
+  'loggingIn': 'Sedang masuk...',
+  'loginSuccess': 'Login berhasil!',
+  'loginFailed': 'Login gagal',
+  'pleaseEnterTenantCode': 'Mohon masukkan kode tenant',
+  'pleaseEnterBranchCode': 'Mohon masukkan kode cabang',
+  'pleaseEnterUsername': 'Mohon masukkan username',
+  'pleaseEnterPassword': 'Mohon masukkan password',
 };
