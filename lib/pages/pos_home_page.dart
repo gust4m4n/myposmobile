@@ -4,7 +4,14 @@ import '../models/product_model.dart';
 import '../widgets/product_section_widget.dart';
 
 class POSHomePage extends StatefulWidget {
-  const POSHomePage({super.key});
+  final bool isDarkMode;
+  final VoidCallback onThemeToggle;
+
+  const POSHomePage({
+    super.key,
+    required this.isDarkMode,
+    required this.onThemeToggle,
+  });
 
   @override
   State<POSHomePage> createState() => _POSHomePageState();
@@ -57,6 +64,7 @@ class _POSHomePageState extends State<POSHomePage> {
   void _checkout() {
     if (_cart.isEmpty) return;
 
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -72,9 +80,6 @@ class _POSHomePageState extends State<POSHomePage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey.shade700,
-              ),
               child: const Text('Batal'),
             ),
             ElevatedButton(
@@ -88,7 +93,7 @@ class _POSHomePageState extends State<POSHomePage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF007AFF),
+                backgroundColor: theme.colorScheme.primary,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -127,9 +132,12 @@ class _POSHomePageState extends State<POSHomePage> {
   }
 
   Widget _buildCartContent({ScrollController? scrollController}) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: isDark ? const Color(0xFF000000) : Colors.grey[100],
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -139,9 +147,9 @@ class _POSHomePageState extends State<POSHomePage> {
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              color: theme.cardColor,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
@@ -192,9 +200,9 @@ class _POSHomePageState extends State<POSHomePage> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.cardColor,
                           border: Border.all(
-                            color: Colors.grey.shade200,
+                            color: theme.dividerColor,
                             width: 1,
                           ),
                           borderRadius: BorderRadius.circular(12),
@@ -214,7 +222,9 @@ class _POSHomePageState extends State<POSHomePage> {
                           subtitle: Text(
                             'Rp ${item.product.price.toStringAsFixed(0)} x ${item.quantity}',
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color: isDark
+                                  ? Colors.grey.shade400
+                                  : Colors.grey.shade600,
                               fontSize: 13,
                             ),
                           ),
@@ -230,7 +240,7 @@ class _POSHomePageState extends State<POSHomePage> {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.remove_circle_outline),
-                                color: const Color(0xFFFF3B30),
+                                color: theme.colorScheme.error,
                                 onPressed: () {
                                   setState(() {
                                     _removeFromCart(index);
@@ -251,9 +261,9 @@ class _POSHomePageState extends State<POSHomePage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               border: Border(
-                top: BorderSide(color: Colors.grey.shade200, width: 1),
+                top: BorderSide(color: theme.dividerColor, width: 1),
               ),
             ),
             child: Column(
@@ -270,10 +280,10 @@ class _POSHomePageState extends State<POSHomePage> {
                     ),
                     Text(
                       'Rp ${_totalPrice.toStringAsFixed(0)}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF34C759),
+                        color: theme.colorScheme.secondary,
                       ),
                     ),
                   ],
@@ -285,7 +295,7 @@ class _POSHomePageState extends State<POSHomePage> {
                   child: ElevatedButton(
                     onPressed: _cart.isEmpty ? null : _checkout,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF007AFF),
+                      backgroundColor: theme.colorScheme.primary,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -313,23 +323,30 @@ class _POSHomePageState extends State<POSHomePage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTabletOrDesktop = screenWidth >= 768;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'MyPOSMobile',
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.appBarTheme.foregroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(color: Colors.grey.shade200, height: 1),
+          child: Container(color: theme.dividerColor, height: 1),
         ),
         actions: [
+          IconButton(
+            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            onPressed: widget.onThemeToggle,
+            tooltip: widget.isDarkMode ? 'Light Mode' : 'Dark Mode',
+          ),
           if (!isTabletOrDesktop)
             Stack(
               children: [
@@ -343,8 +360,8 @@ class _POSHomePageState extends State<POSHomePage> {
                     top: 8,
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFFF3B30),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.error,
                         shape: BoxShape.circle,
                       ),
                       constraints: const BoxConstraints(
@@ -389,14 +406,14 @@ class _POSHomePageState extends State<POSHomePage> {
                 Container(
                   width: 350,
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    border: Border(left: BorderSide(color: Colors.grey[300]!)),
+                    color: isDark ? const Color(0xFF000000) : Colors.grey[100],
+                    border: Border(left: BorderSide(color: theme.dividerColor)),
                   ),
                   child: Column(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(16),
-                        color: Colors.white,
+                        color: theme.cardColor,
                         child: const Row(
                           children: [
                             Icon(Icons.shopping_cart),
@@ -442,9 +459,9 @@ class _POSHomePageState extends State<POSHomePage> {
                                   return Container(
                                     margin: const EdgeInsets.only(bottom: 8),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: theme.cardColor,
                                       border: Border.all(
-                                        color: Colors.grey.shade200,
+                                        color: theme.dividerColor,
                                         width: 1,
                                       ),
                                       borderRadius: BorderRadius.circular(12),
@@ -465,7 +482,9 @@ class _POSHomePageState extends State<POSHomePage> {
                                       subtitle: Text(
                                         'Rp ${item.product.price.toStringAsFixed(0)} x ${item.quantity}',
                                         style: TextStyle(
-                                          color: Colors.grey.shade600,
+                                          color: isDark
+                                              ? Colors.grey.shade400
+                                              : Colors.grey.shade600,
                                           fontSize: 13,
                                         ),
                                       ),
@@ -483,7 +502,7 @@ class _POSHomePageState extends State<POSHomePage> {
                                             icon: const Icon(
                                               Icons.remove_circle_outline,
                                             ),
-                                            color: const Color(0xFFFF3B30),
+                                            color: theme.colorScheme.error,
                                             onPressed: () =>
                                                 _removeFromCart(index),
                                           ),
@@ -497,10 +516,10 @@ class _POSHomePageState extends State<POSHomePage> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.cardColor,
                           border: Border(
                             top: BorderSide(
-                              color: Colors.grey.shade200,
+                              color: theme.dividerColor,
                               width: 1,
                             ),
                           ),
@@ -519,10 +538,10 @@ class _POSHomePageState extends State<POSHomePage> {
                                 ),
                                 Text(
                                   'Rp ${_totalPrice.toStringAsFixed(0)}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF34C759),
+                                    color: theme.colorScheme.secondary,
                                   ),
                                 ),
                               ],
@@ -534,7 +553,7 @@ class _POSHomePageState extends State<POSHomePage> {
                               child: ElevatedButton(
                                 onPressed: _cart.isEmpty ? null : _checkout,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007AFF),
+                                  backgroundColor: theme.colorScheme.primary,
                                   foregroundColor: Colors.white,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(

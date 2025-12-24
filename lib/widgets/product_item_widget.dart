@@ -22,10 +22,13 @@ class ProductItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade200, width: 1),
+        color: theme.cardColor,
+        border: Border.all(color: theme.dividerColor, width: 1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Material(
@@ -46,7 +49,7 @@ class ProductItemWidget extends StatelessWidget {
                         ? Icons.restaurant
                         : Icons.local_drink,
                     size: iconSize,
-                    color: const Color(0xFF007AFF),
+                    color: theme.colorScheme.primary,
                   ),
                 ),
                 SizedBox(height: padding / 2),
@@ -57,7 +60,7 @@ class ProductItemWidget extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: fontSize,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 2,
@@ -70,7 +73,7 @@ class ProductItemWidget extends StatelessWidget {
                   child: Text(
                     'Rp ${product.price.toStringAsFixed(0)}',
                     style: TextStyle(
-                      color: const Color(0xFF34C759),
+                      color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.w600,
                       fontSize: priceSize,
                     ),

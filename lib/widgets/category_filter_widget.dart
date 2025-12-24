@@ -16,6 +16,9 @@ class CategoryFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(isMobile ? 12 : 16),
       height: isMobile ? 60 : 70,
@@ -33,13 +36,13 @@ class CategoryFilterWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFF007AFF)
-                    : Colors.grey.shade100,
+                    ? theme.colorScheme.primary
+                    : (isDark ? const Color(0xFF2C2C2E) : Colors.grey.shade100),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: isSelected
-                      ? const Color(0xFF007AFF)
-                      : Colors.grey.shade200,
+                      ? theme.colorScheme.primary
+                      : theme.dividerColor,
                   width: 1,
                 ),
               ),
@@ -47,7 +50,9 @@ class CategoryFilterWidget extends StatelessWidget {
                 child: Text(
                   category,
                   style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black87,
+                    color: isSelected
+                        ? Colors.white
+                        : theme.colorScheme.onSurface,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     fontSize: 14,
                   ),
