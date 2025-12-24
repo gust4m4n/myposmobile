@@ -22,6 +22,7 @@ const Map<String, String> en = {
   'emptyCart': 'Empty Cart',
   'total': 'Total:',
   'checkout': 'Checkout',
+  'retry': 'Retry',
 
   // Checkout Dialog
   'checkoutTitle': 'Checkout',

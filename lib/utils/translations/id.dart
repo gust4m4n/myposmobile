@@ -22,6 +22,7 @@ const Map<String, String> id = {
   'emptyCart': 'Keranjang Kosong',
   'total': 'Total:',
   'checkout': 'Checkout',
+  'retry': 'Coba Lagi',
 
   // Checkout Dialog
   'checkoutTitle': 'Checkout',

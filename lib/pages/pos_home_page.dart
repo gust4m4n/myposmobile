@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/product_model.dart';
+import '../services/products_service.dart';
 import '../utils/app_localizations.dart';
 import '../utils/currency_formatter.dart';
 import '../widgets/product_section_widget.dart';
@@ -31,64 +32,68 @@ class _POSHomePageState extends State<POSHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final List<CartItemModel> _cart = [];
   String? _selectedCategory;
+  List<ProductModel> _products = [];
+  List<String> _categories = [];
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final response = await ProductsService.getProducts();
+
+      if (!mounted) return;
+
+      if (response.isSuccess && response.data != null) {
+        setState(() {
+          _products = response.data!
+              .map((json) => ProductModel.fromJson(json))
+              .toList();
+          _isLoading = false;
+          _extractCategories();
+        });
+      } else {
+        setState(() {
+          _errorMessage = response.error ?? 'Failed to load products';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'Error loading products: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _extractCategories() {
+    final localizations = AppLocalizations.of(widget.languageCode);
+    final categorySet = _products.map((p) => p.category).toSet();
+    _categories = [localizations.all, ...categorySet];
+  }
 
   String get selectedCategory {
     final localizations = AppLocalizations.of(widget.languageCode);
     return _selectedCategory ?? localizations.all;
   }
 
-  List<String> get _categories {
+  List<ProductModel> get _filteredProducts {
     final localizations = AppLocalizations.of(widget.languageCode);
-    return [localizations.all, localizations.food, localizations.drinks];
-  }
-
-  List<ProductModel> get _products {
-    final localizations = AppLocalizations.of(widget.languageCode);
-    final foodCategory = localizations.food;
-    final drinksCategory = localizations.drinks;
-
-    return [
-      ProductModel(
-        name: localizations.friedRice,
-        price: 25000,
-        category: foodCategory,
-      ),
-      ProductModel(
-        name: localizations.friedNoodles,
-        price: 20000,
-        category: foodCategory,
-      ),
-      ProductModel(
-        name: localizations.friedChicken,
-        price: 30000,
-        category: foodCategory,
-      ),
-      ProductModel(
-        name: localizations.chickenSatay,
-        price: 35000,
-        category: foodCategory,
-      ),
-      ProductModel(
-        name: localizations.icedTea,
-        price: 5000,
-        category: drinksCategory,
-      ),
-      ProductModel(
-        name: localizations.orangeJuice,
-        price: 7000,
-        category: drinksCategory,
-      ),
-      ProductModel(
-        name: localizations.coffee,
-        price: 10000,
-        category: drinksCategory,
-      ),
-      ProductModel(
-        name: localizations.avocadoJuice,
-        price: 15000,
-        category: drinksCategory,
-      ),
-    ];
+    if (selectedCategory == localizations.all) {
+      return _products;
+    }
+    return _products.where((p) => p.category == selectedCategory).toList();
   }
 
   void _addToCart(ProductModel product) {
@@ -167,14 +172,6 @@ class _POSHomePageState extends State<POSHomePage> {
         );
       },
     );
-  }
-
-  List<ProductModel> get _filteredProducts {
-    final localizations = AppLocalizations.of(widget.languageCode);
-    if (selectedCategory == localizations.all) {
-      return _products;
-    }
-    return _products.where((p) => p.category == selectedCategory).toList();
   }
 
   void _showCartBottomSheet(BuildContext context) {
@@ -522,7 +519,30 @@ class _POSHomePageState extends State<POSHomePage> {
             ),
         ],
       ),
-      body: isTabletOrDesktop
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _errorMessage != null
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: _loadProducts,
+                    icon: const Icon(Icons.refresh),
+                    label: Text(localizations.retry),
+                  ),
+                ],
+              ),
+            )
+          : isTabletOrDesktop
           ? Row(
               children: [
                 // Produk Section

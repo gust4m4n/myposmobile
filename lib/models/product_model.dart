@@ -1,13 +1,51 @@
 class ProductModel {
+  final int? id;
   final String name;
   final double price;
   final String category;
+  final String? description;
+  final String? sku;
+  final int? stock;
+  final bool? isActive;
 
   ProductModel({
+    this.id,
     required this.name,
     required this.price,
     required this.category,
+    this.description,
+    this.sku,
+    this.stock,
+    this.isActive,
   });
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
+      id: json['id'] as int?,
+      name: json['name'] as String,
+      price: (json['price'] is int)
+          ? (json['price'] as int).toDouble()
+          : json['price'] as double,
+      category: json['category'] as String,
+      description: json['description'] as String?,
+      sku: json['sku'] as String?,
+      stock: json['stock'] as int?,
+      isActive: json['is_active'] as bool?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) 'id': id,
+      'name': name,
+      'price': price,
+      'category': category,
+      if (description != null) 'description': description,
+      if (sku != null) 'sku': sku,
+      if (stock != null) 'stock': stock,
+      if (isActive != null) 'is_active': isActive,
+    };
+  }
 }
 
 class CartItemModel {

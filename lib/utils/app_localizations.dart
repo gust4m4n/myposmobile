@@ -40,6 +40,7 @@ class AppLocalizations {
   String get emptyCart => _translate('emptyCart');
   String get total => _translate('total');
   String get checkout => _translate('checkout');
+  String get retry => _translate('retry');
 
   // Checkout Dialog
   String get checkoutTitle => _translate('checkoutTitle');
