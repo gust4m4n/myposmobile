@@ -70,6 +70,7 @@ class ScrollableDataTable extends StatelessWidget {
                   child: DataTable(
                     headingRowHeight: 0,
                     showCheckboxColumn: false,
+                    dividerThickness: 0.2,
                     columnSpacing: spacing,
                     columns: columns.map((col) {
                       return DataColumn(
@@ -101,6 +102,7 @@ class ScrollableDataTable extends StatelessWidget {
                   child: DataTable(
                     headingRowHeight: 0,
                     showCheckboxColumn: false,
+                    dividerThickness: 0.2,
                     columnSpacing: spacing,
                     columns: columns.map((col) {
                       return DataColumn(

@@ -29,7 +29,31 @@ class CheckoutDialog extends StatelessWidget {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      title: Text(localizations.checkoutTitle),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(localizations.checkoutTitle),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: theme.dividerColor, width: 1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              onPressed: onCancel,
+              icon: const Icon(Icons.close, size: 20),
+              padding: const EdgeInsets.all(8),
+              constraints: const BoxConstraints(),
+              iconSize: 20,
+              style: IconButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
       content: SizedBox(
         width: 600,
         child: Column(
@@ -119,19 +143,13 @@ class CheckoutDialog extends StatelessWidget {
       ),
       actions: [
         ActionButton(
-          onPressed: onCancel,
-          icon: Icons.close,
-          label: localizations.cancel,
-          backgroundColor: Colors.red.shade600,
-        ),
-        ActionButton(
           onPressed: () async {
             await onProcessCheckout('cash');
             Navigator.pop(context);
           },
           icon: Icons.money,
           label: 'Tunai',
-          backgroundColor: Colors.green.shade600,
+          backgroundColor: const Color(0xFF34C759),
         ),
         ActionButton(
           onPressed: () async {
@@ -140,7 +158,7 @@ class CheckoutDialog extends StatelessWidget {
           },
           icon: Icons.credit_card,
           label: 'Kartu',
-          backgroundColor: Colors.blue.shade600,
+          backgroundColor: const Color(0xFF007AFF),
         ),
         ActionButton(
           onPressed: () async {
@@ -149,7 +167,7 @@ class CheckoutDialog extends StatelessWidget {
           },
           icon: Icons.account_balance,
           label: 'Transfer',
-          backgroundColor: Colors.orange.shade600,
+          backgroundColor: const Color(0xFFFF9500),
         ),
         ActionButton(
           onPressed: () async {
@@ -158,7 +176,7 @@ class CheckoutDialog extends StatelessWidget {
           },
           icon: Icons.qr_code,
           label: 'QRIS',
-          backgroundColor: theme.colorScheme.primary,
+          backgroundColor: const Color(0xFF5856D6),
         ),
       ],
     );
