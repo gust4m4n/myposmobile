@@ -1,15 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:developer' as dev;
 
 import 'package:flutter/foundation.dart';
 
 /// Global logging function that:
 /// - Only logs in debug mode
 /// - Handles long strings without truncation (chunks into 800 char segments)
-/// - Uses stdout.writeln to avoid "flutter:" prefix
+/// - Uses dev.log for proper logging
 void appLog(
   dynamic message, {
   String? endpoint,
+  String? method,
   Map<String, String>? headers,
   String? body,
   int? status,
@@ -22,23 +23,43 @@ void appLog(
   // If structured API logging
   if (endpoint != null) {
     final logBuffer = StringBuffer();
-    logBuffer.writeln('[API] Endpoint: $endpoint');
-    if (headers != null) {
-      logBuffer.writeln('[API] Headers: $headers');
+    logBuffer.writeln('--------');
+
+    // Request logging (when method is provided)
+    if (method != null && status == null) {
+      logBuffer.writeln('[API] $method $endpoint');
+      if (headers != null && headers.isNotEmpty) {
+        headers.forEach((key, value) {
+          logBuffer.writeln('$key: $value');
+        });
+      }
+      logBuffer.writeln('--------');
+      if (body != null) {
+        logBuffer.writeln(_prettyJson(body));
+      }
+      logBuffer.writeln('--------');
     }
-    if (body != null) {
-      logBuffer.writeln('[API] Body:');
-      logBuffer.writeln(_prettyJson(body));
-    }
-    if (error != null) {
-      logBuffer.writeln('[API] ❌ Error: $error');
-    } else if (status != null) {
-      logBuffer.writeln('[API] Status: $status');
+    // Response logging (when status is provided)
+    else if (status != null) {
+      logBuffer.writeln('[API] $status $endpoint');
+      if (headers != null && headers.isNotEmpty) {
+        headers.forEach((key, value) {
+          logBuffer.writeln('$key: $value');
+        });
+      }
+      logBuffer.writeln('--------');
       if (response != null) {
-        logBuffer.writeln('[API] Response:');
         logBuffer.writeln(_prettyJson(response));
       }
+      logBuffer.writeln('--------');
     }
+    // Error logging
+    else if (error != null) {
+      logBuffer.writeln('[API] ❌ Error: $endpoint');
+      logBuffer.writeln(error.toString());
+      logBuffer.writeln('--------');
+    }
+
     _logChunked(logBuffer.toString());
     return;
   }
@@ -59,17 +80,25 @@ String _prettyJson(String jsonString) {
 }
 
 void _logChunked(String text) {
-  const int chunkSize = 800; // Safe size to avoid truncation
-
-  if (text.length <= chunkSize) {
-    stdout.writeln(text);
-    return;
+  if (kDebugMode) {
+    var lines = '';
+    final RegExp pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((RegExpMatch match) {
+      var line = match.group(0);
+      if (line != null) {
+        if (lines.isEmpty) {
+          lines = line;
+        } else {
+          lines = '$lines\n$line';
+        }
+      }
+    });
+    dev.log(lines);
   }
+}
 
-  // Split into chunks for long messages
-  for (int i = 0; i < text.length; i += chunkSize) {
-    final end = (i + chunkSize < text.length) ? i + chunkSize : text.length;
-    final chunk = text.substring(i, end);
-    stdout.writeln(chunk);
+class Logger {
+  static log(String text) {
+    appLog(text);
   }
 }

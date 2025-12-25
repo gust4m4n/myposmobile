@@ -37,15 +37,31 @@ class HttpClient {
     String? responseBody,
     dynamic error,
   }) {
-    appLog(
-      '',
-      endpoint: '$method ${ApiConfig.baseUrl}$url',
-      headers: headers,
-      body: requestBody,
-      status: statusCode,
-      response: responseBody,
-      error: error,
-    );
+    // Log request
+    if (statusCode == null && error == null) {
+      appLog(
+        '',
+        endpoint: url,
+        method: method,
+        headers: headers,
+        body: requestBody,
+      );
+    }
+    // Log response
+    else if (statusCode != null) {
+      appLog(
+        '',
+        endpoint: url,
+        method: method,
+        headers: headers,
+        status: statusCode,
+        response: responseBody,
+      );
+    }
+    // Log error
+    else if (error != null) {
+      appLog('', endpoint: url, error: error);
+    }
   }
 
   Map<String, String> _getHeaders({bool includeAuth = false}) {
@@ -61,14 +77,22 @@ class HttpClient {
   Future<http.Response> get(String url, {bool requiresAuth = false}) async {
     final headers = _getHeaders(includeAuth: requiresAuth);
 
+    // Log request
+    _logApiCall(
+      method: 'GET',
+      url: '${ApiConfig.baseUrl}$url',
+      headers: headers,
+    );
+
     try {
       final response = await http
           .get(Uri.parse('${ApiConfig.baseUrl}$url'), headers: headers)
           .timeout(ApiConfig.connectTimeout);
 
+      // Log response
       _logApiCall(
         method: 'GET',
-        url: url,
+        url: '${ApiConfig.baseUrl}$url',
         headers: headers,
         statusCode: response.statusCode,
         responseBody: response.body,
@@ -76,7 +100,12 @@ class HttpClient {
 
       return response;
     } catch (e) {
-      _logApiCall(method: 'GET', url: url, headers: headers, error: e);
+      _logApiCall(
+        method: 'GET',
+        url: '${ApiConfig.baseUrl}$url',
+        headers: headers,
+        error: e,
+      );
       rethrow;
     }
   }
@@ -89,6 +118,14 @@ class HttpClient {
     final headers = _getHeaders(includeAuth: requiresAuth);
     final bodyString = json.encode(body);
 
+    // Log request
+    _logApiCall(
+      method: 'POST',
+      url: '${ApiConfig.baseUrl}$url',
+      headers: headers,
+      requestBody: bodyString,
+    );
+
     try {
       final response = await http
           .post(
@@ -98,11 +135,11 @@ class HttpClient {
           )
           .timeout(ApiConfig.connectTimeout);
 
+      // Log response
       _logApiCall(
         method: 'POST',
-        url: url,
+        url: '${ApiConfig.baseUrl}$url',
         headers: headers,
-        requestBody: bodyString,
         statusCode: response.statusCode,
         responseBody: response.body,
       );
@@ -111,9 +148,8 @@ class HttpClient {
     } catch (e) {
       _logApiCall(
         method: 'POST',
-        url: url,
+        url: '${ApiConfig.baseUrl}$url',
         headers: headers,
-        requestBody: bodyString,
         error: e,
       );
       rethrow;
@@ -128,6 +164,14 @@ class HttpClient {
     final headers = _getHeaders(includeAuth: requiresAuth);
     final bodyString = json.encode(body);
 
+    // Log request
+    _logApiCall(
+      method: 'PUT',
+      url: '${ApiConfig.baseUrl}$url',
+      headers: headers,
+      requestBody: bodyString,
+    );
+
     try {
       final response = await http
           .put(
@@ -137,11 +181,11 @@ class HttpClient {
           )
           .timeout(ApiConfig.connectTimeout);
 
+      // Log response
       _logApiCall(
         method: 'PUT',
-        url: url,
+        url: '${ApiConfig.baseUrl}$url',
         headers: headers,
-        requestBody: bodyString,
         statusCode: response.statusCode,
         responseBody: response.body,
       );
@@ -150,9 +194,8 @@ class HttpClient {
     } catch (e) {
       _logApiCall(
         method: 'PUT',
-        url: url,
+        url: '${ApiConfig.baseUrl}$url',
         headers: headers,
-        requestBody: bodyString,
         error: e,
       );
       rethrow;
@@ -162,14 +205,22 @@ class HttpClient {
   Future<http.Response> delete(String url, {bool requiresAuth = false}) async {
     final headers = _getHeaders(includeAuth: requiresAuth);
 
+    // Log request
+    _logApiCall(
+      method: 'DELETE',
+      url: '${ApiConfig.baseUrl}$url',
+      headers: headers,
+    );
+
     try {
       final response = await http
           .delete(Uri.parse('${ApiConfig.baseUrl}$url'), headers: headers)
           .timeout(ApiConfig.connectTimeout);
 
+      // Log response
       _logApiCall(
         method: 'DELETE',
-        url: url,
+        url: '${ApiConfig.baseUrl}$url',
         headers: headers,
         statusCode: response.statusCode,
         responseBody: response.body,
@@ -177,7 +228,12 @@ class HttpClient {
 
       return response;
     } catch (e) {
-      _logApiCall(method: 'DELETE', url: url, headers: headers, error: e);
+      _logApiCall(
+        method: 'DELETE',
+        url: '${ApiConfig.baseUrl}$url',
+        headers: headers,
+        error: e,
+      );
       rethrow;
     }
   }
