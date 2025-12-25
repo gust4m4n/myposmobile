@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../shared/utils/currency_formatter.dart';
 import 'product_model.dart';
 
-class ProductItemWidget extends StatelessWidget {
+class ProductItemWidget extends StatefulWidget {
   final ProductModel product;
   final VoidCallback onTap;
   final double iconSize;
@@ -22,19 +22,36 @@ class ProductItemWidget extends StatelessWidget {
   });
 
   @override
+  State<ProductItemWidget> createState() => _ProductItemWidgetState();
+}
+
+class _ProductItemWidgetState extends State<ProductItemWidget> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        transform: Matrix4.identity()..scale(_isPressed ? 0.95 : 1.0),
         decoration: BoxDecoration(
-          color: theme.cardColor,
-          border: Border.all(color: theme.dividerColor, width: 1),
+          color: _isPressed
+              ? theme.colorScheme.primary.withOpacity(0.1)
+              : theme.cardColor,
+          border: Border.all(
+            color: _isPressed ? theme.colorScheme.primary : theme.dividerColor,
+            width: _isPressed ? 2 : 1,
+          ),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
-          padding: EdgeInsets.all(padding),
+          padding: EdgeInsets.all(widget.padding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -42,21 +59,21 @@ class ProductItemWidget extends StatelessWidget {
               Flexible(
                 flex: 2,
                 child: Icon(
-                  product.category == 'Makanan'
+                  widget.product.category == 'Makanan'
                       ? Icons.restaurant
                       : Icons.local_drink,
-                  size: iconSize,
+                  size: widget.iconSize,
                   color: theme.colorScheme.primary,
                 ),
               ),
-              SizedBox(height: padding / 2),
+              SizedBox(height: widget.padding / 2),
               Flexible(
                 flex: 2,
                 child: Text(
-                  product.name,
+                  widget.product.name,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: fontSize,
+                    fontSize: widget.fontSize,
                     color: theme.colorScheme.onSurface,
                   ),
                   textAlign: TextAlign.center,
@@ -64,15 +81,15 @@ class ProductItemWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: padding / 3),
+              SizedBox(height: widget.padding / 3),
               Flexible(
                 flex: 1,
                 child: Text(
-                  CurrencyFormatter.format(product.price),
+                  CurrencyFormatter.format(widget.product.price),
                   style: TextStyle(
                     color: theme.colorScheme.secondary,
                     fontWeight: FontWeight.w600,
-                    fontSize: priceSize,
+                    fontSize: widget.priceSize,
                   ),
                 ),
               ),
