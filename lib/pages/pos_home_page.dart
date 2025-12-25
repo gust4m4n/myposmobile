@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../models/api_models.dart';
 import '../models/product_model.dart';
 import '../services/orders_service.dart';
 import '../services/payments_service.dart';
 import '../services/products_service.dart';
+import '../services/profile_service.dart';
 import '../utils/app_localizations.dart';
 import '../utils/currency_formatter.dart';
 import '../widgets/product_section_widget.dart';
@@ -40,11 +42,32 @@ class _POSHomePageState extends State<POSHomePage> {
   List<String> _categories = [];
   bool _isLoading = false;
   String? _errorMessage;
+  final _profileService = ProfileService();
+  ProfileModel? _profile;
+  String _appTitle = 'MyPOSMobile';
 
   @override
   void initState() {
     super.initState();
+    _loadProfile();
     _loadProducts();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final response = await _profileService.getProfile();
+
+      if (!mounted) return;
+
+      if (response.isSuccess && response.data != null) {
+        setState(() {
+          _profile = response.data;
+          _appTitle = '${_profile!.tenant.name} \\ ${_profile!.branch.name}';
+        });
+      }
+    } catch (e) {
+      // Silently fail, keep default title
+    }
   }
 
   Future<void> _loadProducts() async {
@@ -505,7 +528,7 @@ class _POSHomePageState extends State<POSHomePage> {
           tooltip: 'Menu',
         ),
         title: Text(
-          localizations.appTitle,
+          _appTitle,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,

@@ -402,7 +402,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"user_id\": 1,\n  \"tenant_id\": 1,\n  \"username\": \"johndoe\"\n}"
+							"body": "{\n  \"user\": {\n    \"id\": 25,\n    \"username\": \"tenantadmin\",\n    \"email\": \"tenantadmin@resto.com\",\n    \"full_name\": \"Tenant Admin Resto\",\n    \"role\": \"tenantadmin\",\n    \"is_active\": true\n  },\n  \"tenant\": {\n    \"id\": 17,\n    \"name\": \"Food Corner\",\n    \"code\": \"resto01\",\n    \"is_active\": true\n  },\n  \"branch\": {\n    \"id\": 25,\n    \"name\": \"Cabang Pusat\",\n    \"code\": \"resto01-pusat\",\n    \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n    \"phone\": \"021-12345678\",\n    \"is_active\": true\n  }\n}"
 						}
 					]
 				},
@@ -523,7 +523,44 @@
 						},
 						"description": "Get list of unique product categories for the authenticated tenant. Returns distinct category values from products table.\n\nExample Response:\n```json\n{\n  \"data\": [\n    \"Makanan Utama\",\n    \"Minuman\",\n    \"Snack & Dessert\"\n  ]\n}\n```"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Categories Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    \"Makanan Utama\",\n    \"Minuman\",\n    \"Snack & Dessert\"\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "List Products",
@@ -567,7 +604,43 @@
 						},
 						"description": "Get list of all products for the authenticated tenant. Products are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- category (optional): Filter by exact category name\n- search (optional): Search keyword in name, description, or SKU (case-insensitive)\n- Both filters can be combined\n\nExamples:\n- All products: /products\n- By category: /products?category=Minuman\n- By search: /products?search=ayam\n- Combined: /products?category=Makanan%20Utama&search=goreng"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "List Products Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 100,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Product by ID",
@@ -598,7 +671,44 @@
 						},
 						"description": "Get product details by ID. Replace '1' with actual product ID. Product must belong to authenticated tenant."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Product Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Nasi Goreng Spesial\",\n    \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"FOOD-001\",\n    \"price\": 25000,\n    \"stock\": 50,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Create Product",
@@ -637,7 +747,51 @@
 						},
 						"description": "Create a new product for the authenticated tenant. Product will be automatically assigned to tenant_id from JWT token."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Product Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"category\": \"Makanan Utama\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Product created successfully\",\n  \"data\": {\n    \"id\": 25,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Baru\",\n    \"description\": \"Deskripsi produk baru\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"SKU-NEW-001\",\n    \"price\": 50000,\n    \"stock\": 100,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Update Product",
@@ -677,7 +831,52 @@
 						},
 						"description": "Update an existing product. Replace '1' with actual product ID. Product must belong to authenticated tenant. All fields are optional for update."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Update Product Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"category\": \"Minuman\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Product updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Updated\",\n    \"description\": \"Deskripsi produk yang sudah diupdate\",\n    \"category\": \"Minuman\",\n    \"sku\": \"SKU-UPD-001\",\n    \"price\": 75000,\n    \"stock\": 150,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T11:30:00+07:00\"\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Delete Product",
@@ -708,7 +907,44 @@
 						},
 						"description": "Delete a product (soft delete). Replace '1' with actual product ID. Product must belong to authenticated tenant."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Delete Product Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Product deleted successfully\"\n}"
+						}
+					]
 				}
 			]
 		},
@@ -752,7 +988,51 @@
 						},
 						"description": "Create a new order with multiple products. Order will be automatically assigned to tenant and branch from JWT token.\n\nRequest body:\n- items: Array of products with quantity\n  - product_id: ID of product to order\n  - quantity: Number of items\n- notes: Optional order notes\n\nResponse includes:\n- Order details with generated order number\n- Total amount calculated from product prices\n- Order items with product details"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Order Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\n      \"product_id\": 27,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 42,\n      \"quantity\": 3\n    }\n  ],\n  \"notes\": \"Customer order from table 5\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/orders",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"orders"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Order created successfully\",\n  \"data\": {\n    \"id\": 3,\n    \"tenant_id\": 17,\n    \"branch_id\": 25,\n    \"user_id\": 10,\n    \"order_number\": \"ORD-20251225-001\",\n    \"total_amount\": 85000,\n    \"status\": \"pending\",\n    \"notes\": \"Customer order from table 5\",\n    \"created_at\": \"2025-12-25T14:30:00+07:00\",\n    \"updated_at\": \"2025-12-25T14:30:00+07:00\",\n    \"items\": [\n      {\n        \"id\": 5,\n        \"order_id\": 3,\n        \"product_id\": 27,\n        \"product_name\": \"Nasi Goreng Spesial\",\n        \"quantity\": 2,\n        \"price\": 25000,\n        \"subtotal\": 50000\n      },\n      {\n        \"id\": 6,\n        \"order_id\": 3,\n        \"product_id\": 42,\n        \"product_name\": \"Jus Jeruk\",\n        \"quantity\": 3,\n        \"price\": 12000,\n        \"subtotal\": 35000\n      }\n    ]\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "List Orders",
@@ -782,7 +1062,43 @@
 						},
 						"description": "Get list of all orders for the authenticated tenant and branch. Orders are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of orders with complete details\n- Each order includes all order items\n- Orders sorted by creation date (newest first)"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "List Orders Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/orders",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"branch_id\": 25,\n      \"user_id\": 10,\n      \"order_number\": \"ORD-20251225-003\",\n      \"total_amount\": 85000,\n      \"status\": \"completed\",\n      \"notes\": \"Customer order from table 5\",\n      \"created_at\": \"2025-12-25T14:30:00+07:00\",\n      \"updated_at\": \"2025-12-25T14:45:00+07:00\",\n      \"items\": [\n        {\n          \"id\": 5,\n          \"product_name\": \"Nasi Goreng Spesial\",\n          \"quantity\": 2,\n          \"price\": 25000,\n          \"subtotal\": 50000\n        },\n        {\n          \"id\": 6,\n          \"product_name\": \"Jus Jeruk\",\n          \"quantity\": 3,\n          \"price\": 12000,\n          \"subtotal\": 35000\n        }\n      ]\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 25,\n      \"user_id\": 10,\n      \"order_number\": \"ORD-20251225-002\",\n      \"total_amount\": 50000,\n      \"status\": \"pending\",\n      \"notes\": \"\",\n      \"created_at\": \"2025-12-25T13:15:00+07:00\",\n      \"updated_at\": \"2025-12-25T13:15:00+07:00\",\n      \"items\": [\n        {\n          \"id\": 3,\n          \"product_name\": \"Ayam Goreng\",\n          \"quantity\": 1,\n          \"price\": 30000,\n          \"subtotal\": 30000\n        },\n        {\n          \"id\": 4,\n          \"product_name\": \"Es Teh Manis\",\n          \"quantity\": 4,\n          \"price\": 5000,\n          \"subtotal\": 20000\n        }\n      ]\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Order by ID",
@@ -813,7 +1129,44 @@
 						},
 						"description": "Get order details by ID. Replace '3' with actual order ID. Order must belong to authenticated tenant.\n\nReturns:\n- Complete order information\n- All order items with product details\n- Current order status"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Order Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/orders/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"orders",
+										"3"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 3,\n    \"tenant_id\": 17,\n    \"branch_id\": 25,\n    \"user_id\": 10,\n    \"order_number\": \"ORD-20251225-003\",\n    \"total_amount\": 85000,\n    \"status\": \"completed\",\n    \"notes\": \"Customer order from table 5\",\n    \"created_at\": \"2025-12-25T14:30:00+07:00\",\n    \"updated_at\": \"2025-12-25T14:45:00+07:00\",\n    \"items\": [\n      {\n        \"id\": 5,\n        \"order_id\": 3,\n        \"product_id\": 27,\n        \"product_name\": \"Nasi Goreng Spesial\",\n        \"quantity\": 2,\n        \"price\": 25000,\n        \"subtotal\": 50000\n      },\n      {\n        \"id\": 6,\n        \"order_id\": 3,\n        \"product_id\": 42,\n        \"product_name\": \"Jus Jeruk\",\n        \"quantity\": 3,\n        \"price\": 12000,\n        \"subtotal\": 35000\n      }\n    ]\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Payments by Order",
@@ -845,7 +1198,45 @@
 						},
 						"description": "Get all payments for a specific order. Replace '3' with actual order ID.\n\nUseful for:\n- Viewing payment history for an order\n- Checking if order has been paid\n- Tracking multiple payments (partial payments)"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Payments by Order Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/orders/3/payments",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"orders",
+										"3",
+										"payments"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"order_id\": 3,\n      \"amount\": 85000,\n      \"payment_method\": \"cash\",\n      \"status\": \"completed\",\n      \"notes\": \"Cash payment\",\n      \"created_at\": \"2025-12-25T14:45:00+07:00\",\n      \"updated_at\": \"2025-12-25T14:45:00+07:00\"\n    }\n  ]\n}"
+						}
+					]
 				}
 			]
 		},
@@ -889,7 +1280,51 @@
 						},
 						"description": "Create payment for an order. Payment amount must be equal to or greater than order total.\n\nRequest body:\n- order_id: ID of order to pay\n- amount: Payment amount (must be >= order total)\n- payment_method: Method of payment (cash, debit, credit, transfer, etc)\n- notes: Optional payment notes\n\nEffect:\n- Creates payment record\n- Updates order status to 'completed'\n- Cannot pay cancelled orders\n- Cannot pay already completed orders"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Payment Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"order_id\": 3,\n  \"amount\": 85000,\n  \"payment_method\": \"cash\",\n  \"notes\": \"Cash payment\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/payments",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"payments"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Payment created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 3,\n    \"amount\": 85000,\n    \"payment_method\": \"cash\",\n    \"status\": \"completed\",\n    \"notes\": \"Cash payment\",\n    \"created_at\": \"2025-12-25 14:45:00\",\n    \"updated_at\": \"2025-12-25 14:45:00\"\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "List Payments",
@@ -919,7 +1354,43 @@
 						},
 						"description": "Get list of all payments for the authenticated tenant and branch. Payments are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of payments with complete details\n- Payment status and method\n- Sorted by creation date (newest first)"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "List Payments Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/payments",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"payments"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 2,\n      \"order_id\": 5,\n      \"amount\": 150000,\n      \"payment_method\": \"credit\",\n      \"status\": \"completed\",\n      \"notes\": \"Credit card payment\",\n      \"created_at\": \"2025-12-25 15:30:00\",\n      \"updated_at\": \"2025-12-25 15:30:00\"\n    },\n    {\n      \"id\": 1,\n      \"order_id\": 3,\n      \"amount\": 85000,\n      \"payment_method\": \"cash\",\n      \"status\": \"completed\",\n      \"notes\": \"Cash payment\",\n      \"created_at\": \"2025-12-25 14:45:00\",\n      \"updated_at\": \"2025-12-25 14:45:00\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Payment by ID",
@@ -950,7 +1421,44 @@
 						},
 						"description": "Get payment details by ID. Replace '1' with actual payment ID. Payment must belong to authenticated tenant.\n\nReturns:\n- Complete payment information\n- Associated order ID\n- Payment method and status"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Payment Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/payments/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"payments",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 3,\n    \"amount\": 85000,\n    \"payment_method\": \"cash\",\n    \"status\": \"completed\",\n    \"notes\": \"Cash payment\",\n    \"created_at\": \"2025-12-25 14:45:00\",\n    \"updated_at\": \"2025-12-25 14:45:00\"\n  }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -986,7 +1494,44 @@
 						},
 						"description": "Dashboard untuk superadmin menampilkan total tenants, branches, dan users. Hanya bisa diakses oleh user dengan role superadmin."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Dashboard Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/dashboard",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"dashboard"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"total_tenants\": 3,\n    \"total_branches\": 8,\n    \"total_users\": 25\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "List Tenants",
@@ -1017,7 +1562,44 @@
 						},
 						"description": "Mendapatkan list semua tenant yang ada di sistem. Hanya superadmin yang bisa akses."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "List Tenants Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tenants",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tenants"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Superadmin Tenant\",\n      \"code\": \"supertenant\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-24T10:00:00+07:00\"\n    },\n    {\n      \"id\": 17,\n      \"name\": \"Warung Makan Sejahtera\",\n      \"code\": \"resto01\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    },\n    {\n      \"id\": 18,\n      \"name\": \"Fashion Store\",\n      \"code\": \"fashion01\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Create Tenant",
@@ -1057,7 +1639,52 @@
 						},
 						"description": "Membuat tenant baru. Hanya superadmin yang bisa akses."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Tenant Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tenants",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tenants"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Tenant created successfully\",\n  \"data\": {\n    \"id\": 19,\n    \"name\": \"New Tenant\",\n    \"code\": \"TENANT002\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T16:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T16:00:00+07:00\"\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "List Branches by Tenant",
@@ -1090,7 +1717,46 @@
 						},
 						"description": "Mendapatkan list semua branch dari tenant tertentu. Ganti :tenant_id dengan ID tenant yang valid."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "List Branches Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tenants/17/branches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tenants",
+										"17",
+										"branches"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 25,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"resto01-pusat\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    },\n    {\n      \"id\": 26,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Menteng\",\n      \"code\": \"resto01-menteng\",\n      \"address\": \"Jl. Menteng Raya No. 45, Jakarta\",\n      \"phone\": \"021-87654321\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "List Users by Branch",
@@ -1123,7 +1789,46 @@
 						},
 						"description": "Mendapatkan list semua user dari branch tertentu. Ganti :branch_id dengan ID branch yang valid."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "List Users Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/branches/25/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"branches",
+										"25",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 10,\n      \"tenant_id\": 17,\n      \"branch_id\": 25,\n      \"username\": \"admin_resto\",\n      \"email\": \"admin@resto.com\",\n      \"full_name\": \"Admin Restoran\",\n      \"role\": \"tenantadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    },\n    {\n      \"id\": 11,\n      \"tenant_id\": 17,\n      \"branch_id\": 25,\n      \"username\": \"kasir_resto\",\n      \"email\": \"kasir@resto.com\",\n      \"full_name\": \"Kasir Restoran\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Superadmin Login",
@@ -1169,7 +1874,47 @@
 						},
 						"description": "Login sebagai superadmin menggunakan credentials: supertenant/superbranch/superadmin/123456. Token akan otomatis tersimpan untuk akses endpoint superadmin."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Superadmin Login Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tenant_code\": \"supertenant\",\n  \"branch_code\": \"superbranch\",\n  \"username\": \"superadmin\",\n  \"password\": \"123456\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzUxOTg4MDAsInVzZXJfaWQiOjEsInRlbmFudF9pZCI6MSwiYnJhbmNoX2lkIjoxLCJyb2xlIjoic3VwZXJhZG1pbiJ9.sample\",\n    \"user\": {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"branch_name\": \"Super Branch\",\n      \"username\": \"superadmin\",\n      \"email\": \"superadmin@system.com\",\n      \"full_name\": \"Super Admin\",\n      \"role\": \"superadmin\",\n      \"is_active\": true\n    }\n  }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -1218,7 +1963,47 @@
 						},
 						"description": "Login sebagai Admin Restoran - Warung Makan Sejahtera"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Restoran Login Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"username\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"id\": 10,\n      \"tenant_id\": 17,\n      \"branch_id\": 25,\n      \"branch_name\": \"Cabang Pusat\",\n      \"username\": \"admin_resto\",\n      \"email\": \"admin@resto.com\",\n      \"full_name\": \"Admin Restoran\",\n      \"role\": \"tenantadmin\",\n      \"is_active\": true\n    }\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Restoran - Get Products",
@@ -1248,7 +2033,43 @@
 						},
 						"description": "Dapatkan daftar produk restoran (makanan & minuman)"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Restoran Products Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{resto_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 27,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"RESTO-001\",\n      \"price\": 25000,\n      \"stock\": 100,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    },\n    {\n      \"id\": 28,\n      \"tenant_id\": 17,\n      \"name\": \"Ayam Goreng Kremes\",\n      \"description\": \"Ayam goreng dengan kremesan renyah\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"RESTO-002\",\n      \"price\": 30000,\n      \"stock\": 50,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    },\n    {\n      \"id\": 42,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"RESTO-DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 200,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    }\n  ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Fashion - Login Admin",
@@ -1292,7 +2113,47 @@
 						},
 						"description": "Login sebagai Admin Fashion Store"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Fashion Login Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"username\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"id\": 15,\n      \"tenant_id\": 18,\n      \"branch_id\": 29,\n      \"branch_name\": \"Cabang Mall Plaza\",\n      \"username\": \"admin_fashion\",\n      \"email\": \"admin@fashion.com\",\n      \"full_name\": \"Admin Fashion\",\n      \"role\": \"tenantadmin\",\n      \"is_active\": true\n    }\n  }\n}"
+						}
+					]
 				},
 				{
 					"name": "Fashion - Get Products",
@@ -1322,7 +2183,43 @@
 						},
 						"description": "Dapatkan daftar produk fashion (pakaian & aksesoris)"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Fashion Products Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{fashion_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 50,\n      \"tenant_id\": 18,\n      \"name\": \"Kemeja Batik Pria\",\n      \"description\": \"Kemeja batik motif modern untuk pria\",\n      \"category\": \"Pakaian Pria\",\n      \"sku\": \"FASHION-001\",\n      \"price\": 250000,\n      \"stock\": 30,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:48:10+07:00\",\n      \"updated_at\": \"2025-12-24T19:48:10+07:00\"\n    },\n    {\n      \"id\": 51,\n      \"tenant_id\": 18,\n      \"name\": \"Dress Casual Wanita\",\n      \"description\": \"Dress casual untuk wanita berbagai acara\",\n      \"category\": \"Pakaian Wanita\",\n      \"sku\": \"FASHION-002\",\n      \"price\": 180000,\n      \"stock\": 25,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:48:10+07:00\",\n      \"updated_at\": \"2025-12-24T19:48:10+07:00\"\n    },\n    {\n      \"id\": 65,\n      \"tenant_id\": 18,\n      \"name\": \"Tas Kulit Premium\",\n      \"description\": \"Tas kulit asli berkualitas tinggi\",\n      \"category\": \"Aksesoris\",\n      \"sku\": \"FASHION-ACC-001\",\n      \"price\": 450000,\n      \"stock\": 15,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:48:10+07:00\",\n      \"updated_at\": \"2025-12-24T19:48:10+07:00\"\n    }\n  ]\n}"
+						}
+					]
 				}
 			]
 		}

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/api_models.dart';
 import '../services/profile_service.dart';
 import '../utils/app_localizations.dart';
-import 'change_password_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final bool isDarkMode;
@@ -158,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Profile Information',
+                                'User Information',
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -167,21 +166,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 24),
 
-                              // User ID
+                              // Full Name
                               _buildInfoRow(
                                 context,
-                                icon: Icons.badge,
-                                label: 'User ID',
-                                value: '${_profile!.userId}',
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Tenant ID
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.business,
-                                label: 'Tenant ID',
-                                value: '${_profile!.tenantId}',
+                                icon: Icons.person,
+                                label: 'Full Name',
+                                value: _profile!.user.fullName,
                               ),
                               const SizedBox(height: 16),
 
@@ -190,7 +180,25 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 icon: Icons.person_outline,
                                 label: localizations.username,
-                                value: _profile!.username,
+                                value: _profile!.user.username,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Email
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.email_outlined,
+                                label: 'Email',
+                                value: _profile!.user.email,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Role
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.admin_panel_settings_outlined,
+                                label: 'Role',
+                                value: _profile!.user.role.toUpperCase(),
                               ),
                             ],
                           ),
@@ -198,42 +206,105 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Change Password Button
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChangePasswordPage(
-                                languageCode: widget.languageCode,
+                      // Tenant Information Card
+                      Card(
+                        elevation: isDark ? 2 : 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tenant Information',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurface,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.lock_outline),
-                        label: const Text('Change Password'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: theme.colorScheme.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                              const SizedBox(height: 24),
+
+                              // Tenant Name
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.business,
+                                label: 'Tenant Name',
+                                value: _profile!.tenant.name,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Tenant Code
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.tag,
+                                label: 'Tenant Code',
+                                value: _profile!.tenant.code,
+                              ),
+                            ],
                           ),
-                          side: BorderSide(color: theme.colorScheme.primary),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 24),
 
-                      // Refresh Button
-                      ElevatedButton.icon(
-                        onPressed: _loadProfile,
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Refresh Profile'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      // Branch Information Card
+                      Card(
+                        elevation: isDark ? 2 : 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Branch Information',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Branch Name
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.store,
+                                label: 'Branch Name',
+                                value: _profile!.branch.name,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Branch Code
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.qr_code,
+                                label: 'Branch Code',
+                                value: _profile!.branch.code,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Address
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.location_on_outlined,
+                                label: 'Address',
+                                value: _profile!.branch.address,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Phone
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.phone_outlined,
+                                label: 'Phone',
+                                value: _profile!.branch.phone,
+                              ),
+                            ],
                           ),
                         ),
                       ),

@@ -90,28 +90,142 @@ class AuthResponseData {
   }
 }
 
-// Profile Model
-class ProfileModel {
-  final int userId;
-  final int tenantId;
+// Profile User Model
+class ProfileUserModel {
+  final int id;
   final String username;
+  final String email;
+  final String fullName;
+  final String role;
+  final bool isActive;
 
-  ProfileModel({
-    required this.userId,
-    required this.tenantId,
+  ProfileUserModel({
+    required this.id,
     required this.username,
+    required this.email,
+    required this.fullName,
+    required this.role,
+    required this.isActive,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) {
-    return ProfileModel(
-      userId: json['user_id'],
-      tenantId: json['tenant_id'],
+  factory ProfileUserModel.fromJson(Map<String, dynamic> json) {
+    return ProfileUserModel(
+      id: json['id'],
       username: json['username'],
+      email: json['email'],
+      fullName: json['full_name'],
+      role: json['role'],
+      isActive: json['is_active'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'user_id': userId, 'tenant_id': tenantId, 'username': username};
+    return {
+      'id': id,
+      'username': username,
+      'email': email,
+      'full_name': fullName,
+      'role': role,
+      'is_active': isActive,
+    };
+  }
+}
+
+// Profile Tenant Model
+class ProfileTenantModel {
+  final int id;
+  final String name;
+  final String code;
+  final bool isActive;
+
+  ProfileTenantModel({
+    required this.id,
+    required this.name,
+    required this.code,
+    required this.isActive,
+  });
+
+  factory ProfileTenantModel.fromJson(Map<String, dynamic> json) {
+    return ProfileTenantModel(
+      id: json['id'],
+      name: json['name'],
+      code: json['code'],
+      isActive: json['is_active'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name, 'code': code, 'is_active': isActive};
+  }
+}
+
+// Profile Branch Model
+class ProfileBranchModel {
+  final int id;
+  final String name;
+  final String code;
+  final String address;
+  final String phone;
+  final bool isActive;
+
+  ProfileBranchModel({
+    required this.id,
+    required this.name,
+    required this.code,
+    required this.address,
+    required this.phone,
+    required this.isActive,
+  });
+
+  factory ProfileBranchModel.fromJson(Map<String, dynamic> json) {
+    return ProfileBranchModel(
+      id: json['id'],
+      name: json['name'],
+      code: json['code'],
+      address: json['address'],
+      phone: json['phone'],
+      isActive: json['is_active'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'code': code,
+      'address': address,
+      'phone': phone,
+      'is_active': isActive,
+    };
+  }
+}
+
+// Profile Model
+class ProfileModel {
+  final ProfileUserModel user;
+  final ProfileTenantModel tenant;
+  final ProfileBranchModel branch;
+
+  ProfileModel({
+    required this.user,
+    required this.tenant,
+    required this.branch,
+  });
+
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    return ProfileModel(
+      user: ProfileUserModel.fromJson(json['user']),
+      tenant: ProfileTenantModel.fromJson(json['tenant']),
+      branch: ProfileBranchModel.fromJson(json['branch']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user.toJson(),
+      'tenant': tenant.toJson(),
+      'branch': branch.toJson(),
+    };
   }
 }
 
