@@ -10,6 +10,7 @@ import '../profile/profile_service.dart';
 import '../shared/api_models.dart';
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/custom_dialog.dart';
 import 'checkout_dialog.dart';
 import 'product_model.dart';
 import 'product_section_widget.dart';
@@ -1034,8 +1035,10 @@ class _POSHomePageState extends State<POSHomePage> {
                   // Show confirmation dialog
                   final confirmed = await showDialog<bool>(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text(localizations.logout),
+                    builder: (context) => CustomDialog(
+                      title: localizations.logout,
+                      width: 400,
+                      onClose: () => Navigator.pop(context, false),
                       content: Text(localizations.logoutConfirmation),
                       actions: [
                         TextButton(

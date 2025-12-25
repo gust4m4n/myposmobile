@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/custom_dialog.dart';
 import '../shared/widgets/scrollable_data_table.dart';
 
 class OrderDetailDialog extends StatelessWidget {
@@ -25,99 +26,84 @@ class OrderDetailDialog extends StatelessWidget {
     final createdAt = order['created_at'] ?? '';
     final items = (order['order_items'] as List?) ?? [];
 
-    return AlertDialog(
-      title: Text('${localizations.orderDetails}: $orderNumber'),
-      content: SizedBox(
-        width: 500,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildInfoRow('Status', status, theme),
-              _buildInfoRow(
-                'Total',
-                CurrencyFormatter.format(totalAmount.toDouble()),
-                theme,
-              ),
-              if (notes != null && notes.toString().isNotEmpty)
-                _buildInfoRow('Notes', notes.toString(), theme),
-              _buildInfoRow('Created', createdAt, theme),
-              const SizedBox(height: 16),
-              Text(
-                localizations.orderItems,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+    return CustomDialog(
+      title: '${localizations.orderDetails}: $orderNumber',
+      width: 500,
+      onClose: () => Navigator.pop(context),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildInfoRow('Status', status, theme),
+            _buildInfoRow(
+              'Total',
+              CurrencyFormatter.format(totalAmount.toDouble()),
+              theme,
+            ),
+            if (notes != null && notes.toString().isNotEmpty)
+              _buildInfoRow('Notes', notes.toString(), theme),
+            _buildInfoRow('Created', createdAt, theme),
+            const SizedBox(height: 16),
+            Text(
+              localizations.orderItems,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            ScrollableDataTable(
+              maxHeight: 300,
+              columns: [
+                DataTableColumn.buildColumn(context: context, label: 'Product'),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: localizations.price,
+                  numeric: true,
                 ),
-              ),
-              const SizedBox(height: 8),
-              ScrollableDataTable(
-                maxHeight: 300,
-                columns: [
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Product',
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: localizations.price,
-                    numeric: true,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Qty',
-                    numeric: true,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Subtotal',
-                    numeric: true,
-                  ),
-                ],
-                rows: items.map((item) {
-                  final productName = item['product_name'] ?? 'Unknown';
-                  final quantity = item['quantity'] ?? 0;
-                  final price = item['price'] ?? 0;
-                  final subtotal = item['subtotal'] ?? 0;
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'Qty',
+                  numeric: true,
+                ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'Subtotal',
+                  numeric: true,
+                ),
+              ],
+              rows: items.map((item) {
+                final productName = item['product_name'] ?? 'Unknown';
+                final quantity = item['quantity'] ?? 0;
+                final price = item['price'] ?? 0;
+                final subtotal = item['subtotal'] ?? 0;
 
-                  return DataRow(
-                    cells: [
-                      DataCell(
-                        Text(
-                          productName,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        ),
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        productName,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      DataCell(
-                        Text(CurrencyFormatter.format(price.toDouble())),
+                    ),
+                    DataCell(Text(CurrencyFormatter.format(price.toDouble()))),
+                    DataCell(
+                      Text(
+                        '$quantity',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      DataCell(
-                        Text(
-                          '$quantity',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                    ),
+                    DataCell(
+                      Text(
+                        CurrencyFormatter.format(subtotal.toDouble()),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      DataCell(
-                        Text(
-                          CurrencyFormatter.format(subtotal.toDouble()),
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(localizations.close),
-        ),
-      ],
     );
   }
 

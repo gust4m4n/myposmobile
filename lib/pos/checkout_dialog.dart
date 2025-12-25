@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/action_button.dart';
+import '../shared/widgets/custom_dialog.dart';
 import '../shared/widgets/scrollable_data_table.dart';
 import 'product_model.dart';
 
@@ -27,119 +28,92 @@ class CheckoutDialog extends StatelessWidget {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(languageCode);
 
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return CustomDialog(
+      title: localizations.checkoutTitle,
+      onClose: onCancel,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(localizations.checkoutTitle),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: theme.dividerColor, width: 1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: IconButton(
-              onPressed: onCancel,
-              icon: const Icon(Icons.close, size: 20),
-              padding: const EdgeInsets.all(8),
-              constraints: const BoxConstraints(),
-              iconSize: 20,
-              style: IconButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+          // DataTable for cart items with scroll
+          ScrollableDataTable(
+            columns: [
+              DataTableColumn.buildColumn(context: context, label: 'Product'),
+              DataTableColumn.buildColumn(
+                context: context,
+                label: 'Qty',
+                numeric: true,
               ),
-            ),
-          ),
-        ],
-      ),
-      titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-      content: SizedBox(
-        width: 600,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // DataTable for cart items with scroll
-            ScrollableDataTable(
-              columns: [
-                DataTableColumn.buildColumn(context: context, label: 'Product'),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'Qty',
-                  numeric: true,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: localizations.price,
-                  numeric: true,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'Subtotal',
-                  numeric: true,
-                ),
-              ],
-              rows: cart.map((cartItem) {
-                return DataRow(
-                  cells: [
-                    DataCell(
-                      Text(
-                        cartItem.product.name,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    DataCell(
-                      Text(
-                        '${cartItem.quantity}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    DataCell(
-                      Text(CurrencyFormatter.format(cartItem.product.price)),
-                    ),
-                    DataCell(
-                      Text(
-                        CurrencyFormatter.format(cartItem.total),
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-            // Total
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+              DataTableColumn.buildColumn(
+                context: context,
+                label: localizations.price,
+                numeric: true,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    localizations.total,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
+              DataTableColumn.buildColumn(
+                context: context,
+                label: 'Subtotal',
+                numeric: true,
+              ),
+            ],
+            rows: cart.map((cartItem) {
+              return DataRow(
+                cells: [
+                  DataCell(
+                    Text(
+                      cartItem.product.name,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ),
-                  Text(
-                    CurrencyFormatter.format(totalPrice),
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
+                  DataCell(
+                    Text(
+                      '${cartItem.quantity}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  DataCell(
+                    Text(CurrencyFormatter.format(cartItem.product.price)),
+                  ),
+                  DataCell(
+                    Text(
+                      CurrencyFormatter.format(cartItem.total),
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
-              ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 16),
+          // Total
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
             ),
-          ],
-        ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  localizations.total,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                Text(
+                  CurrencyFormatter.format(totalPrice),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       actions: [
         ActionButton(
