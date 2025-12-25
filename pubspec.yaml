@@ -24,6 +24,7 @@ dependencies:
   http: ^1.6.0
   shared_preferences: ^2.5.3
   window_manager: ^0.5.1
+  data_table_2: ^2.5.15
 
 dev_dependencies:
   flutter_test:

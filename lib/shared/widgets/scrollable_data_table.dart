@@ -1,3 +1,4 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableDataTable extends StatelessWidget {
@@ -31,88 +32,75 @@ class ScrollableDataTable extends StatelessWidget {
         // Fixed header
         Container(
           color: defaultHeadingColor,
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
-            children: columns.asMap().entries.map((entry) {
-              final column = entry.value;
-              final isLast = entry.key == columns.length - 1;
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: entry.key == 0 ? 12 : spacing / 2,
-                    right: isLast ? 12 : spacing / 2,
-                    top: 12,
-                    bottom: 12,
+            children: [
+              SizedBox(width: 24), // Match horizontalMargin
+              ...columns.asMap().entries.expand((entry) {
+                final column = entry.value;
+                final isLast = entry.key == columns.length - 1;
+
+                return [
+                  Expanded(
+                    child: Align(
+                      alignment: column.numeric
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: column.label,
+                    ),
                   ),
-                  child: Align(
-                    alignment: column.numeric
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: column.label,
-                  ),
-                ),
-              );
-            }).toList(),
+                  if (!isLast) SizedBox(width: spacing),
+                ];
+              }),
+              SizedBox(width: 24), // Match horizontalMargin
+            ],
           ),
         ),
         // Scrollable body
         if (isFullHeight)
           Expanded(
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(
-                  scrollbars: false,
-                  overscroll: false,
-                  physics: const ClampingScrollPhysics(),
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                    headingRowHeight: 0,
-                    showCheckboxColumn: false,
-                    dividerThickness: 0.2,
-                    columnSpacing: spacing,
-                    columns: columns.map((col) {
-                      return DataColumn(
-                        label: const SizedBox.shrink(),
-                        numeric: col.numeric,
-                      );
-                    }).toList(),
-                    rows: rows,
-                  ),
-                ),
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                scrollbars: false,
+                physics: const ClampingScrollPhysics(),
+              ),
+              child: DataTable2(
+                headingRowHeight: 0,
+                showCheckboxColumn: false,
+                dividerThickness: 0.2,
+                horizontalMargin: 24,
+                columnSpacing: spacing,
+                columns: columns.map((col) {
+                  return DataColumn2(
+                    label: const SizedBox.shrink(),
+                    numeric: col.numeric,
+                  );
+                }).toList(),
+                rows: rows,
               ),
             ),
           )
         else
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: maxHeight ?? MediaQuery.of(context).size.height * 0.4,
-            ),
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(
-                  scrollbars: false,
-                  overscroll: false,
-                  physics: const ClampingScrollPhysics(),
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                    headingRowHeight: 0,
-                    showCheckboxColumn: false,
-                    dividerThickness: 0.2,
-                    columnSpacing: spacing,
-                    columns: columns.map((col) {
-                      return DataColumn(
-                        label: const SizedBox.shrink(),
-                        numeric: col.numeric,
-                      );
-                    }).toList(),
-                    rows: rows,
-                  ),
-                ),
+          SizedBox(
+            height: maxHeight ?? MediaQuery.of(context).size.height * 0.4,
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                scrollbars: false,
+                physics: const ClampingScrollPhysics(),
+              ),
+              child: DataTable2(
+                headingRowHeight: 0,
+                showCheckboxColumn: false,
+                dividerThickness: 0.2,
+                horizontalMargin: 24,
+                columnSpacing: spacing,
+                columns: columns.map((col) {
+                  return DataColumn2(
+                    label: const SizedBox.shrink(),
+                    numeric: col.numeric,
+                  );
+                }).toList(),
+                rows: rows,
               ),
             ),
           ),

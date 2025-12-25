@@ -130,6 +130,7 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
               else if (_orderData != null)
                 ScrollableDataTable(
                   maxHeight: 300,
+                  columnSpacing: 16,
                   columns: [
                     DataTableColumn.buildColumn(
                       context: context,
