@@ -126,20 +126,38 @@ class CheckoutDialog extends StatelessWidget {
         ),
         ActionButton(
           onPressed: () async {
-            Navigator.pop(context);
             await onProcessCheckout('cash');
+            Navigator.pop(context);
           },
           icon: Icons.money,
-          label: 'Bayar Cash',
+          label: 'Tunai',
           backgroundColor: Colors.green.shade600,
         ),
         ActionButton(
           onPressed: () async {
+            await onProcessCheckout('card');
             Navigator.pop(context);
-            await onProcessCheckout('qr');
+          },
+          icon: Icons.credit_card,
+          label: 'Kartu',
+          backgroundColor: Colors.blue.shade600,
+        ),
+        ActionButton(
+          onPressed: () async {
+            await onProcessCheckout('transfer');
+            Navigator.pop(context);
+          },
+          icon: Icons.account_balance,
+          label: 'Transfer',
+          backgroundColor: Colors.orange.shade600,
+        ),
+        ActionButton(
+          onPressed: () async {
+            await onProcessCheckout('qris');
+            Navigator.pop(context);
           },
           icon: Icons.qr_code,
-          label: 'Bayar QR',
+          label: 'QRIS',
           backgroundColor: theme.colorScheme.primary,
         ),
       ],
