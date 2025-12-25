@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../config/api_config.dart';
-import 'logger.dart';
+import 'logger_x.dart';
 
 class HttpClient {
   static final HttpClient _instance = HttpClient._internal();

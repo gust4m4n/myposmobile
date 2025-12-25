@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ActionButton extends StatelessWidget {
+class ButtonX extends StatelessWidget {
   final VoidCallback onPressed;
   final IconData icon;
   final String label;
@@ -9,7 +9,7 @@ class ActionButton extends StatelessWidget {
   final double? borderRadius;
   final double? elevation;
 
-  const ActionButton({
+  const ButtonX({
     super.key,
     required this.onPressed,
     required this.icon,

@@ -4,7 +4,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'login/login_page.dart';
 import 'pos/pos_home_page.dart';
-import 'shared/utils/http_client.dart';
+import 'shared/utils/api_x.dart';
 import 'shared/utils/storage_service.dart';
 
 void main() async {
@@ -94,9 +94,9 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
       _isLoading = false;
     });
 
-    // Set token to HttpClient if exists
+    // Set token to ApiX if exists
     if (savedToken != null) {
-      HttpClient().setAuthToken(savedToken);
+      ApiX.setAuthToken(savedToken);
     }
   }
 
@@ -126,10 +126,10 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
       _authToken = null;
     });
 
-    // Clear token from storage and HttpClient
+    // Clear token from storage and ApiX
     final storage = await StorageService.getInstance();
     await storage.clearToken();
-    HttpClient().clearAuthToken();
+    ApiX.clearAuthToken();
   }
 
   @override

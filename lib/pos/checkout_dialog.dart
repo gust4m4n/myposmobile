@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myposmobile/shared/widgets/button_x.dart';
 
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
-import '../shared/widgets/action_button.dart';
-import '../shared/widgets/custom_dialog.dart';
+import '../shared/widgets/dialog_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
 import 'product_model.dart';
 
@@ -28,7 +28,7 @@ class CheckoutDialog extends StatelessWidget {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(languageCode);
 
-    return CustomDialog(
+    return DialogX(
       title: localizations.checkoutTitle,
       onClose: onCancel,
       content: Column(
@@ -116,7 +116,7 @@ class CheckoutDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        ActionButton(
+        ButtonX(
           onPressed: () async {
             await onProcessCheckout('cash');
             Navigator.pop(context);
@@ -125,7 +125,7 @@ class CheckoutDialog extends StatelessWidget {
           label: 'Tunai',
           backgroundColor: const Color(0xFF34C759),
         ),
-        ActionButton(
+        ButtonX(
           onPressed: () async {
             await onProcessCheckout('card');
             Navigator.pop(context);
@@ -134,7 +134,7 @@ class CheckoutDialog extends StatelessWidget {
           label: 'Kartu',
           backgroundColor: const Color(0xFF007AFF),
         ),
-        ActionButton(
+        ButtonX(
           onPressed: () async {
             await onProcessCheckout('transfer');
             Navigator.pop(context);
@@ -143,7 +143,7 @@ class CheckoutDialog extends StatelessWidget {
           label: 'Transfer',
           backgroundColor: const Color(0xFFFF9500),
         ),
-        ActionButton(
+        ButtonX(
           onPressed: () async {
             await onProcessCheckout('qris');
             Navigator.pop(context);

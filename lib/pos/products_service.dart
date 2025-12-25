@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
-import '../shared/utils/http_client.dart';
+import '../shared/utils/api_x.dart';
 
 /// Service untuk operasi produk (CRUD dan categories).
 /// Memerlukan JWT token untuk authentication.
@@ -41,51 +39,33 @@ class ProductsService {
     String? category,
     String? search,
   }) async {
-    try {
-      // Build query parameters
-      final queryParams = <String, String>{};
-      if (category != null && category.isNotEmpty) {
-        queryParams['category'] = category;
-      }
-      if (search != null && search.isNotEmpty) {
-        queryParams['search'] = search;
-      }
-
-      // Build URL with query params
-      var url = ApiConfig.products;
-      if (queryParams.isNotEmpty) {
-        final queryString = queryParams.entries
-            .map(
-              (e) =>
-                  '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
-            )
-            .join('&');
-        url = '$url?$queryString';
-      }
-
-      final response = await HttpClient().get(url, requiresAuth: true);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final products = (data['data'] as List)
-            .map((item) => item as Map<String, dynamic>)
-            .toList();
-
-        return ApiResponse<List<Map<String, dynamic>>>(
-          data: products,
-          message: data['message'] ?? 'Products retrieved successfully',
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        return ApiResponse<List<Map<String, dynamic>>>(
-          error: errorData['error'] ?? 'Failed to get products',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<List<Map<String, dynamic>>>(
-        error: 'Error getting products: $e',
-      );
+    // Build query parameters
+    final queryParams = <String, String>{};
+    if (category != null && category.isNotEmpty) {
+      queryParams['category'] = category;
     }
+    if (search != null && search.isNotEmpty) {
+      queryParams['search'] = search;
+    }
+
+    // Build URL with query params
+    var url = ApiConfig.products;
+    if (queryParams.isNotEmpty) {
+      final queryString = queryParams.entries
+          .map(
+            (e) =>
+                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+          )
+          .join('&');
+      url = '$url?$queryString';
+    }
+
+    return ApiX.get<List<Map<String, dynamic>>>(
+      url,
+      requiresAuth: true,
+      fromJson: (data) =>
+          (data as List).map((item) => item as Map<String, dynamic>).toList(),
+    );
   }
 
   /// Get product by ID
@@ -103,29 +83,11 @@ class ProductsService {
   static Future<ApiResponse<Map<String, dynamic>>> getProductById(
     int productId,
   ) async {
-    try {
-      final response = await HttpClient().get(
-        '${ApiConfig.products}/$productId',
-        requiresAuth: true,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return ApiResponse<Map<String, dynamic>>(
-          data: data['data'] as Map<String, dynamic>,
-          message: data['message'] ?? 'Product retrieved successfully',
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        return ApiResponse<Map<String, dynamic>>(
-          error: errorData['error'] ?? 'Failed to get product',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<Map<String, dynamic>>(
-        error: 'Error getting product: $e',
-      );
-    }
+    return ApiX.get<Map<String, dynamic>>(
+      '${ApiConfig.products}/$productId',
+      requiresAuth: true,
+      fromJson: (data) => data as Map<String, dynamic>,
+    );
   }
 
   /// Get list of unique product categories
@@ -139,31 +101,12 @@ class ProductsService {
   /// // result.data = ["Makanan Utama", "Minuman", "Snack & Dessert"]
   /// ```
   static Future<ApiResponse<List<String>>> getCategories() async {
-    try {
-      final response = await HttpClient().get(
-        '${ApiConfig.products}/categories',
-        requiresAuth: true,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final categories = (data['data'] as List)
-            .map((item) => item.toString())
-            .toList();
-
-        return ApiResponse<List<String>>(
-          data: categories,
-          message: data['message'] ?? 'Categories retrieved successfully',
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        return ApiResponse<List<String>>(
-          error: errorData['error'] ?? 'Failed to get categories',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<List<String>>(error: 'Error getting categories: $e');
-    }
+    return ApiX.get<List<String>>(
+      '${ApiConfig.products}/categories',
+      requiresAuth: true,
+      fromJson: (data) =>
+          (data as List).map((item) => item.toString()).toList(),
+    );
   }
 
   /// Create new product
@@ -199,38 +142,20 @@ class ProductsService {
     required int stock,
     bool isActive = true,
   }) async {
-    try {
-      final response = await HttpClient().post(
-        ApiConfig.products,
-        body: {
-          'name': name,
-          if (description != null) 'description': description,
-          'category': category,
-          'sku': sku,
-          'price': price,
-          'stock': stock,
-          'is_active': isActive,
-        },
-        requiresAuth: true,
-      );
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return ApiResponse<Map<String, dynamic>>(
-          data: data['data'] as Map<String, dynamic>,
-          message: data['message'] ?? 'Product created successfully',
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        return ApiResponse<Map<String, dynamic>>(
-          error: errorData['error'] ?? 'Failed to create product',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<Map<String, dynamic>>(
-        error: 'Error creating product: $e',
-      );
-    }
+    return ApiX.post<Map<String, dynamic>>(
+      ApiConfig.products,
+      body: {
+        'name': name,
+        if (description != null) 'description': description,
+        'category': category,
+        'sku': sku,
+        'price': price,
+        'stock': stock,
+        'is_active': isActive,
+      },
+      requiresAuth: true,
+      fromJson: (data) => data as Map<String, dynamic>,
+    );
   }
 
   /// Update existing product
@@ -266,39 +191,21 @@ class ProductsService {
     int? stock,
     bool? isActive,
   }) async {
-    try {
-      final body = <String, dynamic>{};
-      if (name != null) body['name'] = name;
-      if (description != null) body['description'] = description;
-      if (category != null) body['category'] = category;
-      if (sku != null) body['sku'] = sku;
-      if (price != null) body['price'] = price;
-      if (stock != null) body['stock'] = stock;
-      if (isActive != null) body['is_active'] = isActive;
+    final body = <String, dynamic>{};
+    if (name != null) body['name'] = name;
+    if (description != null) body['description'] = description;
+    if (category != null) body['category'] = category;
+    if (sku != null) body['sku'] = sku;
+    if (price != null) body['price'] = price;
+    if (stock != null) body['stock'] = stock;
+    if (isActive != null) body['is_active'] = isActive;
 
-      final response = await HttpClient().put(
-        '${ApiConfig.products}/$productId',
-        body: body,
-        requiresAuth: true,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return ApiResponse<Map<String, dynamic>>(
-          data: data['data'] as Map<String, dynamic>,
-          message: data['message'] ?? 'Product updated successfully',
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        return ApiResponse<Map<String, dynamic>>(
-          error: errorData['error'] ?? 'Failed to update product',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<Map<String, dynamic>>(
-        error: 'Error updating product: $e',
-      );
-    }
+    return ApiX.put<Map<String, dynamic>>(
+      '${ApiConfig.products}/$productId',
+      body: body,
+      requiresAuth: true,
+      fromJson: (data) => data as Map<String, dynamic>,
+    );
   }
 
   /// Delete product
@@ -314,26 +221,10 @@ class ProductsService {
   /// final result = await ProductsService.deleteProduct(1);
   /// ```
   static Future<ApiResponse<bool>> deleteProduct(int productId) async {
-    try {
-      final response = await HttpClient().delete(
-        '${ApiConfig.products}/$productId',
-        requiresAuth: true,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return ApiResponse<bool>(
-          data: true,
-          message: data['message'] ?? 'Product deleted successfully',
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        return ApiResponse<bool>(
-          error: errorData['error'] ?? 'Failed to delete product',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<bool>(error: 'Error deleting product: $e');
-    }
+    return ApiX.delete<bool>(
+      '${ApiConfig.products}/$productId',
+      requiresAuth: true,
+      fromJson: (data) => true,
+    );
   }
 }

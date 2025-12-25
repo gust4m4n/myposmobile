@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
-import '../shared/utils/http_client.dart';
+import '../shared/utils/api_x.dart';
 
 class SuperadminUsersService {
-  final HttpClient _httpClient = HttpClient();
-
   /// GET /api/v1/superadmin/branches/:branch_id/users
   /// Get list of users for a specific branch
   /// Requires JWT token with superadmin role
@@ -16,28 +12,11 @@ class SuperadminUsersService {
   ///
   /// Returns: List of UserModel
   Future<ApiResponse<List<UserModel>>> listUsersByBranch(int branchId) async {
-    try {
-      final response = await _httpClient.get(
-        ApiConfig.superadminBranchUsers(branchId),
-        requiresAuth: true,
-      );
-
-      final jsonResponse = json.decode(response.body);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> usersJson = jsonResponse['data'] ?? [];
-        final users = usersJson
-            .map((json) => UserModel.fromJson(json))
-            .toList();
-
-        return ApiResponse(message: jsonResponse['message'], data: users);
-      } else {
-        return ApiResponse(
-          error: jsonResponse['error'] ?? 'Failed to list users',
-        );
-      }
-    } catch (e) {
-      return ApiResponse(error: 'Error listing users: $e');
-    }
+    return await ApiX.get(
+      ApiConfig.superadminBranchUsers(branchId),
+      requiresAuth: true,
+      fromJson: (data) =>
+          (data as List).map((json) => UserModel.fromJson(json)).toList(),
+    );
   }
 }

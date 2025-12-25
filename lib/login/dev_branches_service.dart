@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
-import '../shared/utils/http_client.dart';
+import '../shared/utils/api_x.dart';
 
 /// Service untuk mendapatkan daftar branches dari tenant tertentu (dev endpoint).
 /// Endpoint public yang tidak memerlukan authentication token.
@@ -27,32 +25,11 @@ class DevBranchesService {
   static Future<ApiResponse<List<Map<String, dynamic>>>> getDevBranches(
     int tenantId,
   ) async {
-    try {
-      final response = await HttpClient().get(
-        ApiConfig.devTenantBranches(tenantId),
-        requiresAuth: false,
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final branches = (data['data'] as List)
-            .map((item) => item as Map<String, dynamic>)
-            .toList();
-
-        return ApiResponse<List<Map<String, dynamic>>>(
-          data: branches,
-          message: data['message'] ?? 'Branches retrieved successfully',
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        return ApiResponse<List<Map<String, dynamic>>>(
-          error: errorData['error'] ?? 'Failed to get branches',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<List<Map<String, dynamic>>>(
-        error: 'Error getting branches: $e',
-      );
-    }
+    return ApiX.get<List<Map<String, dynamic>>>(
+      ApiConfig.devTenantBranches(tenantId),
+      requiresAuth: false,
+      fromJson: (data) =>
+          (data as List).map((item) => item as Map<String, dynamic>).toList(),
+    );
   }
 }

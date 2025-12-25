@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
-import '../shared/utils/http_client.dart';
+import '../shared/utils/api_x.dart';
 
 class ChangePasswordService {
-  final HttpClient _httpClient = HttpClient();
-
   /// PUT /api/v1/change-password
   /// Change password for current logged in user
   /// Requires JWT token
@@ -20,26 +16,10 @@ class ChangePasswordService {
     required String oldPassword,
     required String newPassword,
   }) async {
-    try {
-      final response = await _httpClient.put(
-        ApiConfig.changePassword,
-        body: {'old_password': oldPassword, 'new_password': newPassword},
-        requiresAuth: true,
-      );
-
-      final jsonResponse = json.decode(response.body);
-
-      if (response.statusCode == 200) {
-        return ApiResponse(
-          message: jsonResponse['message'] ?? 'Password changed successfully',
-        );
-      } else {
-        return ApiResponse(
-          error: jsonResponse['error'] ?? 'Failed to change password',
-        );
-      }
-    } catch (e) {
-      return ApiResponse(error: 'Error changing password: $e');
-    }
+    return ApiX.put<void>(
+      ApiConfig.changePassword,
+      body: {'old_password': oldPassword, 'new_password': newPassword},
+      requiresAuth: true,
+    );
   }
 }

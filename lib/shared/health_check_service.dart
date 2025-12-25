@@ -1,24 +1,14 @@
-import 'dart:convert';
-
+import 'api_models.dart';
 import 'config/api_config.dart';
-import 'utils/http_client.dart';
+import 'utils/api_x.dart';
 
 class HealthCheckService {
-  final HttpClient _httpClient = HttpClient();
-
   /// GET /health
   /// Check server health status
-  Future<Map<String, dynamic>> checkHealth() async {
-    try {
-      final response = await _httpClient.get(ApiConfig.health);
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to check health: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error checking health: $e');
-    }
+  static Future<ApiResponse<Map<String, dynamic>>> checkHealth() async {
+    return await ApiX.get<Map<String, dynamic>>(
+      ApiConfig.health,
+      fromJson: (data) => data as Map<String, dynamic>,
+    );
   }
 }

@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
-import '../shared/utils/http_client.dart';
+import '../shared/utils/api_x.dart';
 
 class RegisterService {
-  final HttpClient _httpClient = HttpClient();
-
   /// POST /api/v1/auth/register
   /// Register a new user
   ///
@@ -27,33 +23,17 @@ class RegisterService {
     required String password,
     required String fullName,
   }) async {
-    try {
-      final response = await _httpClient.post(
-        ApiConfig.register,
-        body: {
-          'tenant_code': tenantCode,
-          'branch_code': branchCode,
-          'username': username,
-          'email': email,
-          'password': password,
-          'full_name': fullName,
-        },
-      );
-
-      final jsonResponse = json.decode(response.body);
-
-      if (response.statusCode == 201) {
-        return ApiResponse.fromJson(
-          jsonResponse,
-          (data) => AuthResponseData.fromJson(data),
-        );
-      } else {
-        return ApiResponse(
-          error: jsonResponse['error'] ?? 'Registration failed',
-        );
-      }
-    } catch (e) {
-      return ApiResponse(error: 'Error during registration: $e');
-    }
+    return await ApiX.post(
+      ApiConfig.register,
+      body: {
+        'tenant_code': tenantCode,
+        'branch_code': branchCode,
+        'username': username,
+        'email': email,
+        'password': password,
+        'full_name': fullName,
+      },
+      fromJson: (json) => AuthResponseData.fromJson(json),
+    );
   }
 }

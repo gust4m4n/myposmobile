@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
-import '../shared/widgets/custom_dialog.dart';
+import '../shared/widgets/dialog_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
 
 class OrderDetailDialog extends StatelessWidget {
@@ -26,7 +26,7 @@ class OrderDetailDialog extends StatelessWidget {
     final createdAt = order['created_at'] ?? '';
     final items = (order['order_items'] as List?) ?? [];
 
-    return CustomDialog(
+    return DialogX(
       title: '${localizations.orderDetails}: $orderNumber',
       width: 500,
       onClose: () => Navigator.pop(context),

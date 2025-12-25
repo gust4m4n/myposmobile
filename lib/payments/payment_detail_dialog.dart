@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../orders/orders_service.dart';
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
-import '../shared/widgets/custom_dialog.dart';
+import '../shared/widgets/dialog_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
 
 class PaymentDetailDialog extends StatefulWidget {
@@ -75,7 +75,7 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
     final createdAt = payment['created_at'] ?? '';
     final orderId = payment['order_id'] ?? 0;
 
-    return CustomDialog(
+    return DialogX(
       title: '${localizations.payments} #${payment['id'] ?? 'N/A'}',
       width: 500,
       onClose: () => Navigator.pop(context),

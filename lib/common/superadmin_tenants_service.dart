@@ -1,41 +1,20 @@
-import 'dart:convert';
-
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
-import '../shared/utils/http_client.dart';
+import '../shared/utils/api_x.dart';
 
 class SuperadminTenantsService {
-  final HttpClient _httpClient = HttpClient();
-
   /// GET /api/v1/superadmin/tenants
   /// Get list of all tenants
   /// Requires JWT token with superadmin role
   ///
   /// Returns: List of TenantModel
   Future<ApiResponse<List<TenantModel>>> listTenants() async {
-    try {
-      final response = await _httpClient.get(
-        ApiConfig.superadminTenants,
-        requiresAuth: true,
-      );
-
-      final jsonResponse = json.decode(response.body);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> tenantsJson = jsonResponse['data'] ?? [];
-        final tenants = tenantsJson
-            .map((json) => TenantModel.fromJson(json))
-            .toList();
-
-        return ApiResponse(message: jsonResponse['message'], data: tenants);
-      } else {
-        return ApiResponse(
-          error: jsonResponse['error'] ?? 'Failed to list tenants',
-        );
-      }
-    } catch (e) {
-      return ApiResponse(error: 'Error listing tenants: $e');
-    }
+    return await ApiX.get(
+      ApiConfig.superadminTenants,
+      requiresAuth: true,
+      fromJson: (data) =>
+          (data as List).map((json) => TenantModel.fromJson(json)).toList(),
+    );
   }
 
   /// POST /api/v1/superadmin/tenants
@@ -53,27 +32,11 @@ class SuperadminTenantsService {
     required String code,
     bool isActive = true,
   }) async {
-    try {
-      final response = await _httpClient.post(
-        ApiConfig.superadminTenants,
-        body: {'name': name, 'code': code, 'is_active': isActive},
-        requiresAuth: true,
-      );
-
-      final jsonResponse = json.decode(response.body);
-
-      if (response.statusCode == 201) {
-        return ApiResponse.fromJson(
-          jsonResponse,
-          (data) => TenantModel.fromJson(data),
-        );
-      } else {
-        return ApiResponse(
-          error: jsonResponse['error'] ?? 'Failed to create tenant',
-        );
-      }
-    } catch (e) {
-      return ApiResponse(error: 'Error creating tenant: $e');
-    }
+    return await ApiX.post(
+      ApiConfig.superadminTenants,
+      body: {'name': name, 'code': code, 'is_active': isActive},
+      requiresAuth: true,
+      fromJson: (json) => TenantModel.fromJson(json),
+    );
   }
 }

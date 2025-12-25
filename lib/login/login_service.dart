@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
-import '../shared/utils/http_client.dart';
+import '../shared/utils/api_x.dart';
 
 class LoginService {
-  final HttpClient _httpClient = HttpClient();
-
   /// POST /api/v1/auth/login
   /// Login user and get JWT token
   ///
@@ -23,41 +19,27 @@ class LoginService {
     required String username,
     required String password,
   }) async {
-    try {
-      final response = await _httpClient.post(
-        ApiConfig.login,
-        body: {
-          'tenant_code': tenantCode,
-          'branch_code': branchCode,
-          'username': username,
-          'password': password,
-        },
-      );
+    final response = await ApiX.post<AuthResponseData>(
+      ApiConfig.login,
+      body: {
+        'tenant_code': tenantCode,
+        'branch_code': branchCode,
+        'username': username,
+        'password': password,
+      },
+      fromJson: (data) => AuthResponseData.fromJson(data),
+    );
 
-      final jsonResponse = json.decode(response.body);
-
-      if (response.statusCode == 200) {
-        final apiResponse = ApiResponse.fromJson(
-          jsonResponse,
-          (data) => AuthResponseData.fromJson(data),
-        );
-
-        // Save token to HttpClient
-        if (apiResponse.data?.token != null) {
-          _httpClient.setAuthToken(apiResponse.data!.token);
-        }
-
-        return apiResponse;
-      } else {
-        return ApiResponse(error: jsonResponse['error'] ?? 'Login failed');
-      }
-    } catch (e) {
-      return ApiResponse(error: 'Error during login: $e');
+    // Save token to ApiX
+    if (response.data?.token != null) {
+      ApiX.setAuthToken(response.data!.token);
     }
+
+    return response;
   }
 
   /// Logout user and clear token
   void logout() {
-    _httpClient.clearAuthToken();
+    ApiX.clearAuthToken();
   }
 }
