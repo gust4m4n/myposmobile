@@ -7,16 +7,12 @@ import 'dev_tenants_service.dart';
 import 'login_service.dart';
 
 class LoginPage extends StatefulWidget {
-  final bool isDarkMode;
-  final VoidCallback onThemeToggle;
   final String languageCode;
   final VoidCallback onLanguageToggle;
   final Function(String token) onLoginSuccess;
 
   const LoginPage({
     super.key,
-    required this.isDarkMode,
-    required this.onThemeToggle,
     required this.languageCode,
     required this.onLanguageToggle,
     required this.onLoginSuccess,
@@ -231,13 +227,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ],
-          ),
-          IconButton(
-            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode),
-            onPressed: widget.onThemeToggle,
-            tooltip: widget.isDarkMode
-                ? localizations.lightMode
-                : localizations.darkMode,
           ),
         ],
       ),

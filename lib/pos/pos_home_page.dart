@@ -16,16 +16,12 @@ import 'product_section_widget.dart';
 import 'products_service.dart';
 
 class POSHomePage extends StatefulWidget {
-  final bool isDarkMode;
-  final VoidCallback onThemeToggle;
   final String languageCode;
   final VoidCallback onLanguageToggle;
   final VoidCallback onLogout;
 
   const POSHomePage({
     super.key,
-    required this.isDarkMode,
-    required this.onThemeToggle,
     required this.languageCode,
     required this.onLanguageToggle,
     required this.onLogout,
@@ -272,12 +268,11 @@ class _POSHomePageState extends State<POSHomePage> {
 
   Widget _buildCartContent({ScrollController? scrollController}) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final localizations = AppLocalizations.of(widget.languageCode);
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF000000) : Colors.grey[100],
+        color: const Color(0xFF000000),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -381,9 +376,7 @@ class _POSHomePageState extends State<POSHomePage> {
                                 TextSpan(
                                   text: ' x ',
                                   style: TextStyle(
-                                    color: isDark
-                                        ? Colors.grey.shade500
-                                        : Colors.grey.shade600,
+                                    color: Colors.grey.shade500,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -494,7 +487,6 @@ class _POSHomePageState extends State<POSHomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTabletOrDesktop = screenWidth >= 768;
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final localizations = AppLocalizations.of(widget.languageCode);
 
     return Scaffold(
@@ -571,13 +563,6 @@ class _POSHomePageState extends State<POSHomePage> {
                 ),
               ),
             ],
-          ),
-          IconButton(
-            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode),
-            onPressed: widget.onThemeToggle,
-            tooltip: widget.isDarkMode
-                ? localizations.lightMode
-                : localizations.darkMode,
           ),
           if (!isTabletOrDesktop)
             Stack(
@@ -662,7 +647,7 @@ class _POSHomePageState extends State<POSHomePage> {
                 Container(
                   width: 350,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF000000) : Colors.grey[100],
+                    color: const Color(0xFF000000),
                     border: Border(left: BorderSide(color: theme.dividerColor)),
                   ),
                   child: Column(
@@ -751,9 +736,7 @@ class _POSHomePageState extends State<POSHomePage> {
                                             TextSpan(
                                               text: ' x ',
                                               style: TextStyle(
-                                                color: isDark
-                                                    ? Colors.grey.shade500
-                                                    : Colors.grey.shade600,
+                                                color: Colors.grey.shade500,
                                                 fontSize: 13,
                                               ),
                                             ),
@@ -961,10 +944,8 @@ class _POSHomePageState extends State<POSHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfilePage(
-                        isDarkMode: widget.isDarkMode,
-                        languageCode: widget.languageCode,
-                      ),
+                      builder: (context) =>
+                          ProfilePage(languageCode: widget.languageCode),
                     ),
                   );
                 },

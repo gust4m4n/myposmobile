@@ -21,30 +21,100 @@ class ScrollableDataTable extends StatelessWidget {
     final theme = Theme.of(context);
     final defaultHeadingColor =
         headingRowColor ?? theme.colorScheme.primary.withOpacity(0.1);
+    final spacing = columnSpacing ?? 16;
+    final isFullHeight = maxHeight == double.infinity;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: maxHeight ?? MediaQuery.of(context).size.height * 0.4,
-      ),
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(
-            scrollbars: false,
-            overscroll: false,
-            physics: const ClampingScrollPhysics(),
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            child: DataTable(
-              headingRowColor: WidgetStateProperty.all(defaultHeadingColor),
-              columnSpacing: columnSpacing ?? 16,
-              columns: columns,
-              rows: rows,
-            ),
+    return Column(
+      mainAxisSize: isFullHeight ? MainAxisSize.max : MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Fixed header
+        Container(
+          color: defaultHeadingColor,
+          child: Row(
+            children: columns.asMap().entries.map((entry) {
+              final column = entry.value;
+              final isLast = entry.key == columns.length - 1;
+              return Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: entry.key == 0 ? 12 : spacing / 2,
+                    right: isLast ? 12 : spacing / 2,
+                    top: 12,
+                    bottom: 12,
+                  ),
+                  child: Align(
+                    alignment: column.numeric
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: column.label,
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ),
-      ),
+        // Scrollable body
+        if (isFullHeight)
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  scrollbars: false,
+                  overscroll: false,
+                  physics: const ClampingScrollPhysics(),
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: DataTable(
+                    headingRowHeight: 0,
+                    showCheckboxColumn: false,
+                    columnSpacing: spacing,
+                    columns: columns.map((col) {
+                      return DataColumn(
+                        label: const SizedBox.shrink(),
+                        numeric: col.numeric,
+                      );
+                    }).toList(),
+                    rows: rows,
+                  ),
+                ),
+              ),
+            ),
+          )
+        else
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: maxHeight ?? MediaQuery.of(context).size.height * 0.4,
+            ),
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  scrollbars: false,
+                  overscroll: false,
+                  physics: const ClampingScrollPhysics(),
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: DataTable(
+                    headingRowHeight: 0,
+                    showCheckboxColumn: false,
+                    columnSpacing: spacing,
+                    columns: columns.map((col) {
+                      return DataColumn(
+                        label: const SizedBox.shrink(),
+                        numeric: col.numeric,
+                      );
+                    }).toList(),
+                    rows: rows,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

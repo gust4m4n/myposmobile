@@ -159,82 +159,76 @@ class _OrdersPageState extends State<OrdersPage> {
                 ],
               ),
             )
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: ScrollableDataTable(
-                maxHeight: MediaQuery.of(context).size.height * 0.7,
-                columnSpacing: 20,
-                columns: [
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Order Number',
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Total Amount',
-                    numeric: true,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Status',
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Created At',
-                  ),
-                ],
-                rows: _orders.map((order) {
-                  final orderNumber = order['order_number'] ?? 'N/A';
-                  final totalAmount = order['total_amount'] ?? 0;
-                  final status = order['status'] ?? 'pending';
-                  final createdAt = order['created_at'] ?? '';
+          : ScrollableDataTable(
+              maxHeight: double.infinity,
+              columnSpacing: 20,
+              columns: [
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'Order Number',
+                ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'Total Amount',
+                  numeric: true,
+                ),
+                DataTableColumn.buildColumn(context: context, label: 'Status'),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'Created At',
+                ),
+              ],
+              rows: _orders.map((order) {
+                final orderNumber = order['order_number'] ?? 'N/A';
+                final totalAmount = order['total_amount'] ?? 0;
+                final status = order['status'] ?? 'pending';
+                final createdAt = order['created_at'] ?? '';
 
-                  return DataRow(
-                    onSelectChanged: (_) => _showOrderDetail(order),
-                    cells: [
-                      DataCell(
-                        Text(
-                          orderNumber,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
+                return DataRow(
+                  onSelectChanged: (_) => _showOrderDetail(order),
+                  cells: [
+                    DataCell(
+                      Text(
+                        orderNumber,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      DataCell(
-                        Text(
-                          CurrencyFormatter.format(totalAmount.toDouble()),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                    ),
+                    DataCell(
+                      Text(
+                        CurrencyFormatter.format(totalAmount.toDouble()),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      DataCell(
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _getStatusColor(status).withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: _getStatusColor(status),
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            status.toUpperCase(),
-                            style: TextStyle(
-                              color: _getStatusColor(status),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
+                    ),
+                    DataCell(
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(status).withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: _getStatusColor(status),
+                            width: 1,
                           ),
                         ),
+                        child: Text(
+                          status.toUpperCase(),
+                          style: TextStyle(
+                            color: _getStatusColor(status),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
-                      DataCell(
-                        Text(createdAt, style: const TextStyle(fontSize: 12)),
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
+                    ),
+                    DataCell(
+                      Text(createdAt, style: const TextStyle(fontSize: 12)),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
     );
   }

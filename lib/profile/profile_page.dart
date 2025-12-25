@@ -5,14 +5,9 @@ import '../shared/utils/app_localizations.dart';
 import 'profile_service.dart';
 
 class ProfilePage extends StatefulWidget {
-  final bool isDarkMode;
   final String languageCode;
 
-  const ProfilePage({
-    super.key,
-    required this.isDarkMode,
-    required this.languageCode,
-  });
+  const ProfilePage({super.key, required this.languageCode});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -65,7 +60,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(widget.languageCode);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -135,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         // Profile Header
                         Card(
-                          elevation: isDark ? 2 : 1,
+                          elevation: 2,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -203,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ? (constraints.maxWidth - 16) / 2
                                       : constraints.maxWidth,
                                   child: Card(
-                                    elevation: isDark ? 2 : 1,
+                                    elevation: 2,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -258,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ? (constraints.maxWidth - 16) / 2
                                       : constraints.maxWidth,
                                   child: Card(
-                                    elevation: isDark ? 2 : 1,
+                                    elevation: 2,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -311,7 +305,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(
                                   width: constraints.maxWidth,
                                   child: Card(
-                                    elevation: isDark ? 2 : 1,
+                                    elevation: 2,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -390,7 +384,6 @@ class _ProfilePageState extends State<ProfilePage> {
     String value,
   ) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,7 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
             '$label:',
             style: TextStyle(
               fontSize: 13,
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              color: Colors.grey.shade400,
               fontWeight: FontWeight.w500,
             ),
           ),

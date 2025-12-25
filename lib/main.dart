@@ -59,7 +59,6 @@ class MyPOSMobileApp extends StatefulWidget {
 }
 
 class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
-  bool _isDarkMode = false;
   String _languageCode = 'id'; // Default to Indonesian
   String? _authToken;
   bool _isLoading = true;
@@ -88,12 +87,10 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
     final storage = await StorageService.getInstance();
     final savedToken = storage.getToken();
     final savedLanguage = storage.getLanguageCode();
-    final savedDarkMode = storage.getDarkMode();
 
     setState(() {
       _authToken = savedToken;
       _languageCode = savedLanguage;
-      _isDarkMode = savedDarkMode;
       _isLoading = false;
     });
 
@@ -101,17 +98,6 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
     if (savedToken != null) {
       HttpClient().setAuthToken(savedToken);
     }
-  }
-
-  Future<void> _toggleTheme() async {
-    final newDarkMode = !_isDarkMode;
-    setState(() {
-      _isDarkMode = newDarkMode;
-    });
-
-    // Save dark mode preference
-    final storage = await StorageService.getInstance();
-    await storage.saveDarkMode(newDarkMode);
   }
 
   Future<void> _toggleLanguage() async {
@@ -152,36 +138,6 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
       title: 'MyPOSMobile',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: Colors.grey.shade50,
-        colorScheme: const ColorScheme.light(
-          primary: Color(0xFF007AFF),
-          secondary: Color(0xFF34C759),
-          error: Color(0xFFFF3B30),
-          surface: Colors.white,
-          onSurface: Colors.black87,
-        ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          iconTheme: const IconThemeData(color: Colors.black87),
-        ),
-        cardColor: Colors.white,
-        dividerColor: Colors.grey.shade200,
-        useMaterial3: true,
-        pageTransitionsTheme: const PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: _InstantPageTransitionsBuilder(),
-            TargetPlatform.iOS: _InstantPageTransitionsBuilder(),
-            TargetPlatform.linux: _InstantPageTransitionsBuilder(),
-            TargetPlatform.macOS: _InstantPageTransitionsBuilder(),
-            TargetPlatform.windows: _InstantPageTransitionsBuilder(),
-          },
-        ),
-      ),
-      darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF000000),
         colorScheme: const ColorScheme.dark(
@@ -211,20 +167,16 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
           },
         ),
       ),
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.dark,
       home: _isLoading
           ? const Scaffold(body: Center(child: CircularProgressIndicator()))
           : _authToken == null
           ? LoginPage(
-              isDarkMode: _isDarkMode,
-              onThemeToggle: _toggleTheme,
               languageCode: _languageCode,
               onLanguageToggle: _toggleLanguage,
               onLoginSuccess: _handleLoginSuccess,
             )
           : POSHomePage(
-              isDarkMode: _isDarkMode,
-              onThemeToggle: _toggleTheme,
               languageCode: _languageCode,
               onLanguageToggle: _toggleLanguage,
               onLogout: _handleLogout,

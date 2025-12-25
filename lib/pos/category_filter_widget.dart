@@ -18,7 +18,6 @@ class CategoryFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       height: isMobile ? 60 : 70,
@@ -55,9 +54,7 @@ class CategoryFilterWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? theme.colorScheme.primary
-                        : (isDark
-                              ? const Color(0xFF2C2C2E)
-                              : Colors.grey.shade100),
+                        : const Color(0xFF2C2C2E),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: isSelected
