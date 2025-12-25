@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/action_button.dart';
+import '../shared/widgets/scrollable_data_table.dart';
 import 'product_model.dart';
 
 class CheckoutDialog extends StatelessWidget {
@@ -36,107 +37,52 @@ class CheckoutDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // DataTable for cart items with scroll
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.4,
-              ),
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(
-                    scrollbars: false,
-                    overscroll: false,
-                    physics: const ClampingScrollPhysics(),
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: DataTable(
-                      headingRowColor: WidgetStateProperty.all(
-                        theme.colorScheme.primary.withOpacity(0.1),
-                      ),
-                      columnSpacing: 16,
-                      columns: [
-                        DataColumn(
-                          label: Text(
-                            'Product',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Qty',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                          numeric: true,
-                        ),
-                        DataColumn(
-                          label: Text(
-                            localizations.price,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                          numeric: true,
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Subtotal',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                          numeric: true,
-                        ),
-                      ],
-                      rows: cart.map((cartItem) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              Text(
-                                cartItem.product.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                '${cartItem.quantity}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                CurrencyFormatter.format(
-                                  cartItem.product.price,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                CurrencyFormatter.format(cartItem.total),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
-                  ),
+            ScrollableDataTable(
+              columns: [
+                DataTableColumn.buildColumn(context: context, label: 'Product'),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'Qty',
+                  numeric: true,
                 ),
-              ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: localizations.price,
+                  numeric: true,
+                ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'Subtotal',
+                  numeric: true,
+                ),
+              ],
+              rows: cart.map((cartItem) {
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        cartItem.product.name,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    DataCell(
+                      Text(
+                        '${cartItem.quantity}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    DataCell(
+                      Text(CurrencyFormatter.format(cartItem.product.price)),
+                    ),
+                    DataCell(
+                      Text(
+                        CurrencyFormatter.format(cartItem.total),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
             const SizedBox(height: 16),
             // Total

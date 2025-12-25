@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/scrollable_data_table.dart';
 
 class OrderDetailDialog extends StatelessWidget {
   final Map<String, dynamic> order;
@@ -51,99 +52,61 @@ class OrderDetailDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(
-                  scrollbars: false,
-                  overscroll: false,
-                  physics: const ClampingScrollPhysics(),
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    headingRowColor: WidgetStateProperty.all(
-                      theme.colorScheme.primary.withOpacity(0.1),
-                    ),
-                    columns: [
-                      DataColumn(
-                        label: Text(
-                          'Product',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
+              ScrollableDataTable(
+                maxHeight: 300,
+                columns: [
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Product',
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: localizations.price,
+                    numeric: true,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Qty',
+                    numeric: true,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Subtotal',
+                    numeric: true,
+                  ),
+                ],
+                rows: items.map((item) {
+                  final productName = item['product_name'] ?? 'Unknown';
+                  final quantity = item['quantity'] ?? 0;
+                  final price = item['price'] ?? 0;
+                  final subtotal = item['subtotal'] ?? 0;
+
+                  return DataRow(
+                    cells: [
+                      DataCell(
+                        Text(
+                          productName,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
-                      DataColumn(
-                        label: Text(
-                          localizations.price,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                        numeric: true,
+                      DataCell(
+                        Text(CurrencyFormatter.format(price.toDouble())),
                       ),
-                      DataColumn(
-                        label: Text(
-                          'Qty',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
+                      DataCell(
+                        Text(
+                          '$quantity',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        numeric: true,
                       ),
-                      DataColumn(
-                        label: Text(
-                          'Subtotal',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
+                      DataCell(
+                        Text(
+                          CurrencyFormatter.format(subtotal.toDouble()),
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
-                        numeric: true,
                       ),
                     ],
-                    rows: items.map((item) {
-                      final productName = item['product_name'] ?? 'Unknown';
-                      final quantity = item['quantity'] ?? 0;
-                      final price = item['price'] ?? 0;
-                      final subtotal = item['subtotal'] ?? 0;
-
-                      return DataRow(
-                        cells: [
-                          DataCell(
-                            Text(
-                              productName,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          DataCell(
-                            Text(CurrencyFormatter.format(price.toDouble())),
-                          ),
-                          DataCell(
-                            Text(
-                              '$quantity',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              CurrencyFormatter.format(subtotal.toDouble()),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                ),
+                  );
+                }).toList(),
               ),
             ],
           ),

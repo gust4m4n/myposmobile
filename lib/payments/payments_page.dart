@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/scrollable_data_table.dart';
 import 'payment_detail_dialog.dart';
 import 'payments_service.dart';
 
@@ -158,148 +159,93 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 ],
               ),
             )
-          : SingleChildScrollView(
+          : Padding(
               padding: const EdgeInsets.all(16),
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                width: double.infinity,
-                child: DataTable(
-                  showCheckboxColumn: false,
-                  headingRowColor: WidgetStateProperty.all(
-                    theme.colorScheme.primary.withOpacity(0.1),
+              child: ScrollableDataTable(
+                maxHeight: MediaQuery.of(context).size.height * 0.7,
+                columnSpacing: 20,
+                columns: [
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Payment ID',
                   ),
-                  dataRowColor: WidgetStateProperty.resolveWith<Color>((
-                    Set<WidgetState> states,
-                  ) {
-                    final isDark = theme.brightness == Brightness.dark;
-                    if (states.contains(WidgetState.selected)) {
-                      return theme.colorScheme.primary.withOpacity(
-                        isDark ? 0.3 : 0.2,
-                      );
-                    }
-                    if (states.contains(WidgetState.hovered)) {
-                      return theme.colorScheme.primary.withOpacity(
-                        isDark ? 0.15 : 0.08,
-                      );
-                    }
-                    return Colors.transparent;
-                  }),
-                  dataRowMinHeight: 60,
-                  dataRowMaxHeight: 80,
-                  columnSpacing: 20,
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'Payment ID',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        localizations.orderId,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Amount',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                      numeric: true,
-                    ),
-                    DataColumn(
-                      label: Text(
-                        localizations.method,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Status',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Created At',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                  rows: _payments.map((payment) {
-                    final paymentId = payment['id'] ?? 0;
-                    final orderId = payment['order_id'] ?? 0;
-                    final amount = payment['amount'] ?? 0;
-                    final paymentMethod = payment['payment_method'] ?? 'N/A';
-                    final status = payment['status'] ?? 'pending';
-                    final createdAt = payment['created_at'] ?? '';
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: localizations.orderId,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Amount',
+                    numeric: true,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: localizations.method,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Status',
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Created At',
+                  ),
+                ],
+                rows: _payments.map((payment) {
+                  final paymentId = payment['id'] ?? 0;
+                  final orderId = payment['order_id'] ?? 0;
+                  final amount = payment['amount'] ?? 0;
+                  final paymentMethod = payment['payment_method'] ?? 'N/A';
+                  final status = payment['status'] ?? 'pending';
+                  final createdAt = payment['created_at'] ?? '';
 
-                    return DataRow(
-                      onSelectChanged: (_) => _showPaymentDetail(payment),
-                      cells: [
-                        DataCell(
-                          Text(
-                            '#$paymentId',
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
+                  return DataRow(
+                    onSelectChanged: (_) => _showPaymentDetail(payment),
+                    cells: [
+                      DataCell(
+                        Text(
+                          '#$paymentId',
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
-                        DataCell(Text('#$orderId')),
-                        DataCell(
-                          Text(
-                            CurrencyFormatter.format(amount.toDouble()),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      DataCell(Text('#$orderId')),
+                      DataCell(
+                        Text(
+                          CurrencyFormatter.format(amount.toDouble()),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        DataCell(Text(paymentMethod)),
-                        DataCell(
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getStatusColor(status).withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: _getStatusColor(status),
-                                width: 1,
-                              ),
-                            ),
-                            child: Text(
-                              status.toUpperCase(),
-                              style: TextStyle(
-                                color: _getStatusColor(status),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
+                      ),
+                      DataCell(Text(paymentMethod)),
+                      DataCell(
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getStatusColor(status).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: _getStatusColor(status),
+                              width: 1,
                             ),
                           ),
+                          child: Text(
+                            status.toUpperCase(),
+                            style: TextStyle(
+                              color: _getStatusColor(status),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
-                        DataCell(
-                          Text(createdAt, style: const TextStyle(fontSize: 12)),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ),
+                      ),
+                      DataCell(
+                        Text(createdAt, style: const TextStyle(fontSize: 12)),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
             ),
     );

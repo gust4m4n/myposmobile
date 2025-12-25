@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/scrollable_data_table.dart';
 import 'order_detail_dialog.dart';
 import 'orders_service.dart';
 
@@ -158,126 +159,81 @@ class _OrdersPageState extends State<OrdersPage> {
                 ],
               ),
             )
-          : SingleChildScrollView(
+          : Padding(
               padding: const EdgeInsets.all(16),
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                width: double.infinity,
-                child: DataTable(
-                  showCheckboxColumn: false,
-                  headingRowColor: WidgetStateProperty.all(
-                    theme.colorScheme.primary.withOpacity(0.1),
+              child: ScrollableDataTable(
+                maxHeight: MediaQuery.of(context).size.height * 0.7,
+                columnSpacing: 20,
+                columns: [
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Order Number',
                   ),
-                  dataRowColor: WidgetStateProperty.resolveWith<Color>((
-                    Set<WidgetState> states,
-                  ) {
-                    final isDark = theme.brightness == Brightness.dark;
-                    if (states.contains(WidgetState.selected)) {
-                      return theme.colorScheme.primary.withOpacity(
-                        isDark ? 0.3 : 0.2,
-                      );
-                    }
-                    if (states.contains(WidgetState.hovered)) {
-                      return theme.colorScheme.primary.withOpacity(
-                        isDark ? 0.15 : 0.08,
-                      );
-                    }
-                    return Colors.transparent;
-                  }),
-                  dataRowMinHeight: 60,
-                  dataRowMaxHeight: 80,
-                  columnSpacing: 20,
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'Order Number',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Total Amount',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                      numeric: true,
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Status',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Created At',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                  rows: _orders.map((order) {
-                    final orderNumber = order['order_number'] ?? 'N/A';
-                    final totalAmount = order['total_amount'] ?? 0;
-                    final status = order['status'] ?? 'pending';
-                    final createdAt = order['created_at'] ?? '';
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Total Amount',
+                    numeric: true,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Status',
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Created At',
+                  ),
+                ],
+                rows: _orders.map((order) {
+                  final orderNumber = order['order_number'] ?? 'N/A';
+                  final totalAmount = order['total_amount'] ?? 0;
+                  final status = order['status'] ?? 'pending';
+                  final createdAt = order['created_at'] ?? '';
 
-                    return DataRow(
-                      onSelectChanged: (_) => _showOrderDetail(order),
-                      cells: [
-                        DataCell(
-                          Text(
-                            orderNumber,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
+                  return DataRow(
+                    onSelectChanged: (_) => _showOrderDetail(order),
+                    cells: [
+                      DataCell(
+                        Text(
+                          orderNumber,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
-                        DataCell(
-                          Text(
-                            CurrencyFormatter.format(totalAmount.toDouble()),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                      ),
+                      DataCell(
+                        Text(
+                          CurrencyFormatter.format(totalAmount.toDouble()),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        DataCell(
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getStatusColor(status).withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: _getStatusColor(status),
-                                width: 1,
-                              ),
-                            ),
-                            child: Text(
-                              status.toUpperCase(),
-                              style: TextStyle(
-                                color: _getStatusColor(status),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
+                      ),
+                      DataCell(
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getStatusColor(status).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: _getStatusColor(status),
+                              width: 1,
                             ),
                           ),
+                          child: Text(
+                            status.toUpperCase(),
+                            style: TextStyle(
+                              color: _getStatusColor(status),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
-                        DataCell(
-                          Text(createdAt, style: const TextStyle(fontSize: 12)),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ),
+                      ),
+                      DataCell(
+                        Text(createdAt, style: const TextStyle(fontSize: 12)),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
             ),
     );
