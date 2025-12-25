@@ -1,0 +1,265 @@
+import 'package:flutter/material.dart';
+
+import '../orders/orders_service.dart';
+import '../shared/utils/app_localizations.dart';
+import '../shared/utils/currency_formatter.dart';
+
+class PaymentDetailDialog extends StatefulWidget {
+  final Map<String, dynamic> payment;
+  final String languageCode;
+
+  const PaymentDetailDialog({
+    super.key,
+    required this.payment,
+    required this.languageCode,
+  });
+
+  @override
+  State<PaymentDetailDialog> createState() => _PaymentDetailDialogState();
+}
+
+class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
+  Map<String, dynamic>? _orderData;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOrderDetails();
+  }
+
+  Future<void> _loadOrderDetails() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final orderId = widget.payment['order_id'];
+      final response = await OrdersService.getOrderById(orderId);
+
+      if (!mounted) return;
+
+      if (response.isSuccess && response.data != null) {
+        setState(() {
+          _orderData = response.data!;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = response.error ?? 'Failed to load order details';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'Error loading order details: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(widget.languageCode);
+    final payment = widget.payment;
+    final amount = payment['amount'] ?? 0;
+    final paymentMethod = payment['payment_method'] ?? 'N/A';
+    final status = payment['status'] ?? 'pending';
+    final notes = payment['notes'];
+    final createdAt = payment['created_at'] ?? '';
+    final orderId = payment['order_id'] ?? 0;
+
+    return AlertDialog(
+      title: Text('${localizations.payments} #${payment['id'] ?? 'N/A'}'),
+      content: SizedBox(
+        width: 500,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildInfoRow('Status', status, theme),
+              _buildInfoRow(
+                'Amount',
+                CurrencyFormatter.format(amount.toDouble()),
+                theme,
+              ),
+              _buildInfoRow(localizations.method, paymentMethod, theme),
+              _buildInfoRow(localizations.orderId, '#$orderId', theme),
+              if (notes != null && notes.toString().isNotEmpty)
+                _buildInfoRow('Notes', notes.toString(), theme),
+              _buildInfoRow('Created', createdAt, theme),
+              const SizedBox(height: 16),
+              Text(
+                localizations.orderItems,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 8),
+              if (_isLoading)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              else if (_errorMessage != null)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        const Icon(Icons.error_outline, color: Colors.red),
+                        const SizedBox(height: 8),
+                        Text(
+                          _errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else if (_orderData != null)
+                ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    scrollbars: false,
+                    overscroll: false,
+                    physics: const ClampingScrollPhysics(),
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      headingRowColor: WidgetStateProperty.all(
+                        theme.colorScheme.primary.withOpacity(0.1),
+                      ),
+                      columns: [
+                        DataColumn(
+                          label: Text(
+                            'Product',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            localizations.price,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          numeric: true,
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Qty',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          numeric: true,
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Subtotal',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          numeric: true,
+                        ),
+                      ],
+                      rows: (_orderData!['order_items'] as List? ?? []).map((
+                        item,
+                      ) {
+                        final productName = item['product_name'] ?? 'Unknown';
+                        final quantity = item['quantity'] ?? 0;
+                        final price = item['price'] ?? 0;
+                        final subtotal = item['subtotal'] ?? 0;
+
+                        return DataRow(
+                          cells: [
+                            DataCell(
+                              Text(
+                                productName,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Text(CurrencyFormatter.format(price.toDouble())),
+                            ),
+                            DataCell(
+                              Text(
+                                '$quantity',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                CurrencyFormatter.format(subtotal.toDouble()),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(localizations.close),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value, ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              '$label:',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

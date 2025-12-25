@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'pages/login_page.dart';
-import 'pages/pos_home_page.dart';
-import 'utils/http_client.dart';
-import 'utils/storage_service.dart';
+import 'login/login_page.dart';
+import 'pos/pos_home_page.dart';
+import 'shared/utils/http_client.dart';
+import 'shared/utils/storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
