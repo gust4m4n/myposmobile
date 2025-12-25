@@ -171,6 +171,15 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
         cardColor: Colors.white,
         dividerColor: Colors.grey.shade200,
         useMaterial3: true,
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: _InstantPageTransitionsBuilder(),
+            TargetPlatform.iOS: _InstantPageTransitionsBuilder(),
+            TargetPlatform.linux: _InstantPageTransitionsBuilder(),
+            TargetPlatform.macOS: _InstantPageTransitionsBuilder(),
+            TargetPlatform.windows: _InstantPageTransitionsBuilder(),
+          },
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
@@ -192,6 +201,15 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
         cardColor: const Color(0xFF1C1C1E),
         dividerColor: Color(0xFF38383A),
         useMaterial3: true,
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: _InstantPageTransitionsBuilder(),
+            TargetPlatform.iOS: _InstantPageTransitionsBuilder(),
+            TargetPlatform.linux: _InstantPageTransitionsBuilder(),
+            TargetPlatform.macOS: _InstantPageTransitionsBuilder(),
+            TargetPlatform.windows: _InstantPageTransitionsBuilder(),
+          },
+        ),
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: _isLoading
@@ -212,5 +230,22 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
               onLogout: _handleLogout,
             ),
     );
+  }
+}
+
+// Custom page transition builder with no animation for instant navigation
+class _InstantPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _InstantPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    // Return child directly without any animation
+    return child;
   }
 }

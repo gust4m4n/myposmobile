@@ -8,6 +8,7 @@ import '../services/products_service.dart';
 import '../services/profile_service.dart';
 import '../utils/app_localizations.dart';
 import '../utils/currency_formatter.dart';
+import '../widgets/checkout_dialog.dart';
 import '../widgets/product_section_widget.dart';
 import 'change_password_page.dart';
 import 'orders_page.dart';
@@ -53,6 +54,13 @@ class _POSHomePageState extends State<POSHomePage> {
     _loadProducts();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload profile every time the page appears
+    _loadProfile();
+  }
+
   Future<void> _loadProfile() async {
     try {
       final response = await _profileService.getProfile();
@@ -62,7 +70,7 @@ class _POSHomePageState extends State<POSHomePage> {
       if (response.isSuccess && response.data != null) {
         setState(() {
           _profile = response.data;
-          _appTitle = '${_profile!.tenant.name} \\ ${_profile!.branch.name}';
+          _appTitle = '${_profile!.tenant.name} - ${_profile!.branch.name}';
         });
       }
     } catch (e) {
@@ -155,48 +163,21 @@ class _POSHomePageState extends State<POSHomePage> {
   void _checkout() {
     if (_cart.isEmpty) return;
 
-    final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(widget.languageCode);
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: Text(localizations.checkoutTitle),
-          content: Text(
-            localizations.totalPayment(CurrencyFormatter.format(_totalPrice)),
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(localizations.cancel),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                await _processCheckout();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(localizations.pay),
-            ),
-          ],
+        return CheckoutDialog(
+          languageCode: widget.languageCode,
+          cart: _cart,
+          totalPrice: _totalPrice,
+          onCancel: () => Navigator.pop(context),
+          onProcessCheckout: _processCheckout,
         );
       },
     );
   }
 
-  Future<void> _processCheckout() async {
+  Future<void> _processCheckout(String paymentMethod) async {
     final localizations = AppLocalizations.of(widget.languageCode);
 
     // Show loading
@@ -233,8 +214,8 @@ class _POSHomePageState extends State<POSHomePage> {
       final paymentResponse = await PaymentsService.createPayment(
         orderId: orderId,
         amount: totalAmount,
-        paymentMethod: 'cash',
-        notes: 'POS Payment',
+        paymentMethod: paymentMethod,
+        notes: 'POS Payment - $paymentMethod',
       );
 
       if (!paymentResponse.isSuccess) {
@@ -527,9 +508,25 @@ class _POSHomePageState extends State<POSHomePage> {
           },
           tooltip: 'Menu',
         ),
-        title: Text(
-          _appTitle,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        title: Row(
+          children: [
+            Icon(
+              Icons.store,
+              size: 24,
+              color: theme.appBarTheme.foregroundColor,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                _appTitle,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
         foregroundColor: theme.appBarTheme.foregroundColor,

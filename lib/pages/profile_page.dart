@@ -119,196 +119,264 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           : _profile == null
           ? const Center(child: Text('No profile data'))
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 600),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Profile Icon
-                      Center(
-                        child: Container(
-                          width: 120,
-                          height: 120,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.1),
-                            shape: BoxShape.circle,
+          : ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                scrollbars: false,
+                overscroll: false,
+                physics: const ClampingScrollPhysics(),
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1200),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Profile Header
+                        Card(
+                          elevation: isDark ? 2 : 1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
-                            Icons.person,
-                            size: 64,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Profile Information Card
-                      Card(
-                        elevation: isDark ? 2 : 1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'User Information',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.onSurface,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 64,
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primary
+                                        .withOpacity(0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 36,
+                                    color: theme.colorScheme.primary,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 24),
-
-                              // Full Name
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.person,
-                                label: 'Full Name',
-                                value: _profile!.user.fullName,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Username
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.person_outline,
-                                label: localizations.username,
-                                value: _profile!.user.username,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Email
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.email_outlined,
-                                label: 'Email',
-                                value: _profile!.user.email,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Role
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.admin_panel_settings_outlined,
-                                label: 'Role',
-                                value: _profile!.user.role.toUpperCase(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Tenant Information Card
-                      Card(
-                        elevation: isDark ? 2 : 1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Tenant Information',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.onSurface,
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _profile!.user.fullName,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        _profile!.user.role.toUpperCase(),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 24),
-
-                              // Tenant Name
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.business,
-                                label: 'Tenant Name',
-                                value: _profile!.tenant.name,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Tenant Code
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.tag,
-                                label: 'Tenant Code',
-                                value: _profile!.tenant.code,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 16),
 
-                      // Branch Information Card
-                      Card(
-                        elevation: isDark ? 2 : 1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Branch Information',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.onSurface,
+                        // Information Grid
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final isWide = constraints.maxWidth > 600;
+                            return Wrap(
+                              spacing: 16,
+                              runSpacing: 16,
+                              children: [
+                                // User Information
+                                SizedBox(
+                                  width: isWide
+                                      ? (constraints.maxWidth - 16) / 2
+                                      : constraints.maxWidth,
+                                  child: Card(
+                                    elevation: isDark ? 2 : 1,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.person_outline,
+                                                size: 20,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                'User Information',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurface,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 16),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Username',
+                                            _profile!.user.username,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Email',
+                                            _profile!.user.email,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 24),
 
-                              // Branch Name
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.store,
-                                label: 'Branch Name',
-                                value: _profile!.branch.name,
-                              ),
-                              const SizedBox(height: 16),
+                                // Tenant Information
+                                SizedBox(
+                                  width: isWide
+                                      ? (constraints.maxWidth - 16) / 2
+                                      : constraints.maxWidth,
+                                  child: Card(
+                                    elevation: isDark ? 2 : 1,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.business,
+                                                size: 20,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                'Tenant',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurface,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 16),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Name',
+                                            _profile!.tenant.name,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Code',
+                                            _profile!.tenant.code,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
 
-                              // Branch Code
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.qr_code,
-                                label: 'Branch Code',
-                                value: _profile!.branch.code,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Address
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.location_on_outlined,
-                                label: 'Address',
-                                value: _profile!.branch.address,
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Phone
-                              _buildInfoRow(
-                                context,
-                                icon: Icons.phone_outlined,
-                                label: 'Phone',
-                                value: _profile!.branch.phone,
-                              ),
-                            ],
-                          ),
+                                // Branch Information
+                                SizedBox(
+                                  width: constraints.maxWidth,
+                                  child: Card(
+                                    elevation: isDark ? 2 : 1,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.store,
+                                                size: 20,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                'Branch',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurface,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 16),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Name',
+                                            _profile!.branch.name,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Code',
+                                            _profile!.branch.code,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Address',
+                                            _profile!.branch.address,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _buildCompactInfoRow(
+                                            context,
+                                            'Phone',
+                                            _profile!.branch.phone,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -316,48 +384,36 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildInfoRow(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
+  Widget _buildCompactInfoRow(
+    BuildContext context,
+    String label,
+    String value,
+  ) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+        SizedBox(
+          width: 80,
+          child: Text(
+            '$label:',
+            style: TextStyle(
+              fontSize: 13,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          child: Icon(icon, size: 24, color: theme.colorScheme.primary),
         ),
-        const SizedBox(width: 16),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-            ],
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
         ),
       ],

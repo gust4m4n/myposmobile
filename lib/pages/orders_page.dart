@@ -157,57 +157,127 @@ class _OrdersPageState extends State<OrdersPage> {
                 ],
               ),
             )
-          : ListView.builder(
+          : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
-              itemCount: _orders.length,
-              itemBuilder: (context, index) {
-                final order = _orders[index];
-                final orderNumber = order['order_number'] ?? 'N/A';
-                final totalAmount = order['total_amount'] ?? 0;
-                final status = order['status'] ?? 'pending';
-                final createdAt = order['created_at'] ?? '';
-                final notes = order['notes'];
-
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16),
-                    leading: CircleAvatar(
-                      backgroundColor: _getStatusColor(status),
-                      child: const Icon(
-                        Icons.receipt_long,
-                        color: Colors.white,
+              scrollDirection: Axis.vertical,
+              child: SizedBox(
+                width: double.infinity,
+                child: DataTable(
+                  showCheckboxColumn: false,
+                  headingRowColor: WidgetStateProperty.all(
+                    theme.colorScheme.primary.withOpacity(0.1),
+                  ),
+                  dataRowColor: WidgetStateProperty.resolveWith<Color>((
+                    Set<WidgetState> states,
+                  ) {
+                    final isDark = theme.brightness == Brightness.dark;
+                    if (states.contains(WidgetState.selected)) {
+                      return theme.colorScheme.primary.withOpacity(
+                        isDark ? 0.3 : 0.2,
+                      );
+                    }
+                    if (states.contains(WidgetState.hovered)) {
+                      return theme.colorScheme.primary.withOpacity(
+                        isDark ? 0.15 : 0.08,
+                      );
+                    }
+                    return Colors.transparent;
+                  }),
+                  dataRowMinHeight: 60,
+                  dataRowMaxHeight: 80,
+                  columnSpacing: 20,
+                  columns: [
+                    DataColumn(
+                      label: Text(
+                        'Order Number',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
                     ),
-                    title: Text(
-                      orderNumber,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    DataColumn(
+                      label: Text(
+                        'Total Amount',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      numeric: true,
                     ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 4),
-                        Text(CurrencyFormatter.format(totalAmount.toDouble())),
-                        Text('Status: $status'),
-                        if (notes != null && notes.toString().isNotEmpty)
+                    DataColumn(
+                      label: Text(
+                        'Status',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Created At',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                  rows: _orders.map((order) {
+                    final orderNumber = order['order_number'] ?? 'N/A';
+                    final totalAmount = order['total_amount'] ?? 0;
+                    final status = order['status'] ?? 'pending';
+                    final createdAt = order['created_at'] ?? '';
+
+                    return DataRow(
+                      onSelectChanged: (_) => _showOrderDetail(order),
+                      cells: [
+                        DataCell(
                           Text(
-                            'Notes: $notes',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        Text(
-                          createdAt,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            orderNumber,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                         ),
+                        DataCell(
+                          Text(
+                            CurrencyFormatter.format(totalAmount.toDouble()),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getStatusColor(status).withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: _getStatusColor(status),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              status.toUpperCase(),
+                              style: TextStyle(
+                                color: _getStatusColor(status),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(createdAt, style: const TextStyle(fontSize: 12)),
+                        ),
                       ],
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => _showOrderDetail(order),
-                  ),
-                );
-              },
+                    );
+                  }).toList(),
+                ),
+              ),
             ),
     );
   }
@@ -274,33 +344,100 @@ class OrderDetailDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              ...items.map((item) {
-                final productName = item['product_name'] ?? 'Unknown';
-                final quantity = item['quantity'] ?? 0;
-                final price = item['price'] ?? 0;
-                final subtotal = item['subtotal'] ?? 0;
-
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  child: ListTile(
-                    title: Text(productName),
-                    subtitle: Text(
-                      '${localizations.price}: ${CurrencyFormatter.format(price.toDouble())}',
+              ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  scrollbars: false,
+                  overscroll: false,
+                  physics: const ClampingScrollPhysics(),
+                ),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    headingRowColor: WidgetStateProperty.all(
+                      theme.colorScheme.primary.withOpacity(0.1),
                     ),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'x$quantity',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                    columns: [
+                      DataColumn(
+                        label: Text(
+                          'Product',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
                         ),
-                        Text(CurrencyFormatter.format(subtotal.toDouble())),
-                      ],
-                    ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          localizations.price,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        numeric: true,
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Qty',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        numeric: true,
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Subtotal',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        numeric: true,
+                      ),
+                    ],
+                    rows: items.map((item) {
+                      final productName = item['product_name'] ?? 'Unknown';
+                      final quantity = item['quantity'] ?? 0;
+                      final price = item['price'] ?? 0;
+                      final subtotal = item['subtotal'] ?? 0;
+
+                      return DataRow(
+                        cells: [
+                          DataCell(
+                            Text(
+                              productName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Text(CurrencyFormatter.format(price.toDouble())),
+                          ),
+                          DataCell(
+                            Text(
+                              '$quantity',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              CurrencyFormatter.format(subtotal.toDouble()),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
                   ),
-                );
-              }),
+                ),
+              ),
             ],
           ),
         ),
