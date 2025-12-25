@@ -79,7 +79,8 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
       title: '${localizations.payments} #${payment['id'] ?? 'N/A'}',
       width: 500,
       onClose: () => Navigator.pop(context),
-      content: SingleChildScrollView(
+      content: SizedBox(
+        height: 500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -102,17 +103,12 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
             ),
             const SizedBox(height: 8),
             if (_isLoading)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(),
-                ),
-              )
+              const Expanded(child: Center(child: CircularProgressIndicator()))
             else if (_errorMessage != null)
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+              Expanded(
+                child: Center(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.error_outline, color: Colors.red),
                       const SizedBox(height: 8),
@@ -126,62 +122,64 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
                 ),
               )
             else if (_orderData != null)
-              ScrollableDataTable(
-                maxHeight: 300,
-                columnSpacing: 16,
-                columns: [
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Product',
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: localizations.price,
-                    numeric: true,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Qty',
-                    numeric: true,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'Subtotal',
-                    numeric: true,
-                  ),
-                ],
-                rows: (_orderData!['order_items'] as List? ?? []).map((item) {
-                  final productName = item['product_name'] ?? 'Unknown';
-                  final quantity = item['quantity'] ?? 0;
-                  final price = item['price'] ?? 0;
-                  final subtotal = item['subtotal'] ?? 0;
+              Expanded(
+                child: ScrollableDataTable(
+                  maxHeight: double.infinity,
+                  columnSpacing: 16,
+                  columns: [
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'Product',
+                    ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: localizations.price,
+                      numeric: true,
+                    ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'Qty',
+                      numeric: true,
+                    ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'Subtotal',
+                      numeric: true,
+                    ),
+                  ],
+                  rows: (_orderData!['order_items'] as List? ?? []).map((item) {
+                    final productName = item['product_name'] ?? 'Unknown';
+                    final quantity = item['quantity'] ?? 0;
+                    final price = item['price'] ?? 0;
+                    final subtotal = item['subtotal'] ?? 0;
 
-                  return DataRow(
-                    cells: [
-                      DataCell(
-                        Text(
-                          productName,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                    return DataRow(
+                      cells: [
+                        DataCell(
+                          Text(
+                            productName,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
                         ),
-                      ),
-                      DataCell(
-                        Text(CurrencyFormatter.format(price.toDouble())),
-                      ),
-                      DataCell(
-                        Text(
-                          '$quantity',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        DataCell(
+                          Text(CurrencyFormatter.format(price.toDouble())),
                         ),
-                      ),
-                      DataCell(
-                        Text(
-                          CurrencyFormatter.format(subtotal.toDouble()),
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        DataCell(
+                          Text(
+                            '$quantity',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }).toList(),
+                        DataCell(
+                          Text(
+                            CurrencyFormatter.format(subtotal.toDouble()),
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
               ),
           ],
         ),

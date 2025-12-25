@@ -30,7 +30,8 @@ class OrderDetailDialog extends StatelessWidget {
       title: '${localizations.orderDetails}: $orderNumber',
       width: 500,
       onClose: () => Navigator.pop(context),
-      content: SingleChildScrollView(
+      content: SizedBox(
+        height: 500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -50,56 +51,64 @@ class OrderDetailDialog extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 8),
-            ScrollableDataTable(
-              maxHeight: 300,
-              columns: [
-                DataTableColumn.buildColumn(context: context, label: 'Product'),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: localizations.price,
-                  numeric: true,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'Qty',
-                  numeric: true,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'Subtotal',
-                  numeric: true,
-                ),
-              ],
-              rows: items.map((item) {
-                final productName = item['product_name'] ?? 'Unknown';
-                final quantity = item['quantity'] ?? 0;
-                final price = item['price'] ?? 0;
-                final subtotal = item['subtotal'] ?? 0;
+            Expanded(
+              child: ScrollableDataTable(
+                maxHeight: double.infinity,
+                columnSpacing: 16,
+                columns: [
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Product',
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: localizations.price,
+                    numeric: true,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Qty',
+                    numeric: true,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'Subtotal',
+                    numeric: true,
+                  ),
+                ],
+                rows: items.map((item) {
+                  final productName = item['product_name'] ?? 'Unknown';
+                  final quantity = item['quantity'] ?? 0;
+                  final price = item['price'] ?? 0;
+                  final subtotal = item['subtotal'] ?? 0;
 
-                return DataRow(
-                  cells: [
-                    DataCell(
-                      Text(
-                        productName,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                  return DataRow(
+                    cells: [
+                      DataCell(
+                        Text(
+                          productName,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
                       ),
-                    ),
-                    DataCell(Text(CurrencyFormatter.format(price.toDouble()))),
-                    DataCell(
-                      Text(
-                        '$quantity',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      DataCell(
+                        Text(CurrencyFormatter.format(price.toDouble())),
                       ),
-                    ),
-                    DataCell(
-                      Text(
-                        CurrencyFormatter.format(subtotal.toDouble()),
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      DataCell(
+                        Text(
+                          '$quantity',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }).toList(),
+                      DataCell(
+                        Text(
+                          CurrencyFormatter.format(subtotal.toDouble()),
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),
