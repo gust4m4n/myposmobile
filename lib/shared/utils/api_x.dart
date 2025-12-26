@@ -146,7 +146,7 @@ class ApiX {
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(jsonResponse, fromJson);
     } else {
       return ApiResponse<T>(
@@ -182,7 +182,7 @@ class ApiX {
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(jsonResponse, fromJson);
     } else {
       return ApiResponse<T>(
@@ -218,7 +218,7 @@ class ApiX {
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(jsonResponse, fromJson);
     } else {
       return ApiResponse<T>(
@@ -251,7 +251,7 @@ class ApiX {
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(jsonResponse, fromJson);
     } else {
       return ApiResponse<T>(

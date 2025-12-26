@@ -176,11 +176,7 @@ class _HomePageState extends State<HomePage> {
 
     // Prepare order items
     final items = _cart.map((cartItem) {
-      return {
-        'product_id': cartItem.product.id,
-        'quantity': cartItem.quantity,
-        'price': cartItem.product.price,
-      };
+      return {'product_id': cartItem.product.id, 'quantity': cartItem.quantity};
     }).toList();
 
     // Create order
@@ -188,6 +184,10 @@ class _HomePageState extends State<HomePage> {
       items: items,
       notes: 'POS Order',
     );
+
+    if (!mounted) {
+      return;
+    }
 
     if (orderResponse.isSuccess && orderResponse.data != null) {
       final orderId = orderResponse.data!['id'];
@@ -201,25 +201,46 @@ class _HomePageState extends State<HomePage> {
         notes: 'POS Payment - $paymentMethod',
       );
 
+      if (!mounted) {
+        return;
+      }
+
+      // Close loading dialog first
+      Navigator.pop(context);
+
       if (paymentResponse.isSuccess) {
         // Clear cart and show success
         setState(() {
           _cart.clear();
         });
 
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('transactionSuccess'.tr),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('transactionSuccess'.tr),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Payment failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(paymentResponse.message ?? 'paymentFailed'.tr),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      // Order failed
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(orderResponse.message ?? 'orderFailed'.tr),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
-
-    // Close loading dialog
-    if (mounted) Navigator.pop(context);
   }
 
   void _showCartBottomSheet(BuildContext context) {
@@ -268,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   'cart'.tr,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -297,7 +318,7 @@ class _HomePageState extends State<HomePage> {
                           'emptyCart'.tr,
                           style: const TextStyle(
                             color: Colors.grey,
-                            fontSize: 16,
+                            fontSize: 16.0,
                           ),
                         ),
                       ],
@@ -328,8 +349,8 @@ class _HomePageState extends State<HomePage> {
                           title: Text(
                             item.product.name,
                             style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
                             ),
                           ),
                           subtitle: Text.rich(
@@ -341,23 +362,23 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   style: TextStyle(
                                     color: Colors.orange.shade700,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 TextSpan(
                                   text: ' x ',
                                   style: TextStyle(
                                     color: Colors.grey.shade500,
-                                    fontSize: 13,
+                                    fontSize: 16.0,
                                   ),
                                 ),
                                 TextSpan(
                                   text: '${item.quantity}',
                                   style: TextStyle(
                                     color: theme.colorScheme.primary,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
@@ -369,8 +390,8 @@ class _HomePageState extends State<HomePage> {
                               Text(
                                 CurrencyFormatter.format(item.total),
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
                                 ),
                               ),
                               IconButton(
@@ -409,15 +430,15 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       'total'.tr,
                       style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       CurrencyFormatter.format(_totalPrice),
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
                         color: theme.colorScheme.secondary,
                       ),
                     ),
@@ -440,8 +461,8 @@ class _HomePageState extends State<HomePage> {
                     child: Text(
                       'checkout'.tr,
                       style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -486,8 +507,8 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 _appTitle,
                 style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -495,40 +516,43 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.language),
-            tooltip: 'language'.tr,
-            onSelected: (value) {
-              widget.onLanguageToggle();
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'en',
-                child: Row(
-                  children: [
-                    if (widget.languageCode == 'en')
-                      const Icon(Icons.check, size: 20)
-                    else
-                      const SizedBox(width: 20),
-                    const SizedBox(width: 8),
-                    Text('english'.tr),
-                  ],
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: PopupMenuButton<String>(
+              icon: const Icon(Icons.language),
+              tooltip: 'language'.tr,
+              onSelected: (value) {
+                widget.onLanguageToggle();
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'en',
+                  child: Row(
+                    children: [
+                      if (widget.languageCode == 'en')
+                        const Icon(Icons.check, size: 20)
+                      else
+                        const SizedBox(width: 20),
+                      const SizedBox(width: 8),
+                      Text('english'.tr),
+                    ],
+                  ),
                 ),
-              ),
-              PopupMenuItem(
-                value: 'id',
-                child: Row(
-                  children: [
-                    if (widget.languageCode == 'id')
-                      const Icon(Icons.check, size: 20)
-                    else
-                      const SizedBox(width: 20),
-                    const SizedBox(width: 8),
-                    Text('indonesian'.tr),
-                  ],
+                PopupMenuItem(
+                  value: 'id',
+                  child: Row(
+                    children: [
+                      if (widget.languageCode == 'id')
+                        const Icon(Icons.check, size: 20)
+                      else
+                        const SizedBox(width: 20),
+                      const SizedBox(width: 8),
+                      Text('indonesian'.tr),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           if (!isTabletOrDesktop)
             Stack(
@@ -555,7 +579,7 @@ class _HomePageState extends State<HomePage> {
                         '${_cart.length}',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 12,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -607,7 +631,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               'cart'.tr,
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -630,7 +654,7 @@ class _HomePageState extends State<HomePage> {
                                       'emptyCart'.tr,
                                       style: const TextStyle(
                                         color: Colors.grey,
-                                        fontSize: 16,
+                                        fontSize: 16.0,
                                       ),
                                     ),
                                   ],
@@ -661,8 +685,8 @@ class _HomePageState extends State<HomePage> {
                                       title: Text(
                                         item.product.name,
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
                                         ),
                                       ),
                                       subtitle: Text.rich(
@@ -674,15 +698,15 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               style: TextStyle(
                                                 color: Colors.orange.shade700,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             TextSpan(
                                               text: ' x ',
                                               style: TextStyle(
                                                 color: Colors.grey.shade500,
-                                                fontSize: 13,
+                                                fontSize: 16.0,
                                               ),
                                             ),
                                             TextSpan(
@@ -690,8 +714,8 @@ class _HomePageState extends State<HomePage> {
                                               style: TextStyle(
                                                 color:
                                                     theme.colorScheme.primary,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ],
@@ -705,8 +729,8 @@ class _HomePageState extends State<HomePage> {
                                               item.total,
                                             ),
                                             style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0,
                                             ),
                                           ),
                                           IconButton(
@@ -743,14 +767,14 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   'total'.tr,
                                   style: const TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   CurrencyFormatter.format(_totalPrice),
                                   style: TextStyle(
-                                    fontSize: 24,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
                                     color: theme.colorScheme.secondary,
                                   ),
@@ -774,8 +798,8 @@ class _HomePageState extends State<HomePage> {
                                 child: Text(
                                   'checkout'.tr,
                                   style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -824,7 +848,7 @@ class _HomePageState extends State<HomePage> {
                         '${_cart.length}',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 10,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -871,8 +895,8 @@ class _HomePageState extends State<HomePage> {
                         _profile?.user.fullName ?? 'User',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -888,7 +912,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   'profile'.tr,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -911,7 +935,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   'changePassword'.tr,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -932,7 +956,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   'orders'.tr,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -955,7 +979,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   'payments'.tr,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -979,7 +1003,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   'faq'.tr,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -1002,7 +1026,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   'termsAndConditions'.tr,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -1023,7 +1047,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   'logout'.tr,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     color: theme.colorScheme.error,
                   ),
                 ),

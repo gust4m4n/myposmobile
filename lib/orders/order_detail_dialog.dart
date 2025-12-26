@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/data_table_x.dart';
 import '../shared/widgets/dialog_x.dart';
-import '../shared/widgets/scrollable_data_table.dart';
 import '../translations/translation_extension.dart';
 
 class OrderDetailDialog extends StatelessWidget {
@@ -48,11 +48,14 @@ class OrderDetailDialog extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'orderItems'.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: ScrollableDataTable(
+              child: DataTableX(
                 maxHeight: double.infinity,
                 columnSpacing: 16,
                 columns: [
@@ -87,7 +90,7 @@ class OrderDetailDialog extends StatelessWidget {
                       DataCell(
                         Text(
                           productName,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          style: const TextStyle(fontWeight: FontWeight.normal),
                         ),
                       ),
                       DataCell(
@@ -102,7 +105,7 @@ class OrderDetailDialog extends StatelessWidget {
                       DataCell(
                         Text(
                           CurrencyFormatter.format(subtotal.toDouble()),
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -127,7 +130,7 @@ class OrderDetailDialog extends StatelessWidget {
             child: Text(
               '$label:',
               style: TextStyle(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface.withOpacity(0.7),
               ),
             ),
@@ -135,7 +138,7 @@ class OrderDetailDialog extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+              style: const TextStyle(fontWeight: FontWeight.normal),
             ),
           ),
         ],

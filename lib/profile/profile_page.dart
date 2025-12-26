@@ -106,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Text(
                                         _profile!.user.fullName,
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.bold,
                                           color: theme.colorScheme.onSurface,
                                         ),
@@ -115,8 +115,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Text(
                                         _profile!.user.role.toUpperCase(),
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
                                           color: theme.colorScheme.primary,
                                         ),
                                       ),
@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               Text(
                                                 'User Information',
                                                 style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 16.0,
                                                   fontWeight: FontWeight.bold,
                                                   color: theme
                                                       .colorScheme
@@ -220,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               Text(
                                                 'Tenant',
                                                 style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 16.0,
                                                   fontWeight: FontWeight.bold,
                                                   color: theme
                                                       .colorScheme
@@ -273,7 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               Text(
                                                 'Branch',
                                                 style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 16.0,
                                                   fontWeight: FontWeight.bold,
                                                   color: theme
                                                       .colorScheme
@@ -339,9 +339,9 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Text(
             '$label:',
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 16.0,
               color: Colors.grey.shade400,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.normal,
             ),
           ),
         ),
@@ -349,8 +349,8 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Text(
             value,
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
           ),

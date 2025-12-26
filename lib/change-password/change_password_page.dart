@@ -107,7 +107,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     'Change Your Password',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -117,7 +117,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     'Enter your current password and a new password',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16.0,
                       color: isDark
                           ? Colors.grey.shade400
                           : Colors.grey.shade600,
@@ -261,8 +261,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 Text(
                                   'Changing...',
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
@@ -270,8 +270,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           : const Text(
                               'Change Password',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                     ),

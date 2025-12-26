@@ -108,9 +108,9 @@ class _CategoryFilter extends StatelessWidget {
                           ? Colors.white
                           : Colors.white.withOpacity(0.7),
                       fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w500,
-                      fontSize: 15,
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      fontSize: 16.0,
                     ),
                   ),
                 ),
@@ -154,8 +154,8 @@ class _ProductGrid extends StatelessWidget {
             maxExtent = constraints.maxWidth / 2 - 24;
           }
           iconSize = 32;
-          fontSize = 12;
-          priceSize = 11;
+          fontSize = 16.0;
+          priceSize = 16.0;
           padding = 8;
         } else {
           maxExtent = 180;
@@ -165,19 +165,19 @@ class _ProductGrid extends StatelessWidget {
             maxExtent = 150;
           }
           iconSize = 36;
-          fontSize = 13;
-          priceSize = 12;
+          fontSize = 16.0;
+          priceSize = 16.0;
           padding = 12;
         }
 
         return GridView.builder(
-          padding: EdgeInsets.all(isMobile ? 12 : 16),
+          padding: EdgeInsets.zero,
           physics: const ClampingScrollPhysics(),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: maxExtent,
             childAspectRatio: 0.85,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
           ),
           itemCount: products.length,
           itemBuilder: (context, index) {
@@ -213,8 +213,8 @@ class _ProductItem extends StatefulWidget {
     required this.product,
     required this.onTap,
     this.iconSize = 36,
-    this.fontSize = 13,
-    this.priceSize = 12,
+    this.fontSize = 16.0,
+    this.priceSize = 16.0,
     this.padding = 12,
   });
 
@@ -245,7 +245,6 @@ class _ProductItemState extends State<_ProductItem> {
             color: _isPressed ? theme.colorScheme.primary : theme.dividerColor,
             width: _isPressed ? 2 : 1,
           ),
-          borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
           padding: EdgeInsets.all(widget.padding),
@@ -269,7 +268,7 @@ class _ProductItemState extends State<_ProductItem> {
                 child: Text(
                   widget.product.name,
                   style: TextStyle(
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                     fontSize: widget.fontSize,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -285,7 +284,7 @@ class _ProductItemState extends State<_ProductItem> {
                   CurrencyFormatter.format(widget.product.price),
                   style: TextStyle(
                     color: theme.colorScheme.secondary,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                     fontSize: widget.priceSize,
                   ),
                 ),

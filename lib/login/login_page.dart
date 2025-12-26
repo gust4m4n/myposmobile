@@ -202,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                     'appTitle'.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -407,8 +407,8 @@ class _LoginPageState extends State<LoginPage> {
                                 Text(
                                   'loggingIn'.tr,
                                   style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
@@ -416,8 +416,8 @@ class _LoginPageState extends State<LoginPage> {
                           : Text(
                               'loginButton'.tr,
                               style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                     ),
@@ -430,7 +430,7 @@ class _LoginPageState extends State<LoginPage> {
                     'v1.0.0',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 16.0,
                       color: theme.colorScheme.onSurface.withOpacity(0.5),
                     ),
                   ),

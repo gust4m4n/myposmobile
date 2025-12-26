@@ -125,9 +125,9 @@ class _FaqPageState extends State<FaqPage> {
                 child: Text(
                   faq['category'],
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ),
@@ -136,7 +136,7 @@ class _FaqPageState extends State<FaqPage> {
             Text(
               faq['question'],
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16.0,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
@@ -146,7 +146,7 @@ class _FaqPageState extends State<FaqPage> {
             Text(
               faq['answer'],
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 16.0,
                 color: theme.colorScheme.onSurfaceVariant,
                 height: 1.5,
               ),
@@ -258,9 +258,9 @@ class _FaqPageState extends State<FaqPage> {
                       Text(
                         '${_filteredFaqs.length} FAQ(s) found',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 16.0,
                           color: theme.colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ],
@@ -282,7 +282,7 @@ class _FaqPageState extends State<FaqPage> {
                               Text(
                                 'No FAQs found',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 16.0,
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
@@ -331,11 +331,11 @@ class _FaqPageState extends State<FaqPage> {
                                           child: Text(
                                             faq['category'],
                                             style: TextStyle(
-                                              fontSize: 10,
+                                              fontSize: 16.0,
                                               color: theme
                                                   .colorScheme
                                                   .onPrimaryContainer,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.normal,
                                             ),
                                           ),
                                         ),
@@ -354,8 +354,8 @@ class _FaqPageState extends State<FaqPage> {
                                             child: Text(
                                               faq['question'],
                                               style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
                                                 color:
                                                     theme.colorScheme.onSurface,
                                               ),
@@ -376,7 +376,7 @@ class _FaqPageState extends State<FaqPage> {
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 16.0,
                                           color: theme
                                               .colorScheme
                                               .onSurfaceVariant,

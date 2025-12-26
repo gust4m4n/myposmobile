@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:myposmobile/shared/widgets/button_x.dart';
 
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/data_table_x.dart';
 import '../shared/widgets/dialog_x.dart';
-import '../shared/widgets/scrollable_data_table.dart';
 import '../translations/translation_extension.dart';
 import 'product_model.dart';
 
@@ -36,7 +36,7 @@ class CheckoutDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // DataTable for cart items with scroll
-          ScrollableDataTable(
+          DataTableX(
             columns: [
               DataTableColumn.buildColumn(
                 context: context,
@@ -64,7 +64,7 @@ class CheckoutDialog extends StatelessWidget {
                   DataCell(
                     Text(
                       cartItem.product.name,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
+                      style: const TextStyle(fontWeight: FontWeight.normal),
                     ),
                   ),
                   DataCell(
@@ -79,7 +79,7 @@ class CheckoutDialog extends StatelessWidget {
                   DataCell(
                     Text(
                       CurrencyFormatter.format(cartItem.total),
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -100,7 +100,7 @@ class CheckoutDialog extends StatelessWidget {
                 Text(
                   'total'.tr,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.primary,
                   ),
@@ -108,7 +108,7 @@ class CheckoutDialog extends StatelessWidget {
                 Text(
                   CurrencyFormatter.format(totalPrice),
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.primary,
                   ),
@@ -121,8 +121,8 @@ class CheckoutDialog extends StatelessWidget {
       actions: [
         ButtonX(
           onPressed: () async {
-            await onProcessCheckout('cash');
             Navigator.pop(context);
+            await onProcessCheckout('cash');
           },
           icon: Icons.money,
           label: 'cash'.tr,
@@ -130,8 +130,8 @@ class CheckoutDialog extends StatelessWidget {
         ),
         ButtonX(
           onPressed: () async {
-            await onProcessCheckout('card');
             Navigator.pop(context);
+            await onProcessCheckout('card');
           },
           icon: Icons.credit_card,
           label: 'card'.tr,
@@ -139,8 +139,8 @@ class CheckoutDialog extends StatelessWidget {
         ),
         ButtonX(
           onPressed: () async {
-            await onProcessCheckout('transfer');
             Navigator.pop(context);
+            await onProcessCheckout('transfer');
           },
           icon: Icons.account_balance,
           label: 'Transfer',
@@ -148,8 +148,8 @@ class CheckoutDialog extends StatelessWidget {
         ),
         ButtonX(
           onPressed: () async {
-            await onProcessCheckout('qris');
             Navigator.pop(context);
+            await onProcessCheckout('qris');
           },
           icon: Icons.qr_code,
           label: 'QRIS',

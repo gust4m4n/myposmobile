@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
-import '../shared/widgets/scrollable_data_table.dart';
+import '../shared/widgets/data_table_x.dart';
 import '../translations/translation_extension.dart';
 import 'payment_detail_dialog.dart';
 import 'payments_service.dart';
@@ -105,12 +105,12 @@ class _PaymentsPageState extends State<PaymentsPage> {
                   const SizedBox(height: 16),
                   Text(
                     'noPayments'.tr,
-                    style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    style: const TextStyle(color: Colors.grey, fontSize: 16.0),
                   ),
                 ],
               ),
             )
-          : ScrollableDataTable(
+          : DataTableX(
               maxHeight: double.infinity,
               columnSpacing: 20,
               columns: [
@@ -154,7 +154,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                     DataCell(
                       Text(
                         '#$paymentId',
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     DataCell(Text('#$orderId')),
@@ -184,13 +184,13 @@ class _PaymentsPageState extends State<PaymentsPage> {
                           style: TextStyle(
                             color: _getStatusColor(status),
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 16.0,
                           ),
                         ),
                       ),
                     ),
                     DataCell(
-                      Text(createdAt, style: const TextStyle(fontSize: 12)),
+                      Text(createdAt, style: const TextStyle(fontSize: 16.0)),
                     ),
                   ],
                 );

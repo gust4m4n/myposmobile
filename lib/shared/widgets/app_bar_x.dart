@@ -24,7 +24,7 @@ class AppBarX extends StatelessWidget implements PreferredSizeWidget {
       title: title is String
           ? Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0)
             )
           : title,
       actions: actions,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
-import '../shared/widgets/scrollable_data_table.dart';
+import '../shared/widgets/data_table_x.dart';
 import '../translations/translation_extension.dart';
 import 'order_detail_dialog.dart';
 import 'orders_service.dart';
@@ -104,12 +104,12 @@ class _OrdersPageState extends State<OrdersPage> {
                   const SizedBox(height: 16),
                   Text(
                     'noOrders'.tr,
-                    style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    style: const TextStyle(color: Colors.grey, fontSize: 16.0),
                   ),
                 ],
               ),
             )
-          : ScrollableDataTable(
+          : DataTableX(
               maxHeight: double.infinity,
               columnSpacing: 20,
               columns: [
@@ -143,7 +143,7 @@ class _OrdersPageState extends State<OrdersPage> {
                     DataCell(
                       Text(
                         orderNumber,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     DataCell(
@@ -171,13 +171,13 @@ class _OrdersPageState extends State<OrdersPage> {
                           style: TextStyle(
                             color: _getStatusColor(status),
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 16.0,
                           ),
                         ),
                       ),
                     ),
                     DataCell(
-                      Text(createdAt, style: const TextStyle(fontSize: 12)),
+                      Text(createdAt, style: const TextStyle(fontSize: 16.0)),
                     ),
                   ],
                 );

@@ -123,9 +123,9 @@ class _TncPageState extends State<TncPage> {
                         Text(
                           'v${tnc['version']}',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 16.0,
                             color: theme.colorScheme.onSecondaryContainer,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ],
@@ -154,9 +154,9 @@ class _TncPageState extends State<TncPage> {
                           Text(
                             'Active',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 16.0,
                               color: Colors.green[700],
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                         ],
@@ -173,22 +173,22 @@ class _TncPageState extends State<TncPage> {
                   shrinkWrap: true,
                   styleSheet: MarkdownStyleSheet(
                     h1: TextStyle(
-                      fontSize: 24,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
                     h2: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
                     h3: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
                     p: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16.0,
                       color: theme.colorScheme.onSurfaceVariant,
                       height: 1.5,
                     ),
@@ -203,14 +203,14 @@ class _TncPageState extends State<TncPage> {
               Text(
                 'Created: ${tnc['created_at']}',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 16.0,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               Text(
                 'Updated: ${tnc['updated_at']}',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 16.0,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
@@ -246,7 +246,7 @@ class _TncPageState extends State<TncPage> {
             Text(
               'No active Terms & Conditions',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.0,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
@@ -278,7 +278,7 @@ class _TncPageState extends State<TncPage> {
                     child: Text(
                       _activeTnc['title'],
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -311,9 +311,9 @@ class _TncPageState extends State<TncPage> {
                         Text(
                           'Version ${_activeTnc['version']}',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 16.0,
                             color: theme.colorScheme.onSecondaryContainer,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ],
@@ -341,9 +341,9 @@ class _TncPageState extends State<TncPage> {
                         Text(
                           'active'.tr,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 16.0,
                             color: Colors.green[700],
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ],
@@ -357,22 +357,22 @@ class _TncPageState extends State<TncPage> {
                 data: _activeTnc['content'],
                 styleSheet: MarkdownStyleSheet(
                   h1: TextStyle(
-                    fontSize: 24,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
                   h2: TextStyle(
-                    fontSize: 20,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
                   h3: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
                   p: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16.0,
                     color: theme.colorScheme.onSurfaceVariant,
                     height: 1.6,
                   ),
@@ -386,7 +386,7 @@ class _TncPageState extends State<TncPage> {
               Text(
                 'Last updated: ${_activeTnc['updated_at']}',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 16.0,
                   color: theme.colorScheme.onSurfaceVariant,
                   fontStyle: FontStyle.italic,
                 ),
@@ -415,7 +415,7 @@ class _TncPageState extends State<TncPage> {
             Text(
               'No Terms & Conditions found',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.0,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
@@ -451,8 +451,8 @@ class _TncPageState extends State<TncPage> {
                         child: Text(
                           tnc['title'],
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
                           ),
                         ),
@@ -478,9 +478,9 @@ class _TncPageState extends State<TncPage> {
                         child: Text(
                           'v${tnc['version']}',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 16.0,
                             color: theme.colorScheme.onSecondaryContainer,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ),
@@ -498,9 +498,9 @@ class _TncPageState extends State<TncPage> {
                           child: Text(
                             'Active',
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 16.0,
                               color: Colors.green[700],
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                         ),
@@ -510,7 +510,7 @@ class _TncPageState extends State<TncPage> {
                   Text(
                     'Updated: ${tnc['updated_at']}',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 16.0,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
