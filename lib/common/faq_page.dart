@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../common/faq_service.dart';
+import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
 
@@ -181,12 +182,7 @@ class _FaqPageState extends State<FaqPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FAQ'),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-        elevation: 0,
-      ),
+      appBar: AppBarX(title: 'FAQ'),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null

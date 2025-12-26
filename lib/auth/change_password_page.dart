@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../shared/utils/app_localizations.dart';
+import '../shared/widgets/app_bar_x.dart';
 import 'change_password_service.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -88,20 +88,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(widget.languageCode);
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text(
-          'Change Password',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-        ),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
+      appBar: AppBarX(
+        title: 'Change Password',
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(color: theme.dividerColor, height: 1),

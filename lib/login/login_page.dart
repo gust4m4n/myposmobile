@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../shared/utils/app_localizations.dart';
+import '../shared/widgets/app_bar_x.dart';
 import 'dev_branches_service.dart';
 import 'dev_tenants_service.dart';
 import 'login_service.dart';
@@ -179,19 +180,8 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(
-          localizations.login,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-        ),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: theme.dividerColor, height: 1),
-        ),
+      appBar: AppBarX(
+        title: localizations.login,
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.language),

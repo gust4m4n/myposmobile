@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
 import 'order_detail_dialog.dart';
 import 'orders_service.dart';
@@ -108,12 +109,11 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final localizations = AppLocalizations.of(widget.languageCode);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(localizations.orders),
+      appBar: AppBarX(
+        title: localizations.orders,
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadOrders),
         ],

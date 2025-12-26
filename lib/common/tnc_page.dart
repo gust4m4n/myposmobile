@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../common/tnc_service.dart';
+import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
 
@@ -549,11 +550,8 @@ class _TncPageState extends State<TncPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Terms & Conditions'),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-        elevation: 0,
+      appBar: AppBarX(
+        title: 'Terms & Conditions',
         actions: [
           // Toggle view button
           TextButton.icon(

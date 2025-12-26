@@ -13,6 +13,7 @@ import '../profile/profile_service.dart';
 import '../shared/api_models.dart';
 import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/dialog_x.dart';
 import 'checkout_dialog.dart';
 import 'product_model.dart';
@@ -496,7 +497,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
+      drawerScrimColor: Colors.black54,
+      drawerEnableOpenDragGesture: false,
+      appBar: AppBarX(
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
@@ -523,14 +526,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-        ),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: theme.dividerColor, height: 1),
         ),
         actions: [
           PopupMenuButton<String>(
@@ -899,33 +894,41 @@ class _HomePageState extends State<HomePage> {
             )
           : null,
       drawer: Drawer(
+        elevation: 0,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         child: Container(
           color: theme.scaffoldBackgroundColor,
           child: ListView(
             padding: EdgeInsets.zero,
+            physics: const ClampingScrollPhysics(),
             children: [
-              DrawerHeader(
-                decoration: BoxDecoration(color: theme.colorScheme.primary),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
+              Container(
+                color: theme.colorScheme.primary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 30,
+                      radius: 20,
                       backgroundColor: Colors.white,
                       child: Icon(
                         Icons.person,
-                        size: 35,
+                        size: 24,
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'User Name',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        _profile?.user.fullName ?? 'User',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

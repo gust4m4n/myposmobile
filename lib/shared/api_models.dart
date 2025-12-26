@@ -10,11 +10,27 @@ class ApiResponse<T> {
     Map<String, dynamic> json,
     T Function(dynamic)? fromJsonT,
   ) {
+    // Handle different response formats:
+    // 1. Standard format: {message: "...", data: {...}, error: null}
+    // 2. Direct format (no data wrapper): {user: {...}, tenant: {...}, ...}
+
+    T? parsedData;
+
+    if (fromJsonT != null) {
+      if (json.containsKey('data') && json['data'] != null) {
+        // Standard format with 'data' key
+        parsedData = fromJsonT(json['data']);
+      } else if (!json.containsKey('message') && !json.containsKey('error')) {
+        // Direct format - entire json is the data
+        parsedData = fromJsonT(json);
+      }
+    } else {
+      parsedData = json['data'];
+    }
+
     return ApiResponse<T>(
       message: json['message'],
-      data: fromJsonT != null && json['data'] != null
-          ? fromJsonT(json['data'])
-          : json['data'],
+      data: parsedData,
       error: json['error'],
     );
   }

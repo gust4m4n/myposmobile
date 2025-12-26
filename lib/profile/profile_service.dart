@@ -12,7 +12,10 @@ class ProfileService {
     return ApiX.get<ProfileModel>(
       ApiConfig.profile,
       requiresAuth: true,
-      fromJson: (data) => ProfileModel.fromJson(data),
+      fromJson: (data) {
+        print('DEBUG Profile Service - Parsing profile data: $data');
+        return ProfileModel.fromJson(data);
+      },
     );
   }
 }

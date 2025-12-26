@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/api_models.dart';
 import '../shared/utils/app_localizations.dart';
+import '../shared/widgets/app_bar_x.dart';
 import 'profile_service.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -63,20 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(
-          localizations.profile,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-        ),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: theme.dividerColor, height: 1),
-        ),
-      ),
+      appBar: AppBarX(title: localizations.profile),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../api_models.dart';
 import 'http_client.dart';
+import 'logger_x.dart';
 
 /// Reusable API client class for all API calls in the application
 /// Provides simplified methods for GET, POST, PUT, DELETE operations
@@ -18,23 +19,23 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    try {
-      final response = await _client.get(endpoint, requiresAuth: requiresAuth);
+    final response = await _client.get(endpoint, requiresAuth: requiresAuth);
 
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    LoggerX.log('DEBUG ApiX.get - Endpoint: $endpoint');
+    LoggerX.log('DEBUG ApiX.get - Status Code: ${response.statusCode}');
+    LoggerX.log('DEBUG ApiX.get - Response Body: ${response.body}');
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return ApiResponse<T>.fromJson(jsonResponse, fromJson);
-      } else {
-        return ApiResponse<T>(
-          error:
-              jsonResponse['error'] ??
-              jsonResponse['message'] ??
-              'Request failed with status ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<T>(error: 'Error: $e');
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+    } else {
+      return ApiResponse<T>(
+        error:
+            jsonResponse['error'] ??
+            jsonResponse['message'] ??
+            'Request failed with status ${response.statusCode}',
+      );
     }
   }
 
@@ -49,27 +50,23 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    try {
-      final response = await _client.post(
-        endpoint,
-        body: body,
-        requiresAuth: requiresAuth,
+    final response = await _client.post(
+      endpoint,
+      body: body,
+      requiresAuth: requiresAuth,
+    );
+
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+    } else {
+      return ApiResponse<T>(
+        error:
+            jsonResponse['error'] ??
+            jsonResponse['message'] ??
+            'Request failed with status ${response.statusCode}',
       );
-
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return ApiResponse<T>.fromJson(jsonResponse, fromJson);
-      } else {
-        return ApiResponse<T>(
-          error:
-              jsonResponse['error'] ??
-              jsonResponse['message'] ??
-              'Request failed with status ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<T>(error: 'Error: $e');
     }
   }
 
@@ -84,27 +81,23 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    try {
-      final response = await _client.put(
-        endpoint,
-        body: body,
-        requiresAuth: requiresAuth,
+    final response = await _client.put(
+      endpoint,
+      body: body,
+      requiresAuth: requiresAuth,
+    );
+
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+    } else {
+      return ApiResponse<T>(
+        error:
+            jsonResponse['error'] ??
+            jsonResponse['message'] ??
+            'Request failed with status ${response.statusCode}',
       );
-
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return ApiResponse<T>.fromJson(jsonResponse, fromJson);
-      } else {
-        return ApiResponse<T>(
-          error:
-              jsonResponse['error'] ??
-              jsonResponse['message'] ??
-              'Request failed with status ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<T>(error: 'Error: $e');
     }
   }
 
@@ -117,26 +110,19 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    try {
-      final response = await _client.delete(
-        endpoint,
-        requiresAuth: requiresAuth,
+    final response = await _client.delete(endpoint, requiresAuth: requiresAuth);
+
+    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+    } else {
+      return ApiResponse<T>(
+        error:
+            jsonResponse['error'] ??
+            jsonResponse['message'] ??
+            'Request failed with status ${response.statusCode}',
       );
-
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return ApiResponse<T>.fromJson(jsonResponse, fromJson);
-      } else {
-        return ApiResponse<T>(
-          error:
-              jsonResponse['error'] ??
-              jsonResponse['message'] ??
-              'Request failed with status ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      return ApiResponse<T>(error: 'Error: $e');
     }
   }
 
