@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
-import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 
 class OrderDetailDialog extends StatelessWidget {
   final Map<String, dynamic> order;
@@ -18,7 +18,7 @@ class OrderDetailDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(languageCode);
+    TranslationService.setLanguage(languageCode);
     final orderNumber = order['order_number'] ?? 'N/A';
     final totalAmount = order['total_amount'] ?? 0;
     final status = order['status'] ?? 'pending';
@@ -27,7 +27,7 @@ class OrderDetailDialog extends StatelessWidget {
     final items = (order['order_items'] as List?) ?? [];
 
     return DialogX(
-      title: '${localizations.orderDetails}: $orderNumber',
+      title: '${'orderDetails'.tr}: $orderNumber',
       width: 500,
       onClose: () => Navigator.pop(context),
       content: SizedBox(
@@ -47,7 +47,7 @@ class OrderDetailDialog extends StatelessWidget {
             _buildInfoRow('Created', createdAt, theme),
             const SizedBox(height: 16),
             Text(
-              localizations.orderItems,
+              'orderItems'.tr,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -58,21 +58,21 @@ class OrderDetailDialog extends StatelessWidget {
                 columns: [
                   DataTableColumn.buildColumn(
                     context: context,
-                    label: 'Product',
+                    label: 'product'.tr,
                   ),
                   DataTableColumn.buildColumn(
                     context: context,
-                    label: localizations.price,
+                    label: 'price'.tr,
                     numeric: true,
                   ),
                   DataTableColumn.buildColumn(
                     context: context,
-                    label: 'Qty',
+                    label: 'qty'.tr,
                     numeric: true,
                   ),
                   DataTableColumn.buildColumn(
                     context: context,
-                    label: 'Subtotal',
+                    label: 'subtotal'.tr,
                     numeric: true,
                   ),
                 ],

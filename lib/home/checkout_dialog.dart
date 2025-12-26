@@ -4,7 +4,7 @@ import 'package:myposmobile/shared/widgets/button_x.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
-import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 import 'product_model.dart';
 
 class CheckoutDialog extends StatelessWidget {
@@ -26,10 +26,10 @@ class CheckoutDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(languageCode);
+    TranslationService.setLanguage(languageCode);
 
     return DialogX(
-      title: localizations.checkoutTitle,
+      title: 'checkoutTitle'.tr,
       onClose: onCancel,
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -38,20 +38,23 @@ class CheckoutDialog extends StatelessWidget {
           // DataTable for cart items with scroll
           ScrollableDataTable(
             columns: [
-              DataTableColumn.buildColumn(context: context, label: 'Product'),
               DataTableColumn.buildColumn(
                 context: context,
-                label: 'Qty',
+                label: 'product'.tr,
+              ),
+              DataTableColumn.buildColumn(
+                context: context,
+                label: 'qty'.tr,
                 numeric: true,
               ),
               DataTableColumn.buildColumn(
                 context: context,
-                label: localizations.price,
+                label: 'price'.tr,
                 numeric: true,
               ),
               DataTableColumn.buildColumn(
                 context: context,
-                label: 'Subtotal',
+                label: 'subtotal'.tr,
                 numeric: true,
               ),
             ],
@@ -95,7 +98,7 @@ class CheckoutDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  localizations.total,
+                  'total'.tr,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -122,7 +125,7 @@ class CheckoutDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           icon: Icons.money,
-          label: 'Tunai',
+          label: 'cash'.tr,
           backgroundColor: const Color(0xFF34C759),
         ),
         ButtonX(
@@ -131,7 +134,7 @@ class CheckoutDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           icon: Icons.credit_card,
-          label: 'Kartu',
+          label: 'card'.tr,
           backgroundColor: const Color(0xFF007AFF),
         ),
         ButtonX(

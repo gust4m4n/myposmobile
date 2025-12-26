@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import '../api_models.dart';
 import 'http_client.dart';
-import 'logger_x.dart';
 
 /// Reusable API client class for all API calls in the application
 /// Provides simplified methods for GET, POST, PUT, DELETE operations

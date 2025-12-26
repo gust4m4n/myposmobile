@@ -1,6 +1,6 @@
 # Translation Extension Usage
 
-Sekarang Anda bisa menggunakan translation dengan cara yang lebih mudah seperti aplikasi lain!
+Aplikasi ini menggunakan `.tr` extension untuk translation yang lebih mudah dan modern!
 
 ## Import
 
@@ -13,22 +13,17 @@ import '../translations/translation_extension.dart';
 ### 1. Simple Translation
 
 ```dart
-// Sebelumnya:
-final localizations = AppLocalizations.of(widget.languageCode);
-Text(localizations.appTitle)
+// Initialize language di build method
+TranslationService.setLanguage(widget.languageCode);
 
-// Sekarang:
-AppLocalizations.of(widget.languageCode); // Init language
 Text('appTitle'.tr)
+Text('login'.tr)
+Text('logout'.tr)
 ```
 
 ### 2. Translation dengan Parameter
 
 ```dart
-// Sebelumnya:
-localizations.totalPayment('Rp 10.000')
-
-// Sekarang:
 'totalPayment'.trParams({'amount': 'Rp 10.000'})
 ```
 
@@ -38,7 +33,7 @@ localizations.totalPayment('Rp 10.000')
 @override
 Widget build(BuildContext context) {
   // Initialize translations dengan language code saat ini
-  AppLocalizations.of(widget.languageCode);
+  TranslationService.setLanguage(widget.languageCode);
 
   return Scaffold(
     appBar: AppBarX(
@@ -80,15 +75,27 @@ Semua key yang ada di `translations/en.dart` dan `translations/id.dart` bisa dig
 
 ## Keuntungan
 
-✅ **Lebih ringkas** - tidak perlu `final localizations = AppLocalizations.of(...)`  
+✅ **Lebih ringkas** - tidak perlu deklarasi variable localizations  
 ✅ **Lebih mudah dibaca** - `'title'.tr` lebih intuitif  
 ✅ **Konsisten** - pattern yang sama dengan package seperti GetX, easy_localization  
-✅ **Backward compatible** - cara lama masih tetap bisa digunakan  
+✅ **Type-safe** - Translation keys terpusat di en.dart dan id.dart
 
-## Migration
+## Menambah Translation Baru
 
-Anda bisa migrate secara bertahap:
+1. Tambahkan key ke `lib/translations/en.dart`:
 
-1. Tambahkan import `translation_extension.dart`
-2. Initialize dengan `AppLocalizations.of(widget.languageCode)` di build method
-3. Ganti `localizations.keyName` menjadi `'keyName'.tr`
+   ```dart
+   'newKey': 'New English Text',
+   ```
+
+2. Tambahkan key yang sama ke `lib/translations/id.dart`:
+
+   ```dart
+   'newKey': 'Teks Bahasa Indonesia Baru',
+   ```
+
+3. Gunakan langsung dengan `.tr`:
+
+   ```dart
+   Text('newKey'.tr)
+   ```

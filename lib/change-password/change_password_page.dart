@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../change-password/change_password_service.dart';
 import '../shared/widgets/app_bar_x.dart';
+import 'change_password_service.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   final String languageCode;

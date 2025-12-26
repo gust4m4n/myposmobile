@@ -73,4 +73,57 @@ const Map<String, String> id = {
   'pleaseEnterBranchCode': 'Mohon masukkan kode cabang',
   'pleaseEnterUsername': 'Mohon masukkan username',
   'pleaseEnterPassword': 'Mohon masukkan password',
+
+  // Change Password
+  'changePassword': 'Ubah Password',
+  'currentPassword': 'Password Saat Ini',
+  'newPassword': 'Password Baru',
+  'confirmNewPassword': 'Konfirmasi Password Baru',
+  'pleaseEnterCurrentPassword': 'Mohon masukkan password saat ini',
+  'pleaseEnterNewPassword': 'Mohon masukkan password baru',
+  'pleaseConfirmPassword': 'Mohon konfirmasi password baru',
+  'passwordsDoNotMatch': 'Password tidak cocok',
+  'passwordMustBe6Characters': 'Password minimal 6 karakter',
+  'passwordChangedSuccessfully': 'Password berhasil diubah',
+  'changing': 'Mengubah...',
+
+  // Login Page Additional
+  'loadingTenants': 'Memuat tenant...',
+  'loadingBranches': 'Memuat cabang...',
+  'selectTenant': 'Pilih Tenant',
+  'selectBranch': 'Pilih Cabang',
+  'selectTenantFirst': 'Pilih tenant terlebih dahulu',
+
+  // Profile Page
+  'noProfileData': 'Tidak ada data profil',
+
+  // Orders Page Additional
+  'orderNumber': 'Nomor Pesanan',
+  'totalAmount': 'Total Jumlah',
+  'status': 'Status',
+  'createdAt': 'Dibuat Pada',
+
+  // Payments Page Additional
+  'paymentId': 'ID Pembayaran',
+  'amount': 'Jumlah',
+
+  // Table Columns
+  'product': 'Produk',
+  'qty': 'Qty',
+  'subtotal': 'Subtotal',
+
+  // Common Labels
+  'notes': 'Catatan',
+  'created': 'Dibuat',
+
+  // FAQ & TNC
+  'faq': 'FAQ',
+  'termsAndConditions': 'Syarat & Ketentuan',
+  'viewAll': 'Lihat Semua',
+  'viewActive': 'Lihat Aktif',
+  'active': 'Aktif',
+
+  // Payment Methods
+  'cash': 'Tunai',
+  'card': 'Kartu',
 };

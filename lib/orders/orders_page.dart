@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
-import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 import 'order_detail_dialog.dart';
 import 'orders_service.dart';
 
@@ -80,11 +80,11 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
 
     return Scaffold(
       appBar: AppBarX(
-        title: localizations.orders,
+        title: 'orders'.tr,
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadOrders),
         ],
@@ -103,7 +103,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    localizations.noOrders,
+                    'noOrders'.tr,
                     style: const TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                 ],
@@ -115,17 +115,20 @@ class _OrdersPageState extends State<OrdersPage> {
               columns: [
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: 'Order Number',
+                  label: 'orderNumber'.tr,
                 ),
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: 'Total Amount',
+                  label: 'totalAmount'.tr,
                   numeric: true,
                 ),
-                DataTableColumn.buildColumn(context: context, label: 'Status'),
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: 'Created At',
+                  label: 'status'.tr,
+                ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'createdAt'.tr,
                 ),
               ],
               rows: _orders.map((order) {

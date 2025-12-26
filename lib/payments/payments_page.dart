@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
-import '../translations/app_localizations.dart';
 import '../translations/translation_extension.dart';
 import 'payment_detail_dialog.dart';
 import 'payments_service.dart';
@@ -82,7 +81,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   Widget build(BuildContext context) {
     // Initialize translations with current language
-    AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
 
     return Scaffold(
       appBar: AppBarX(
@@ -117,7 +116,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
               columns: [
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: 'Payment ID',
+                  label: 'paymentId'.tr,
                 ),
                 DataTableColumn.buildColumn(
                   context: context,
@@ -125,17 +124,20 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 ),
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: 'Amount',
+                  label: 'amount'.tr,
                   numeric: true,
                 ),
                 DataTableColumn.buildColumn(
                   context: context,
                   label: 'method'.tr,
                 ),
-                DataTableColumn.buildColumn(context: context, label: 'Status'),
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: 'Created At',
+                  label: 'status'.tr,
+                ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'createdAt'.tr,
                 ),
               ],
               rows: _payments.map((payment) {

@@ -5,6 +5,7 @@ import '../common/tnc_service.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
+import '../translations/translation_extension.dart';
 
 class TncPage extends StatefulWidget {
   final String languageCode;
@@ -220,7 +221,7 @@ class _TncPageState extends State<TncPage> {
           ButtonX(
             onPressed: () => Navigator.pop(context),
             icon: Icons.close,
-            label: 'Close',
+            label: 'close'.tr,
             backgroundColor: theme.colorScheme.primary,
           ),
         ],
@@ -338,7 +339,7 @@ class _TncPageState extends State<TncPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Active',
+                          'active'.tr,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.green[700],
@@ -528,7 +529,7 @@ class _TncPageState extends State<TncPage> {
 
     return Scaffold(
       appBar: AppBarX(
-        title: 'Terms & Conditions',
+        title: 'termsAndConditions'.tr,
         actions: [
           // Toggle view button
           TextButton.icon(
@@ -544,7 +545,7 @@ class _TncPageState extends State<TncPage> {
               color: theme.colorScheme.onPrimary,
             ),
             label: Text(
-              _showingActive ? 'View All' : 'View Active',
+              _showingActive ? 'viewAll'.tr : 'viewActive'.tr,
               style: TextStyle(color: theme.colorScheme.onPrimary),
             ),
           ),

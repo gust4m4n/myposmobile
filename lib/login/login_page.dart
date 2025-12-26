@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../shared/widgets/app_bar_x.dart';
-import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 import 'dev_branches_service.dart';
 import 'dev_tenants_service.dart';
 import 'login_service.dart';
@@ -135,17 +135,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBarX(
-        title: localizations.login,
+        title: 'login'.tr,
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.language),
-            tooltip: localizations.language,
+            tooltip: 'language'.tr,
             onSelected: (value) {
               widget.onLanguageToggle();
             },
@@ -159,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                     else
                       const SizedBox(width: 20),
                     const SizedBox(width: 8),
-                    Text(localizations.english),
+                    Text('english'.tr),
                   ],
                 ),
               ),
@@ -172,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                     else
                       const SizedBox(width: 20),
                     const SizedBox(width: 8),
-                    Text(localizations.indonesian),
+                    Text('indonesian'.tr),
                   ],
                 ),
               ),
@@ -199,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    localizations.appTitle,
+                    'appTitle'.tr,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 32,
@@ -213,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                   DropdownButtonFormField<Map<String, dynamic>>(
                     value: _selectedTenant,
                     decoration: InputDecoration(
-                      labelText: localizations.tenantCode,
+                      labelText: 'tenantCode'.tr,
                       prefixIcon: const Icon(Icons.business),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -222,20 +222,20 @@ class _LoginPageState extends State<LoginPage> {
                       fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
                     ),
                     hint: _isLoadingTenants
-                        ? const Row(
+                        ? Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 16,
                                 height: 16,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                 ),
                               ),
-                              SizedBox(width: 12),
-                              Text('Loading tenants...'),
+                              const SizedBox(width: 12),
+                              Text('loadingTenants'.tr),
                             ],
                           )
-                        : const Text('Select Tenant'),
+                        : Text('selectTenant'.tr),
                     items: _tenants.map((tenant) {
                       return DropdownMenuItem<Map<String, dynamic>>(
                         value: tenant,
@@ -256,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                     validator: (value) {
                       if (value == null) {
-                        return localizations.pleaseEnterTenantCode;
+                        return 'pleaseEnterTenantCode'.tr;
                       }
                       return null;
                     },
@@ -267,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                   DropdownButtonFormField<Map<String, dynamic>>(
                     value: _selectedBranch,
                     decoration: InputDecoration(
-                      labelText: localizations.branchCode,
+                      labelText: 'branchCode'.tr,
                       prefixIcon: const Icon(Icons.storefront),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -276,23 +276,23 @@ class _LoginPageState extends State<LoginPage> {
                       fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
                     ),
                     hint: _isLoadingBranches
-                        ? const Row(
+                        ? Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 16,
                                 height: 16,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                 ),
                               ),
-                              SizedBox(width: 12),
-                              Text('Loading branches...'),
+                              const SizedBox(width: 12),
+                              Text('loadingBranches'.tr),
                             ],
                           )
                         : Text(
                             _selectedTenant == null
-                                ? 'Select tenant first'
-                                : 'Select Branch',
+                                ? 'selectTenantFirst'.tr
+                                : 'selectBranch'.tr,
                           ),
                     items: _branches.map((branch) {
                       return DropdownMenuItem<Map<String, dynamic>>(
@@ -312,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                     validator: (value) {
                       if (value == null) {
-                        return localizations.pleaseEnterBranchCode;
+                        return 'pleaseEnterBranchCode'.tr;
                       }
                       return null;
                     },
@@ -323,7 +323,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _usernameController,
                     decoration: InputDecoration(
-                      labelText: localizations.username,
+                      labelText: 'username'.tr,
                       prefixIcon: const Icon(Icons.person),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -332,8 +332,8 @@ class _LoginPageState extends State<LoginPage> {
                       fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
                     ),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return localizations.pleaseEnterUsername;
+                      if (value == null || value.isEmpty) {
+                        return 'pleaseEnterUsername'.tr;
                       }
                       return null;
                     },
@@ -346,7 +346,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: localizations.password,
+                      labelText: 'password'.tr,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -368,7 +368,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return localizations.pleaseEnterPassword;
+                        return 'pleaseEnterPassword'.tr;
                       }
                       return null;
                     },
@@ -405,7 +405,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  localizations.loggingIn,
+                                  'loggingIn'.tr,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -414,7 +414,7 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             )
                           : Text(
-                              localizations.loginButton,
+                              'loginButton'.tr,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

@@ -4,7 +4,7 @@ import '../orders/orders_service.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
-import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 
 class PaymentDetailDialog extends StatefulWidget {
   final Map<String, dynamic> payment;
@@ -56,7 +56,7 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
     final payment = widget.payment;
     final amount = payment['amount'] ?? 0;
     final paymentMethod = payment['payment_method'] ?? 'N/A';
@@ -66,7 +66,7 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
     final orderId = payment['order_id'] ?? 0;
 
     return DialogX(
-      title: '${localizations.payments} #${payment['id'] ?? 'N/A'}',
+      title: '${'payments'.tr} #${payment['id'] ?? 'N/A'}',
       width: 500,
       onClose: () => Navigator.pop(context),
       content: SizedBox(
@@ -75,20 +75,20 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildInfoRow('Status', status, theme),
+            _buildInfoRow('status'.tr, status, theme),
             _buildInfoRow(
-              'Amount',
+              'amount'.tr,
               CurrencyFormatter.format(amount.toDouble()),
               theme,
             ),
-            _buildInfoRow(localizations.method, paymentMethod, theme),
-            _buildInfoRow(localizations.orderId, '#$orderId', theme),
+            _buildInfoRow('method'.tr, paymentMethod, theme),
+            _buildInfoRow('orderId'.tr, '#$orderId', theme),
             if (notes != null && notes.toString().isNotEmpty)
-              _buildInfoRow('Notes', notes.toString(), theme),
-            _buildInfoRow('Created', createdAt, theme),
+              _buildInfoRow('notes'.tr, notes.toString(), theme),
+            _buildInfoRow('created'.tr, createdAt, theme),
             const SizedBox(height: 16),
             Text(
-              localizations.orderItems,
+              'orderItems'.tr,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -102,16 +102,16 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
                   columns: [
                     DataTableColumn.buildColumn(
                       context: context,
-                      label: 'Product',
+                      label: 'product'.tr,
                     ),
                     DataTableColumn.buildColumn(
                       context: context,
-                      label: localizations.price,
+                      label: 'price'.tr,
                       numeric: true,
                     ),
                     DataTableColumn.buildColumn(
                       context: context,
-                      label: 'Qty',
+                      label: 'qty'.tr,
                       numeric: true,
                     ),
                     DataTableColumn.buildColumn(

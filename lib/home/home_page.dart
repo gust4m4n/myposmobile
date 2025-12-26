@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myposmobile/shared/widgets/button_x.dart';
 
-import '../auth/change_password_page.dart';
+import '../change-password/change_password_dialog.dart';
 import '../common/faq_page.dart';
 import '../common/tnc_page.dart';
 import '../orders/orders_page.dart';
@@ -14,7 +14,7 @@ import '../shared/api_models.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/dialog_x.dart';
-import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 import 'checkout_dialog.dart';
 import 'product_model.dart';
 import 'product_section_widget.dart';
@@ -100,19 +100,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _extractCategories() {
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
     final categorySet = _products.map((p) => p.category).toSet();
-    _categories = [localizations.all, ...categorySet];
+    _categories = ['all'.tr, ...categorySet];
   }
 
   String get selectedCategory {
-    final localizations = AppLocalizations.of(widget.languageCode);
-    return _selectedCategory ?? localizations.all;
+    TranslationService.setLanguage(widget.languageCode);
+    return _selectedCategory ?? 'all'.tr;
   }
 
   List<ProductModel> get _filteredProducts {
-    final localizations = AppLocalizations.of(widget.languageCode);
-    if (selectedCategory == localizations.all) {
+    TranslationService.setLanguage(widget.languageCode);
+    if (selectedCategory == 'all'.tr) {
       return _products;
     }
     return _products.where((p) => p.category == selectedCategory).toList();
@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _processCheckout(String paymentMethod) async {
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
 
     // Show loading
     showDialog(
@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(localizations.transactionSuccess),
+              content: Text('transactionSuccess'.tr),
               backgroundColor: Colors.green,
             ),
           );
@@ -240,7 +240,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCartContent({ScrollController? scrollController}) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
 
     return Container(
       decoration: BoxDecoration(
@@ -266,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                 const Icon(Icons.shopping_cart),
                 const SizedBox(width: 8),
                 Text(
-                  localizations.cart,
+                  'cart'.tr,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -294,7 +294,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          localizations.emptyCart,
+                          'emptyCart'.tr,
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 16,
@@ -407,7 +407,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      localizations.total,
+                      'total'.tr,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -438,7 +438,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     child: Text(
-                      localizations.checkout,
+                      'checkout'.tr,
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
@@ -459,7 +459,7 @@ class _HomePageState extends State<HomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTabletOrDesktop = screenWidth >= 768;
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -497,7 +497,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.language),
-            tooltip: localizations.language,
+            tooltip: 'language'.tr,
             onSelected: (value) {
               widget.onLanguageToggle();
             },
@@ -511,7 +511,7 @@ class _HomePageState extends State<HomePage> {
                     else
                       const SizedBox(width: 20),
                     const SizedBox(width: 8),
-                    Text(localizations.english),
+                    Text('english'.tr),
                   ],
                 ),
               ),
@@ -524,7 +524,7 @@ class _HomePageState extends State<HomePage> {
                     else
                       const SizedBox(width: 20),
                     const SizedBox(width: 8),
-                    Text(localizations.indonesian),
+                    Text('indonesian'.tr),
                   ],
                 ),
               ),
@@ -605,7 +605,7 @@ class _HomePageState extends State<HomePage> {
                             const Icon(Icons.shopping_cart),
                             const SizedBox(width: 8),
                             Text(
-                              localizations.cart,
+                              'cart'.tr,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -627,7 +627,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
-                                      localizations.emptyCart,
+                                      'emptyCart'.tr,
                                       style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 16,
@@ -741,7 +741,7 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  localizations.total,
+                                  'total'.tr,
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -772,7 +772,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 child: Text(
-                                  localizations.checkout,
+                                  'checkout'.tr,
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600,
@@ -886,7 +886,7 @@ class _HomePageState extends State<HomePage> {
                   color: theme.colorScheme.onSurface,
                 ),
                 title: Text(
-                  localizations.profile,
+                  'profile'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: theme.colorScheme.onSurface,
@@ -909,7 +909,7 @@ class _HomePageState extends State<HomePage> {
                   color: theme.colorScheme.onSurface,
                 ),
                 title: Text(
-                  'Change Password',
+                  'changePassword'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: theme.colorScheme.onSurface,
@@ -917,12 +917,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ChangePasswordPage(languageCode: widget.languageCode),
-                    ),
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        ChangePasswordDialog(languageCode: widget.languageCode),
                   );
                 },
               ),
@@ -932,7 +930,7 @@ class _HomePageState extends State<HomePage> {
                   color: theme.colorScheme.onSurface,
                 ),
                 title: Text(
-                  localizations.orders,
+                  'orders'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: theme.colorScheme.onSurface,
@@ -955,7 +953,7 @@ class _HomePageState extends State<HomePage> {
                   color: theme.colorScheme.onSurface,
                 ),
                 title: Text(
-                  localizations.payments,
+                  'payments'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: theme.colorScheme.onSurface,
@@ -979,7 +977,7 @@ class _HomePageState extends State<HomePage> {
                   color: theme.colorScheme.onSurface,
                 ),
                 title: Text(
-                  'FAQ',
+                  'faq'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: theme.colorScheme.onSurface,
@@ -1002,7 +1000,7 @@ class _HomePageState extends State<HomePage> {
                   color: theme.colorScheme.onSurface,
                 ),
                 title: Text(
-                  'Terms & Conditions',
+                  'termsAndConditions'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: theme.colorScheme.onSurface,
@@ -1023,7 +1021,7 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 leading: Icon(Icons.logout, color: theme.colorScheme.error),
                 title: Text(
-                  localizations.logout,
+                  'logout'.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: theme.colorScheme.error,
@@ -1035,22 +1033,22 @@ class _HomePageState extends State<HomePage> {
                   final confirmed = await showDialog<bool>(
                     context: context,
                     builder: (context) => DialogX(
-                      title: localizations.logout,
+                      title: 'logout'.tr,
                       width: 400,
                       onClose: () => Navigator.pop(context, false),
-                      content: Text(localizations.logoutConfirmation),
+                      content: Text('logoutConfirmation'.tr),
                       actions: [
                         ButtonX(
                           onPressed: () => Navigator.pop(context, false),
                           icon: Icons.cancel,
-                          label: localizations.cancel,
+                          label: 'cancel'.tr,
                           backgroundColor: theme.colorScheme.surface,
                           foregroundColor: theme.colorScheme.onSurface,
                         ),
                         ButtonX(
                           onPressed: () => Navigator.pop(context, true),
                           icon: Icons.logout,
-                          label: localizations.logout,
+                          label: 'logout'.tr,
                           backgroundColor: theme.colorScheme.error,
                         ),
                       ],

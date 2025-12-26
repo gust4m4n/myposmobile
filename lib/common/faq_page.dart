@@ -4,6 +4,7 @@ import '../common/faq_service.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
+import '../translations/translation_extension.dart';
 
 class FaqPage extends StatefulWidget {
   final String languageCode;
@@ -156,7 +157,7 @@ class _FaqPageState extends State<FaqPage> {
           ButtonX(
             onPressed: () => Navigator.pop(context),
             icon: Icons.close,
-            label: 'Close',
+            label: 'close'.tr,
             backgroundColor: theme.colorScheme.primary,
           ),
         ],
@@ -169,7 +170,7 @@ class _FaqPageState extends State<FaqPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBarX(title: 'FAQ'),
+      appBar: AppBarX(title: 'faq'.tr),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(

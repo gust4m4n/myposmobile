@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../shared/api_models.dart';
 import '../shared/widgets/app_bar_x.dart';
-import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 import 'profile_service.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -50,15 +50,15 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(widget.languageCode);
+    TranslationService.setLanguage(widget.languageCode);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBarX(title: localizations.profile),
+      appBar: AppBarX(title: 'profile'.tr),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _profile == null
-          ? const Center(child: Text('No profile data'))
+          ? Center(child: Text('noProfileData'.tr))
           : ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(
                 scrollbars: false,
