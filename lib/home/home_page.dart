@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> {
   List<ProductModel> _products = [];
   List<String> _categories = [];
   bool _isLoading = false;
-  String? _errorMessage;
   final _profileService = ProfileService();
   ProfileModel? _profile;
   String _appTitle = 'MyPOSMobile';
@@ -63,51 +62,38 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadProfile() async {
-    try {
-      final response = await _profileService.getProfile();
+    final response = await _profileService.getProfile();
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _profile = response.data;
-          _appTitle = '${_profile!.tenant.name} - ${_profile!.branch.name}';
-        });
-      }
-    } catch (e) {
-      // Silently fail, keep default title
+    if (response.isSuccess && response.data != null) {
+      setState(() {
+        _profile = response.data;
+        _appTitle = '${_profile!.tenant.name} - ${_profile!.branch.name}';
+      });
     }
   }
 
   Future<void> _loadProducts() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    try {
-      final response = await ProductsService.getProducts();
+    final response = await ProductsService.getProducts();
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _products = response.data!
-              .map((json) => ProductModel.fromJson(json))
-              .toList();
-          _isLoading = false;
-          _extractCategories();
-        });
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to load products';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
       setState(() {
-        _errorMessage = 'Error loading products: $e';
+        _products = response.data!
+            .map((json) => ProductModel.fromJson(json))
+            .toList();
+        _extractCategories();
+      });
+    }
+
+    if (mounted) {
+      setState(() {
         _isLoading = false;
       });
     }
@@ -188,26 +174,22 @@ class _HomePageState extends State<HomePage> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    try {
-      // Prepare order items
-      final items = _cart.map((cartItem) {
-        return {
-          'product_id': cartItem.product.id,
-          'quantity': cartItem.quantity,
-          'price': cartItem.product.price,
-        };
-      }).toList();
+    // Prepare order items
+    final items = _cart.map((cartItem) {
+      return {
+        'product_id': cartItem.product.id,
+        'quantity': cartItem.quantity,
+        'price': cartItem.product.price,
+      };
+    }).toList();
 
-      // Create order
-      final orderResponse = await OrdersService.createOrder(
-        items: items,
-        notes: 'POS Order',
-      );
+    // Create order
+    final orderResponse = await OrdersService.createOrder(
+      items: items,
+      notes: 'POS Order',
+    );
 
-      if (!orderResponse.isSuccess || orderResponse.data == null) {
-        throw Exception(orderResponse.error ?? 'Failed to create order');
-      }
-
+    if (orderResponse.isSuccess && orderResponse.data != null) {
       final orderId = orderResponse.data!['id'];
       final totalAmount = _totalPrice;
 
@@ -219,40 +201,25 @@ class _HomePageState extends State<HomePage> {
         notes: 'POS Payment - $paymentMethod',
       );
 
-      if (!paymentResponse.isSuccess) {
-        throw Exception(paymentResponse.error ?? 'Failed to create payment');
-      }
+      if (paymentResponse.isSuccess) {
+        // Clear cart and show success
+        setState(() {
+          _cart.clear();
+        });
 
-      // Close loading
-      if (mounted) Navigator.pop(context);
-
-      // Clear cart and show success
-      setState(() {
-        _cart.clear();
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(localizations.transactionSuccess),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    } catch (e) {
-      // Close loading
-      if (mounted) Navigator.pop(context);
-
-      // Show error
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Transaction failed: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(localizations.transactionSuccess),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
       }
     }
+
+    // Close loading dialog
+    if (mounted) Navigator.pop(context);
   }
 
   void _showCartBottomSheet(BuildContext context) {
@@ -601,27 +568,6 @@ class _HomePageState extends State<HomePage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.red, fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: _loadProducts,
-                    icon: const Icon(Icons.refresh),
-                    label: Text(localizations.retry),
-                  ),
-                ],
-              ),
-            )
           : isTabletOrDesktop
           ? Row(
               children: [

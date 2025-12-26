@@ -19,7 +19,6 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   List<Map<String, dynamic>> _orders = [];
   bool _isLoading = false;
-  String? _errorMessage;
 
   @override
   void initState() {
@@ -30,29 +29,20 @@ class _OrdersPageState extends State<OrdersPage> {
   Future<void> _loadOrders() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    try {
-      final response = await OrdersService.getOrders();
+    final response = await OrdersService.getOrders();
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _orders = response.data!;
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to load orders';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
       setState(() {
-        _errorMessage = 'Error loading orders: $e';
+        _orders = response.data!;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
         _isLoading = false;
       });
     }
@@ -69,39 +59,20 @@ class _OrdersPageState extends State<OrdersPage> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    try {
-      final response = await OrdersService.getOrderById(orderId);
+    final response = await OrdersService.getOrderById(orderId);
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      // Close loading dialog
-      Navigator.pop(context);
+    // Close loading dialog
+    Navigator.pop(context);
 
-      if (response.isSuccess && response.data != null) {
-        // Show order detail dialog with fetched data
-        showDialog(
-          context: context,
-          builder: (context) => OrderDetailDialog(
-            order: response.data!,
-            languageCode: widget.languageCode,
-          ),
-        );
-      } else {
-        // Show error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.error ?? 'Failed to load order details'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      Navigator.pop(context); // Close loading
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error loading order details: $e'),
-          backgroundColor: Colors.red,
+    if (response.isSuccess && response.data != null) {
+      // Show order detail dialog with fetched data
+      showDialog(
+        context: context,
+        builder: (context) => OrderDetailDialog(
+          order: response.data!,
+          languageCode: widget.languageCode,
         ),
       );
     }
@@ -120,27 +91,6 @@ class _OrdersPageState extends State<OrdersPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: _loadOrders,
-                    icon: const Icon(Icons.refresh),
-                    label: Text(localizations.retry),
-                  ),
-                ],
-              ),
-            )
           : _orders.isEmpty
           ? Center(
               child: Column(

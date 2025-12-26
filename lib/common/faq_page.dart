@@ -19,7 +19,6 @@ class _FaqPageState extends State<FaqPage> {
   List<dynamic> _faqs = [];
   List<dynamic> _filteredFaqs = [];
   bool _isLoading = true;
-  String? _errorMessage;
   String _selectedCategory = 'All';
   List<String> _categories = ['All'];
   final TextEditingController _searchController = TextEditingController();
@@ -39,56 +38,44 @@ class _FaqPageState extends State<FaqPage> {
   Future<void> _loadFaqs() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    try {
-      final result = await _faqService.getAllFaq(activeOnly: true);
+    final result = await _faqService.getAllFaq(activeOnly: true);
 
-      if (result['success'] == true) {
-        final data = result['data'];
-        print('FAQ Response data: $data'); // Debug print
+    if (result['success'] == true) {
+      final data = result['data'];
+      print('FAQ Response data: $data'); // Debug print
 
-        // Parse the response - check if data contains 'data' key or is directly the list
-        List<dynamic> faqList;
-        if (data is Map && data.containsKey('data')) {
-          faqList = data['data'] as List<dynamic>;
-        } else if (data is List) {
-          faqList = data;
-        } else {
-          faqList = [];
-        }
-
-        print('FAQ List count: ${faqList.length}'); // Debug print
-
-        // Extract unique categories
-        final categoriesSet = <String>{'All'};
-        for (var faq in faqList) {
-          if (faq['category'] != null &&
-              faq['category'].toString().isNotEmpty) {
-            categoriesSet.add(faq['category']);
-          }
-        }
-
-        setState(() {
-          _faqs = faqList;
-          _filteredFaqs = faqList;
-          _categories = categoriesSet.toList();
-          _isLoading = false;
-        });
+      // Parse the response - check if data contains 'data' key or is directly the list
+      List<dynamic> faqList;
+      if (data is Map && data.containsKey('data')) {
+        faqList = data['data'] as List<dynamic>;
+      } else if (data is List) {
+        faqList = data;
       } else {
-        setState(() {
-          _errorMessage = result['message'] ?? 'Failed to load FAQs';
-          _isLoading = false;
-        });
+        faqList = [];
       }
-    } catch (e) {
-      print('FAQ Error: $e'); // Debug print
+
+      print('FAQ List count: ${faqList.length}'); // Debug print
+
+      // Extract unique categories
+      final categoriesSet = <String>{'All'};
+      for (var faq in faqList) {
+        if (faq['category'] != null && faq['category'].toString().isNotEmpty) {
+          categoriesSet.add(faq['category']);
+        }
+      }
+
       setState(() {
-        _errorMessage = 'Error: $e';
-        _isLoading = false;
+        _faqs = faqList;
+        _filteredFaqs = faqList;
+        _categories = categoriesSet.toList();
       });
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _filterFaqs() {
@@ -185,35 +172,6 @@ class _FaqPageState extends State<FaqPage> {
       appBar: AppBarX(title: 'FAQ'),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: theme.colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: theme.colorScheme.error,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ButtonX(
-                    onPressed: _loadFaqs,
-                    icon: Icons.refresh,
-                    label: 'Retry',
-                    backgroundColor: theme.colorScheme.primary,
-                  ),
-                ],
-              ),
-            )
           : Column(
               children: [
                 // Search and filter section

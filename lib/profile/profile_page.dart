@@ -17,7 +17,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _profileService = ProfileService();
   bool _isLoading = true;
-  String? _errorMessage;
   ProfileModel? _profile;
 
   @override
@@ -29,29 +28,20 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfile() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    try {
-      final response = await _profileService.getProfile();
+    final response = await _profileService.getProfile();
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _profile = response.data;
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to load profile';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
       setState(() {
-        _errorMessage = 'Error: $e';
+        _profile = response.data;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
         _isLoading = false;
       });
     }
@@ -67,38 +57,6 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBarX(title: localizations.profile),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: theme.colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: theme.colorScheme.error,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: _loadProfile,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            )
           : _profile == null
           ? const Center(child: Text('No profile data'))
           : ScrollConfiguration(

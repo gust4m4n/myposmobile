@@ -23,7 +23,6 @@ class PaymentDetailDialog extends StatefulWidget {
 class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
   Map<String, dynamic>? _orderData;
   bool _isLoading = false;
-  String? _errorMessage;
 
   @override
   void initState() {
@@ -34,30 +33,21 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
   Future<void> _loadOrderDetails() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    try {
-      final orderId = widget.payment['order_id'];
-      final response = await OrdersService.getOrderById(orderId);
+    final orderId = widget.payment['order_id'];
+    final response = await OrdersService.getOrderById(orderId);
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _orderData = response.data!;
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to load order details';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
       setState(() {
-        _errorMessage = 'Error loading order details: $e';
+        _orderData = response.data!;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
         _isLoading = false;
       });
     }
@@ -104,23 +94,6 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
             const SizedBox(height: 8),
             if (_isLoading)
               const Expanded(child: Center(child: CircularProgressIndicator()))
-            else if (_errorMessage != null)
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, color: Colors.red),
-                      const SizedBox(height: 8),
-                      Text(
-                        _errorMessage!,
-                        style: const TextStyle(color: Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              )
             else if (_orderData != null)
               Expanded(
                 child: ScrollableDataTable(

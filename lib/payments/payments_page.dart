@@ -20,7 +20,6 @@ class PaymentsPage extends StatefulWidget {
 class _PaymentsPageState extends State<PaymentsPage> {
   List<Map<String, dynamic>> _payments = [];
   bool _isLoading = false;
-  String? _errorMessage;
 
   @override
   void initState() {
@@ -31,29 +30,20 @@ class _PaymentsPageState extends State<PaymentsPage> {
   Future<void> _loadPayments() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    try {
-      final response = await PaymentsService.getPayments();
+    final response = await PaymentsService.getPayments();
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _payments = response.data!;
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to load payments';
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
       setState(() {
-        _errorMessage = 'Error loading payments: $e';
+        _payments = response.data!;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
         _isLoading = false;
       });
     }
@@ -70,39 +60,20 @@ class _PaymentsPageState extends State<PaymentsPage> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    try {
-      final response = await PaymentsService.getPaymentById(paymentId);
+    final response = await PaymentsService.getPaymentById(paymentId);
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      // Close loading dialog
-      Navigator.pop(context);
+    // Close loading dialog
+    Navigator.pop(context);
 
-      if (response.isSuccess && response.data != null) {
-        // Show payment detail dialog with fetched data
-        showDialog(
-          context: context,
-          builder: (context) => PaymentDetailDialog(
-            payment: response.data!,
-            languageCode: widget.languageCode,
-          ),
-        );
-      } else {
-        // Show error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.error ?? 'Failed to load payment details'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      Navigator.pop(context); // Close loading
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error loading payment details: $e'),
-          backgroundColor: Colors.red,
+    if (response.isSuccess && response.data != null) {
+      // Show payment detail dialog with fetched data
+      showDialog(
+        context: context,
+        builder: (context) => PaymentDetailDialog(
+          payment: response.data!,
+          languageCode: widget.languageCode,
         ),
       );
     }
@@ -122,27 +93,6 @@ class _PaymentsPageState extends State<PaymentsPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: _loadPayments,
-                    icon: const Icon(Icons.refresh),
-                    label: Text('retry'.tr),
-                  ),
-                ],
-              ),
-            )
           : _payments.isEmpty
           ? Center(
               child: Column(

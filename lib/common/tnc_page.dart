@@ -20,7 +20,6 @@ class _TncPageState extends State<TncPage> {
   List<dynamic> _tncList = [];
   dynamic _activeTnc;
   bool _isLoading = true;
-  String? _errorMessage;
   bool _showingActive = true;
 
   @override
@@ -32,80 +31,58 @@ class _TncPageState extends State<TncPage> {
   Future<void> _loadActiveTnc() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
       _showingActive = true;
     });
 
-    try {
-      final result = await _tncService.getActiveTnc();
+    final result = await _tncService.getActiveTnc();
 
-      if (result['success'] == true) {
-        final data = result['data'];
-        // Parse the response - check if data contains 'data' key or is directly the object
-        dynamic tncData;
-        if (data is Map && data.containsKey('data')) {
-          tncData = data['data'];
-        } else {
-          tncData = data;
-        }
-        setState(() {
-          _activeTnc = tncData;
-          _isLoading = false;
-        });
+    if (result['success'] == true) {
+      final data = result['data'];
+      // Parse the response - check if data contains 'data' key or is directly the object
+      dynamic tncData;
+      if (data is Map && data.containsKey('data')) {
+        tncData = data['data'];
       } else {
-        setState(() {
-          _errorMessage =
-              result['message'] ?? 'Failed to load Terms & Conditions';
-          _isLoading = false;
-        });
+        tncData = data;
       }
-    } catch (e) {
       setState(() {
-        _errorMessage = 'Error: $e';
-        _isLoading = false;
+        _activeTnc = tncData;
       });
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Future<void> _loadAllTnc() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
       _showingActive = false;
     });
 
-    try {
-      final result = await _tncService.getAllTnc();
+    final result = await _tncService.getAllTnc();
 
-      if (result['success'] == true) {
-        final data = result['data'];
-        // Parse the response - check if data contains 'data' key or is directly the list
-        List<dynamic> tncList;
-        if (data is Map && data.containsKey('data')) {
-          tncList = data['data'] as List<dynamic>;
-        } else if (data is List) {
-          tncList = data;
-        } else {
-          tncList = [];
-        }
-
-        setState(() {
-          _tncList = tncList;
-          _isLoading = false;
-        });
+    if (result['success'] == true) {
+      final data = result['data'];
+      // Parse the response - check if data contains 'data' key or is directly the list
+      List<dynamic> tncList;
+      if (data is Map && data.containsKey('data')) {
+        tncList = data['data'] as List<dynamic>;
+      } else if (data is List) {
+        tncList = data;
       } else {
-        setState(() {
-          _errorMessage =
-              result['message'] ?? 'Failed to load Terms & Conditions';
-          _isLoading = false;
-        });
+        tncList = [];
       }
-    } catch (e) {
+
       setState(() {
-        _errorMessage = 'Error: $e';
-        _isLoading = false;
+        _tncList = tncList;
       });
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _showTncDetail(dynamic tnc) {
@@ -575,38 +552,6 @@ class _TncPageState extends State<TncPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: theme.colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(
-                      _errorMessage!,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: theme.colorScheme.error,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  ButtonX(
-                    onPressed: _showingActive ? _loadActiveTnc : _loadAllTnc,
-                    icon: Icons.refresh,
-                    label: 'Retry',
-                    backgroundColor: theme.colorScheme.primary,
-                  ),
-                ],
-              ),
-            )
           : _showingActive
           ? _buildActiveTncView()
           : _buildAllTncView(),

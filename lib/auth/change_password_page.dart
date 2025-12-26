@@ -30,7 +30,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
-  String? _errorMessage;
 
   @override
   void dispose() {
@@ -47,41 +46,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    try {
-      final response = await _changePasswordService.changePassword(
-        oldPassword: _oldPasswordController.text,
-        newPassword: _newPasswordController.text,
-      );
+    final response = await _changePasswordService.changePassword(
+      oldPassword: _oldPasswordController.text,
+      newPassword: _newPasswordController.text,
+    );
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess) {
-        // Clear form and go back
-        _oldPasswordController.clear();
-        _newPasswordController.clear();
-        _confirmPasswordController.clear();
+    if (response.isSuccess) {
+      // Clear form and go back
+      _oldPasswordController.clear();
+      _newPasswordController.clear();
+      _confirmPasswordController.clear();
 
-        // Go back to previous page
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to change password';
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _errorMessage = 'Error: $e';
-      });
-    } finally {
+      // Go back to previous page
       if (mounted) {
-        setState(() => _isLoading = false);
+        Navigator.pop(context);
       }
+    }
+
+    if (mounted) {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -289,20 +276,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             ),
                     ),
                   ),
-
-                  // Error Message
-                  if (_errorMessage != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      _errorMessage!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: theme.colorScheme.error,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),

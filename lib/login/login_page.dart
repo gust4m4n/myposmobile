@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoadingTenants = false;
   bool _isLoadingBranches = false;
   bool _obscurePassword = true;
-  String? _errorMessage;
 
   // Dropdown data
   List<Map<String, dynamic>> _tenants = [];
@@ -56,29 +55,20 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _loadTenants() async {
     setState(() {
       _isLoadingTenants = true;
-      _errorMessage = null;
     });
 
-    try {
-      final response = await DevTenantsService.getDevTenants();
+    final response = await DevTenantsService.getDevTenants();
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _tenants = response.data!;
-          _isLoadingTenants = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to load tenants';
-          _isLoadingTenants = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
       setState(() {
-        _errorMessage = 'Error loading tenants: $e';
+        _tenants = response.data!;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
         _isLoadingTenants = false;
       });
     }
@@ -89,29 +79,20 @@ class _LoginPageState extends State<LoginPage> {
       _isLoadingBranches = true;
       _selectedBranch = null;
       _branches = [];
-      _errorMessage = null;
     });
 
-    try {
-      final response = await DevBranchesService.getDevBranches(tenantId);
+    final response = await DevBranchesService.getDevBranches(tenantId);
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      if (response.isSuccess && response.data != null) {
-        setState(() {
-          _branches = response.data!;
-          _isLoadingBranches = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? 'Failed to load branches';
-          _isLoadingBranches = false;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
       setState(() {
-        _errorMessage = 'Error loading branches: $e';
+        _branches = response.data!;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
         _isLoadingBranches = false;
       });
     }
@@ -129,46 +110,25 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    if (_selectedTenant == null || _selectedBranch == null) {
-      setState(() {
-        _errorMessage = 'Please select tenant and branch';
-      });
-      return;
-    }
-
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
-    final localizations = AppLocalizations.of(widget.languageCode);
+    final response = await _loginService.login(
+      tenantCode: _selectedTenant!['code'] as String,
+      branchCode: _selectedBranch!['code'] as String,
+      username: _usernameController.text.trim(),
+      password: _passwordController.text,
+    );
 
-    try {
-      final response = await _loginService.login(
-        tenantCode: _selectedTenant!['code'] as String,
-        branchCode: _selectedBranch!['code'] as String,
-        username: _usernameController.text.trim(),
-        password: _passwordController.text,
-      );
+    if (!mounted) return;
 
-      if (!mounted) return;
+    if (response.isSuccess && response.data != null) {
+      widget.onLoginSuccess(response.data!.token);
+    }
 
-      if (response.isSuccess && response.data != null) {
-        widget.onLoginSuccess(response.data!.token);
-      } else {
-        setState(() {
-          _errorMessage = response.error ?? localizations.loginFailed;
-        });
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _errorMessage = '${localizations.loginFailed}: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+    if (mounted) {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -462,20 +422,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                     ),
                   ),
-
-                  // Error Message
-                  if (_errorMessage != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      _errorMessage!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: theme.colorScheme.error,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
 
                   const SizedBox(height: 32),
 
