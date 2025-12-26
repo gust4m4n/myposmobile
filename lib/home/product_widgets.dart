@@ -5,7 +5,7 @@ import '../shared/utils/currency_formatter.dart';
 import 'product_model.dart';
 
 /// Combined widget untuk menampilkan daftar produk dengan category filter dan grid
-class ProductsWidget extends StatelessWidget {
+class ProductsWidget extends StatefulWidget {
   final List<ProductModel> products;
   final String selectedCategory;
   final ValueChanged<String> onCategorySelected;
@@ -24,20 +24,41 @@ class ProductsWidget extends StatelessWidget {
   });
 
   @override
+  State<ProductsWidget> createState() => _ProductsWidgetState();
+}
+
+class _ProductsWidgetState extends State<ProductsWidget> {
+  String _searchQuery = '';
+
+  List<ProductModel> get _filteredProducts {
+    if (_searchQuery.isEmpty) {
+      return widget.products;
+    }
+    return widget.products.where((product) {
+      return product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         _CategoryFilter(
-          selectedCategory: selectedCategory,
-          onCategorySelected: onCategorySelected,
-          isMobile: isMobile,
-          categories: categories,
+          selectedCategory: widget.selectedCategory,
+          onCategorySelected: widget.onCategorySelected,
+          isMobile: widget.isMobile,
+          categories: widget.categories,
+          onSearchChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
         ),
         Expanded(
           child: _ProductGrid(
-            products: products,
-            onProductTap: onProductTap,
-            isMobile: isMobile,
+            products: _filteredProducts,
+            onProductTap: widget.onProductTap,
+            isMobile: widget.isMobile,
           ),
         ),
       ],
@@ -49,75 +70,134 @@ class ProductsWidget extends StatelessWidget {
 // Private: Category Filter
 // ============================================================================
 
-class _CategoryFilter extends StatelessWidget {
+class _CategoryFilter extends StatefulWidget {
   final String selectedCategory;
   final ValueChanged<String> onCategorySelected;
   final List<String> categories;
   final bool isMobile;
+  final ValueChanged<String> onSearchChanged;
 
   const _CategoryFilter({
     required this.selectedCategory,
     required this.onCategorySelected,
     required this.categories,
     this.isMobile = false,
+    required this.onSearchChanged,
   });
+
+  @override
+  State<_CategoryFilter> createState() => _CategoryFilterState();
+}
+
+class _CategoryFilterState extends State<_CategoryFilter> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Container(
-      height: isMobile ? 60 : 70,
+      height: widget.isMobile ? 60 : 70,
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: ScrollConfiguration(
-        behavior: ScrollConfiguration.of(context).copyWith(
-          scrollbars: false,
-          dragDevices: {
-            PointerDeviceKind.touch,
-            PointerDeviceKind.mouse,
-            PointerDeviceKind.trackpad,
-          },
-        ),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          physics: const ClampingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 16),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            final category = categories[index];
-            final isSelected = selectedCategory == category;
+      child: Row(
+        children: [
+          Expanded(
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                scrollbars: false,
+                dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.trackpad,
+                },
+              ),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const ClampingScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                  horizontal: widget.isMobile ? 12 : 16,
+                ),
+                itemCount: widget.categories.length,
+                itemBuilder: (context, index) {
+                  final category = widget.categories[index];
+                  final isSelected = widget.selectedCategory == category;
 
-            return Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => onCategorySelected(category),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 28,
-                    vertical: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.primary.withOpacity(0.5),
-                  ),
-                  child: Text(
-                    category,
-                    style: TextStyle(
-                      color: isSelected
-                          ? Colors.white
-                          : Colors.white.withOpacity(0.7),
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                      fontSize: 16.0,
+                  return Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => widget.onCategorySelected(category),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 28,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.primary.withOpacity(0.5),
+                        ),
+                        child: Text(
+                          category,
+                          style: TextStyle(
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.7),
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            width: 168,
+            padding: EdgeInsets.only(right: widget.isMobile ? 12 : 16),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                widget.onSearchChanged(value);
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                hintText: 'Search',
+                prefixIcon: Icon(Icons.search, color: theme.hintColor),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.cancel, size: 20),
+                        onPressed: () {
+                          _searchController.clear();
+                          widget.onSearchChanged('');
+                          setState(() {});
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: theme.colorScheme.surface,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
