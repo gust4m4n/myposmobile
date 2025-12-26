@@ -1,0 +1,617 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
+import '../common/tnc_service.dart';
+import '../shared/widgets/button_x.dart';
+import '../shared/widgets/dialog_x.dart';
+
+class TncPage extends StatefulWidget {
+  final String languageCode;
+
+  const TncPage({super.key, required this.languageCode});
+
+  @override
+  State<TncPage> createState() => _TncPageState();
+}
+
+class _TncPageState extends State<TncPage> {
+  final TncService _tncService = TncService();
+  List<dynamic> _tncList = [];
+  dynamic _activeTnc;
+  bool _isLoading = true;
+  String? _errorMessage;
+  bool _showingActive = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadActiveTnc();
+  }
+
+  Future<void> _loadActiveTnc() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _showingActive = true;
+    });
+
+    try {
+      final result = await _tncService.getActiveTnc();
+
+      if (result['success'] == true) {
+        final data = result['data'];
+        // Parse the response - check if data contains 'data' key or is directly the object
+        dynamic tncData;
+        if (data is Map && data.containsKey('data')) {
+          tncData = data['data'];
+        } else {
+          tncData = data;
+        }
+        setState(() {
+          _activeTnc = tncData;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage =
+              result['message'] ?? 'Failed to load Terms & Conditions';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadAllTnc() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _showingActive = false;
+    });
+
+    try {
+      final result = await _tncService.getAllTnc();
+
+      if (result['success'] == true) {
+        final data = result['data'];
+        // Parse the response - check if data contains 'data' key or is directly the list
+        List<dynamic> tncList;
+        if (data is Map && data.containsKey('data')) {
+          tncList = data['data'] as List<dynamic>;
+        } else if (data is List) {
+          tncList = data;
+        } else {
+          tncList = [];
+        }
+
+        setState(() {
+          _tncList = tncList;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage =
+              result['message'] ?? 'Failed to load Terms & Conditions';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _showTncDetail(dynamic tnc) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (context) => DialogX(
+        title: tnc['title'],
+        width: 700,
+        onClose: () => Navigator.pop(context),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Version and status
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.label,
+                          size: 14,
+                          color: theme.colorScheme.onSecondaryContainer,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'v${tnc['version']}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: theme.colorScheme.onSecondaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  if (tnc['is_active'] == true)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            size: 14,
+                            color: Colors.green[700],
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Active',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.green[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              // Content with Markdown support
+              Container(
+                constraints: const BoxConstraints(maxHeight: 500),
+                child: Markdown(
+                  data: tnc['content'],
+                  shrinkWrap: true,
+                  styleSheet: MarkdownStyleSheet(
+                    h1: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    h2: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    h3: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    p: TextStyle(
+                      fontSize: 14,
+                      color: theme.colorScheme.onSurfaceVariant,
+                      height: 1.5,
+                    ),
+                    listBullet: TextStyle(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Timestamps
+              Text(
+                'Created: ${tnc['created_at']}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              Text(
+                'Updated: ${tnc['updated_at']}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          ButtonX(
+            onPressed: () => Navigator.pop(context),
+            icon: Icons.close,
+            label: 'Close',
+            backgroundColor: theme.colorScheme.primary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActiveTncView() {
+    final theme = Theme.of(context);
+
+    if (_activeTnc == null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.description_outlined,
+              size: 64,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No active Terms & Conditions',
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Icon(
+                    Icons.description,
+                    color: theme.colorScheme.primary,
+                    size: 28,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _activeTnc['title'],
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Version and status
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.label,
+                          size: 14,
+                          color: theme.colorScheme.onSecondaryContainer,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Version ${_activeTnc['version']}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: theme.colorScheme.onSecondaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          size: 14,
+                          color: Colors.green[700],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Active',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.green[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 32),
+              // Content with Markdown
+              MarkdownBody(
+                data: _activeTnc['content'],
+                styleSheet: MarkdownStyleSheet(
+                  h1: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  h2: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  h3: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  p: TextStyle(
+                    fontSize: 14,
+                    color: theme.colorScheme.onSurfaceVariant,
+                    height: 1.6,
+                  ),
+                  listBullet: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              // Timestamps
+              Text(
+                'Last updated: ${_activeTnc['updated_at']}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAllTncView() {
+    final theme = Theme.of(context);
+
+    if (_tncList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.description_outlined,
+              size: 64,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No Terms & Conditions found',
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _tncList.length,
+      itemBuilder: (context, index) {
+        final tnc = _tncList[index];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: InkWell(
+            onTap: () => _showTncDetail(tnc),
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.description, color: theme.colorScheme.primary),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          tnc['title'],
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'v${tnc['version']}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: theme.colorScheme.onSecondaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (tnc['is_active'] == true)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'Active',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.green[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Updated: ${tnc['updated_at']}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Terms & Conditions'),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+        elevation: 0,
+        actions: [
+          // Toggle view button
+          TextButton.icon(
+            onPressed: () {
+              if (_showingActive) {
+                _loadAllTnc();
+              } else {
+                _loadActiveTnc();
+              }
+            },
+            icon: Icon(
+              _showingActive ? Icons.list : Icons.star,
+              color: theme.colorScheme.onPrimary,
+            ),
+            label: Text(
+              _showingActive ? 'View All' : 'View Active',
+              style: TextStyle(color: theme.colorScheme.onPrimary),
+            ),
+          ),
+        ],
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _errorMessage != null
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: theme.colorScheme.error,
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: theme.colorScheme.error,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  ButtonX(
+                    onPressed: _showingActive ? _loadActiveTnc : _loadAllTnc,
+                    icon: Icons.refresh,
+                    label: 'Retry',
+                    backgroundColor: theme.colorScheme.primary,
+                  ),
+                ],
+              ),
+            )
+          : _showingActive
+          ? _buildActiveTncView()
+          : _buildAllTncView(),
+    );
+  }
+}

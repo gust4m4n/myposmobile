@@ -34,6 +34,19 @@ class ApiConfig {
   static const String superadminDashboard = '$apiPrefix/superadmin/dashboard';
   static const String superadminTenants = '$apiPrefix/superadmin/tenants';
 
+  // FAQ endpoints (public)
+  static const String faq = '$apiPrefix/faq';
+
+  // Superadmin FAQ endpoints
+  static const String superadminFaq = '$apiPrefix/superadmin/faq';
+
+  // Terms & Conditions endpoints (public)
+  static const String tnc = '$apiPrefix/tnc';
+  static const String tncActive = '$apiPrefix/tnc/active';
+
+  // Superadmin TnC endpoints
+  static const String superadminTnc = '$apiPrefix/superadmin/tnc';
+
   // Dynamic endpoints
   static String devTenantBranches(int tenantId) =>
       '/dev/tenants/$tenantId/branches';
@@ -41,4 +54,12 @@ class ApiConfig {
       '$apiPrefix/superadmin/tenants/$tenantId/branches';
   static String superadminBranchUsers(int branchId) =>
       '$apiPrefix/superadmin/branches/$branchId/users';
+
+  // FAQ dynamic endpoints
+  static String faqById(int id) => '$apiPrefix/faq/$id';
+  static String superadminFaqById(int id) => '$apiPrefix/superadmin/faq/$id';
+
+  // TnC dynamic endpoints
+  static String tncById(int id) => '$apiPrefix/tnc/$id';
+  static String superadminTncById(int id) => '$apiPrefix/superadmin/tnc/$id';
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'home/home_page.dart';
 import 'login/login_page.dart';
-import 'pos/pos_home_page.dart';
 import 'shared/utils/api_x.dart';
 import 'shared/utils/storage_service.dart';
 
@@ -176,7 +176,7 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
               onLanguageToggle: _toggleLanguage,
               onLoginSuccess: _handleLoginSuccess,
             )
-          : POSHomePage(
+          : HomePage(
               languageCode: _languageCode,
               onLanguageToggle: _toggleLanguage,
               onLogout: _handleLogout,

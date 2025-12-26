@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "myposcore-api-collection",
 		"name": "MyPOSCore API",
-		"description": "Collection untuk MyPOSCore Backend API - Multi-tenant & Multi-branch POS System\n\nFeatures:\n- Multi-tenancy support dengan tenant code\n- Multi-branch per tenant dengan branch code\n- JWT authentication (24h expiry)\n- User management per branch\n- Role-based access control (superadmin, tenantadmin, branchadmin, user)\n- Superadmin management panel\n\nArchitecture:\n- Separate services: RegisterService & LoginService\n- Clean architecture with handlers, services, models\n- PostgreSQL database with GORM\n- Gin web framework\n\nRoles:\n- superadmin: Full system access, manage tenants\n- tenantadmin: Manage tenant-level resources\n- branchadmin: Manage branch-level resources\n- user: Regular user access",
+		"description": "Collection untuk MyPOSCore Backend API - Multi-tenant & Multi-branch POS System\n\nFeatures:\n- Multi-tenancy support dengan tenant code\n- Multi-branch per tenant dengan branch code\n- JWT authentication (24h expiry)\n- User management per branch\n- Role-based access control (superadmin, tenantadmin, branchadmin, user)\n- Product & Inventory management\n- Order & Payment processing\n- FAQ & Terms & Conditions management\n- Superadmin management panel\n\nArchitecture:\n- Separate services: RegisterService & LoginService\n- Clean architecture with handlers, services, models\n- PostgreSQL database with GORM\n- Gin web framework\n\nRoles:\n- superadmin: Full system access, manage tenants, FAQ & TnC\n- tenantadmin: Manage tenant-level resources\n- branchadmin: Manage branch-level resources\n- user: Regular user access\n\nPublic Endpoints:\n- /health - Health check\n- /dev/tenants - List all tenants (for testing)\n- /api/v1/faq - FAQ endpoints (public read access)\n- /api/v1/tnc - Terms & Conditions endpoints (public read access)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "myposcore"
 	},
@@ -23,7 +23,35 @@
 				},
 				"description": "Endpoint untuk mengecek status server"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"status\": \"healthy\",\n  \"message\": \"Server is running\",\n  \"timestamp\": \"2025-12-26T10:00:00+07:00\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Dev",
@@ -1913,6 +1941,770 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzUxOTg4MDAsInVzZXJfaWQiOjEsInRlbmFudF9pZCI6MSwiYnJhbmNoX2lkIjoxLCJyb2xlIjoic3VwZXJhZG1pbiJ9.sample\",\n    \"user\": {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"branch_name\": \"Super Branch\",\n      \"username\": \"superadmin\",\n      \"email\": \"superadmin@system.com\",\n      \"full_name\": \"Super Admin\",\n      \"role\": \"superadmin\",\n      \"is_active\": true\n    }\n  }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "FAQ",
+			"item": [
+				{
+					"name": "Get All FAQ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/faq?category=General&active_only=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"faq"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "General",
+									"description": "Filter by category (optional)",
+									"disabled": true
+								},
+								{
+									"key": "active_only",
+									"value": "true",
+									"description": "Show only active FAQs (optional, default: false)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Public endpoint untuk mendapatkan daftar FAQ. Tidak memerlukan authentication.\n\nQuery Parameters:\n- category (optional): Filter by category\n- active_only (optional): Show only active FAQs\n\nFAQ diurutkan berdasarkan order ASC, lalu created_at DESC"
+					},
+					"response": [
+						{
+							"name": "Get All FAQ Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/faq",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"faq"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"question\": \"Apa itu MyPOS Core?\",\n      \"answer\": \"MyPOS Core adalah sistem Point of Sale (POS) berbasis cloud yang dirancang untuk membantu bisnis mengelola penjualan, inventori, dan operasional toko dengan mudah.\",\n      \"category\": \"General\",\n      \"order\": 1,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"question\": \"Bagaimana cara membuat akun?\",\n      \"answer\": \"Klik tombol Register di halaman login, isi informasi bisnis, buat username dan password, verifikasi email, dan akun Anda siap digunakan.\",\n      \"category\": \"Account\",\n      \"order\": 1,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"question\": \"Metode pembayaran apa saja yang didukung?\",\n      \"answer\": \"MyPOS Core mendukung Cash, Debit Card, Credit Card, E-Wallet (GoPay, OVO, Dana), Transfer Bank, dan QRIS.\",\n      \"category\": \"Payments\",\n      \"order\": 1,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get FAQ by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/faq/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"faq",
+								"1"
+							]
+						},
+						"description": "Public endpoint untuk mendapatkan detail FAQ berdasarkan ID. Tidak memerlukan authentication."
+					},
+					"response": [
+						{
+							"name": "Get FAQ by ID Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/faq/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"faq",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"question\": \"Apa itu MyPOS Core?\",\n    \"answer\": \"MyPOS Core adalah sistem Point of Sale (POS) berbasis cloud yang dirancang untuk membantu bisnis mengelola penjualan, inventori, dan operasional toko dengan mudah. Sistem ini mendukung multi-cabang dan multi-pengguna dengan fitur lengkap untuk bisnis retail dan F&B.\",\n    \"category\": \"General\",\n    \"order\": 1,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create FAQ (Superadmin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun.\",\n  \"category\": \"General\",\n  \"order\": 3\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/faq",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"faq"
+							]
+						},
+						"description": "Endpoint untuk membuat FAQ baru. Hanya bisa diakses oleh superadmin.\n\nRequest body:\n- question: Pertanyaan (required, min 5, max 500 characters)\n- answer: Jawaban (required)\n- category: Kategori (optional, max 100 characters)\n- order: Urutan tampilan (optional, default 0)"
+					},
+					"response": [
+						{
+							"name": "Create FAQ Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English.\",\n  \"category\": \"General\",\n  \"order\": 3\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/faq",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"faq"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"FAQ created successfully\",\n  \"data\": {\n    \"id\": 25,\n    \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n    \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English.\",\n    \"category\": \"General\",\n    \"order\": 3,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-26T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-26T10:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update FAQ (Superadmin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun Anda.\",\n  \"category\": \"General\",\n  \"order\": 3,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/faq/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"faq",
+								"1"
+							]
+						},
+						"description": "Endpoint untuk mengupdate FAQ. Hanya bisa diakses oleh superadmin. Semua field optional.\n\nRequest body:\n- question: Pertanyaan (optional, min 5, max 500 characters)\n- answer: Jawaban (optional)\n- category: Kategori (optional, max 100 characters)\n- order: Urutan tampilan (optional)\n- is_active: Status aktif (optional)"
+					},
+					"response": [
+						{
+							"name": "Update FAQ Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun Anda.\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/faq/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"faq",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"FAQ updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n    \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun Anda.\",\n    \"category\": \"General\",\n    \"order\": 3,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-26T11:30:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete FAQ (Superadmin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/faq/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"faq",
+								"1"
+							]
+						},
+						"description": "Endpoint untuk menghapus FAQ. Hanya bisa diakses oleh superadmin."
+					},
+					"response": [
+						{
+							"name": "Delete FAQ Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/faq/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"faq",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"FAQ deleted successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Terms & Conditions",
+			"item": [
+				{
+					"name": "Get All TnC",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/tnc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tnc"
+							]
+						},
+						"description": "Public endpoint untuk mendapatkan daftar semua Terms & Conditions. Tidak memerlukan authentication.\n\nReturns:\n- Array of TnC documents\n- Sorted by creation date (newest first)"
+					},
+					"response": [
+						{
+							"name": "Get All TnC Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/tnc",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tnc"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"Terms and Conditions - MyPOS Core System\",\n      \"content\": \"# Terms and Conditions for MyPOS Core\\n\\n## 1. Introduction\\nWelcome to MyPOS Core...\",\n      \"version\": \"1.0.0\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"title\": \"Privacy Policy\",\n      \"content\": \"# Privacy Policy\\n\\n## Information We Collect\\n- Business information...\",\n      \"version\": \"1.0.0\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"title\": \"Refund Policy\",\n      \"content\": \"# Refund Policy\\n\\n## Subscription Refunds\\n- Subscription fees are generally non-refundable...\",\n      \"version\": \"1.0.0\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Active TnC",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/tnc/active",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tnc",
+								"active"
+							]
+						},
+						"description": "Public endpoint untuk mendapatkan Terms & Conditions yang aktif. Tidak memerlukan authentication.\n\nReturns:\n- The currently active TnC document\n- Returns 404 if no active TnC found"
+					},
+					"response": [
+						{
+							"name": "Get Active TnC Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/tnc/active",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tnc",
+										"active"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"Terms and Conditions - MyPOS Core System\",\n    \"content\": \"# Terms and Conditions for MyPOS Core\\n\\n## 1. Introduction\\nWelcome to MyPOS Core, a comprehensive Point of Sale management system. By using this system, you agree to be bound by these Terms and Conditions.\\n\\n## 2. Service Description\\nMyPOS Core provides:\\n- Multi-tenant POS system management\\n- Branch and user management\\n- Product catalog and inventory tracking\\n- Order processing and payment management\\n- Reporting and analytics\\n\\n## 3. User Responsibilities\\nUsers are responsible for:\\n- Maintaining the confidentiality of their login credentials\\n- All activities conducted under their account\\n- Ensuring accurate data entry\\n- Complying with applicable laws and regulations\\n\\n## 4. Data Privacy\\nWe are committed to protecting your data:\\n- All transactions are encrypted\\n- Personal information is stored securely\\n- We do not share your data with third parties without consent\\n- Regular backups are performed to prevent data loss\\n\\n## 5. Payment Terms\\n- Payment processing fees may apply\\n- All prices are in Indonesian Rupiah (IDR)\\n- Refunds are subject to our refund policy\\n- Subscription fees are non-refundable\\n\\nLast Updated: December 2025\",\n    \"version\": \"1.0.0\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get TnC by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/tnc/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tnc",
+								"1"
+							]
+						},
+						"description": "Public endpoint untuk mendapatkan detail Terms & Conditions berdasarkan ID. Tidak memerlukan authentication."
+					},
+					"response": [
+						{
+							"name": "Get TnC by ID Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/tnc/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tnc",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"Terms and Conditions - MyPOS Core System\",\n    \"content\": \"# Terms and Conditions for MyPOS Core\\n\\n## 1. Introduction\\nWelcome to MyPOS Core...\",\n    \"version\": \"1.0.0\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create TnC (Superadmin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Privacy Policy\",\n  \"content\": \"# Privacy Policy\\n\\n## Information We Collect\\n- Business information (company name, address, tax ID)\\n- User information (name, email, phone, role)\\n- Transaction data (orders, payments, products)\\n\\n## How We Use Your Information\\n- To provide and maintain the service\\n- To process transactions\\n- To improve user experience\\n\\nLast Updated: December 2025\",\n  \"version\": \"1.0.0\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tnc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tnc"
+							]
+						},
+						"description": "Endpoint untuk membuat Terms & Conditions baru. Hanya bisa diakses oleh superadmin.\n\nRequest body:\n- title: Judul document (required, max 255 characters)\n- content: Isi document (required, supports Markdown)\n- version: Versi document (required, max 20 characters)"
+					},
+					"response": [
+						{
+							"name": "Create TnC Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"Privacy Policy\",\n  \"content\": \"# Privacy Policy\\n\\n## Information We Collect\\n- Business information...\",\n  \"version\": \"1.0.0\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tnc",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tnc"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"TnC created successfully\",\n  \"data\": {\n    \"id\": 2,\n    \"title\": \"Privacy Policy\",\n    \"content\": \"# Privacy Policy\\n\\n## Information We Collect\\n- Business information...\",\n    \"version\": \"1.0.0\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-26T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-26T10:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update TnC (Superadmin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Privacy Policy - Updated\",\n  \"content\": \"# Privacy Policy\\n\\n## Information We Collect\\n- Business information (company name, address, tax ID)\\n- User information (name, email, phone, role)\\n- Transaction data (orders, payments, products)\\n- Usage data (login times, feature usage)\\n\\nLast Updated: December 2025\",\n  \"version\": \"1.0.1\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tnc/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tnc",
+								"1"
+							]
+						},
+						"description": "Endpoint untuk mengupdate Terms & Conditions. Hanya bisa diakses oleh superadmin. Semua field optional.\n\nRequest body:\n- title: Judul document (optional, max 255 characters)\n- content: Isi document (optional, supports Markdown)\n- version: Versi document (optional, max 20 characters)\n- is_active: Status aktif (optional)"
+					},
+					"response": [
+						{
+							"name": "Update TnC Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"version\": \"1.0.1\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tnc/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tnc",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"TnC updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"Privacy Policy - Updated\",\n    \"content\": \"# Privacy Policy\\n\\n## Information We Collect\\n- Business information...\",\n    \"version\": \"1.0.1\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-26T11:30:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete TnC (Superadmin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tnc/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tnc",
+								"1"
+							]
+						},
+						"description": "Endpoint untuk menghapus Terms & Conditions. Hanya bisa diakses oleh superadmin."
+					},
+					"response": [
+						{
+							"name": "Delete TnC Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tnc/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tnc",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"TnC deleted successfully\"\n}"
 						}
 					]
 				}

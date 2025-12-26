@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myposmobile/shared/widgets/button_x.dart';
 
 import '../auth/change_password_page.dart';
+import '../common/faq_page.dart';
+import '../common/tnc_page.dart';
 import '../orders/orders_page.dart';
 import '../orders/orders_service.dart';
 import '../payments/payments_page.dart';
@@ -16,12 +19,12 @@ import 'product_model.dart';
 import 'product_section_widget.dart';
 import 'products_service.dart';
 
-class POSHomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final String languageCode;
   final VoidCallback onLanguageToggle;
   final VoidCallback onLogout;
 
-  const POSHomePage({
+  const HomePage({
     super.key,
     required this.languageCode,
     required this.onLanguageToggle,
@@ -29,10 +32,10 @@ class POSHomePage extends StatefulWidget {
   });
 
   @override
-  State<POSHomePage> createState() => _POSHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _POSHomePageState extends State<POSHomePage> {
+class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final List<CartItemModel> _cart = [];
   String? _selectedCategory;
@@ -1016,6 +1019,53 @@ class _POSHomePageState extends State<POSHomePage> {
                     MaterialPageRoute(
                       builder: (context) =>
                           PaymentsPage(languageCode: widget.languageCode),
+                    ),
+                  );
+                },
+              ),
+              Divider(color: theme.dividerColor, height: 1),
+              ListTile(
+                leading: Icon(
+                  Icons.help_outline,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'FAQ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          FaqPage(languageCode: widget.languageCode),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.description_outlined,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'Terms & Conditions',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          TncPage(languageCode: widget.languageCode),
                     ),
                   );
                 },
