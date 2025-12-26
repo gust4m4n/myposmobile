@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
+import '../translations/app_localizations.dart';
+import '../translations/translation_extension.dart';
 import 'payment_detail_dialog.dart';
 import 'payments_service.dart';
 
@@ -109,11 +110,12 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(widget.languageCode);
+    // Initialize translations with current language
+    AppLocalizations.of(widget.languageCode);
 
     return Scaffold(
       appBar: AppBarX(
-        title: localizations.payments,
+        title: 'payments'.tr,
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadPayments),
         ],
@@ -136,7 +138,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                   ElevatedButton.icon(
                     onPressed: _loadPayments,
                     icon: const Icon(Icons.refresh),
-                    label: Text(localizations.retry),
+                    label: Text('retry'.tr),
                   ),
                 ],
               ),
@@ -153,7 +155,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    localizations.noPayments,
+                    'noPayments'.tr,
                     style: const TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                 ],
@@ -169,7 +171,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 ),
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: localizations.orderId,
+                  label: 'orderId'.tr,
                 ),
                 DataTableColumn.buildColumn(
                   context: context,
@@ -178,7 +180,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 ),
                 DataTableColumn.buildColumn(
                   context: context,
-                  label: localizations.method,
+                  label: 'method'.tr,
                 ),
                 DataTableColumn.buildColumn(context: context, label: 'Status'),
                 DataTableColumn.buildColumn(

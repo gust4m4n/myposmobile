@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../orders/orders_service.dart';
-import '../shared/utils/app_localizations.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../shared/widgets/scrollable_data_table.dart';
+import '../translations/app_localizations.dart';
 
 class PaymentDetailDialog extends StatefulWidget {
   final Map<String, dynamic> payment;

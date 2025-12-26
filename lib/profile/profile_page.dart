@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../shared/api_models.dart';
-import '../shared/utils/app_localizations.dart';
 import '../shared/widgets/app_bar_x.dart';
+import '../translations/app_localizations.dart';
 import 'profile_service.dart';
 
 class ProfilePage extends StatefulWidget {

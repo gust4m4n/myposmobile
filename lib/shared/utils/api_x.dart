@@ -20,11 +20,6 @@ class ApiX {
     T Function(dynamic)? fromJson,
   }) async {
     final response = await _client.get(endpoint, requiresAuth: requiresAuth);
-
-    LoggerX.log('DEBUG ApiX.get - Endpoint: $endpoint');
-    LoggerX.log('DEBUG ApiX.get - Status Code: ${response.statusCode}');
-    LoggerX.log('DEBUG ApiX.get - Response Body: ${response.body}');
-
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {

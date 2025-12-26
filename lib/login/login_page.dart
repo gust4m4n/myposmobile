@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../shared/utils/app_localizations.dart';
 import '../shared/widgets/app_bar_x.dart';
+import '../translations/app_localizations.dart';
 import 'dev_branches_service.dart';
 import 'dev_tenants_service.dart';
 import 'login_service.dart';

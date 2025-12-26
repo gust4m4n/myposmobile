@@ -1,11 +1,15 @@
-import 'translations/en.dart' as en_translations;
-import 'translations/id.dart' as id_translations;
+import '../translations/en.dart' as en_translations;
+import '../translations/id.dart' as id_translations;
+import '../translations/translation_extension.dart';
 
 class AppLocalizations {
   final String languageCode;
   late final Map<String, String> _translations;
 
   AppLocalizations(this.languageCode) {
+    // Set global language code
+    TranslationService.setLanguage(languageCode);
+
     _translations = languageCode == 'en'
         ? en_translations.en
         : id_translations.id;

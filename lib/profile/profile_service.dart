@@ -13,7 +13,6 @@ class ProfileService {
       ApiConfig.profile,
       requiresAuth: true,
       fromJson: (data) {
-        print('DEBUG Profile Service - Parsing profile data: $data');
         return ProfileModel.fromJson(data);
       },
     );
