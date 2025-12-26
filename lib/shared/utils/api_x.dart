@@ -1,13 +1,129 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+
 import '../api_models.dart';
-import 'http_client.dart';
+import '../config/api_config.dart';
+import 'logger_x.dart';
 
 /// Reusable API client class for all API calls in the application
 /// Provides simplified methods for GET, POST, PUT, DELETE operations
 /// Returns ApiResponse<T> for type-safe responses
 class ApiX {
-  static final HttpClient _client = HttpClient();
+  static String? _authToken;
+
+  static void _log(String message) {
+    appLog('[API] 🌐 [ApiX] $message');
+  }
+
+  static void _logApiCall({
+    required String method,
+    required String url,
+    required Map<String, String> headers,
+    String? requestBody,
+    int? statusCode,
+    String? responseBody,
+    dynamic error,
+  }) {
+    // Log request
+    if (statusCode == null && error == null) {
+      appLog(
+        '',
+        endpoint: url,
+        method: method,
+        headers: headers,
+        body: requestBody,
+      );
+    }
+    // Log response
+    else if (statusCode != null) {
+      appLog(
+        '',
+        endpoint: url,
+        method: method,
+        headers: headers,
+        status: statusCode,
+        response: responseBody,
+      );
+    }
+    // Log error
+    else if (error != null) {
+      appLog('', endpoint: url, error: error);
+    }
+  }
+
+  static Map<String, String> _getHeaders({bool includeAuth = false}) {
+    final headers = {'Content-Type': 'application/json'};
+
+    if (includeAuth && _authToken != null) {
+      headers['Authorization'] = 'Bearer $_authToken';
+    }
+
+    return headers;
+  }
+
+  static Future<http.Response?> _makeRequest({
+    required String method,
+    required String endpoint,
+    Map<String, dynamic>? body,
+    bool requiresAuth = false,
+  }) async {
+    final headers = _getHeaders(includeAuth: requiresAuth);
+    final url = '${ApiConfig.baseUrl}$endpoint';
+    final bodyString = body != null ? json.encode(body) : null;
+
+    // Log request
+    _logApiCall(
+      method: method,
+      url: url,
+      headers: headers,
+      requestBody: bodyString,
+    );
+
+    try {
+      final uri = Uri.parse(url);
+      http.Response response;
+
+      switch (method) {
+        case 'GET':
+          response = await http
+              .get(uri, headers: headers)
+              .timeout(ApiConfig.connectTimeout);
+          break;
+        case 'POST':
+          response = await http
+              .post(uri, headers: headers, body: bodyString)
+              .timeout(ApiConfig.connectTimeout);
+          break;
+        case 'PUT':
+          response = await http
+              .put(uri, headers: headers, body: bodyString)
+              .timeout(ApiConfig.connectTimeout);
+          break;
+        case 'DELETE':
+          response = await http
+              .delete(uri, headers: headers)
+              .timeout(ApiConfig.connectTimeout);
+          break;
+        default:
+          throw Exception('Unsupported HTTP method: $method');
+      }
+
+      // Log response
+      _logApiCall(
+        method: method,
+        url: url,
+        headers: headers,
+        statusCode: response.statusCode,
+        responseBody: response.body,
+      );
+
+      return response;
+    } catch (e) {
+      _logApiCall(method: method, url: url, headers: headers, error: e);
+      return null;
+    }
+  }
 
   /// GET request
   /// [endpoint] - API endpoint (e.g., '/api/products')
@@ -18,7 +134,16 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    final response = await _client.get(endpoint, requiresAuth: requiresAuth);
+    final response = await _makeRequest(
+      method: 'GET',
+      endpoint: endpoint,
+      requiresAuth: requiresAuth,
+    );
+
+    if (response == null) {
+      return ApiResponse<T>(error: 'Request failed');
+    }
+
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
@@ -44,11 +169,16 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    final response = await _client.post(
-      endpoint,
+    final response = await _makeRequest(
+      method: 'POST',
+      endpoint: endpoint,
       body: body,
       requiresAuth: requiresAuth,
     );
+
+    if (response == null) {
+      return ApiResponse<T>(error: 'Request failed');
+    }
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
@@ -75,11 +205,16 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    final response = await _client.put(
-      endpoint,
+    final response = await _makeRequest(
+      method: 'PUT',
+      endpoint: endpoint,
       body: body,
       requiresAuth: requiresAuth,
     );
+
+    if (response == null) {
+      return ApiResponse<T>(error: 'Request failed');
+    }
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
@@ -104,7 +239,15 @@ class ApiX {
     bool requiresAuth = false,
     T Function(dynamic)? fromJson,
   }) async {
-    final response = await _client.delete(endpoint, requiresAuth: requiresAuth);
+    final response = await _makeRequest(
+      method: 'DELETE',
+      endpoint: endpoint,
+      requiresAuth: requiresAuth,
+    );
+
+    if (response == null) {
+      return ApiResponse<T>(error: 'Request failed');
+    }
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
@@ -122,14 +265,16 @@ class ApiX {
 
   /// Set authentication token
   static void setAuthToken(String token) {
-    _client.setAuthToken(token);
+    _authToken = token;
+    _log('🔐 Auth token set');
   }
 
   /// Clear authentication token
   static void clearAuthToken() {
-    _client.clearAuthToken();
+    _authToken = null;
+    _log('🔓 Auth token cleared');
   }
 
   /// Get current auth token
-  static String? get authToken => _client.authToken;
+  static String? get authToken => _authToken;
 }

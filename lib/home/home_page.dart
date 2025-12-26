@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myposmobile/shared/widgets/button_x.dart';
 
 import '../change-password/change_password_dialog.dart';
-import '../common/faq_page.dart';
-import '../common/tnc_page.dart';
+import '../faq/faq_page.dart';
 import '../orders/orders_page.dart';
 import '../orders/orders_service.dart';
 import '../payments/payments_page.dart';
@@ -14,10 +13,11 @@ import '../shared/api_models.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/dialog_x.dart';
+import '../tnc/tnc_page.dart';
 import '../translations/translation_extension.dart';
 import 'checkout_dialog.dart';
 import 'product_model.dart';
-import 'product_section_widget.dart';
+import 'product_widgets.dart';
 import 'products_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -574,7 +574,7 @@ class _HomePageState extends State<HomePage> {
                 // Produk Section
                 Expanded(
                   flex: 2,
-                  child: ProductSectionWidget(
+                  child: ProductsWidget(
                     products: _filteredProducts,
                     selectedCategory: selectedCategory,
                     categories: _categories,
@@ -788,7 +788,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             )
-          : ProductSectionWidget(
+          : ProductsWidget(
               products: _filteredProducts,
               selectedCategory: selectedCategory,
               categories: _categories,

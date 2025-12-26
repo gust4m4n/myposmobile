@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../common/tnc_service.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../translations/translation_extension.dart';
+import 'tnc_service.dart';
 
 class TncPage extends StatefulWidget {
   final String languageCode;

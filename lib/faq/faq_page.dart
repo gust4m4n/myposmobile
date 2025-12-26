@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../common/faq_service.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../translations/translation_extension.dart';
+import 'faq_service.dart';
 
 class FaqPage extends StatefulWidget {
   final String languageCode;
