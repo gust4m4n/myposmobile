@@ -6,6 +6,7 @@ import '../home/products_service.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../translations/translation_extension.dart';
+import 'add_product_dialog.dart';
 
 class ProductsManagementPage extends StatefulWidget {
   final String languageCode;
@@ -71,11 +72,16 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
     return _products.where((p) => p.category == _selectedCategory).toList();
   }
 
-  void _showAddProductDialog() {
-    // TODO: Implement add product dialog
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('addProduct'.tr), backgroundColor: Colors.blue),
+  void _showAddProductDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AddProductDialog(languageCode: widget.languageCode),
     );
+
+    // Reload products if product was added successfully
+    if (result == true) {
+      _loadProducts();
+    }
   }
 
   void _handleProductTap(ProductModel product) {
