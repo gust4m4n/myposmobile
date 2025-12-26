@@ -86,42 +86,31 @@ class _CategoryFilter extends StatelessWidget {
           itemBuilder: (context, index) {
             final category = categories[index];
             final isSelected = selectedCategory == category;
-            final isLast = index == categories.length - 1;
 
-            return Padding(
-              padding: EdgeInsets.only(right: isLast ? 0 : 8),
+            return Material(
+              color: Colors.transparent,
               child: InkWell(
                 onTap: () => onCategorySelected(category),
-                borderRadius: BorderRadius.circular(20),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
+                    horizontal: 28,
+                    vertical: 14,
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? theme.colorScheme.primary
-                        : const Color(0xFF2C2C2E),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected
-                          ? theme.colorScheme.primary
-                          : theme.dividerColor,
-                      width: 1,
-                    ),
+                        : theme.colorScheme.primary.withOpacity(0.5),
                   ),
-                  child: Center(
-                    child: Text(
-                      category,
-                      style: TextStyle(
-                        color: isSelected
-                            ? Colors.white
-                            : theme.colorScheme.onSurface,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.w500,
-                        fontSize: 14,
-                      ),
+                  child: Text(
+                    category,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.7),
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w500,
+                      fontSize: 15,
                     ),
                   ),
                 ),
