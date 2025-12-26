@@ -156,4 +156,8 @@ const Map<String, String> id = {
   'searchFaqs': 'Cari FAQ...',
   'faqsFound': '{count} FAQ ditemukan',
   'noFaqsFound': 'Tidak ada FAQ ditemukan',
+
+  // Products Management
+  'productsManagement': 'Manajemen Produk',
+  'addProduct': 'Tambah Produk',
 };

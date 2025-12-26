@@ -7,6 +7,7 @@ import '../orders/orders_page.dart';
 import '../orders/orders_service.dart';
 import '../payments/payments_page.dart';
 import '../payments/payments_service.dart';
+import '../products/products_management_page.dart';
 import '../profile/profile_page.dart';
 import '../profile/profile_service.dart';
 import '../shared/api_models.dart';
@@ -942,6 +943,30 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                       builder: (context) =>
                           PaymentsPage(languageCode: widget.languageCode),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.inventory_2_outlined,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'productsManagement'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductsManagementPage(
+                        languageCode: widget.languageCode,
+                      ),
                     ),
                   );
                 },

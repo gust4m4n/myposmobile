@@ -157,4 +157,8 @@ const Map<String, String> en = {
   'searchFaqs': 'Search FAQs...',
   'faqsFound': '{count} FAQ(s) found',
   'noFaqsFound': 'No FAQs found',
+
+  // Products Management
+  'productsManagement': 'Products Management',
+  'addProduct': 'Add Product',
 };

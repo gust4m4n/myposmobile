@@ -185,7 +185,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                       )
                     : null,
                 filled: true,
-                fillColor: theme.colorScheme.surface,
+                fillColor: const Color(0xFFFF9500),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
