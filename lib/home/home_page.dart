@@ -16,6 +16,7 @@ import '../shared/widgets/dialog_x.dart';
 import '../tnc/tnc_page.dart';
 import '../translations/translation_extension.dart';
 import 'checkout_dialog.dart';
+import 'payment_success_dialog.dart';
 import 'product_model.dart';
 import 'product_widgets.dart';
 import 'products_service.dart';
@@ -209,15 +210,28 @@ class _HomePageState extends State<HomePage> {
       Navigator.pop(context);
 
       if (paymentResponse.statusCode == 200) {
-        // Clear cart and show success
+        // Prepare items data from cart before clearing
+        final completedItems = _cart.map((cartItem) {
+          return {
+            'product_name': cartItem.product.name,
+            'quantity': cartItem.quantity,
+            'price': cartItem.product.price,
+            'subtotal': cartItem.total,
+          };
+        }).toList();
+
+        // Clear cart
         setState(() {
           _cart.clear();
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('transactionSuccess'.tr),
-            backgroundColor: Colors.green,
+        // Show success dialog with receipt
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => PaymentSuccessDialog(
+            orderData: orderResponse.data!,
+            items: completedItems,
           ),
         );
       } else {
