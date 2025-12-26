@@ -27,7 +27,8 @@ class ApiResponse<T> {
         parsedData = fromJsonT(json);
       }
     } else {
-      parsedData = json['data'];
+      // No transformer provided, return entire json as T
+      parsedData = json as T?;
     }
 
     return ApiResponse<T>(

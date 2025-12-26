@@ -36,9 +36,12 @@ class _PaymentsPageState extends State<PaymentsPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      setState(() {
-        _payments = response.data!;
-      });
+      final data = (response.data as Map<String, dynamic>)['data'];
+      if (data is List) {
+        setState(() {
+          _payments = data.cast<Map<String, dynamic>>();
+        });
+      }
     }
 
     if (mounted) {

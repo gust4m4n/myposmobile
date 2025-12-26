@@ -43,19 +43,26 @@ class OrdersService {
 
   /// Get list of all orders for authenticated tenant and branch
   ///
+  /// Parameters:
+  /// - page: Page number (default: 1)
+  /// - perPage: Items per page (default: 32, max: 100)
+  ///
   /// Returns:
-  /// - List<Map<String, dynamic>> berisi semua orders dengan items
+  /// - Map<String, dynamic> berisi:
+  ///   - data: List<Map<String, dynamic>> semua orders dengan items
+  ///   - pagination: Map berisi page, per_page, total, total_pages
   ///
   /// Example:
   /// ```dart
-  /// final result = await OrdersService.getOrders();
+  /// final result = await OrdersService.getOrders(page: 1, perPage: 32);
   /// ```
-  static Future<ApiResponse<List<Map<String, dynamic>>>> getOrders() async {
-    return ApiX.get<List<Map<String, dynamic>>>(
-      ApiConfig.orders,
+  static Future<ApiResponse<Map<String, dynamic>>> getOrders({
+    int page = 1,
+    int perPage = 32,
+  }) async {
+    return ApiX.get<Map<String, dynamic>>(
+      '${ApiConfig.orders}?page=$page&per_page=$perPage',
       requiresAuth: true,
-      fromJson: (data) =>
-          (data as List).map((item) => item as Map<String, dynamic>).toList(),
     );
   }
 

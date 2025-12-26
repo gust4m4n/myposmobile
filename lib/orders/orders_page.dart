@@ -36,9 +36,12 @@ class _OrdersPageState extends State<OrdersPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      setState(() {
-        _orders = response.data!;
-      });
+      final data = (response.data as Map<String, dynamic>)['data'];
+      if (data is List) {
+        setState(() {
+          _orders = data.cast<Map<String, dynamic>>();
+        });
+      }
     }
 
     if (mounted) {
