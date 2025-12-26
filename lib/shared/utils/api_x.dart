@@ -141,19 +141,24 @@ class ApiX {
     );
 
     if (response == null) {
-      return ApiResponse<T>(error: 'Request failed');
+      return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+      return ApiResponse<T>.fromJson(
+        jsonResponse,
+        fromJson,
+        response.statusCode,
+      );
     } else {
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??
             'Request failed with status ${response.statusCode}',
+        statusCode: response.statusCode,
       );
     }
   }
@@ -177,19 +182,24 @@ class ApiX {
     );
 
     if (response == null) {
-      return ApiResponse<T>(error: 'Request failed');
+      return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+      return ApiResponse<T>.fromJson(
+        jsonResponse,
+        fromJson,
+        response.statusCode,
+      );
     } else {
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??
             'Request failed with status ${response.statusCode}',
+        statusCode: response.statusCode,
       );
     }
   }
@@ -213,19 +223,24 @@ class ApiX {
     );
 
     if (response == null) {
-      return ApiResponse<T>(error: 'Request failed');
+      return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+      return ApiResponse<T>.fromJson(
+        jsonResponse,
+        fromJson,
+        response.statusCode,
+      );
     } else {
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??
             'Request failed with status ${response.statusCode}',
+        statusCode: response.statusCode,
       );
     }
   }
@@ -246,19 +261,24 @@ class ApiX {
     );
 
     if (response == null) {
-      return ApiResponse<T>(error: 'Request failed');
+      return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return ApiResponse<T>.fromJson(jsonResponse, fromJson);
+      return ApiResponse<T>.fromJson(
+        jsonResponse,
+        fromJson,
+        response.statusCode,
+      );
     } else {
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??
             'Request failed with status ${response.statusCode}',
+        statusCode: response.statusCode,
       );
     }
   }

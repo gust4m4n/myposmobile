@@ -35,7 +35,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _orders = response.data!;
       });
@@ -66,7 +66,7 @@ class _OrdersPageState extends State<OrdersPage> {
     // Close loading dialog
     Navigator.pop(context);
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       // Show order detail dialog with fetched data
       showDialog(
         context: context,

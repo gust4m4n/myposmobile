@@ -40,7 +40,7 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _orderData = response.data!;
       });

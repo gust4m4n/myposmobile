@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _tenants = response.data!;
       });
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _branches = response.data!;
       });
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       widget.onLoginSuccess(response.data!.token);
     }
 

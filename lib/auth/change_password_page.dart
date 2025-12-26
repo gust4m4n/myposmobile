@@ -55,7 +55,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess) {
+    if (response.statusCode == 200) {
       // Clear form and go back
       _oldPasswordController.clear();
       _newPasswordController.clear();

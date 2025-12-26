@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _profile = response.data;
       });

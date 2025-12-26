@@ -57,7 +57,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
 
     if (!mounted) return;
 
-    if (response.isSuccess) {
+    if (response.statusCode == 200) {
       // Clear form
       _oldPasswordController.clear();
       _newPasswordController.clear();

@@ -35,7 +35,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _payments = response.data!;
       });
@@ -66,7 +66,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
     // Close loading dialog
     Navigator.pop(context);
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       // Show payment detail dialog with fetched data
       showDialog(
         context: context,

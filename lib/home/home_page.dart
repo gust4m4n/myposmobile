@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _profile = response.data;
         _appTitle = '${_profile!.tenant.name} - ${_profile!.branch.name}';
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!mounted) return;
 
-    if (response.isSuccess && response.data != null) {
+    if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _products = response.data!
             .map((json) => ProductModel.fromJson(json))
@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    if (orderResponse.isSuccess && orderResponse.data != null) {
+    if (orderResponse.statusCode == 200 && orderResponse.data != null) {
       final orderId = orderResponse.data!['id'];
       final totalAmount = _totalPrice;
 
@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
       // Close loading dialog first
       Navigator.pop(context);
 
-      if (paymentResponse.isSuccess) {
+      if (paymentResponse.statusCode == 200) {
         // Clear cart and show success
         setState(() {
           _cart.clear();
@@ -327,19 +327,19 @@ class _HomePageState extends State<HomePage> {
                 : ListView.builder(
                     controller: scrollController,
                     physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.zero,
                     itemCount: _cart.length,
                     itemBuilder: (context, index) {
                       final item = _cart[index];
                       return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
                           color: theme.cardColor,
-                          border: Border.all(
-                            color: theme.dividerColor,
-                            width: 1,
+                          border: Border(
+                            bottom: BorderSide(
+                              color: theme.dividerColor,
+                              width: 0.5,
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
                           contentPadding: const EdgeInsets.symmetric(
@@ -662,19 +662,19 @@ class _HomePageState extends State<HomePage> {
                               )
                             : ListView.builder(
                                 physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.all(12),
+                                padding: EdgeInsets.zero,
                                 itemCount: _cart.length,
                                 itemBuilder: (context, index) {
                                   final item = _cart[index];
                                   return Container(
-                                    margin: const EdgeInsets.only(bottom: 8),
                                     decoration: BoxDecoration(
                                       color: theme.cardColor,
-                                      border: Border.all(
-                                        color: theme.dividerColor,
-                                        width: 1,
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: theme.dividerColor,
+                                          width: 0.5,
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: ListTile(
                                       contentPadding:

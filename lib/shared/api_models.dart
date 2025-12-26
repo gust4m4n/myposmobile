@@ -3,12 +3,14 @@ class ApiResponse<T> {
   final String? message;
   final T? data;
   final String? error;
+  final int statusCode;
 
-  ApiResponse({this.message, this.data, this.error});
+  ApiResponse({this.message, this.data, this.error, required this.statusCode});
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,
     T Function(dynamic)? fromJsonT,
+    int statusCode,
   ) {
     // Handle different response formats:
     // 1. Standard format: {message: "...", data: {...}, error: null}
@@ -32,10 +34,9 @@ class ApiResponse<T> {
       message: json['message'],
       data: parsedData,
       error: json['error'],
+      statusCode: statusCode,
     );
   }
-
-  bool get isSuccess => error == null;
 }
 
 // User Model
