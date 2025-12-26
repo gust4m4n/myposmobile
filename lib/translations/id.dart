@@ -126,4 +126,34 @@ const Map<String, String> id = {
   // Payment Methods
   'cash': 'Tunai',
   'card': 'Kartu',
+  'transfer': 'Transfer',
+  'qris': 'QRIS',
+
+  // Receipt/PDF
+  'receiptTitle': 'STRUK PEMBAYARAN',
+  'orderNumberLabel': 'No. Order',
+  'dateLabel': 'Tanggal',
+  'orderDetailsLabel': 'DETAIL PESANAN',
+  'thankYou': 'Terima Kasih',
+  'receiptSaved': 'Struk berhasil disimpan: {fileName}',
+  'openFolder': 'Buka Folder',
+  'receiptFailed': 'Gagal membuat struk: {error}',
+  'printReceipt': 'Cetak Struk',
+  'done': 'Selesai',
+
+  // Common
+  'menu': 'Menu',
+  'user': 'Pengguna',
+  'notAvailable': 'T/A',
+  'unknown': 'Tidak Diketahui',
+  'selectLanguage': 'Pilih Bahasa',
+
+  // Change Password Page
+  'changeYourPassword': 'Ubah Password Anda',
+  'changePasswordInstructions': 'Masukkan password saat ini dan password baru',
+
+  // FAQ Page
+  'searchFaqs': 'Cari FAQ...',
+  'faqsFound': '{count} FAQ ditemukan',
+  'noFaqsFound': 'Tidak ada FAQ ditemukan',
 };

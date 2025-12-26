@@ -12,6 +12,7 @@ import '../profile/profile_service.dart';
 import '../shared/api_models.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
+import '../shared/widgets/connectivity_indicator.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../tnc/tnc_page.dart';
 import '../translations/translation_extension.dart';
@@ -461,24 +462,11 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
+                  child: ButtonX(
                     onPressed: _cart.isEmpty ? null : _checkout,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'checkout'.tr,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    icon: Icons.shopping_cart_checkout,
+                    label: 'checkout'.tr,
+                    backgroundColor: theme.colorScheme.primary,
                   ),
                 ),
               ],
@@ -507,7 +495,7 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          tooltip: 'Menu',
+          tooltip: 'menu'.tr,
         ),
         title: Row(
           children: [
@@ -530,44 +518,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: PopupMenuButton<String>(
-              icon: const Icon(Icons.language),
-              tooltip: 'language'.tr,
-              onSelected: (value) {
-                widget.onLanguageToggle();
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'en',
-                  child: Row(
-                    children: [
-                      if (widget.languageCode == 'en')
-                        const Icon(Icons.check, size: 20)
-                      else
-                        const SizedBox(width: 20),
-                      const SizedBox(width: 8),
-                      Text('english'.tr),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'id',
-                  child: Row(
-                    children: [
-                      if (widget.languageCode == 'id')
-                        const Icon(Icons.check, size: 20)
-                      else
-                        const SizedBox(width: 20),
-                      const SizedBox(width: 8),
-                      Text('indonesian'.tr),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const ConnectivityIndicator(),
           if (!isTabletOrDesktop)
             Stack(
               children: [
@@ -798,24 +749,11 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: 12),
                             SizedBox(
                               width: double.infinity,
-                              height: 50,
-                              child: ElevatedButton(
+                              child: ButtonX(
                                 onPressed: _cart.isEmpty ? null : _checkout,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: theme.colorScheme.primary,
-                                  foregroundColor: Colors.white,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
-                                  'checkout'.tr,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                icon: Icons.shopping_cart_checkout,
+                                label: 'checkout'.tr,
+                                backgroundColor: theme.colorScheme.primary,
                               ),
                             ),
                           ],
@@ -906,7 +844,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        _profile?.user.fullName ?? 'User',
+                        _profile?.user.fullName ?? 'user'.tr,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,
@@ -1053,6 +991,85 @@ class _HomePageState extends State<HomePage> {
                           TncPage(languageCode: widget.languageCode),
                     ),
                   );
+                },
+              ),
+              Divider(color: theme.dividerColor, height: 1),
+              ListTile(
+                leading: Icon(
+                  Icons.language,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Row(
+                  children: [
+                    Text(
+                      'language'.tr,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      widget.languageCode == 'en' ? '(English)' : '(Indonesia)',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () async {
+                  Navigator.pop(context);
+                  // Show language selection dialog
+                  final selectedLanguage = await showDialog<String>(
+                    context: context,
+                    builder: (context) => DialogX(
+                      title: 'selectLanguage'.tr,
+                      width: 400,
+                      onClose: () => Navigator.pop(context),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: widget.languageCode == 'en'
+                                ? const Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                  )
+                                : const Icon(Icons.circle_outlined),
+                            title: Text('english'.tr),
+                            onTap: () => Navigator.pop(context, 'en'),
+                            selected: widget.languageCode == 'en',
+                          ),
+                          ListTile(
+                            leading: widget.languageCode == 'id'
+                                ? const Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                  )
+                                : const Icon(Icons.circle_outlined),
+                            title: Text('indonesian'.tr),
+                            onTap: () => Navigator.pop(context, 'id'),
+                            selected: widget.languageCode == 'id',
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        ButtonX(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icons.close,
+                          label: 'close'.tr,
+                          backgroundColor: theme.colorScheme.surface,
+                          foregroundColor: theme.colorScheme.onSurface,
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (selectedLanguage != null &&
+                      selectedLanguage != widget.languageCode) {
+                    widget.onLanguageToggle();
+                  }
                 },
               ),
               Divider(color: theme.dividerColor, height: 1),

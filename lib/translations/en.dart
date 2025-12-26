@@ -126,4 +126,35 @@ const Map<String, String> en = {
   // Payment Methods
   'cash': 'Cash',
   'card': 'Card',
+  'transfer': 'Transfer',
+  'qris': 'QRIS',
+
+  // Receipt/PDF
+  'receiptTitle': 'PAYMENT RECEIPT',
+  'orderNumberLabel': 'Order No.',
+  'dateLabel': 'Date',
+  'orderDetailsLabel': 'ORDER DETAILS',
+  'thankYou': 'Thank You',
+  'receiptSaved': 'Receipt saved successfully: {fileName}',
+  'openFolder': 'Open Folder',
+  'receiptFailed': 'Failed to create receipt: {error}',
+  'printReceipt': 'Print Receipt',
+  'done': 'Done',
+
+  // Common
+  'menu': 'Menu',
+  'user': 'User',
+  'notAvailable': 'N/A',
+  'unknown': 'Unknown',
+  'selectLanguage': 'Select Language',
+
+  // Change Password Page
+  'changeYourPassword': 'Change Your Password',
+  'changePasswordInstructions':
+      'Enter your current password and a new password',
+
+  // FAQ Page
+  'searchFaqs': 'Search FAQs...',
+  'faqsFound': '{count} FAQ(s) found',
+  'noFaqsFound': 'No FAQs found',
 };

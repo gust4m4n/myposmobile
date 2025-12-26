@@ -5,7 +5,9 @@ import 'package:window_manager/window_manager.dart';
 import 'home/home_page.dart';
 import 'login/login_page.dart';
 import 'shared/utils/api_x.dart';
+import 'shared/utils/connectivity_service.dart';
 import 'shared/utils/storage_service.dart';
+import 'shared/widgets/connectivity_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,11 +70,15 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
     super.initState();
     windowManager.addListener(this);
     _loadSavedData();
+
+    // Initialize connectivity monitoring
+    ConnectivityService().initialize();
   }
 
   @override
   void dispose() {
     windowManager.removeListener(this);
+    ConnectivityService().dispose();
     super.dispose();
   }
 
@@ -170,16 +176,18 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
       themeMode: ThemeMode.dark,
       home: _isLoading
           ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-          : _authToken == null
-          ? LoginPage(
-              languageCode: _languageCode,
-              onLanguageToggle: _toggleLanguage,
-              onLoginSuccess: _handleLoginSuccess,
-            )
-          : HomePage(
-              languageCode: _languageCode,
-              onLanguageToggle: _toggleLanguage,
-              onLogout: _handleLogout,
+          : ConnectivityWrapper(
+              child: _authToken == null
+                  ? LoginPage(
+                      languageCode: _languageCode,
+                      onLanguageToggle: _toggleLanguage,
+                      onLoginSuccess: _handleLoginSuccess,
+                    )
+                  : HomePage(
+                      languageCode: _languageCode,
+                      onLanguageToggle: _toggleLanguage,
+                      onLogout: _handleLogout,
+                    ),
             ),
     );
   }

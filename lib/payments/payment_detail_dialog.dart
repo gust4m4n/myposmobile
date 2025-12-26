@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../orders/orders_service.dart';
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/button_x.dart';
 import '../shared/widgets/data_table_x.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../translations/translation_extension.dart';
@@ -50,6 +55,179 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _generateAndDownloadReceipt(BuildContext context) async {
+    if (_orderData == null) return;
+
+    try {
+      final pdf = pw.Document();
+      final items =
+          (_orderData!['order_items'] as List?)?.cast<Map<String, dynamic>>() ??
+          [];
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.roll80,
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                // Header
+                pw.Center(
+                  child: pw.Text(
+                    'receiptTitle'.tr,
+                    style: pw.TextStyle(
+                      fontSize: 18,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+
+                // Order Info
+                pw.Text(
+                  '${'orderNumberLabel'.tr}: ${_orderData!['order_number']}',
+                  style: const pw.TextStyle(fontSize: 12),
+                ),
+                pw.Text(
+                  '${'dateLabel'.tr}: ${_formatDateTime(_orderData!['created_at'])}',
+                  style: const pw.TextStyle(fontSize: 12),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+
+                // Items
+                pw.Text(
+                  'orderDetailsLabel'.tr,
+                  style: pw.TextStyle(
+                    fontSize: 12,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 5),
+
+                ...items.map((item) {
+                  return pw.Container(
+                    margin: const pw.EdgeInsets.only(bottom: 5),
+                    child: pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Expanded(
+                          child: pw.Text(
+                            item['product_name'],
+                            style: const pw.TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        pw.SizedBox(width: 10),
+                        pw.Text(
+                          '${item['quantity']}x',
+                          style: const pw.TextStyle(fontSize: 11),
+                        ),
+                        pw.SizedBox(width: 10),
+                        pw.Text(
+                          CurrencyFormatter.format(item['subtotal']),
+                          style: const pw.TextStyle(fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+
+                pw.SizedBox(height: 5),
+                pw.Divider(),
+                pw.SizedBox(height: 5),
+
+                // Total
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text(
+                      'total'.tr.toUpperCase(),
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                    pw.Text(
+                      CurrencyFormatter.format(_orderData!['total_amount']),
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+
+                pw.SizedBox(height: 10),
+                pw.Divider(),
+                pw.SizedBox(height: 10),
+
+                // Footer
+                pw.Center(
+                  child: pw.Text(
+                    'thankYou'.tr,
+                    style: const pw.TextStyle(fontSize: 12),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Save directly to Downloads folder in user's home directory
+      final home =
+          Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+      if (home == null) throw Exception('Cannot find home directory');
+
+      final downloadsPath = '$home/Downloads';
+      final fileName = 'struk_${_orderData!['order_number']}.pdf';
+      final file = File('$downloadsPath/$fileName');
+
+      await file.writeAsBytes(await pdf.save());
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('receiptSaved'.tr.replaceAll('{fileName}', fileName)),
+            backgroundColor: Colors.green,
+            action: SnackBarAction(
+              label: 'openFolder'.tr,
+              textColor: Colors.white,
+              onPressed: () {
+                // Open Downloads folder in Finder
+                Process.run('open', [downloadsPath]);
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'receiptFailed'.tr.replaceAll('{error}', e.toString()),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  String _formatDateTime(String? dateTime) {
+    if (dateTime == null) return '';
+    try {
+      final dt = DateTime.parse(dateTime);
+      return '${dt.day}/${dt.month}/${dt.year} ${dt.hour}:${dt.minute.toString().padLeft(2, '0')}';
+    } catch (e) {
+      return dateTime;
     }
   }
 
@@ -162,6 +340,27 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
           ],
         ),
       ),
+      actions: [
+        Expanded(
+          child: ButtonX(
+            onPressed: _orderData == null
+                ? null
+                : () => _generateAndDownloadReceipt(context),
+            icon: Icons.print,
+            label: 'printReceipt'.tr,
+            backgroundColor: const Color(0xFFFF9500),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ButtonX(
+            onPressed: () => Navigator.pop(context),
+            icon: Icons.close,
+            label: 'close'.tr,
+            backgroundColor: theme.colorScheme.primary,
+          ),
+        ),
+      ],
     );
   }
 

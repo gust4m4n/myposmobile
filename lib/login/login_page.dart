@@ -1,7 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
+import '../faq/faq_page.dart';
 import '../shared/widgets/app_bar_x.dart';
+import '../shared/widgets/button_x.dart';
+import '../shared/widgets/dialog_x.dart';
+import '../tnc/tnc_page.dart';
 import '../translations/translation_extension.dart';
 import 'dev_branches_service.dart';
 import 'dev_tenants_service.dart';
@@ -33,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoadingTenants = false;
   bool _isLoadingBranches = false;
   bool _obscurePassword = true;
+  String _appVersion = '';
 
   // Dropdown data
   List<Map<String, dynamic>> _tenants = [];
@@ -43,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    _loadAppVersion();
     _loadTenants();
 
     // Prefill credentials in debug mode
@@ -50,6 +57,13 @@ class _LoginPageState extends State<LoginPage> {
       _usernameController.text = 'branchadmin';
       _passwordController.text = '123456';
     }
+  }
+
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = 'v${packageInfo.version}';
+    });
   }
 
   Future<void> _loadTenants() async {
@@ -143,40 +157,61 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBarX(
         title: 'login'.tr,
         actions: [
-          PopupMenuButton<String>(
+          IconButton(
             icon: const Icon(Icons.language),
             tooltip: 'language'.tr,
-            onSelected: (value) {
-              widget.onLanguageToggle();
+            onPressed: () async {
+              // Show language selection dialog
+              final selectedLanguage = await showDialog<String>(
+                context: context,
+                builder: (context) => DialogX(
+                  title: 'selectLanguage'.tr,
+                  width: 400,
+                  onClose: () => Navigator.pop(context),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: widget.languageCode == 'en'
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              )
+                            : const Icon(Icons.circle_outlined),
+                        title: Text('english'.tr),
+                        onTap: () => Navigator.pop(context, 'en'),
+                        selected: widget.languageCode == 'en',
+                      ),
+                      ListTile(
+                        leading: widget.languageCode == 'id'
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              )
+                            : const Icon(Icons.circle_outlined),
+                        title: Text('indonesian'.tr),
+                        onTap: () => Navigator.pop(context, 'id'),
+                        selected: widget.languageCode == 'id',
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    ButtonX(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icons.close,
+                      label: 'close'.tr,
+                      backgroundColor: theme.colorScheme.surface,
+                      foregroundColor: theme.colorScheme.onSurface,
+                    ),
+                  ],
+                ),
+              );
+
+              if (selectedLanguage != null &&
+                  selectedLanguage != widget.languageCode) {
+                widget.onLanguageToggle();
+              }
             },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'en',
-                child: Row(
-                  children: [
-                    if (widget.languageCode == 'en')
-                      const Icon(Icons.check, size: 20)
-                    else
-                      const SizedBox(width: 20),
-                    const SizedBox(width: 8),
-                    Text('english'.tr),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'id',
-                child: Row(
-                  children: [
-                    if (widget.languageCode == 'id')
-                      const Icon(Icons.check, size: 20)
-                    else
-                      const SizedBox(width: 20),
-                    const SizedBox(width: 8),
-                    Text('indonesian'.tr),
-                  ],
-                ),
-              ),
-            ],
           ),
         ],
       ),
@@ -425,14 +460,72 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 32),
 
-                  // App Version
-                  Text(
-                    'v1.0.0',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: theme.colorScheme.onSurface.withOpacity(0.5),
-                    ),
+                  // TnC, FAQ, and App Version
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: _isLoading
+                            ? null
+                            : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TncPage(
+                                      languageCode: widget.languageCode,
+                                    ),
+                                  ),
+                                );
+                              },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                        ),
+                        child: Text('termsAndConditions'.tr),
+                      ),
+                      Text(
+                        ' | ',
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _isLoading
+                            ? null
+                            : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FaqPage(
+                                      languageCode: widget.languageCode,
+                                    ),
+                                  ),
+                                );
+                              },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                        ),
+                        child: Text('faq'.tr),
+                      ),
+                      Text(
+                        ' | ',
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        ),
+                      ),
+                      Text(
+                        _appVersion.isEmpty ? 'v1.0.0' : _appVersion,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

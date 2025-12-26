@@ -5,6 +5,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/button_x.dart';
 import '../translations/translation_extension.dart';
 
 class PaymentSuccessDialog extends StatelessWidget {
@@ -31,7 +32,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                 // Header
                 pw.Center(
                   child: pw.Text(
-                    'STRUK PEMBAYARAN',
+                    'receiptTitle'.tr,
                     style: pw.TextStyle(
                       fontSize: 18,
                       fontWeight: pw.FontWeight.bold,
@@ -44,11 +45,11 @@ class PaymentSuccessDialog extends StatelessWidget {
 
                 // Order Info
                 pw.Text(
-                  'No. Order: ${orderData['order_number']}',
+                  '${'orderNumberLabel'.tr}: ${orderData['order_number']}',
                   style: const pw.TextStyle(fontSize: 12),
                 ),
                 pw.Text(
-                  'Tanggal: ${_formatDateTime(orderData['created_at'])}',
+                  '${'dateLabel'.tr}: ${_formatDateTime(orderData['created_at'])}',
                   style: const pw.TextStyle(fontSize: 12),
                 ),
                 pw.SizedBox(height: 10),
@@ -57,7 +58,7 @@ class PaymentSuccessDialog extends StatelessWidget {
 
                 // Items
                 pw.Text(
-                  'DETAIL PESANAN',
+                  'orderDetailsLabel'.tr,
                   style: pw.TextStyle(
                     fontSize: 12,
                     fontWeight: pw.FontWeight.bold,
@@ -101,7 +102,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Text(
-                      'TOTAL',
+                      'total'.tr.toUpperCase(),
                       style: pw.TextStyle(
                         fontSize: 14,
                         fontWeight: pw.FontWeight.bold,
@@ -124,7 +125,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                 // Footer
                 pw.Center(
                   child: pw.Text(
-                    'Terima Kasih',
+                    'thankYou'.tr,
                     style: const pw.TextStyle(fontSize: 12),
                   ),
                 ),
@@ -148,10 +149,10 @@ class PaymentSuccessDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Struk berhasil disimpan: $fileName'),
+            content: Text('receiptSaved'.tr.replaceAll('{fileName}', fileName)),
             backgroundColor: Colors.green,
             action: SnackBarAction(
-              label: 'Buka Folder',
+              label: 'openFolder'.tr,
               textColor: Colors.white,
               onPressed: () {
                 // Open Downloads folder in Finder
@@ -165,7 +166,9 @@ class PaymentSuccessDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal membuat struk: $e'),
+            content: Text(
+              'receiptFailed'.tr.replaceAll('{error}', e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -220,7 +223,7 @@ class PaymentSuccessDialog extends StatelessWidget {
 
             // Order Number
             Text(
-              'No. Order: ${orderData['order_number']}',
+              '${'orderNumberLabel'.tr}: ${orderData['order_number']}',
               style: TextStyle(
                 fontSize: 16.0,
                 color: theme.colorScheme.secondary,
@@ -297,9 +300,12 @@ class PaymentSuccessDialog extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Total',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    'total'.tr,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     CurrencyFormatter.format(orderData['total_amount']),
@@ -318,29 +324,21 @@ class PaymentSuccessDialog extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
-                    icon: const Icon(Icons.print),
-                    label: const Text(
-                      'Cetak Struk',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
+                  child: ButtonX(
                     onPressed: () => _generateAndDownloadReceipt(context),
+                    icon: Icons.print,
+                    label: 'printReceipt'.tr,
+                    backgroundColor: theme.colorScheme.surface,
+                    foregroundColor: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton(
+                  child: ButtonX(
                     onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text(
-                      'Selesai',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
+                    icon: Icons.check,
+                    label: 'done'.tr,
+                    backgroundColor: theme.colorScheme.primary,
                   ),
                 ),
               ],
