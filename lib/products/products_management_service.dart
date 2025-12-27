@@ -1,4 +1,5 @@
 import '../shared/api_models.dart';
+import '../shared/config/api_config.dart';
 import '../shared/utils/api_x.dart';
 
 class ProductsManagementService {
@@ -12,7 +13,7 @@ class ProductsManagementService {
     required bool isActive,
   }) async {
     return await ApiX.post(
-      '/products',
+      ApiConfig.products,
       body: {
         'name': name,
         'description': description,
@@ -22,6 +23,7 @@ class ProductsManagementService {
         'stock': stock,
         'is_active': isActive,
       },
+      requiresAuth: true,
     );
   }
 
@@ -36,7 +38,7 @@ class ProductsManagementService {
     required bool isActive,
   }) async {
     return await ApiX.put(
-      '/products/$id',
+      '${ApiConfig.products}/$id',
       body: {
         'name': name,
         'description': description,
@@ -46,12 +48,13 @@ class ProductsManagementService {
         'stock': stock,
         'is_active': isActive,
       },
+      requiresAuth: true,
     );
   }
 
   static Future<ApiResponse<Map<String, dynamic>>> deleteProduct({
     required int id,
   }) async {
-    return await ApiX.delete('/products/$id');
+    return await ApiX.delete('${ApiConfig.products}/$id', requiresAuth: true);
   }
 }

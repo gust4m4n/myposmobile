@@ -7,6 +7,7 @@ class ProductModel {
   final String? sku;
   final int? stock;
   final bool? isActive;
+  final String? image;
 
   ProductModel({
     this.id,
@@ -17,6 +18,7 @@ class ProductModel {
     this.sku,
     this.stock,
     this.isActive,
+    this.image,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class ProductModel {
       sku: json['sku'] as String?,
       stock: json['stock'] as int?,
       isActive: json['is_active'] as bool?,
+      image: json['image'] as String?,
     );
   }
 
@@ -44,6 +47,7 @@ class ProductModel {
       if (sku != null) 'sku': sku,
       if (stock != null) 'stock': stock,
       if (isActive != null) 'is_active': isActive,
+      if (image != null) 'image': image,
     };
   }
 }

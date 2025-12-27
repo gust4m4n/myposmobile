@@ -7,6 +7,8 @@ import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../translations/translation_extension.dart';
 import 'add_product_dialog.dart';
+import 'edit_product_dialog.dart';
+import 'products_management_service.dart';
 
 class ProductsManagementPage extends StatefulWidget {
   final String languageCode;
@@ -84,13 +86,100 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
     }
   }
 
-  void _handleProductTap(ProductModel product) {
-    // TODO: Implement edit product dialog
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Edit: ${product.name}'),
-        backgroundColor: Colors.blue,
+  void _showEditProductDialog(ProductModel product) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => EditProductDialog(
+        languageCode: widget.languageCode,
+        product: product,
       ),
+    );
+
+    // Reload products if product was updated successfully
+    if (result == true) {
+      _loadProducts();
+    }
+  }
+
+  void _showDeleteConfirmation(ProductModel product) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('deleteProduct'.tr),
+        content: Text('${'deleteProductConfirmation'.tr}\n\n${product.name}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text('delete'.tr),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    // Delete the product
+    final response = await ProductsManagementService.deleteProduct(
+      id: product.id!,
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('productDeletedSuccess'.tr),
+          backgroundColor: Colors.green,
+        ),
+      );
+      _loadProducts();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message ?? 'productDeletedFailed'.tr),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _showProductContextMenu(ProductModel product) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.edit, color: Color(0xFF007AFF)),
+                title: Text('editProduct'.tr),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showEditProductDialog(product);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: Text(
+                  'deleteProduct'.tr,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showDeleteConfirmation(product);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -147,7 +236,7 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
                   _selectedCategory = category;
                 });
               },
-              onProductTap: _handleProductTap,
+              onProductTap: _showProductContextMenu,
               isMobile: false,
               categories: _categories,
             ),

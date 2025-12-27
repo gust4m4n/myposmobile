@@ -520,6 +520,37 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           const ConnectivityIndicator(),
+          // User Profile Photo
+          GestureDetector(
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProfilePage(languageCode: widget.languageCode),
+                ),
+              );
+              // Reload profile when returning from profile page
+              _loadProfile();
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: theme.colorScheme.primary,
+                backgroundImage: _profile?.user.image != null
+                    ? NetworkImage(
+                        _profile!.user.image!.startsWith('http')
+                            ? _profile!.user.image!
+                            : 'http://localhost:8080${_profile!.user.image!}',
+                      )
+                    : null,
+                child: _profile?.user.image == null
+                    ? const Icon(Icons.person, size: 20, color: Colors.white)
+                    : null,
+              ),
+            ),
+          ),
           if (!isTabletOrDesktop)
             Stack(
               children: [
