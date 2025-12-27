@@ -116,6 +116,7 @@ class ProfileUserModel {
   final String fullName;
   final String role;
   final bool isActive;
+  final String? image;
 
   ProfileUserModel({
     required this.id,
@@ -124,6 +125,7 @@ class ProfileUserModel {
     required this.fullName,
     required this.role,
     required this.isActive,
+    this.image,
   });
 
   factory ProfileUserModel.fromJson(Map<String, dynamic> json) {
@@ -134,6 +136,7 @@ class ProfileUserModel {
       fullName: json['full_name'],
       role: json['role'],
       isActive: json['is_active'],
+      image: json['image'],
     );
   }
 
@@ -145,6 +148,7 @@ class ProfileUserModel {
       'full_name': fullName,
       'role': role,
       'is_active': isActive,
+      'image': image,
     };
   }
 }

@@ -96,6 +96,27 @@ const Map<String, String> id = {
 
   // Profile Page
   'noProfileData': 'Tidak ada data profil',
+  'editProfile': 'Edit Profil',
+  'fullName': 'Nama Lengkap',
+  'email': 'Email',
+  'fullNameRequired': 'Nama lengkap harus diisi',
+  'emailRequired': 'Email harus diisi',
+  'emailInvalid': 'Format email tidak valid',
+  'profileUpdatedSuccess': 'Profil berhasil diperbarui',
+  'profileUpdateFailed': 'Gagal memperbarui profil',
+  'profilePhoto': 'Foto Profil',
+  'selectPhoto': 'Pilih Foto',
+  'uploadPhoto': 'Upload Foto',
+  'uploading': 'Mengupload...',
+  'deletePhoto': 'Hapus Foto',
+  'deleting': 'Menghapus...',
+  'deletePhotoConfirmation': 'Apakah Anda yakin ingin menghapus foto profil?',
+  'delete': 'Hapus',
+  'photoUploadedSuccess': 'Foto berhasil diupload',
+  'photoUploadFailed': 'Gagal mengupload foto',
+  'photoDeletedSuccess': 'Foto berhasil dihapus',
+  'photoDeleteFailed': 'Gagal menghapus foto',
+  'failedToPickImage': 'Gagal memilih gambar',
 
   // Orders Page Additional
   'orderNumber': 'Nomor Pesanan',

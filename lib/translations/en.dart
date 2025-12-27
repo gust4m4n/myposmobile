@@ -96,6 +96,28 @@ const Map<String, String> en = {
 
   // Profile Page
   'noProfileData': 'No profile data',
+  'editProfile': 'Edit Profile',
+  'fullName': 'Full Name',
+  'email': 'Email',
+  'fullNameRequired': 'Full name is required',
+  'emailRequired': 'Email is required',
+  'emailInvalid': 'Invalid email format',
+  'profileUpdatedSuccess': 'Profile updated successfully',
+  'profileUpdateFailed': 'Failed to update profile',
+  'profilePhoto': 'Profile Photo',
+  'selectPhoto': 'Select Photo',
+  'uploadPhoto': 'Upload Photo',
+  'uploading': 'Uploading...',
+  'deletePhoto': 'Delete Photo',
+  'deleting': 'Deleting...',
+  'deletePhotoConfirmation':
+      'Are you sure you want to delete your profile photo?',
+  'delete': 'Delete',
+  'photoUploadedSuccess': 'Photo uploaded successfully',
+  'photoUploadFailed': 'Failed to upload photo',
+  'photoDeletedSuccess': 'Photo deleted successfully',
+  'photoDeleteFailed': 'Failed to delete photo',
+  'failedToPickImage': 'Failed to pick image',
 
   // Orders Page Additional
   'orderNumber': 'Order Number',

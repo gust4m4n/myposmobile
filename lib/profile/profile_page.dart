@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../shared/api_models.dart';
+import '../shared/config/api_config.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../translations/translation_extension.dart';
+import 'edit_profile_dialog.dart';
 import 'profile_service.dart';
+import 'upload_profile_photo_dialog.dart';
 
 class ProfilePage extends StatefulWidget {
   final String languageCode;
@@ -47,6 +50,39 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _showEditProfileDialog() async {
+    if (_profile == null) return;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => EditProfileDialog(
+        languageCode: widget.languageCode,
+        currentFullName: _profile!.user.fullName,
+        currentEmail: _profile!.user.email,
+      ),
+    );
+
+    // Reload profile if update was successful
+    if (result == true) {
+      await _loadProfile();
+    }
+  }
+
+  Future<void> _showUploadPhotoDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => UploadProfilePhotoDialog(
+        languageCode: widget.languageCode,
+        currentImageUrl: _profile?.user.image,
+      ),
+    );
+
+    // Reload profile if photo was uploaded/deleted
+    if (result == true) {
+      await _loadProfile();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -73,6 +109,23 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // Edit Profile Button
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton.icon(
+                            onPressed: () => _showEditProfileDialog(),
+                            icon: const Icon(Icons.edit, size: 18),
+                            label: Text('editProfile'.tr),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
                         // Profile Header
                         Card(
                           elevation: 2,
@@ -83,19 +136,70 @@ class _ProfilePageState extends State<ProfilePage> {
                             padding: const EdgeInsets.all(16.0),
                             child: Row(
                               children: [
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary
-                                        .withOpacity(0.1),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 36,
-                                    color: theme.colorScheme.primary,
-                                  ),
+                                // Profile Photo
+                                Stack(
+                                  children: [
+                                    Container(
+                                      width: 80,
+                                      height: 80,
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primary
+                                            .withOpacity(0.1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: _profile!.user.image != null
+                                          ? ClipOval(
+                                              child: Image.network(
+                                                '${ApiConfig.baseUrl}${_profile!.user.image}',
+                                                fit: BoxFit.cover,
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) {
+                                                      return Icon(
+                                                        Icons.person,
+                                                        size: 40,
+                                                        color: theme
+                                                            .colorScheme
+                                                            .primary,
+                                                      );
+                                                    },
+                                              ),
+                                            )
+                                          : Icon(
+                                              Icons.person,
+                                              size: 40,
+                                              color: theme.colorScheme.primary,
+                                            ),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.primary,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: theme.colorScheme.surface,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: IconButton(
+                                          onPressed: _showUploadPhotoDialog,
+                                          icon: const Icon(
+                                            Icons.camera_alt,
+                                            size: 16,
+                                          ),
+                                          iconSize: 16,
+                                          padding: const EdgeInsets.all(4),
+                                          constraints: const BoxConstraints(),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(

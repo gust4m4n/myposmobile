@@ -12,43 +12,16 @@ import 'logger_x.dart';
 class ApiX {
   static String? _authToken;
 
-  static void _log(String message) {
-    appLog('[API] 🌐 [ApiX] $message');
-  }
-
-  static void _logApiCall({
-    required String method,
-    required String url,
-    required Map<String, String> headers,
-    String? requestBody,
-    int? statusCode,
-    String? responseBody,
-    dynamic error,
-  }) {
-    // Log request
-    if (statusCode == null && error == null) {
-      appLog(
-        '',
-        endpoint: url,
-        method: method,
-        headers: headers,
-        body: requestBody,
-      );
-    }
-    // Log response
-    else if (statusCode != null) {
-      appLog(
-        '',
-        endpoint: url,
-        method: method,
-        headers: headers,
-        status: statusCode,
-        response: responseBody,
-      );
-    }
-    // Log error
-    else if (error != null) {
-      appLog('', endpoint: url, error: error);
+  /// Try to parse response body as JSON, return null if not valid JSON
+  static Map<String, dynamic>? _tryParseJson(String body) {
+    try {
+      final parsed = json.decode(body);
+      if (parsed is Map<String, dynamic>) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -73,11 +46,12 @@ class ApiX {
     final bodyString = body != null ? json.encode(body) : null;
 
     // Log request
-    _logApiCall(
+    appLog(
+      '',
+      endpoint: url,
       method: method,
-      url: url,
       headers: headers,
-      requestBody: bodyString,
+      body: bodyString,
     );
 
     try {
@@ -110,17 +84,16 @@ class ApiX {
       }
 
       // Log response
-      _logApiCall(
-        method: method,
-        url: url,
-        headers: headers,
-        statusCode: response.statusCode,
-        responseBody: response.body,
+      appLog(
+        '',
+        endpoint: url,
+        status: response.statusCode,
+        response: response.body,
       );
 
       return response;
     } catch (e) {
-      _logApiCall(method: method, url: url, headers: headers, error: e);
+      appLog('', endpoint: url, error: e);
       return null;
     }
   }
@@ -144,7 +117,15 @@ class ApiX {
       return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
-    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    final jsonResponse = _tryParseJson(response.body);
+
+    if (jsonResponse == null) {
+      // Response is not valid JSON
+      return ApiResponse<T>(
+        error: 'Invalid JSON response: ${response.body}',
+        statusCode: response.statusCode,
+      );
+    }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(
@@ -185,7 +166,15 @@ class ApiX {
       return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
-    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    final jsonResponse = _tryParseJson(response.body);
+
+    if (jsonResponse == null) {
+      // Response is not valid JSON
+      return ApiResponse<T>(
+        error: 'Invalid JSON response: ${response.body}',
+        statusCode: response.statusCode,
+      );
+    }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(
@@ -226,7 +215,15 @@ class ApiX {
       return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
-    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    final jsonResponse = _tryParseJson(response.body);
+
+    if (jsonResponse == null) {
+      // Response is not valid JSON
+      return ApiResponse<T>(
+        error: 'Invalid JSON response: ${response.body}',
+        statusCode: response.statusCode,
+      );
+    }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(
@@ -264,7 +261,15 @@ class ApiX {
       return ApiResponse<T>(error: 'Request failed', statusCode: 0);
     }
 
-    final Map<String, dynamic> jsonResponse = json.decode(response.body);
+    final jsonResponse = _tryParseJson(response.body);
+
+    if (jsonResponse == null) {
+      // Response is not valid JSON
+      return ApiResponse<T>(
+        error: 'Invalid JSON response: ${response.body}',
+        statusCode: response.statusCode,
+      );
+    }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return ApiResponse<T>.fromJson(
@@ -286,13 +291,13 @@ class ApiX {
   /// Set authentication token
   static void setAuthToken(String token) {
     _authToken = token;
-    _log('🔐 Auth token set');
+    appLog('🔐 Auth token set');
   }
 
   /// Clear authentication token
   static void clearAuthToken() {
     _authToken = null;
-    _log('🔓 Auth token cleared');
+    appLog('🔓 Auth token cleared');
   }
 
   /// Get current auth token
@@ -321,25 +326,46 @@ class ApiX {
       }
 
       // Add file
-      final file = await http.MultipartFile.fromPath(fieldName, filePath);
+      appLog('📤 Preparing to upload file from: $filePath');
+      appLog('📤 Field name: $fieldName');
+
+      // Create multipart file with explicit content type
+      final file = await http.MultipartFile.fromPath(
+        fieldName,
+        filePath,
+        // Try to set content type based on file extension
+      );
+
       request.files.add(file);
 
-      _log('📤 Uploading file to $url');
+      appLog(
+        '📤 File added to request: ${file.filename}, size: ${file.length} bytes, contentType: ${file.contentType}',
+      );
+      appLog('📤 Uploading to: $endpoint');
+      appLog('📤 Request files count: ${request.files.length}');
+      appLog('📤 Request headers: ${request.headers}');
 
       final streamedResponse = await request.send().timeout(
         ApiConfig.connectTimeout,
       );
       final response = await http.Response.fromStream(streamedResponse);
 
-      _logApiCall(
-        method: 'POST (multipart)',
-        url: url,
-        headers: request.headers,
-        statusCode: response.statusCode,
-        responseBody: response.body,
+      appLog(
+        '',
+        endpoint: url,
+        status: response.statusCode,
+        response: response.body,
       );
 
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final jsonResponse = _tryParseJson(response.body);
+
+      if (jsonResponse == null) {
+        // Response is not valid JSON
+        return ApiResponse<T>(
+          error: 'Invalid JSON response: ${response.body}',
+          statusCode: response.statusCode,
+        );
+      }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return ApiResponse<T>.fromJson(jsonResponse, null, response.statusCode);
@@ -353,7 +379,7 @@ class ApiX {
         );
       }
     } catch (e) {
-      _log('❌ Upload error: $e');
+      appLog('❌ Upload error', error: e);
       return ApiResponse<T>(error: 'Upload failed: $e', statusCode: 0);
     }
   }
