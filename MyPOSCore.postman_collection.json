@@ -430,7 +430,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"user\": {\n    \"id\": 25,\n    \"username\": \"tenantadmin\",\n    \"email\": \"tenantadmin@resto.com\",\n    \"full_name\": \"Tenant Admin Resto\",\n    \"role\": \"tenantadmin\",\n    \"is_active\": true\n  },\n  \"tenant\": {\n    \"id\": 17,\n    \"name\": \"Food Corner\",\n    \"code\": \"resto01\",\n    \"is_active\": true\n  },\n  \"branch\": {\n    \"id\": 25,\n    \"name\": \"Cabang Pusat\",\n    \"code\": \"resto01-pusat\",\n    \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n    \"phone\": \"021-12345678\",\n    \"is_active\": true\n  }\n}"
+							"body": "{\n  \"user\": {\n    \"id\": 25,\n    \"username\": \"tenantadmin\",\n    \"email\": \"tenantadmin@resto.com\",\n    \"full_name\": \"Tenant Admin Resto\",\n    \"image\": \"/uploads/profiles/user_25_1735296000.jpg\",\n    \"role\": \"tenantadmin\",\n    \"is_active\": true\n  },\n  \"tenant\": {\n    \"id\": 17,\n    \"name\": \"Food Corner\",\n    \"code\": \"resto01\",\n    \"is_active\": true\n  },\n  \"branch\": {\n    \"id\": 25,\n    \"name\": \"Cabang Pusat\",\n    \"code\": \"resto01-pusat\",\n    \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n    \"phone\": \"021-12345678\",\n    \"is_active\": true\n  }\n}"
 						}
 					]
 				},
@@ -514,6 +514,545 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"message\": \"Password changed successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Upload Profile Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/profile/photo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"photo"
+							]
+						},
+						"description": "Upload or update user profile photo. Maximum file size: 5MB. Allowed formats: jpg, jpeg, png, gif, webp."
+					},
+					"response": [
+						{
+							"name": "Upload Image Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/profile/photo",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"photo"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Image uploaded successfully\",\n  \"user\": {\n    \"id\": 25,\n    \"username\": \"tenantadmin\",\n    \"email\": \"tenantadmin@resto.com\",\n    \"full_name\": \"Tenant Admin Resto\",\n    \"image\": \"/uploads/profiles/user_25_1735296000.jpg\",\n    \"role\": \"tenantadmin\",\n    \"is_active\": true\n  },\n  \"tenant\": {\n    \"id\": 17,\n    \"name\": \"Food Corner\",\n    \"code\": \"resto01\",\n    \"is_active\": true\n  },\n  \"branch\": {\n    \"id\": 25,\n    \"name\": \"Cabang Pusat\",\n    \"code\": \"resto01-pusat\",\n    \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n    \"phone\": \"021-12345678\",\n    \"is_active\": true\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Profile Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/profile/photo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"photo"
+							]
+						},
+						"description": "Delete user profile photo."
+					},
+					"response": [
+						{
+							"name": "Delete Image Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/profile/photo",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"photo"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Image deleted successfully\",\n  \"user\": {\n    \"id\": 25,\n    \"username\": \"tenantadmin\",\n    \"email\": \"tenantadmin@resto.com\",\n    \"full_name\": \"Tenant Admin Resto\",\n    \"image\": \"\",\n    \"role\": \"tenantadmin\",\n    \"is_active\": true\n  },\n  \"tenant\": {\n    \"id\": 17,\n    \"name\": \"Food Corner\",\n    \"code\": \"resto01\",\n    \"is_active\": true\n  },\n  \"branch\": {\n    \"id\": 25,\n    \"name\": \"Cabang Pusat\",\n    \"code\": \"resto01-pusat\",\n    \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n    \"phone\": \"021-12345678\",\n    \"is_active\": true\n  }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "active_only",
+									"value": "true",
+									"description": "Filter to show only active categories",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get list of all product categories for the authenticated tenant. Categories are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- active_only (optional): Set to 'true' to show only active categories"
+					},
+					"response": [
+						{
+							"name": "List Categories Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Makanan Utama\",\n      \"description\": \"Kategori untuk makanan utama seperti nasi, mie, dll\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"updated_at\": \"2025-12-27 10:00:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Minuman\",\n      \"description\": \"Kategori untuk minuman panas dan dingin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:01:00\",\n      \"updated_at\": \"2025-12-27 10:01:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"name\": \"Snack\",\n      \"description\": \"Kategori untuk makanan ringan\",\n      \"is_active\": false,\n      \"created_at\": \"2025-12-27 10:02:00\",\n      \"updated_at\": \"2025-12-27 10:02:00\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						},
+						"description": "Get category details by ID. Replace '1' with actual category ID. Category must belong to authenticated tenant."
+					},
+					"response": [
+						{
+							"name": "Get Category Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Makanan Utama\",\n    \"description\": \"Kategori untuk makanan utama seperti nasi, mie, dll\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\",\n    \"updated_at\": \"2025-12-27 10:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Dessert\",\n  \"description\": \"Kategori untuk makanan penutup\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							]
+						},
+						"description": "Create a new category for the authenticated tenant. Category will be automatically assigned to tenant_id from JWT token."
+					},
+					"response": [
+						{
+							"name": "Create Category Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Dessert\",\n  \"description\": \"Kategori untuk makanan penutup\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"categories"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Category created successfully\",\n  \"data\": {\n    \"id\": 4,\n    \"tenant_id\": 17,\n    \"name\": \"Dessert\",\n    \"description\": \"Kategori untuk makanan penutup\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 11:00:00\",\n    \"updated_at\": \"2025-12-27 11:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Dessert Updated\",\n  \"description\": \"Kategori untuk makanan penutup dan kue\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						},
+						"description": "Update an existing category. Replace '1' with actual category ID. Category must belong to authenticated tenant."
+					},
+					"response": [
+						{
+							"name": "Update Category Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Dessert Updated\",\n  \"description\": \"Kategori untuk makanan penutup dan kue\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Category updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Dessert Updated\",\n    \"description\": \"Kategori untuk makanan penutup dan kue\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\",\n    \"updated_at\": \"2025-12-27 11:30:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						},
+						"description": "Delete a category (soft delete). Replace '1' with actual category ID. Category must belong to authenticated tenant and must not be used by any products."
+					},
+					"response": [
+						{
+							"name": "Delete Category Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Category deleted successfully\"\n}"
 						}
 					]
 				}
@@ -666,7 +1205,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 100,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n    }\n  ]\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"image\": \"/uploads/products/product_1_1735296000.jpg\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 100,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"image\": \"/uploads/products/product_1_1735296000.jpg\"\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -734,7 +1273,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Nasi Goreng Spesial\",\n    \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"FOOD-001\",\n    \"price\": 25000,\n    \"stock\": 50,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n  }\n}"
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Nasi Goreng Spesial\",\n    \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"FOOD-001\",\n    \"price\": 25000,\n    \"stock\": 50,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\"\n  }\n}"
 						}
 					]
 				},
@@ -817,7 +1356,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Product created successfully\",\n  \"data\": {\n    \"id\": 25,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Baru\",\n    \"description\": \"Deskripsi produk baru\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"SKU-NEW-001\",\n    \"price\": 50000,\n    \"stock\": 100,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"Product created successfully\",\n  \"data\": {\n    \"id\": 25,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Baru\",\n    \"description\": \"Deskripsi produk baru\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"SKU-NEW-001\",\n    \"price\": 50000,\n    \"stock\": 100,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\"\n  }\n}"
 						}
 					]
 				},
@@ -902,7 +1441,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Product updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Updated\",\n    \"description\": \"Deskripsi produk yang sudah diupdate\",\n    \"category\": \"Minuman\",\n    \"sku\": \"SKU-UPD-001\",\n    \"price\": 75000,\n    \"stock\": 150,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T11:30:00+07:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"Product updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Updated\",\n    \"description\": \"Deskripsi produk yang sudah diupdate\",\n    \"category\": \"Minuman\",\n    \"sku\": \"SKU-UPD-001\",\n    \"price\": 75000,\n    \"stock\": 150,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T11:30:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\"\n  }\n}"
 						}
 					]
 				},
@@ -971,6 +1510,166 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"message\": \"Product deleted successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Upload Product Image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1/photo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1",
+								"photo"
+							]
+						},
+						"description": "Upload or update product image. Maximum file size: 5MB. Allowed formats: jpg, jpeg, png, gif, webp.\n\nReplace '1' with actual product ID."
+					},
+					"response": [
+						{
+							"name": "Upload Image Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/1/photo",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"1",
+										"photo"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Image uploaded successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Nasi Goreng\",\n    \"description\": \"Nasi goreng spesial dengan telur\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"NGS001\",\n    \"price\": 25000,\n    \"stock\": 50,\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\",\n    \"updated_at\": \"2025-12-27 11:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Product Image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1/photo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1",
+								"photo"
+							]
+						},
+						"description": "Delete product image. Replace '1' with actual product ID."
+					},
+					"response": [
+						{
+							"name": "Delete Image Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/1/photo",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"products",
+										"1",
+										"photo"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Image deleted successfully\"\n}"
 						}
 					]
 				}
@@ -1535,6 +2234,756 @@
 			]
 		},
 		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Get list of all users for the authenticated tenant. Users are automatically filtered by tenant_id from JWT token."
+					},
+					"response": [
+						{
+							"name": "List Users Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"user1\",\n      \"email\": \"user1@example.com\",\n      \"full_name\": \"User Satu\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"admin1\",\n      \"email\": \"admin1@example.com\",\n      \"full_name\": \"Admin Satu\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:05:00\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						},
+						"description": "Get user details by ID. Replace '1' with actual user ID. User must belong to authenticated tenant."
+					},
+					"response": [
+						{
+							"name": "Get User Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"user1\",\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"User Satu\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Create a new user for the authenticated tenant. User will be automatically assigned to tenant_id from JWT token.\n\nValidations:\n- username: min 3 characters, unique per tenant\n- email: valid email format, globally unique\n- password: min 6 characters\n- role: must be one of: user, branchadmin, tenantadmin\n- branch_id: must exist and belong to tenant"
+					},
+					"response": [
+						{
+							"name": "Create User Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User created successfully\",\n  \"data\": {\n    \"id\": 10,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"newuser\",\n    \"email\": \"newuser@example.com\",\n    \"full_name\": \"New User\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 11:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						},
+						"description": "Update an existing user. Replace '1' with actual user ID. User must belong to authenticated tenant.\n\nAll fields are optional for update. Only send the fields you want to change.\n\nPartial update example (only update role):\n{\n  \"role\": \"branchadmin\"\n}\n\nPassword update (will be automatically hashed):\n{\n  \"password\": \"newpassword123\"\n}"
+					},
+					"response": [
+						{
+							"name": "Update User Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"user1\",\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"Updated User Name\",\n    \"role\": \"branchadmin\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						},
+						"description": "Delete a user (soft delete). Replace '1' with actual user ID. User must belong to authenticated tenant.\n\nNote: This is a soft delete. User record will be marked as deleted but not removed from database."
+					},
+					"response": [
+						{
+							"name": "Delete User Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User deleted successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Get list of all users for the authenticated tenant. Users are automatically filtered by tenant_id from JWT token."
+					},
+					"response": [
+						{
+							"name": "List Users Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"user1\",\n      \"email\": \"user1@example.com\",\n      \"full_name\": \"User Satu\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"admin1\",\n      \"email\": \"admin1@example.com\",\n      \"full_name\": \"Admin Satu\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:05:00\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						},
+						"description": "Get user details by ID. Replace '1' with actual user ID. User must belong to authenticated tenant."
+					},
+					"response": [
+						{
+							"name": "Get User Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"user1\",\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"User Satu\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Create a new user for the authenticated tenant. User will be automatically assigned to tenant_id from JWT token.\n\nValidations:\n- username: min 3 characters, unique per tenant\n- email: valid email format, globally unique\n- password: min 6 characters\n- role: must be one of: user, branchadmin, tenantadmin\n- branch_id: must exist and belong to tenant"
+					},
+					"response": [
+						{
+							"name": "Create User Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User created successfully\",\n  \"data\": {\n    \"id\": 10,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"newuser\",\n    \"email\": \"newuser@example.com\",\n    \"full_name\": \"New User\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 11:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						},
+						"description": "Update an existing user. Replace '1' with actual user ID. User must belong to authenticated tenant.\n\nAll fields are optional for update. Only send the fields you want to change.\n\nPartial update example (only update role):\n{\n  \"role\": \"branchadmin\"\n}\n\nPassword update (will be automatically hashed):\n{\n  \"password\": \"newpassword123\"\n}"
+					},
+					"response": [
+						{
+							"name": "Update User Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"user1\",\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"Updated User Name\",\n    \"role\": \"branchadmin\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						},
+						"description": "Delete a user (soft delete). Replace '1' with actual user ID. User must belong to authenticated tenant.\n\nNote: This is a soft delete. User record will be marked as deleted but not removed from database."
+					},
+					"response": [
+						{
+							"name": "Delete User Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"User deleted successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "Superadmin",
 			"item": [
 				{
@@ -1564,7 +3013,7 @@
 								"dashboard"
 							]
 						},
-						"description": "Dashboard untuk superadmin menampilkan total tenants, branches, dan users. Hanya bisa diakses oleh user dengan role superadmin."
+						"description": "Get comprehensive dashboard statistics including:\n- Total tenants and their list\n- Total branches\n- Total users\n- Total products\n- Total orders (all time, today, this week, this month)\n\nRequires superadmin role."
 					},
 					"response": [
 						{
@@ -1601,7 +3050,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": {\n    \"total_tenants\": 3,\n    \"total_branches\": 8,\n    \"total_users\": 25\n  }\n}"
+							"body": "{\n  \"data\": {\n    \"total_tenants\": 5,\n    \"total_branches\": 12,\n    \"total_users\": 45,\n    \"total_products\": 234,\n    \"total_orders\": 1523,\n    \"total_orders_today\": 23,\n    \"total_orders_this_week\": 156,\n    \"total_orders_this_month\": 678,\n    \"tenants\": [\n      {\n        \"id\": 1,\n        \"name\": \"Warung Makan Sederhana\",\n        \"code\": \"WMS001\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-15 10:30:00\"\n      },\n      {\n        \"id\": 2,\n        \"name\": \"Kopi Kita\",\n        \"code\": \"KK002\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-16 14:20:00\"\n      },\n      {\n        \"id\": 3,\n        \"name\": \"Toko Kelontong Jaya\",\n        \"code\": \"TKJ003\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-18 09:15:00\"\n      },\n      {\n        \"id\": 4,\n        \"name\": \"Resto Seafood\",\n        \"code\": \"RS004\",\n        \"is_active\": false,\n        \"created_at\": \"2025-01-20 16:45:00\"\n      },\n      {\n        \"id\": 5,\n        \"name\": \"Bakery Fresh\",\n        \"code\": \"BF005\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-22 11:00:00\"\n      }\n    ]\n  }\n}"
 						}
 					]
 				},
@@ -3054,6 +4503,564 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"data\": [\n    {\n      \"id\": 50,\n      \"tenant_id\": 18,\n      \"name\": \"Kemeja Batik Pria\",\n      \"description\": \"Kemeja batik motif modern untuk pria\",\n      \"category\": \"Pakaian Pria\",\n      \"sku\": \"FASHION-001\",\n      \"price\": 250000,\n      \"stock\": 30,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:48:10+07:00\",\n      \"updated_at\": \"2025-12-24T19:48:10+07:00\"\n    },\n    {\n      \"id\": 51,\n      \"tenant_id\": 18,\n      \"name\": \"Dress Casual Wanita\",\n      \"description\": \"Dress casual untuk wanita berbagai acara\",\n      \"category\": \"Pakaian Wanita\",\n      \"sku\": \"FASHION-002\",\n      \"price\": 180000,\n      \"stock\": 25,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:48:10+07:00\",\n      \"updated_at\": \"2025-12-24T19:48:10+07:00\"\n    },\n    {\n      \"id\": 65,\n      \"tenant_id\": 18,\n      \"name\": \"Tas Kulit Premium\",\n      \"description\": \"Tas kulit asli berkualitas tinggi\",\n      \"category\": \"Aksesoris\",\n      \"sku\": \"FASHION-ACC-001\",\n      \"price\": 450000,\n      \"stock\": 15,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:48:10+07:00\",\n      \"updated_at\": \"2025-12-24T19:48:10+07:00\"\n    }\n  ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PIN Management",
+			"item": [
+				{
+					"name": "Create PIN",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/pin/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pin",
+								"create"
+							]
+						},
+						"description": "Create a new 6-digit PIN for the authenticated user. PIN must be exactly 6 numeric digits and match confirm_pin.\n\nValidations:\n- PIN must be exactly 6 digits\n- PIN must be numeric only\n- PIN and confirm_pin must match\n- User must not have an existing PIN"
+					},
+					"response": [
+						{
+							"name": "Create PIN Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"create"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"PIN created successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Change PIN",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/pin/change",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pin",
+								"change"
+							]
+						},
+						"description": "Change existing PIN for the authenticated user. Requires old PIN for verification.\n\nValidations:\n- All PINs must be exactly 6 digits\n- All PINs must be numeric only\n- Old PIN must be correct\n- New PIN and confirm_pin must match\n- New PIN must be different from old PIN\n- User must have an existing PIN"
+					},
+					"response": [
+						{
+							"name": "Change PIN Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/change",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"change"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"PIN changed successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Check PIN Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/pin/check",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pin",
+								"check"
+							]
+						},
+						"description": "Check whether the authenticated user has set a PIN or not. Useful to determine if user should create or change PIN."
+					},
+					"response": [
+						{
+							"name": "Check PIN - Has PIN",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/check",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"check"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"has_pin\": true\n}"
+						},
+						{
+							"name": "Check PIN - No PIN",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/check",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"check"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"has_pin\": false\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PIN Management",
+			"item": [
+				{
+					"name": "Create PIN",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/pin/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pin",
+								"create"
+							]
+						},
+						"description": "Create a new 6-digit PIN for the authenticated user."
+					},
+					"response": [
+						{
+							"name": "Create PIN Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/create",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"create"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"PIN created successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Change PIN",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/pin/change",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pin",
+								"change"
+							]
+						},
+						"description": "Change existing PIN for the authenticated user."
+					},
+					"response": [
+						{
+							"name": "Change PIN Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/change",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"change"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"PIN changed successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Check PIN Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/pin/check",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"pin",
+								"check"
+							]
+						},
+						"description": "Check whether the authenticated user has set a PIN."
+					},
+					"response": [
+						{
+							"name": "Check PIN - Has PIN",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/check",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"check"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"has_pin\": true\n}"
+						},
+						{
+							"name": "Check PIN - No PIN",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/pin/check",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"pin",
+										"check"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"has_pin\": false\n}"
 						}
 					]
 				}

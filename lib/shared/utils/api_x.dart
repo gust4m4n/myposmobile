@@ -297,4 +297,64 @@ class ApiX {
 
   /// Get current auth token
   static String? get authToken => _authToken;
+
+  /// Upload file (multipart/form-data)
+  /// [endpoint] - API endpoint (e.g., '/profile/photo')
+  /// [filePath] - absolute path to the file to upload
+  /// [fieldName] - form field name (default: 'image')
+  /// [requiresAuth] - whether to include auth token in headers
+  static Future<ApiResponse<T>> uploadFile<T>(
+    String endpoint, {
+    required String filePath,
+    String fieldName = 'image',
+    bool requiresAuth = true,
+  }) async {
+    try {
+      final url = '${ApiConfig.baseUrl}$endpoint';
+      final uri = Uri.parse(url);
+
+      final request = http.MultipartRequest('POST', uri);
+
+      // Add auth header if required
+      if (requiresAuth && _authToken != null) {
+        request.headers['Authorization'] = 'Bearer $_authToken';
+      }
+
+      // Add file
+      final file = await http.MultipartFile.fromPath(fieldName, filePath);
+      request.files.add(file);
+
+      _log('📤 Uploading file to $url');
+
+      final streamedResponse = await request.send().timeout(
+        ApiConfig.connectTimeout,
+      );
+      final response = await http.Response.fromStream(streamedResponse);
+
+      _logApiCall(
+        method: 'POST (multipart)',
+        url: url,
+        headers: request.headers,
+        statusCode: response.statusCode,
+        responseBody: response.body,
+      );
+
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return ApiResponse<T>.fromJson(jsonResponse, null, response.statusCode);
+      } else {
+        return ApiResponse<T>(
+          error:
+              jsonResponse['error'] ??
+              jsonResponse['message'] ??
+              'Upload failed',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      _log('❌ Upload error: $e');
+      return ApiResponse<T>(error: 'Upload failed: $e', statusCode: 0);
+    }
+  }
 }
