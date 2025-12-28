@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../shared/utils/currency_formatter.dart';
+import '../shared/widgets/search_field.dart';
 import 'product_model.dart';
 
 /// Combined widget untuk menampilkan daftar produk dengan category filter dan grid
@@ -162,39 +163,15 @@ class _CategoryFilterState extends State<_CategoryFilter> {
             ),
           ),
           const SizedBox(width: 12),
-          Container(
-            width: 168,
+          Padding(
             padding: EdgeInsets.only(right: widget.isMobile ? 12 : 16),
-            child: TextField(
+            child: SearchField(
               controller: _searchController,
               onChanged: (value) {
                 widget.onSearchChanged(value);
                 setState(() {});
               },
-              decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(Icons.search, color: theme.hintColor),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.cancel, size: 20),
-                        onPressed: () {
-                          _searchController.clear();
-                          widget.onSearchChanged('');
-                          setState(() {});
-                        },
-                      )
-                    : null,
-                filled: true,
-                fillColor: const Color(0xFFFF9500),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
+              width: 168,
             ),
           ),
         ],

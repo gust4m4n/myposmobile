@@ -538,14 +538,18 @@ class _HomePageState extends State<HomePage> {
               child: CircleAvatar(
                 radius: 18,
                 backgroundColor: theme.colorScheme.primary,
-                backgroundImage: _profile?.user.image != null
+                backgroundImage:
+                    _profile?.user.image != null &&
+                        _profile!.user.image!.isNotEmpty
                     ? NetworkImage(
                         _profile!.user.image!.startsWith('http')
                             ? _profile!.user.image!
                             : 'http://localhost:8080${_profile!.user.image!}',
                       )
                     : null,
-                child: _profile?.user.image == null
+                child:
+                    _profile?.user.image == null ||
+                        _profile!.user.image!.isEmpty
                     ? const Icon(Icons.person, size: 20, color: Colors.white)
                     : null,
               ),

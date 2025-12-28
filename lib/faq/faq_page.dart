@@ -196,8 +196,22 @@ class _FaqPageState extends State<FaqPage> {
                                   },
                                 )
                               : null,
+                          filled: true,
+                          fillColor: Colors.grey[200],
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[400]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[400]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: theme.colorScheme.primary,
+                              width: 2,
+                            ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
