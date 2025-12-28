@@ -87,6 +87,25 @@ const Map<String, String> en = {
   'passwordChangedSuccessfully': 'Password changed successfully',
   'changing': 'Changing...',
 
+  // PIN
+  'createPin': 'Create PIN',
+  'changePin': 'Change PIN',
+  'currentPin': 'Current PIN',
+  'newPin': 'New PIN',
+  'pin': 'PIN',
+  'confirmPin': 'Confirm PIN',
+  'pleaseEnterCurrentPin': 'Please enter your current PIN',
+  'pleaseEnterPin': 'Please enter a PIN',
+  'pleaseConfirmPin': 'Please confirm your PIN',
+  'pinsDoNotMatch': 'PINs do not match',
+  'pinMustBe6Digits': 'PIN must be 6 digits',
+  'pinCreatedSuccess': 'PIN created successfully',
+  'pinCreateFailed': 'Failed to create PIN',
+  'pinChangedSuccess': 'PIN changed successfully',
+  'pinChangeFailed': 'Failed to change PIN',
+  'createPinInstructions': 'Create a 6-digit PIN for quick authentication',
+  'changePinInstructions': 'Enter your current PIN and a new 6-digit PIN',
+
   // Login Page Additional
   'loadingTenants': 'Loading tenants...',
   'loadingBranches': 'Loading branches...',

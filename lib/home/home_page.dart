@@ -7,6 +7,8 @@ import '../orders/orders_page.dart';
 import '../orders/orders_service.dart';
 import '../payments/payments_page.dart';
 import '../payments/payments_service.dart';
+import '../pin/pin_dialog.dart';
+import '../pin/pin_service.dart';
 import '../products/products_management_page.dart';
 import '../profile/profile_page.dart';
 import '../profile/profile_service.dart';
@@ -933,6 +935,37 @@ class _HomePageState extends State<HomePage> {
                     context: context,
                     builder: (context) =>
                         ChangePasswordDialog(languageCode: widget.languageCode),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.pin_outlined,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'changePin'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () async {
+                  Navigator.pop(context);
+                  // Check if user has PIN
+                  final statusResponse = await PinService.checkPinStatus();
+                  final hasPin =
+                      statusResponse.statusCode == 200 &&
+                      statusResponse.data?['has_pin'] == true;
+
+                  if (!mounted) return;
+
+                  showDialog(
+                    context: context,
+                    builder: (context) => PinDialog(
+                      languageCode: widget.languageCode,
+                      hasExistingPin: hasPin,
+                    ),
                   );
                 },
               ),

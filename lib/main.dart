@@ -9,6 +9,9 @@ import 'shared/utils/connectivity_service.dart';
 import 'shared/utils/storage_service.dart';
 import 'shared/widgets/connectivity_wrapper.dart';
 
+// Global navigation key for navigation from anywhere
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
@@ -104,10 +107,20 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
     if (savedToken != null) {
       ApiX.setAuthToken(savedToken);
     }
+
+    // Set navigator key for 401 handling
+    ApiX.setNavigatorKey(navigatorKey);
+
+    // Set login success callback for 401 handling
+    ApiX.setLoginSuccessCallback((token) {
+      setState(() {
+        _authToken = token;
+      });
+    });
   }
 
   Future<void> _toggleLanguage() async {
-    final newLanguage = _languageCode == 'en' ? 'id' : 'en';
+    final newLanguage = _languageCode == 'id' ? 'en' : 'id';
     setState(() {
       _languageCode = newLanguage;
     });
@@ -141,6 +154,7 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'MyPOSMobile',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

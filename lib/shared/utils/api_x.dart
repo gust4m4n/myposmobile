@@ -1,16 +1,71 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../../login/login_page.dart';
 import '../api_models.dart';
 import '../config/api_config.dart';
 import 'logger_x.dart';
+import 'storage_service.dart';
 
 /// Reusable API client class for all API calls in the application
 /// Provides simplified methods for GET, POST, PUT, DELETE operations
 /// Returns ApiResponse<T> for type-safe responses
 class ApiX {
   static String? _authToken;
+  static GlobalKey<NavigatorState>? _navigatorKey;
+  static Function(String)? _onLoginSuccessCallback;
+
+  /// Set navigator key for handling 401 redirects
+  static void setNavigatorKey(GlobalKey<NavigatorState> key) {
+    _navigatorKey = key;
+  }
+
+  /// Set callback for handling login success after 401 redirect
+  static void setLoginSuccessCallback(Function(String) callback) {
+    _onLoginSuccessCallback = callback;
+  }
+
+  /// Handle 401 Unauthorized - logout and redirect to login
+  static Future<void> _handle401() async {
+    appLog('🚨 401 Unauthorized - logging out');
+
+    // Clear auth token
+    clearAuthToken();
+
+    // Clear stored token
+    final storage = await StorageService.getInstance();
+    await storage.clearToken();
+
+    // Navigate to login page
+    if (_navigatorKey?.currentContext != null) {
+      final context = _navigatorKey!.currentContext!;
+      // Use pushAndRemoveUntil to clear the navigation stack
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => LoginPage(
+            languageCode: 'id', // Default language
+            onLanguageToggle: () {}, // No-op since we'll reload the app
+            onLoginSuccess: (token) async {
+              // Save token
+              final storage = await StorageService.getInstance();
+              await storage.saveToken(token);
+
+              // Set token in ApiX
+              setAuthToken(token);
+
+              // Call the app's login success callback if set
+              if (_onLoginSuccessCallback != null) {
+                _onLoginSuccessCallback!(token);
+              }
+            },
+          ),
+        ),
+        (route) => false,
+      );
+    }
+  }
 
   /// Try to parse response body as JSON, return null if not valid JSON
   static Map<String, dynamic>? _tryParseJson(String body) {
@@ -134,6 +189,11 @@ class ApiX {
         response.statusCode,
       );
     } else {
+      // Handle 401 Unauthorized
+      if (response.statusCode == 401) {
+        await _handle401();
+      }
+
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
@@ -183,6 +243,11 @@ class ApiX {
         response.statusCode,
       );
     } else {
+      // Handle 401 Unauthorized
+      if (response.statusCode == 401) {
+        await _handle401();
+      }
+
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
@@ -232,6 +297,11 @@ class ApiX {
         response.statusCode,
       );
     } else {
+      // Handle 401 Unauthorized
+      if (response.statusCode == 401) {
+        await _handle401();
+      }
+
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
@@ -278,6 +348,11 @@ class ApiX {
         response.statusCode,
       );
     } else {
+      // Handle 401 Unauthorized
+      if (response.statusCode == 401) {
+        await _handle401();
+      }
+
       return ApiResponse<T>(
         error:
             jsonResponse['error'] ??
@@ -370,6 +445,11 @@ class ApiX {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return ApiResponse<T>.fromJson(jsonResponse, null, response.statusCode);
       } else {
+        // Handle 401 Unauthorized
+        if (response.statusCode == 401) {
+          await _handle401();
+        }
+
         return ApiResponse<T>(
           error:
               jsonResponse['error'] ??

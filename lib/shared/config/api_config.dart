@@ -30,6 +30,11 @@ class ApiConfig {
   // Payment endpoints
   static const String payments = '$apiPrefix/payments';
 
+  // PIN endpoints
+  static const String pinCreate = '$apiPrefix/pin/create';
+  static const String pinChange = '$apiPrefix/pin/change';
+  static const String pinCheck = '$apiPrefix/pin/check';
+
   // Superadmin endpoints
   static const String superadminDashboard = '$apiPrefix/superadmin/dashboard';
   static const String superadminTenants = '$apiPrefix/superadmin/tenants';

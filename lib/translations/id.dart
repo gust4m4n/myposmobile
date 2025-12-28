@@ -87,6 +87,25 @@ const Map<String, String> id = {
   'passwordChangedSuccessfully': 'Password berhasil diubah',
   'changing': 'Mengubah...',
 
+  // PIN
+  'createPin': 'Buat PIN',
+  'changePin': 'Ubah PIN',
+  'currentPin': 'PIN Saat Ini',
+  'newPin': 'PIN Baru',
+  'pin': 'PIN',
+  'confirmPin': 'Konfirmasi PIN',
+  'pleaseEnterCurrentPin': 'Mohon masukkan PIN saat ini',
+  'pleaseEnterPin': 'Mohon masukkan PIN',
+  'pleaseConfirmPin': 'Mohon konfirmasi PIN Anda',
+  'pinsDoNotMatch': 'PIN tidak cocok',
+  'pinMustBe6Digits': 'PIN harus 6 digit',
+  'pinCreatedSuccess': 'PIN berhasil dibuat',
+  'pinCreateFailed': 'Gagal membuat PIN',
+  'pinChangedSuccess': 'PIN berhasil diubah',
+  'pinChangeFailed': 'Gagal mengubah PIN',
+  'createPinInstructions': 'Buat PIN 6 digit untuk autentikasi cepat',
+  'changePinInstructions': 'Masukkan PIN saat ini dan PIN baru 6 digit',
+
   // Login Page Additional
   'loadingTenants': 'Memuat tenant...',
   'loadingBranches': 'Memuat cabang...',
