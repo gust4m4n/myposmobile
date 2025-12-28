@@ -2110,7 +2110,7 @@
 								"payments"
 							]
 						},
-						"description": "Create payment for an order. Payment amount must be equal to or greater than order total.\n\nRequest body:\n- order_id: ID of order to pay\n- amount: Payment amount (must be >= order total)\n- payment_method: Method of payment (cash, debit, credit, transfer, etc)\n- notes: Optional payment notes\n\nEffect:\n- Creates payment record\n- Updates order status to 'completed'\n- Cannot pay cancelled orders\n- Cannot pay already completed orders"
+						"description": "Create payment for an order. Payment amount must be equal to or greater than order total.\n\nRequest body:\n- order_id: ID of order to pay\n- amount: Payment amount (must be >= order total)\n- payment_method: Method of payment (cash, card, transfer, qris)\n- notes: Optional payment notes\n\nEffect:\n- Creates payment record\n- Updates order status to 'completed'\n- Cannot pay cancelled orders\n- Cannot pay already completed orders\n\nResponse includes complete payment details for receipt:\n- Payment information (ID, amount, method, change)\n- Order details (order number, total, items)\n- Product details (name, quantity, price, subtotal)\n- Cashier and branch information"
 					},
 					"response": [
 						{
@@ -2130,7 +2130,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"order_id\": 3,\n  \"amount\": 85000,\n  \"payment_method\": \"cash\",\n  \"notes\": \"Cash payment\"\n}"
+									"raw": "{\n  \"order_id\": 3,\n  \"amount\": 100000,\n  \"payment_method\": \"cash\",\n  \"notes\": \"Cash payment\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/payments",
@@ -2154,7 +2154,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Payment created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 3,\n    \"amount\": 85000,\n    \"payment_method\": \"cash\",\n    \"status\": \"completed\",\n    \"notes\": \"Cash payment\",\n    \"created_at\": \"2025-12-25 14:45:00\",\n    \"updated_at\": \"2025-12-25 14:45:00\"\n  }\n}"
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 3,\n    \"order_number\": \"ORD-20251228-001\",\n    \"amount\": 100000,\n    \"payment_method\": \"cash\",\n    \"status\": \"completed\",\n    \"notes\": \"Cash payment\",\n    \"change\": 15000,\n    \"created_at\": \"2025-12-28 10:30:00\",\n    \"order\": {\n      \"total_amount\": 85000,\n      \"status\": \"completed\",\n      \"notes\": \"\",\n      \"order_items\": [\n        {\n          \"product_name\": \"Nasi Goreng Spesial\",\n          \"quantity\": 2,\n          \"price\": 25000,\n          \"subtotal\": 50000\n        },\n        {\n          \"product_name\": \"Es Teh Manis\",\n          \"quantity\": 3,\n          \"price\": 5000,\n          \"subtotal\": 15000\n        },\n        {\n          \"product_name\": \"Ayam Goreng\",\n          \"quantity\": 1,\n          \"price\": 20000,\n          \"subtotal\": 20000\n        }\n      ],\n      \"cashier_name\": \"John Doe\",\n      \"branch_name\": \"Cabang Pusat Jakarta\"\n    }\n  }\n}"
 						}
 					]
 				},

@@ -14,11 +14,15 @@ import '../translations/translation_extension.dart';
 class PaymentDetailDialog extends StatefulWidget {
   final Map<String, dynamic> payment;
   final String languageCode;
+  final Map<String, dynamic>? orderData;
+  final bool isSuccessMode;
 
   const PaymentDetailDialog({
     super.key,
     required this.payment,
     required this.languageCode,
+    this.orderData,
+    this.isSuccessMode = false,
   });
 
   @override
@@ -32,7 +36,11 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
   @override
   void initState() {
     super.initState();
-    _loadOrderDetails();
+    if (widget.orderData != null) {
+      _orderData = widget.orderData;
+    } else {
+      _loadOrderDetails();
+    }
   }
 
   Future<void> _loadOrderDetails() async {
@@ -244,7 +252,9 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
     final orderId = payment['order_id'] ?? 0;
 
     return DialogX(
-      title: '${'payments'.tr} #${payment['id'] ?? 'N/A'}',
+      title: widget.isSuccessMode
+          ? 'transactionSuccess'.tr
+          : '${'payments'.tr} #${payment['id'] ?? 'N/A'}',
       width: 500,
       onClose: () => Navigator.pop(context),
       content: SizedBox(
@@ -253,6 +263,23 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (widget.isSuccessMode) ...[
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check_circle,
+                    size: 64,
+                    color: Colors.green.shade600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
             _buildInfoRow('status'.tr, status, theme),
             _buildInfoRow(
               'amount'.tr,

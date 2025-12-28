@@ -5,6 +5,7 @@ import '../change-password/change_password_dialog.dart';
 import '../faq/faq_page.dart';
 import '../orders/orders_page.dart';
 import '../orders/orders_service.dart';
+import '../payments/payment_detail_dialog.dart';
 import '../payments/payments_page.dart';
 import '../payments/payments_service.dart';
 import '../pin/pin_dialog.dart';
@@ -20,7 +21,6 @@ import '../shared/widgets/dialog_x.dart';
 import '../tnc/tnc_page.dart';
 import '../translations/translation_extension.dart';
 import 'checkout_dialog.dart';
-import 'payment_success_dialog.dart';
 import 'product_model.dart';
 import 'product_widgets.dart';
 import 'products_service.dart';
@@ -214,16 +214,6 @@ class _HomePageState extends State<HomePage> {
       Navigator.pop(context);
 
       if (paymentResponse.statusCode == 200) {
-        // Prepare items data from cart before clearing
-        final completedItems = _cart.map((cartItem) {
-          return {
-            'product_name': cartItem.product.name,
-            'quantity': cartItem.quantity,
-            'price': cartItem.product.price,
-            'subtotal': cartItem.total,
-          };
-        }).toList();
-
         // Clear cart
         setState(() {
           _cart.clear();
@@ -233,9 +223,11 @@ class _HomePageState extends State<HomePage> {
         showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) => PaymentSuccessDialog(
+          builder: (context) => PaymentDetailDialog(
+            payment: paymentResponse.data!,
+            languageCode: widget.languageCode,
             orderData: orderResponse.data!,
-            items: completedItems,
+            isSuccessMode: true,
           ),
         );
       } else {
