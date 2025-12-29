@@ -46,20 +46,6 @@ class ApiX {
         MaterialPageRoute(
           builder: (context) => LoginPage(
             languageCode: 'id', // Default language
-            onLanguageToggle: () {}, // No-op since we'll reload the app
-            onLoginSuccess: (token) async {
-              // Save token
-              final storage = await StorageService.getInstance();
-              await storage.saveToken(token);
-
-              // Set token in ApiX
-              setAuthToken(token);
-
-              // Call the app's login success callback if set
-              if (_onLoginSuccessCallback != null) {
-                _onLoginSuccessCallback!(token);
-              }
-            },
           ),
         ),
         (route) => false,

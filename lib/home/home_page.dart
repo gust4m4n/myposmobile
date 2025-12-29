@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:myposmobile/shared/widgets/button_x.dart';
 
 import '../change-password/change_password_dialog.dart';
@@ -14,6 +15,9 @@ import '../products/products_management_page.dart';
 import '../profile/profile_page.dart';
 import '../profile/profile_service.dart';
 import '../shared/api_models.dart';
+import '../shared/controllers/auth_controller.dart';
+import '../shared/controllers/language_controller.dart';
+import '../shared/controllers/profile_controller.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/connectivity_indicator.dart';
@@ -27,15 +31,8 @@ import 'products_service.dart';
 
 class HomePage extends StatefulWidget {
   final String languageCode;
-  final VoidCallback onLanguageToggle;
-  final VoidCallback onLogout;
 
-  const HomePage({
-    super.key,
-    required this.languageCode,
-    required this.onLanguageToggle,
-    required this.onLogout,
-  });
+  const HomePage({super.key, required this.languageCode});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -1153,7 +1150,7 @@ class _HomePageState extends State<HomePage> {
 
                   if (selectedLanguage != null &&
                       selectedLanguage != widget.languageCode) {
-                    widget.onLanguageToggle();
+                    Get.find<LanguageController>().toggleLanguage();
                   }
                 },
               ),
@@ -1196,7 +1193,10 @@ class _HomePageState extends State<HomePage> {
                   );
 
                   if (confirmed == true) {
-                    widget.onLogout();
+                    final authController = Get.find<AuthController>();
+                    final profileController = Get.find<ProfileController>();
+                    await authController.logout();
+                    profileController.clearProfile();
                   }
                 },
               ),

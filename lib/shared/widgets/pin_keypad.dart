@@ -43,36 +43,20 @@ class PinKeypad extends StatelessWidget {
           children: List.generate(
             pinLength,
             (index) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              width: 48,
-              height: 48,
+              margin: const EdgeInsets.symmetric(horizontal: 6),
+              width: 16,
+              height: 16,
               decoration: BoxDecoration(
+                shape: BoxShape.circle,
                 border: Border.all(
                   color: index < pin.length
                       ? theme.colorScheme.primary
                       : theme.dividerColor,
                   width: 2,
                 ),
-                borderRadius: BorderRadius.circular(8),
                 color: index < pin.length
-                    ? theme.colorScheme.primary.withOpacity(0.1)
+                    ? theme.colorScheme.primary
                     : theme.colorScheme.surface,
-              ),
-              child: Center(
-                child: obscureText && index < pin.length
-                    ? Icon(
-                        Icons.circle,
-                        size: 12,
-                        color: theme.colorScheme.primary,
-                      )
-                    : Text(
-                        index < pin.length ? pin[index] : '',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
               ),
             ),
           ),

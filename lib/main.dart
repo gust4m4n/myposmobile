@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'home/home_page.dart';
 import 'login/login_page.dart';
+import 'shared/controllers/auth_controller.dart';
+import 'shared/controllers/language_controller.dart';
+import 'shared/controllers/profile_controller.dart';
 import 'shared/utils/api_x.dart';
 import 'shared/utils/connectivity_service.dart';
 import 'shared/utils/storage_service.dart';
 import 'shared/widgets/connectivity_wrapper.dart';
 
-// Global navigation key for navigation from anywhere
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
+
+  // Initialize GetX controllers
+  Get.put(AuthController());
+  Get.put(LanguageController());
+  Get.put(ProfileController());
 
   // Initialize storage
   final storage = await StorageService.getInstance();
@@ -63,24 +69,27 @@ class MyPOSMobileApp extends StatefulWidget {
   State<MyPOSMobileApp> createState() => _MyPOSMobileAppState();
 }
 
-class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
-  String _languageCode = 'id'; // Default to Indonesian
-  String? _authToken;
-  bool _isLoading = true;
+class _MyPOSMobileAppState extends State<MyPOSMobileApp>
+    with WindowListener, WidgetsBindingObserver {
+  final profileController = Get.find<ProfileController>();
 
   @override
   void initState() {
     super.initState();
     windowManager.addListener(this);
-    _loadSavedData();
+    WidgetsBinding.instance.addObserver(this);
 
     // Initialize connectivity monitoring
     ConnectivityService().initialize();
+
+    // Set navigator key for 401 handling
+    ApiX.setNavigatorKey(Get.key);
   }
 
   @override
   void dispose() {
     windowManager.removeListener(this);
+    WidgetsBinding.instance.removeObserver(this);
     ConnectivityService().dispose();
     super.dispose();
   }
@@ -92,117 +101,68 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp> with WindowListener {
     await storage.saveWindowSize(size.width, size.height);
   }
 
-  Future<void> _loadSavedData() async {
-    final storage = await StorageService.getInstance();
-    final savedToken = storage.getToken();
-    final savedLanguage = storage.getLanguageCode();
-
-    setState(() {
-      _authToken = savedToken;
-      _languageCode = savedLanguage;
-      _isLoading = false;
-    });
-
-    // Set token to ApiX if exists
-    if (savedToken != null) {
-      ApiX.setAuthToken(savedToken);
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Fetch profile when app resumes from background
+    final authController = Get.find<AuthController>();
+    if (state == AppLifecycleState.resumed && authController.isAuthenticated) {
+      profileController.fetchProfile();
     }
-
-    // Set navigator key for 401 handling
-    ApiX.setNavigatorKey(navigatorKey);
-
-    // Set login success callback for 401 handling
-    ApiX.setLoginSuccessCallback((token) {
-      setState(() {
-        _authToken = token;
-      });
-    });
-  }
-
-  Future<void> _toggleLanguage() async {
-    final newLanguage = _languageCode == 'id' ? 'en' : 'id';
-    setState(() {
-      _languageCode = newLanguage;
-    });
-
-    // Save language preference
-    final storage = await StorageService.getInstance();
-    await storage.saveLanguageCode(newLanguage);
-  }
-
-  Future<void> _handleLoginSuccess(String token) async {
-    setState(() {
-      _authToken = token;
-    });
-
-    // Save token to storage
-    final storage = await StorageService.getInstance();
-    await storage.saveToken(token);
-  }
-
-  Future<void> _handleLogout() async {
-    setState(() {
-      _authToken = null;
-    });
-
-    // Clear token from storage and ApiX
-    final storage = await StorageService.getInstance();
-    await storage.clearToken();
-    ApiX.clearAuthToken();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      title: 'MyPOSMobile',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF000000),
-        colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF0A84FF),
-          secondary: Color(0xFF32D74B),
-          error: Color(0xFFFF453A),
-          surface: Color(0xFF1C1C1E),
-          onSurface: Colors.white,
+    final authController = Get.find<AuthController>();
+    final languageController = Get.find<LanguageController>();
+
+    return Obx(
+      () => GetMaterialApp(
+        title: 'MyPOSMobile',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: const Color(0xFF000000),
+          colorScheme: const ColorScheme.dark(
+            primary: Color(0xFF0A84FF),
+            secondary: Color(0xFF32D74B),
+            error: Color(0xFFFF453A),
+            surface: Color(0xFF1C1C1E),
+            onSurface: Colors.white,
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF1C1C1E),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
+          cardColor: const Color(0xFF1C1C1E),
+          dividerColor: Color(0xFF38383A),
+          useMaterial3: true,
+          pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: _InstantPageTransitionsBuilder(),
+              TargetPlatform.iOS: _InstantPageTransitionsBuilder(),
+              TargetPlatform.linux: _InstantPageTransitionsBuilder(),
+              TargetPlatform.macOS: _InstantPageTransitionsBuilder(),
+              TargetPlatform.windows: _InstantPageTransitionsBuilder(),
+            },
+          ),
         ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1C1C1E),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          iconTheme: IconThemeData(color: Colors.white),
-        ),
-        cardColor: const Color(0xFF1C1C1E),
-        dividerColor: Color(0xFF38383A),
-        useMaterial3: true,
-        pageTransitionsTheme: const PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: _InstantPageTransitionsBuilder(),
-            TargetPlatform.iOS: _InstantPageTransitionsBuilder(),
-            TargetPlatform.linux: _InstantPageTransitionsBuilder(),
-            TargetPlatform.macOS: _InstantPageTransitionsBuilder(),
-            TargetPlatform.windows: _InstantPageTransitionsBuilder(),
-          },
-        ),
+        themeMode: ThemeMode.dark,
+        home: authController.isLoading.value
+            ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+            : ConnectivityWrapper(
+                child: authController.isAuthenticated
+                    ? HomePage(
+                        languageCode: languageController.languageCode.value,
+                      )
+                    : LoginPage(
+                        languageCode: languageController.languageCode.value,
+                      ),
+              ),
       ),
-      themeMode: ThemeMode.dark,
-      home: _isLoading
-          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-          : ConnectivityWrapper(
-              child: _authToken == null
-                  ? LoginPage(
-                      languageCode: _languageCode,
-                      onLanguageToggle: _toggleLanguage,
-                      onLoginSuccess: _handleLoginSuccess,
-                    )
-                  : HomePage(
-                      languageCode: _languageCode,
-                      onLanguageToggle: _toggleLanguage,
-                      onLogout: _handleLogout,
-                    ),
-            ),
     );
   }
 }

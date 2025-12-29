@@ -9,6 +9,7 @@ import '../home/product_model.dart';
 import '../shared/utils/image_upload_service.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
+import '../shared/widgets/image_crop_editor.dart';
 import '../translations/translation_extension.dart';
 import 'products_management_service.dart';
 
@@ -104,9 +105,24 @@ class _EditProductDialogState extends State<EditProductDialog> {
           return;
         }
 
-        setState(() {
-          _selectedPhotoPath = filePath;
-        });
+        // Open crop editor
+        if (mounted) {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ImageCropEditor(
+                imageFile: file,
+                onCancel: () => Navigator.of(context).pop(),
+                onCropComplete: (croppedFile) {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    _selectedPhotoPath = croppedFile.path;
+                  });
+                },
+              ),
+              fullscreenDialog: true,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (kDebugMode) {
