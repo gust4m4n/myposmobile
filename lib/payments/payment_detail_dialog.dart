@@ -368,24 +368,28 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
         ),
       ),
       actions: [
-        Expanded(
-          child: ButtonX(
-            onPressed: _orderData == null
-                ? null
-                : () => _generateAndDownloadReceipt(context),
-            icon: Icons.print,
-            label: 'printReceipt'.tr,
-            backgroundColor: const Color(0xFFFF9500),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ButtonX(
-            onPressed: () => Navigator.pop(context),
-            icon: Icons.close,
-            label: 'close'.tr,
-            backgroundColor: theme.colorScheme.primary,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: ButtonX(
+                onPressed: _orderData == null
+                    ? null
+                    : () => _generateAndDownloadReceipt(context),
+                icon: Icons.print,
+                label: 'printReceipt'.tr,
+                backgroundColor: const Color(0xFFFF9500),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ButtonX(
+                onPressed: () => Navigator.pop(context),
+                icon: Icons.close,
+                label: 'close'.tr,
+                backgroundColor: theme.colorScheme.primary,
+              ),
+            ),
+          ],
         ),
       ],
     );

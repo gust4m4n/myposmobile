@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:myposmobile/shared/widgets/button_x.dart';
 
+import '../audit-trails/audit_trails_page.dart';
 import '../change-password/change_password_dialog.dart';
 import '../faq/faq_page.dart';
 import '../orders/orders_page.dart';
@@ -24,6 +25,7 @@ import '../shared/widgets/connectivity_indicator.dart';
 import '../shared/widgets/dialog_x.dart';
 import '../tnc/tnc_page.dart';
 import '../translations/translation_extension.dart';
+import '../users/users_management_page.dart';
 import 'checkout_dialog.dart';
 import 'product_model.dart';
 import 'product_widgets.dart';
@@ -1024,6 +1026,53 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) => ProductsManagementPage(
                         languageCode: widget.languageCode,
                       ),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.people_outline,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'userManagement'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UsersManagementPage(
+                        languageCode: widget.languageCode,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.history,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'auditTrails'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AuditTrailsPage(languageCode: widget.languageCode),
                     ),
                   );
                 },
