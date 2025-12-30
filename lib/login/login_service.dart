@@ -7,26 +7,17 @@ class LoginService {
   /// Login user and get JWT token
   ///
   /// Parameters:
-  /// - tenantCode: Tenant code
-  /// - branchCode: Branch code
-  /// - username: Username
+  /// - username: Username (unique across system)
   /// - password: Password
   ///
-  /// Returns: AuthResponseData with token and user info
+  /// Returns: AuthResponseData with token, user, tenant, and branch info
   Future<ApiResponse<AuthResponseData>> login({
-    required String tenantCode,
-    required String branchCode,
     required String username,
     required String password,
   }) async {
     final response = await ApiX.post<AuthResponseData>(
       ApiConfig.login,
-      body: {
-        'tenant_code': tenantCode,
-        'branch_code': branchCode,
-        'username': username,
-        'password': password,
-      },
+      body: {'username': username, 'password': password},
       fromJson: (data) => AuthResponseData.fromJson(data),
     );
 

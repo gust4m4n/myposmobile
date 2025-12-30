@@ -131,14 +131,6 @@ class LoginPage extends StatelessWidget {
                   }),
                   const SizedBox(height: 48),
 
-                  // Tenant Dropdown
-                  _buildTenantDropdown(context, loginController, theme),
-                  const SizedBox(height: 16),
-
-                  // Branch Dropdown
-                  _buildBranchDropdown(context, loginController, theme),
-                  const SizedBox(height: 16),
-
                   // Username Field
                   _buildUsernameField(context, loginController, theme),
                   const SizedBox(height: 16),
@@ -159,121 +151,6 @@ class LoginPage extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTenantDropdown(
-    BuildContext context,
-    LoginController controller,
-    ThemeData theme,
-  ) {
-    TranslationService.setLanguage(languageCode);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Obx(
-      () => DropdownButtonFormField<Map<String, dynamic>>(
-        value: controller.selectedTenant.value,
-        decoration: InputDecoration(
-          labelText: 'tenantCode'.tr,
-          prefixIcon: const Icon(Icons.business),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          filled: true,
-          fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
-        ),
-        hint: controller.isLoadingTenants.value
-            ? Row(
-                children: [
-                  const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                  const SizedBox(width: 12),
-                  Text('loadingTenants'.tr),
-                ],
-              )
-            : Text('selectTenant'.tr),
-        items: controller.tenants.map((tenant) {
-          return DropdownMenuItem<Map<String, dynamic>>(
-            value: tenant,
-            child: Text('${tenant['name']} (${tenant['code']})'),
-          );
-        }).toList(),
-        onChanged:
-            controller.isLoading.value || controller.isLoadingTenants.value
-            ? null
-            : (value) {
-                controller.selectedTenant.value = value;
-                if (value != null) {
-                  controller.loadBranches(value['id'] as int);
-                }
-              },
-        validator: (value) {
-          if (value == null) {
-            return 'pleaseEnterTenantCode'.tr;
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget _buildBranchDropdown(
-    BuildContext context,
-    LoginController controller,
-    ThemeData theme,
-  ) {
-    TranslationService.setLanguage(languageCode);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Obx(
-      () => DropdownButtonFormField<Map<String, dynamic>>(
-        value: controller.selectedBranch.value,
-        decoration: InputDecoration(
-          labelText: 'branchCode'.tr,
-          prefixIcon: const Icon(Icons.storefront),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          filled: true,
-          fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
-        ),
-        hint: controller.isLoadingBranches.value
-            ? Row(
-                children: [
-                  const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                  const SizedBox(width: 12),
-                  Text('loadingBranches'.tr),
-                ],
-              )
-            : Text(
-                controller.selectedTenant.value == null
-                    ? 'selectTenantFirst'.tr
-                    : 'selectBranch'.tr,
-              ),
-        items: controller.branches.map((branch) {
-          return DropdownMenuItem<Map<String, dynamic>>(
-            value: branch,
-            child: Text('${branch['name']} (${branch['code']})'),
-          );
-        }).toList(),
-        onChanged:
-            controller.isLoading.value ||
-                controller.isLoadingBranches.value ||
-                controller.selectedTenant.value == null
-            ? null
-            : (value) {
-                controller.selectedBranch.value = value;
-              },
-        validator: (value) {
-          if (value == null) {
-            return 'pleaseEnterBranchCode'.tr;
-          }
-          return null;
-        },
       ),
     );
   }

@@ -305,7 +305,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"{{tenant_code}}\",\n  \"branch_code\": \"{{branch_code}}\",\n  \"username\": \"johndoe\",\n  \"password\": \"password123\"\n}"
+							"raw": "{\n  \"username\": \"john@warteg123.com\",\n  \"password\": \"password123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -319,7 +319,7 @@
 								"login"
 							]
 						},
-						"description": "Endpoint untuk login user. Mengembalikan JWT token yang digunakan untuk autentikasi."
+						"description": "Endpoint untuk login user. Username bersifat unique di seluruh sistem. Mengembalikan JWT token, profile user, tenant, dan branch information."
 					},
 					"response": [
 						{
@@ -334,7 +334,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"TENANT001\",\n  \"branch_code\": \"BRANCH001\",\n  \"username\": \"johndoe\",\n  \"password\": \"password123\"\n}"
+									"raw": "{\n  \"username\": \"johndoe\",\n  \"password\": \"password123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -359,9 +359,369 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"branch_name\": \"Main Branch\",\n      \"username\": \"johndoe\",\n      \"email\": \"john@example.com\",\n      \"full_name\": \"John Doe\",\n      \"is_active\": true\n    }\n  }\n}"
+							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ0ZW5hbnRfaWQiOjEsInVzZXJuYW1lIjoiam9obkB3YXJ0ZWcxMjMuY29tIiwiZXhwIjoxNzM1NjI0ODAwfQ.abc123...\",\n    \"user\": {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"branch_name\": \"Cabang Pusat\",\n      \"username\": \"john@warteg123.com\",\n      \"email\": \"john@warteg123.com\",\n      \"full_name\": \"John Doe\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true\n    },\n    \"tenant\": {\n      \"id\": 1,\n      \"name\": \"Warteg 123\",\n      \"code\": \"warteg123\",\n      \"description\": \"Warung Tegal dengan menu tradisional Indonesia\",\n      \"address\": \"Jl. Raya Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com\",\n      \"email\": \"info@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true\n    },\n    \"branch\": {\n      \"id\": 1,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"pusat\",\n      \"description\": \"Kantor pusat dan cabang utama\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/pusat\",\n      \"email\": \"pusat@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true\n    }\n  }\n}"
 						}
 					]
+				},
+				{
+					"name": "Login - admin@mypos.com (Superadmin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin@mypos.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai superadmin - akses ke semua tenant"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - admin@warteg123.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin@warteg123.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai tenant admin - Warteg 123"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - john@warteg123.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"john@warteg123.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai user testing - Warteg 123 Cabang Pusat"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - admin.pusat@warteg123.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin.pusat@warteg123.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai branch admin - Warteg 123 Cabang Pusat"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - cashier.pusat@warteg123.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"cashier.pusat@warteg123.com\",\n  \"password\": \"demo123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai cashier - Warteg 123 Cabang Pusat"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - admin.menteng@warteg123.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin.menteng@warteg123.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai branch admin - Warteg 123 Cabang Menteng"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - cashier.menteng@warteg123.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"cashier.menteng@warteg123.com\",\n  \"password\": \"demo123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai cashier - Warteg 123 Cabang Menteng"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - admin@fashionstore99.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin@fashionstore99.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai tenant admin - Fashion Store 99"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - admin.plaza@fashionstore99.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin.plaza@fashionstore99.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai branch admin - Fashion Store 99 Cabang Mall Plaza"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - cashier.plaza@fashionstore99.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"cashier.plaza@fashionstore99.com\",\n  \"password\": \"demo123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai cashier - Fashion Store 99 Cabang Mall Plaza"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - admin.grand@fashionstore99.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin.grand@fashionstore99.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai branch admin - Fashion Store 99 Cabang Grand Mall"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - cashier.grand@fashionstore99.com",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"cashier.grand@fashionstore99.com\",\n  \"password\": \"demo123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login sebagai cashier - Fashion Store 99 Cabang Grand Mall"
+					},
+					"response": []
 				}
 			]
 		},
@@ -3374,7 +3734,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Superadmin Tenant\",\n      \"code\": \"supertenant\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-24T10:00:00+07:00\"\n    },\n    {\n      \"id\": 17,\n      \"name\": \"Warung Makan Sejahtera\",\n      \"code\": \"resto01\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    },\n    {\n      \"id\": 18,\n      \"name\": \"Fashion Store\",\n      \"code\": \"fashion01\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    }\n  ]\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Warteg 123\",\n      \"code\": \"warteg123\",\n      \"description\": \"Warung Tegal dengan menu tradisional Indonesia\",\n      \"address\": \"Jl. Raya Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com\",\n      \"email\": \"info@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion Store 99\",\n      \"code\": \"fashionstore99\",\n      \"description\": \"Toko fashion modern dengan koleksi terlengkap\",\n      \"address\": \"Jl. Thamrin Plaza Lt. 2, Jakarta Pusat\",\n      \"website\": \"https://fashionstore99.com\",\n      \"email\": \"info@fashionstore99.com\",\n      \"phone\": \"021-87654321\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -3400,7 +3760,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"is_active\": true\n}"
+							"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"description\": \"A new business tenant\",\n  \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n  \"website\": \"https://newtenant.com\",\n  \"email\": \"contact@newtenant.com\",\n  \"phone\": \"021-99887766\",\n  \"is_active\": true\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/superadmin/tenants",
@@ -3434,7 +3794,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"is_active\": true\n}"
+									"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"description\": \"A new business tenant\",\n  \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n  \"website\": \"https://newtenant.com\",\n  \"email\": \"contact@newtenant.com\",\n  \"phone\": \"021-99887766\",\n  \"is_active\": true\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/superadmin/tenants",
@@ -3459,7 +3819,164 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Tenant created successfully\",\n  \"data\": {\n    \"id\": 19,\n    \"name\": \"New Tenant\",\n    \"code\": \"TENANT002\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T16:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T16:00:00+07:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"Tenant created successfully\",\n  \"data\": {\n    \"id\": 19,\n    \"name\": \"New Tenant\",\n    \"code\": \"TENANT002\",\n    \"description\": \"A new business tenant\",\n    \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n    \"website\": \"https://newtenant.com\",\n    \"email\": \"contact@newtenant.com\",\n    \"phone\": \"021-99887766\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30T16:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Tenant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Tenant Name\",\n  \"code\": \"TENANT002\",\n  \"description\": \"Updated business description\",\n  \"address\": \"New Address, Jakarta\",\n  \"website\": \"https://updatedtenant.com\",\n  \"email\": \"newemail@tenant.com\",\n  \"phone\": \"021-11112222\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tenants/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tenants",
+								"1"
+							]
+						},
+						"description": "Update existing tenant data. All fields are required. Only superadmin can access."
+					},
+					"response": [
+						{
+							"name": "Update Tenant Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Updated Tenant Name\",\n  \"code\": \"TENANT002\",\n  \"description\": \"Updated business description\",\n  \"address\": \"New Address, Jakarta\",\n  \"website\": \"https://updatedtenant.com\",\n  \"email\": \"newemail@tenant.com\",\n  \"phone\": \"021-11112222\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tenants/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tenants",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Tenant updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Updated Tenant Name\",\n    \"code\": \"TENANT002\",\n    \"description\": \"Updated business description\",\n    \"address\": \"New Address, Jakarta\",\n    \"website\": \"https://updatedtenant.com\",\n    \"email\": \"newemail@tenant.com\",\n    \"phone\": \"021-11112222\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30T10:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Tenant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tenants/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tenants",
+								"1"
+							]
+						},
+						"description": "Soft delete a tenant. The tenant will be marked as deleted but not removed from database. Only superadmin can access."
+					},
+					"response": [
+						{
+							"name": "Delete Tenant Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/tenants/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"tenants",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Tenant deleted successfully\"\n}"
 						}
 					]
 				},
@@ -3531,7 +4048,249 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 25,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"resto01-pusat\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    },\n    {\n      \"id\": 26,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Menteng\",\n      \"code\": \"resto01-menteng\",\n      \"address\": \"Jl. Menteng Raya No. 45, Jakarta\",\n      \"phone\": \"021-87654321\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27+07:00\"\n    }\n  ]\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"pusat\",\n      \"description\": \"Kantor pusat dan cabang utama\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/pusat\",\n      \"email\": \"pusat@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"name\": \"Cabang Menteng\",\n      \"code\": \"menteng\",\n      \"description\": \"Cabang di area Menteng\",\n      \"address\": \"Jl. Menteng Raya No. 45, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/menteng\",\n      \"email\": \"menteng@warteg123.com\",\n      \"phone\": \"021-87654321\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Branch",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tenant_id\": 1,\n  \"name\": \"Cabang Baru\",\n  \"code\": \"baru\",\n  \"description\": \"Cabang baru yang baru dibuka\",\n  \"address\": \"Jl. Gatot Subroto No. 99, Jakarta\",\n  \"website\": \"https://warteg123.com/baru\",\n  \"email\": \"baru@warteg123.com\",\n  \"phone\": \"021-55556666\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/branches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"branches"
+							]
+						},
+						"description": "Create a new branch for a tenant. Only superadmin can access."
+					},
+					"response": [
+						{
+							"name": "Create Branch Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tenant_id\": 1,\n  \"name\": \"Cabang Baru\",\n  \"code\": \"baru\",\n  \"description\": \"Cabang baru yang baru dibuka\",\n  \"address\": \"Jl. Gatot Subroto No. 99, Jakarta\",\n  \"website\": \"https://warteg123.com/baru\",\n  \"email\": \"baru@warteg123.com\",\n  \"phone\": \"021-55556666\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/branches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"branches"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Branch created successfully\",\n  \"data\": {\n    \"id\": 5,\n    \"tenant_id\": 1,\n    \"name\": \"Cabang Baru\",\n    \"code\": \"baru\",\n    \"description\": \"Cabang baru yang baru dibuka\",\n    \"address\": \"Jl. Gatot Subroto No. 99, Jakarta\",\n    \"website\": \"https://warteg123.com/baru\",\n    \"email\": \"baru@warteg123.com\",\n    \"phone\": \"021-55556666\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30T16:30:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Branch",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Branch Name\",\n  \"code\": \"baru\",\n  \"description\": \"Updated branch description\",\n  \"address\": \"Updated Address, Jakarta\",\n  \"website\": \"https://warteg123.com/updated\",\n  \"email\": \"updated@warteg123.com\",\n  \"phone\": \"021-99998888\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/branches/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"branches",
+								"1"
+							]
+						},
+						"description": "Update existing branch data. All fields are required. Only superadmin can access."
+					},
+					"response": [
+						{
+							"name": "Update Branch Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Updated Branch Name\",\n  \"code\": \"baru\",\n  \"description\": \"Updated branch description\",\n  \"address\": \"Updated Address, Jakarta\",\n  \"website\": \"https://warteg123.com/updated\",\n  \"email\": \"updated@warteg123.com\",\n  \"phone\": \"021-99998888\",\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/branches/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"branches",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Branch updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 1,\n    \"name\": \"Updated Branch Name\",\n    \"code\": \"baru\",\n    \"description\": \"Updated branch description\",\n    \"address\": \"Updated Address, Jakarta\",\n    \"website\": \"https://warteg123.com/updated\",\n    \"email\": \"updated@warteg123.com\",\n    \"phone\": \"021-99998888\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-24T10:00:00+07:00\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Branch",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/branches/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"branches",
+								"1"
+							]
+						},
+						"description": "Soft delete a branch. The branch will be marked as deleted but not removed from database. Only superadmin can access."
+					},
+					"response": [
+						{
+							"name": "Delete Branch Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/superadmin/branches/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"superadmin",
+										"branches",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Branch deleted successfully\"\n}"
 						}
 					]
 				},
