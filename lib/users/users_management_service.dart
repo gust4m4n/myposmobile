@@ -4,12 +4,12 @@ import '../shared/utils/api_x.dart';
 class UsersManagementService {
   /// Get all users for tenant
   static Future<ApiResponse<dynamic>> getUsers() async {
-    return await ApiX.get('/users');
+    return await ApiX.get('/api/v1/users', requiresAuth: true);
   }
 
   /// Get user by ID
   static Future<ApiResponse<Map<String, dynamic>>> getUserById(int id) async {
-    return await ApiX.get('/users/$id');
+    return await ApiX.get('/api/v1/users/$id', requiresAuth: true);
   }
 
   /// Create new user
@@ -23,7 +23,8 @@ class UsersManagementService {
     bool isActive = true,
   }) async {
     return await ApiX.post(
-      '/users',
+      '/api/v1/users',
+      requiresAuth: true,
       body: {
         'username': username,
         'email': email,
@@ -56,11 +57,11 @@ class UsersManagementService {
     if (branchId != null) body['branch_id'] = branchId;
     if (isActive != null) body['is_active'] = isActive;
 
-    return await ApiX.put('/users/$id', body: body);
+    return await ApiX.put('/api/v1/users/$id', requiresAuth: true, body: body);
   }
 
   /// Delete user (soft delete)
   static Future<ApiResponse<Map<String, dynamic>>> deleteUser(int id) async {
-    return await ApiX.delete('/users/$id');
+    return await ApiX.delete('/api/v1/users/$id', requiresAuth: true);
   }
 }
