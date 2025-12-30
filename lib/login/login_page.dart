@@ -25,7 +25,7 @@ class LoginPage extends StatelessWidget {
 
     // Prefill credentials in debug mode
     if (kDebugMode) {
-      loginController.emailController.text = 'admin.pusat@foodcorner99.com';
+      loginController.emailController.text = 'admin@foodcorner.com';
       loginController.passwordController.text = '123456';
     }
 

@@ -200,6 +200,10 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                       columns: [
                         DataTableColumn.buildColumn(
                           context: context,
+                          label: 'fullName'.tr,
+                        ),
+                        DataTableColumn.buildColumn(
+                          context: context,
 
                           label: 'email'.tr,
                         ),

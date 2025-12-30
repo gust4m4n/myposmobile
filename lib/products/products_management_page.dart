@@ -213,6 +213,26 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
         ),
         actions: [
           Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: SizedBox(
+              width: 160,
+              child: ButtonX(
+                onPressed: () {
+                  // TODO: Navigate to category management
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Category management coming soon'),
+                      backgroundColor: Colors.blue,
+                    ),
+                  );
+                },
+                icon: Icons.category,
+                label: 'Manage Categories',
+                backgroundColor: const Color(0xFF007AFF),
+              ),
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.only(right: 16),
             child: SizedBox(
               width: 160,
