@@ -219,7 +219,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"{{tenant_code}}\",\n  \"branch_code\": \"{{branch_code}}\",\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
+							"raw": "{\n  \"tenant_code\": \"{{tenant_code}}\",\n  \"branch_code\": \"{{branch_code}}\",\n  \"email\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/register",
@@ -248,7 +248,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"TENANT001\",\n  \"branch_code\": \"BRANCH001\",\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
+									"raw": "{\n  \"tenant_code\": \"TENANT001\",\n  \"branch_code\": \"BRANCH001\",\n  \"email\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/register",
@@ -305,7 +305,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"john@warteg123.com\",\n  \"password\": \"password123\"\n}"
+							"raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -319,7 +319,7 @@
 								"login"
 							]
 						},
-						"description": "Endpoint untuk login user. Username bersifat unique di seluruh sistem. Mengembalikan JWT token, profile user, tenant, dan branch information."
+						"description": "Endpoint untuk login user. Email bersifat unique di seluruh sistem. Mengembalikan JWT token, profile user, tenant, dan branch information."
 					},
 					"response": [
 						{
@@ -334,7 +334,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"johndoe\",\n  \"password\": \"password123\"\n}"
+									"raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -359,7 +359,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ0ZW5hbnRfaWQiOjEsInVzZXJuYW1lIjoiam9obkB3YXJ0ZWcxMjMuY29tIiwiZXhwIjoxNzM1NjI0ODAwfQ.abc123...\",\n    \"user\": {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"branch_name\": \"Cabang Pusat\",\n      \"username\": \"john@warteg123.com\",\n      \"email\": \"john@warteg123.com\",\n      \"full_name\": \"John Doe\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true\n    },\n    \"tenant\": {\n      \"id\": 1,\n      \"name\": \"Warteg 123\",\n      \"code\": \"warteg123\",\n      \"description\": \"Warung Tegal dengan menu tradisional Indonesia\",\n      \"address\": \"Jl. Raya Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com\",\n      \"email\": \"info@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true\n    },\n    \"branch\": {\n      \"id\": 1,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"pusat\",\n      \"description\": \"Kantor pusat dan cabang utama\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/pusat\",\n      \"email\": \"pusat@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true\n    }\n  }\n}"
+							"body": "{\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ0ZW5hbnRfaWQiOjEsInVzZXJuYW1lIjoiam9obkBmb29kY29ybmVyOTkuY29tIiwiZXhwIjoxNzM1NjI0ODAwfQ.abc123...\",\n    \"user\": {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"branch_name\": \"Cabang Pusat\",\n      \"username\": \"john@foodcorner99.com\",\n      \"email\": \"john@foodcorner99.com\",\n      \"full_name\": \"John Doe\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true\n    },\n    \"tenant\": {\n      \"id\": 1,\n      \"name\": \"Food Corner 99\",\n      \"code\": \"resto01\",\n      \"description\": \"Restoran modern dengan berbagai pilihan menu internasional dan lokal\",\n      \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n      \"website\": \"https://www.foodcorner99.com\",\n      \"email\": \"info@foodcorner99.com\",\n      \"phone\": \"021-3199-8899\",\n      \"is_active\": true\n    },\n    \"branch\": {\n      \"id\": 1,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"pusat\",\n      \"description\": \"Cabang utama Food Corner 99 dengan full service restaurant\",\n      \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n      \"website\": \"https://www.foodcorner99.com/cabang/pusat\",\n      \"email\": \"pusat@foodcorner99.com\",\n      \"phone\": \"021-3199-8899\",\n      \"is_active\": true\n    }\n  }\n}"
 						}
 					]
 				},
@@ -375,7 +375,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin@mypos.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin@mypos.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -394,7 +394,7 @@
 					"response": []
 				},
 				{
-					"name": "Login - admin@warteg123.com",
+					"name": "Login - admin@foodcorner99.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -405,7 +405,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin@warteg123.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -419,12 +419,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai tenant admin - Warteg 123"
+						"description": "Login sebagai tenant admin - Food Corner 99"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - john@warteg123.com",
+					"name": "Login - john@foodcorner99.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -435,7 +435,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"john@warteg123.com\",\n  \"password\": \"password123\"\n}"
+							"raw": "{\n  \"email\": \"john@foodcorner99.com\",\n  \"password\": \"password123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -449,12 +449,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai user testing - Warteg 123 Cabang Pusat"
+						"description": "Login sebagai user testing - Food Corner 99 Cabang Pusat"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - admin.pusat@warteg123.com",
+					"name": "Login - admin.pusat@foodcorner99.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -465,7 +465,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.pusat@warteg123.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -479,12 +479,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai branch admin - Warteg 123 Cabang Pusat"
+						"description": "Login sebagai branch admin - Food Corner 99 Cabang Pusat"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - cashier.pusat@warteg123.com",
+					"name": "Login - cashier.pusat@foodcorner99.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -495,7 +495,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.pusat@warteg123.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.pusat@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -509,12 +509,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai cashier - Warteg 123 Cabang Pusat"
+						"description": "Login sebagai cashier - Food Corner 99 Cabang Pusat"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - admin.menteng@warteg123.com",
+					"name": "Login - admin.menteng@foodcorner99.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -525,7 +525,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.menteng@warteg123.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.menteng@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -539,12 +539,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai branch admin - Warteg 123 Cabang Menteng"
+						"description": "Login sebagai branch admin - Food Corner 99 Cabang Menteng"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - cashier.menteng@warteg123.com",
+					"name": "Login - cashier.menteng@foodcorner99.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -555,7 +555,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.menteng@warteg123.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.menteng@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -569,12 +569,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai cashier - Warteg 123 Cabang Menteng"
+						"description": "Login sebagai cashier - Food Corner 99 Cabang Menteng"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - admin@fashionstore99.com",
+					"name": "Login - admin@fashionstore101.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -585,7 +585,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin@fashionstore99.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -599,12 +599,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai tenant admin - Fashion Store 99"
+						"description": "Login sebagai tenant admin - Fashion Store 101"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - admin.plaza@fashionstore99.com",
+					"name": "Login - admin.gi@fashionstore101.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -615,7 +615,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.plaza@fashionstore99.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.gi@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -629,12 +629,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai branch admin - Fashion Store 99 Cabang Mall Plaza"
+						"description": "Login sebagai branch admin - Fashion Store 101 Cabang Grand Indonesia"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - cashier.plaza@fashionstore99.com",
+					"name": "Login - cashier.gi@fashionstore101.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -645,7 +645,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.plaza@fashionstore99.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.gi@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -659,12 +659,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai cashier - Fashion Store 99 Cabang Mall Plaza"
+						"description": "Login sebagai cashier - Fashion Store 101 Cabang Grand Indonesia"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - admin.grand@fashionstore99.com",
+					"name": "Login - admin.senayan@fashionstore101.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -675,7 +675,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.grand@fashionstore99.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.senayan@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -689,12 +689,12 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai branch admin - Fashion Store 99 Cabang Grand Mall"
+						"description": "Login sebagai branch admin - Fashion Store 101 Cabang Senayan City"
 					},
 					"response": []
 				},
 				{
-					"name": "Login - cashier.grand@fashionstore99.com",
+					"name": "Login - cashier.senayan@fashionstore101.com",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -705,7 +705,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.grand@fashionstore99.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.senayan@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -719,7 +719,7 @@
 								"login"
 							]
 						},
-						"description": "Login sebagai cashier - Fashion Store 99 Cabang Grand Mall"
+						"description": "Login sebagai cashier - Fashion Store 101 Cabang Senayan City"
 					},
 					"response": []
 				}
@@ -899,7 +899,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
+							"raw": "{\n  \"email\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -933,7 +933,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -977,7 +977,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"password\": \"password1\",\n  \"confirm_password\": \"password2\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"password\": \"password1\",\n  \"confirm_password\": \"password2\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -1021,7 +1021,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"admin1\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
+									"raw": "{\n  \"email\": \"admin1\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -3008,7 +3008,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+							"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users",
@@ -3041,7 +3041,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+									"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/users",
@@ -3383,7 +3383,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+							"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users",
@@ -3416,7 +3416,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+									"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/users",
@@ -3734,7 +3734,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Warteg 123\",\n      \"code\": \"warteg123\",\n      \"description\": \"Warung Tegal dengan menu tradisional Indonesia\",\n      \"address\": \"Jl. Raya Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com\",\n      \"email\": \"info@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion Store 99\",\n      \"code\": \"fashionstore99\",\n      \"description\": \"Toko fashion modern dengan koleksi terlengkap\",\n      \"address\": \"Jl. Thamrin Plaza Lt. 2, Jakarta Pusat\",\n      \"website\": \"https://fashionstore99.com\",\n      \"email\": \"info@fashionstore99.com\",\n      \"phone\": \"021-87654321\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    }\n  ]\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Food Corner 99\",\n      \"code\": \"resto01\",\n      \"description\": \"Restoran modern dengan berbagai pilihan menu internasional dan lokal untuk pengalaman kuliner terbaik\",\n      \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n      \"website\": \"https://www.foodcorner99.com\",\n      \"email\": \"info@foodcorner99.com\",\n      \"phone\": \"021-3199-8899\",\n      \"image\": \"/uploads/tenants/tenant_foodcorner99_1704000000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 1,\n      \"updated_by_name\": \"Super Admin\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion Store 101\",\n      \"code\": \"fashion01\",\n      \"description\": \"Pusat fashion terlengkap dengan koleksi pakaian, sepatu, dan aksesoris trendy untuk pria dan wanita\",\n      \"address\": \"Grand Indonesia Shopping Town Tower C, Jl. M.H. Thamrin No. 1, Menteng, Jakarta Pusat, DKI Jakarta 10310\",\n      \"website\": \"https://www.fashionstore101.com\",\n      \"email\": \"contact@fashionstore101.com\",\n      \"phone\": \"021-2358-1010\",\n      \"image\": \"/uploads/tenants/tenant_fashionstore101_1704001000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-25 14:30:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 2,\n      \"updated_by_name\": \"John Admin\"\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -3752,15 +3752,57 @@
 							]
 						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"description\": \"A new business tenant\",\n  \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n  \"website\": \"https://newtenant.com\",\n  \"email\": \"contact@newtenant.com\",\n  \"phone\": \"021-99887766\",\n  \"is_active\": true\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "New Tenant",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "TENANT002",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "A new business tenant with logo",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Jl. Kebon Jeruk No. 789, Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://newtenant.com",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "contact@newtenant.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "021-99887766",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Upload tenant logo/image (jpg, jpeg, png, gif, webp, max 5MB)"
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/superadmin/tenants",
@@ -3774,7 +3816,7 @@
 								"tenants"
 							]
 						},
-						"description": "Membuat tenant baru. Hanya superadmin yang bisa akses."
+						"description": "Membuat tenant baru dengan upload image logo. Hanya superadmin yang bisa akses.\n\nSupports:\n- Multipart form data with image upload\n- Image formats: jpg, jpeg, png, gif, webp\n- Max file size: 5MB\n- Image field is optional"
 					},
 					"response": [
 						{
@@ -3783,18 +3825,60 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
 										"key": "Authorization",
 										"value": "Bearer {{auth_token}}",
 										"type": "text"
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"description\": \"A new business tenant\",\n  \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n  \"website\": \"https://newtenant.com\",\n  \"email\": \"contact@newtenant.com\",\n  \"phone\": \"021-99887766\",\n  \"is_active\": true\n}"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "New Tenant",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "TENANT002",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "A new business tenant with logo",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Jl. Kebon Jeruk No. 789, Jakarta",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://newtenant.com",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "contact@newtenant.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "021-99887766",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/path/to/tenant-logo.png"
+										}
+									]
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/superadmin/tenants",
@@ -3819,7 +3903,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Tenant created successfully\",\n  \"data\": {\n    \"id\": 19,\n    \"name\": \"New Tenant\",\n    \"code\": \"TENANT002\",\n    \"description\": \"A new business tenant\",\n    \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n    \"website\": \"https://newtenant.com\",\n    \"email\": \"contact@newtenant.com\",\n    \"phone\": \"021-99887766\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30T16:00:00+07:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"Tenant created successfully\",\n  \"data\": {\n    \"id\": 19,\n    \"name\": \"New Tenant\",\n    \"code\": \"TENANT002\",\n    \"description\": \"A new business tenant with logo\",\n    \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n    \"website\": \"https://newtenant.com\",\n    \"email\": \"contact@newtenant.com\",\n    \"phone\": \"021-99887766\",\n    \"image\": \"/uploads/tenants/tenant_TENANT002_1704003600.png\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30 16:00:00\",\n    \"updated_at\": \"2025-12-30 16:00:00\",\n    \"created_by\": 1\n  }\n}"
 						}
 					]
 				},
@@ -3837,15 +3921,57 @@
 							]
 						},
 						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"Updated Tenant Name\",\n  \"code\": \"TENANT002\",\n  \"description\": \"Updated business description\",\n  \"address\": \"New Address, Jakarta\",\n  \"website\": \"https://updatedtenant.com\",\n  \"email\": \"newemail@tenant.com\",\n  \"phone\": \"021-11112222\",\n  \"is_active\": true\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Updated Tenant Name",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "TENANT002",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Updated business description with new logo",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "New Address, Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://updatedtenant.com",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "newemail@tenant.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "021-11112222",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Upload new tenant logo/image (jpg, jpeg, png, gif, webp, max 5MB). Old image will be deleted if new one is uploaded."
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/superadmin/tenants/1",
@@ -3860,7 +3986,7 @@
 								"1"
 							]
 						},
-						"description": "Update existing tenant data. All fields are required. Only superadmin can access."
+						"description": "Update existing tenant data with optional image upload. All text fields are required. Image is optional - if provided, old image will be deleted. Only superadmin can access."
 					},
 					"response": [
 						{
@@ -3869,18 +3995,60 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
 										"key": "Authorization",
 										"value": "Bearer {{auth_token}}",
 										"type": "text"
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"Updated Tenant Name\",\n  \"code\": \"TENANT002\",\n  \"description\": \"Updated business description\",\n  \"address\": \"New Address, Jakarta\",\n  \"website\": \"https://updatedtenant.com\",\n  \"email\": \"newemail@tenant.com\",\n  \"phone\": \"021-11112222\",\n  \"is_active\": true\n}"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Updated Tenant Name",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "TENANT002",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Updated business description with new logo",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "New Address, Jakarta",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://updatedtenant.com",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "newemail@tenant.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "021-11112222",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/path/to/updated-logo.png"
+										}
+									]
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/superadmin/tenants/1",
@@ -3898,6 +4066,18 @@
 							},
 							"status": "OK",
 							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Tenant updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Updated Tenant Name\",\n    \"code\": \"TENANT002\",\n    \"description\": \"Updated business description with new logo\",\n    \"address\": \"New Address, Jakarta\",\n    \"website\": \"https://updatedtenant.com\",\n    \"email\": \"newemail@tenant.com\",\n    \"phone\": \"021-11112222\",\n    \"image\": \"/uploads/tenants/tenant_TENANT002_1704007200.png\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30 10:00:00\",\n    \"updated_at\": \"2025-12-30 17:00:00\",\n    \"updated_by\": 1\n  }\n}"
+						}
+					]
+				},
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
@@ -4048,7 +4228,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"pusat\",\n      \"description\": \"Kantor pusat dan cabang utama\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/pusat\",\n      \"email\": \"pusat@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"name\": \"Cabang Menteng\",\n      \"code\": \"menteng\",\n      \"description\": \"Cabang di area Menteng\",\n      \"address\": \"Jl. Menteng Raya No. 45, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/menteng\",\n      \"email\": \"menteng@warteg123.com\",\n      \"phone\": \"021-87654321\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T10:00:00+07:00\"\n    }\n  ]\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"pusat\",\n      \"description\": \"Kantor pusat dan cabang utama\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/pusat\",\n      \"email\": \"pusat@warteg123.com\",\n      \"phone\": \"021-12345678\",\n      \"image\": \"/uploads/branches/branch_pusat_1704000000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 1,\n      \"updated_by_name\": \"Super Admin\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"name\": \"Cabang Menteng\",\n      \"code\": \"menteng\",\n      \"description\": \"Cabang di area Menteng\",\n      \"address\": \"Jl. Menteng Raya No. 45, Jakarta Pusat\",\n      \"website\": \"https://warteg123.com/menteng\",\n      \"email\": \"menteng@warteg123.com\",\n      \"phone\": \"021-87654321\",\n      \"image\": \"/uploads/branches/branch_menteng_1704001000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-25 15:20:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 2,\n      \"updated_by_name\": \"Branch Manager\"\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -4066,15 +4246,62 @@
 							]
 						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"tenant_id\": 1,\n  \"name\": \"Cabang Baru\",\n  \"code\": \"baru\",\n  \"description\": \"Cabang baru yang baru dibuka\",\n  \"address\": \"Jl. Gatot Subroto No. 99, Jakarta\",\n  \"website\": \"https://warteg123.com/baru\",\n  \"email\": \"baru@warteg123.com\",\n  \"phone\": \"021-55556666\",\n  \"is_active\": true\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "tenant_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Cabang Baru",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "baru",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Cabang baru yang baru dibuka dengan logo",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Jl. Gatot Subroto No. 99, Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://warteg123.com/baru",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "baru@warteg123.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "021-55556666",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Upload branch logo/image (jpg, jpeg, png, gif, webp, max 5MB)"
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/superadmin/branches",
@@ -4088,7 +4315,7 @@
 								"branches"
 							]
 						},
-						"description": "Create a new branch for a tenant. Only superadmin can access."
+						"description": "Create a new branch for a tenant with optional image upload. Only superadmin can access.\n\nSupports:\n- Multipart form data with image upload\n- Image formats: jpg, jpeg, png, gif, webp\n- Max file size: 5MB\n- Image field is optional"
 					},
 					"response": [
 						{
@@ -4097,18 +4324,65 @@
 								"method": "POST",
 								"header": [
 									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
 										"key": "Authorization",
 										"value": "Bearer {{auth_token}}",
 										"type": "text"
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"tenant_id\": 1,\n  \"name\": \"Cabang Baru\",\n  \"code\": \"baru\",\n  \"description\": \"Cabang baru yang baru dibuka\",\n  \"address\": \"Jl. Gatot Subroto No. 99, Jakarta\",\n  \"website\": \"https://warteg123.com/baru\",\n  \"email\": \"baru@warteg123.com\",\n  \"phone\": \"021-55556666\",\n  \"is_active\": true\n}"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "tenant_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "Cabang Baru",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "baru",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Cabang baru yang baru dibuka dengan logo",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Jl. Gatot Subroto No. 99, Jakarta",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://warteg123.com/baru",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "baru@warteg123.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "021-55556666",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/path/to/branch-logo.png"
+										}
+									]
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/superadmin/branches",
@@ -4133,7 +4407,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Branch created successfully\",\n  \"data\": {\n    \"id\": 5,\n    \"tenant_id\": 1,\n    \"name\": \"Cabang Baru\",\n    \"code\": \"baru\",\n    \"description\": \"Cabang baru yang baru dibuka\",\n    \"address\": \"Jl. Gatot Subroto No. 99, Jakarta\",\n    \"website\": \"https://warteg123.com/baru\",\n    \"email\": \"baru@warteg123.com\",\n    \"phone\": \"021-55556666\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30T16:30:00+07:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"Branch created successfully\",\n  \"data\": {\n    \"id\": 5,\n    \"tenant_id\": 1,\n    \"name\": \"Cabang Baru\",\n    \"code\": \"baru\",\n    \"description\": \"Cabang baru yang baru dibuka dengan logo\",\n    \"address\": \"Jl. Gatot Subroto No. 99, Jakarta\",\n    \"website\": \"https://warteg123.com/baru\",\n    \"email\": \"baru@warteg123.com\",\n    \"phone\": \"021-55556666\",\n    \"image\": \"/uploads/branches/branch_baru_1704010200.png\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30 16:30:00\",\n    \"updated_at\": \"2025-12-30 16:30:00\",\n    \"created_by\": 1\n  }\n}"
 						}
 					]
 				},
@@ -4151,15 +4425,57 @@
 							]
 						},
 						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"Updated Branch Name\",\n  \"code\": \"baru\",\n  \"description\": \"Updated branch description\",\n  \"address\": \"Updated Address, Jakarta\",\n  \"website\": \"https://warteg123.com/updated\",\n  \"email\": \"updated@warteg123.com\",\n  \"phone\": \"021-99998888\",\n  \"is_active\": true\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Updated Branch Name",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "baru",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Updated branch description with new logo",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Updated Address, Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "https://warteg123.com/updated",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "updated@warteg123.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "021-99998888",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Upload new branch logo/image (jpg, jpeg, png, gif, webp, max 5MB). Old image will be deleted if new one is uploaded."
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/superadmin/branches/1",
@@ -4174,7 +4490,7 @@
 								"1"
 							]
 						},
-						"description": "Update existing branch data. All fields are required. Only superadmin can access."
+						"description": "Update existing branch data with optional image upload. All text fields are required. Image is optional - if provided, old image will be deleted. Only superadmin can access."
 					},
 					"response": [
 						{
@@ -4183,18 +4499,60 @@
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
 										"key": "Authorization",
 										"value": "Bearer {{auth_token}}",
 										"type": "text"
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"Updated Branch Name\",\n  \"code\": \"baru\",\n  \"description\": \"Updated branch description\",\n  \"address\": \"Updated Address, Jakarta\",\n  \"website\": \"https://warteg123.com/updated\",\n  \"email\": \"updated@warteg123.com\",\n  \"phone\": \"021-99998888\",\n  \"is_active\": true\n}"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Updated Branch Name",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "baru",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Updated branch description with new logo",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Updated Address, Jakarta",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "https://warteg123.com/updated",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "updated@warteg123.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "021-99998888",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/path/to/updated-branch-logo.png"
+										}
+									]
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/superadmin/branches/1",
@@ -4220,7 +4578,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"Branch updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 1,\n    \"name\": \"Updated Branch Name\",\n    \"code\": \"baru\",\n    \"description\": \"Updated branch description\",\n    \"address\": \"Updated Address, Jakarta\",\n    \"website\": \"https://warteg123.com/updated\",\n    \"email\": \"updated@warteg123.com\",\n    \"phone\": \"021-99998888\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-24T10:00:00+07:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"Branch updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 1,\n    \"name\": \"Updated Branch Name\",\n    \"code\": \"baru\",\n    \"description\": \"Updated branch description\",\n    \"address\": \"Updated Address, Jakarta\",\n    \"website\": \"https://warteg123.com/updated\",\n    \"email\": \"updated@warteg123.com\",\n    \"phone\": \"021-99998888\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-24 10:00:00\",\n    \"updated_at\": \"2025-12-30 17:15:00\",\n    \"updated_by\": 1\n  }\n}"
 						}
 					]
 				},
@@ -4394,7 +4752,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"{{superadmin_tenant}}\",\n  \"branch_code\": \"{{superadmin_branch}}\",\n  \"username\": \"{{superadmin_username}}\",\n  \"password\": \"{{superadmin_password}}\"\n}"
+							"raw": "{\n  \"tenant_code\": \"{{superadmin_tenant}}\",\n  \"branch_code\": \"{{superadmin_branch}}\",\n  \"email\": \"{{superadmin_username}}\",\n  \"password\": \"{{superadmin_password}}\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -4423,7 +4781,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"supertenant\",\n  \"branch_code\": \"superbranch\",\n  \"username\": \"superadmin\",\n  \"password\": \"123456\"\n}"
+									"raw": "{\n  \"tenant_code\": \"supertenant\",\n  \"branch_code\": \"superbranch\",\n  \"email\": \"superadmin\",\n  \"password\": \"123456\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -5247,7 +5605,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"username\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"email\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -5276,7 +5634,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"username\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
+									"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"email\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -5397,7 +5755,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"username\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"email\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -5426,7 +5784,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"username\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
+									"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"email\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -5822,7 +6180,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/admin/change-pin",
@@ -5856,7 +6214,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-pin",
@@ -5900,7 +6258,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"654321\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"654321\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-pin",
@@ -5944,7 +6302,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"admin1\",\n  \"pin\": \"888999\",\n  \"confirm_pin\": \"888999\"\n}"
+									"raw": "{\n  \"email\": \"admin1\",\n  \"pin\": \"888999\",\n  \"confirm_pin\": \"888999\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-pin",

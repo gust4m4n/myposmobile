@@ -25,7 +25,7 @@ class LoginPage extends StatelessWidget {
 
     // Prefill credentials in debug mode
     if (kDebugMode) {
-      loginController.usernameController.text = 'branchadmin';
+      loginController.emailController.text = 'admin.pusat@foodcorner99.com';
       loginController.passwordController.text = '123456';
     }
 
@@ -131,8 +131,8 @@ class LoginPage extends StatelessWidget {
                   }),
                   const SizedBox(height: 48),
 
-                  // Username Field
-                  _buildUsernameField(context, loginController, theme),
+                  // Email Field
+                  _buildEmailField(context, loginController, theme),
                   const SizedBox(height: 16),
 
                   // Password Field
@@ -155,7 +155,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildUsernameField(
+  Widget _buildEmailField(
     BuildContext context,
     LoginController controller,
     ThemeData theme,
@@ -165,17 +165,21 @@ class LoginPage extends StatelessWidget {
 
     return Obx(
       () => TextFormField(
-        controller: controller.usernameController,
+        controller: controller.emailController,
+        keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-          labelText: 'username'.tr,
-          prefixIcon: const Icon(Icons.person),
+          labelText: 'email'.tr,
+          prefixIcon: const Icon(Icons.email),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
           fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'pleaseEnterUsername'.tr;
+            return 'pleaseEnterEmail'.tr;
+          }
+          if (!value.contains('@')) {
+            return 'pleaseEnterValidEmail'.tr;
           }
           return null;
         },

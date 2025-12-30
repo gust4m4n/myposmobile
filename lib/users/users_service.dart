@@ -14,7 +14,6 @@ class UsersService {
 
   /// Create new user
   static Future<ApiResponse<Map<String, dynamic>>> createUser({
-    required String username,
     required String email,
     required String password,
     required String fullName,
@@ -26,7 +25,6 @@ class UsersService {
       '/api/v1/users',
       requiresAuth: true,
       body: {
-        'username': username,
         'email': email,
         'password': password,
         'full_name': fullName,
@@ -40,7 +38,6 @@ class UsersService {
   /// Update existing user
   static Future<ApiResponse<Map<String, dynamic>>> updateUser({
     required int id,
-    String? username,
     String? email,
     String? password,
     String? fullName,
@@ -49,7 +46,6 @@ class UsersService {
     bool? isActive,
   }) async {
     final body = <String, dynamic>{};
-    if (username != null) body['username'] = username;
     if (email != null) body['email'] = email;
     if (password != null) body['password'] = password;
     if (fullName != null) body['full_name'] = fullName;

@@ -7,7 +7,7 @@ import 'login_service.dart';
 
 class LoginController extends GetxController {
   final formKey = GlobalKey<FormState>();
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final loginService = LoginService();
 
@@ -16,7 +16,7 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.onClose();
   }
@@ -33,7 +33,7 @@ class LoginController extends GetxController {
     isLoading.value = true;
 
     final response = await loginService.login(
-      username: usernameController.text.trim(),
+      email: emailController.text.trim(),
       password: passwordController.text,
     );
 

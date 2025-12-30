@@ -81,14 +81,12 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
     );
   }
 
-  Future<void> _deleteUser(int userId, String username) async {
+  Future<void> _deleteUser(int userId, String email) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('deleteUser'.tr),
-        content: Text(
-          'confirmDeleteUser'.tr.replaceAll('{username}', username),
-        ),
+        content: Text('confirmDeleteUser'.tr.replaceAll('{username}', email)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -202,14 +200,7 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                       columns: [
                         DataTableColumn.buildColumn(
                           context: context,
-                          label: 'username'.tr,
-                        ),
-                        DataTableColumn.buildColumn(
-                          context: context,
-                          label: 'fullName'.tr,
-                        ),
-                        DataTableColumn.buildColumn(
-                          context: context,
+
                           label: 'email'.tr,
                         ),
                         DataTableColumn.buildColumn(
@@ -226,7 +217,6 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                         ),
                       ],
                       rows: _users.map((user) {
-                        final username = user['username'] ?? '';
                         final fullName = user['full_name'] ?? '';
                         final email = user['email'] ?? '';
                         final role = user['role'] ?? 'user';
@@ -235,7 +225,6 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
 
                         return DataRow(
                           cells: [
-                            DataCell(Text(username)),
                             DataCell(Text(fullName)),
                             DataCell(Text(email)),
                             DataCell(
@@ -305,8 +294,7 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                                       size: 20,
                                       color: Colors.red,
                                     ),
-                                    onPressed: () =>
-                                        _deleteUser(userId, username),
+                                    onPressed: () => _deleteUser(userId, email),
                                     tooltip: 'delete'.tr,
                                   ),
                                 ],

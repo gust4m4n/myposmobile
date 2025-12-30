@@ -32,4 +32,17 @@ class PinService {
   static Future<ApiResponse<Map<String, dynamic>>> checkPinStatus() async {
     return await ApiX.get(ApiConfig.pinCheck, requiresAuth: true);
   }
+
+  /// Admin change PIN for another user (Admin only)
+  static Future<ApiResponse<Map<String, dynamic>>> adminChangePin({
+    required String username,
+    required String pin,
+    required String confirmPin,
+  }) async {
+    return await ApiX.put(
+      '/api/v1/admin/change-pin',
+      body: {'username': username, 'pin': pin, 'confirm_pin': confirmPin},
+      requiresAuth: true,
+    );
+  }
 }

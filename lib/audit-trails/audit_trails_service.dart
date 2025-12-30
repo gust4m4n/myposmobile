@@ -62,4 +62,23 @@ class AuditTrailsService {
 
     return await ApiX.get(uri.toString(), requiresAuth: true);
   }
+
+  /// Get activity log for specific user
+  static Future<ApiResponse<Map<String, dynamic>>> getUserActivityLog({
+    required int userId,
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'limit': limit.toString(),
+    };
+
+    final uri = Uri(
+      path: '/api/v1/audit-trails/user/$userId',
+      queryParameters: queryParams,
+    );
+
+    return await ApiX.get(uri.toString(), requiresAuth: true);
+  }
 }

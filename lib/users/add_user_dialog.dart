@@ -21,7 +21,6 @@ class AddUserDialog extends StatefulWidget {
 
 class _AddUserDialogState extends State<AddUserDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _fullNameController = TextEditingController();
@@ -40,7 +39,6 @@ class _AddUserDialogState extends State<AddUserDialog> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _fullNameController.dispose();
@@ -58,7 +56,6 @@ class _AddUserDialogState extends State<AddUserDialog> {
     });
 
     final response = await UsersManagementService.createUser(
-      username: _usernameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
       fullName: _fullNameController.text.trim(),
@@ -107,26 +104,6 @@ class _AddUserDialogState extends State<AddUserDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Username Field
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'username'.tr,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.person),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'usernameRequired'.tr;
-                  }
-                  if (value.trim().length < 3) {
-                    return 'usernameMinLength'.tr;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
               // Full Name Field
               TextFormField(
                 controller: _fullNameController,

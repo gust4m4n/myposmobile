@@ -281,12 +281,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           const SizedBox(height: 16),
                                           _buildCompactInfoRow(
                                             context,
-                                            'Username',
-                                            _profile!.user.username,
-                                          ),
-                                          const SizedBox(height: 12),
-                                          _buildCompactInfoRow(
-                                            context,
                                             'Email',
                                             _profile!.user.email,
                                           ),
@@ -339,12 +333,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                             'Name',
                                             _profile!.tenant.name,
                                           ),
-                                          const SizedBox(height: 12),
-                                          _buildCompactInfoRow(
-                                            context,
-                                            'Code',
-                                            _profile!.tenant.code,
-                                          ),
                                         ],
                                       ),
                                     ),
@@ -391,12 +379,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                             context,
                                             'Name',
                                             _profile!.branch.name,
-                                          ),
-                                          const SizedBox(height: 12),
-                                          _buildCompactInfoRow(
-                                            context,
-                                            'Code',
-                                            _profile!.branch.code,
                                           ),
                                           const SizedBox(height: 12),
                                           _buildCompactInfoRow(

@@ -42,7 +42,7 @@ class SuperadminFaqService {
           )
           .timeout(ApiConfig.connectTimeout);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return {
           'success': true,
           'data': json.decode(response.body),

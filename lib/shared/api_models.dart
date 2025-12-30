@@ -40,15 +40,15 @@ class ApiResponse<T> {
   }
 }
 
-// User Model
+// User Model (for login response)
 class UserModel {
   final int id;
   final int tenantId;
   final int branchId;
   final String branchName;
-  final String username;
   final String email;
   final String fullName;
+  final String role;
   final bool isActive;
 
   UserModel({
@@ -56,9 +56,9 @@ class UserModel {
     required this.tenantId,
     required this.branchId,
     required this.branchName,
-    required this.username,
     required this.email,
     required this.fullName,
+    required this.role,
     required this.isActive,
   });
 
@@ -68,9 +68,9 @@ class UserModel {
       tenantId: json['tenant_id'],
       branchId: json['branch_id'],
       branchName: json['branch_name'],
-      username: json['username'],
       email: json['email'],
       fullName: json['full_name'],
+      role: json['role'],
       isActive: json['is_active'],
     );
   }
@@ -81,9 +81,115 @@ class UserModel {
       'tenant_id': tenantId,
       'branch_id': branchId,
       'branch_name': branchName,
-      'username': username,
       'email': email,
       'full_name': fullName,
+      'role': role,
+      'is_active': isActive,
+    };
+  }
+}
+
+// Auth Tenant Model
+class AuthTenantModel {
+  final int id;
+  final String name;
+  final String description;
+  final String address;
+  final String website;
+  final String email;
+  final String phone;
+  final String image;
+  final bool isActive;
+
+  AuthTenantModel({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.address,
+    required this.website,
+    required this.email,
+    required this.phone,
+    required this.image,
+    required this.isActive,
+  });
+
+  factory AuthTenantModel.fromJson(Map<String, dynamic> json) {
+    return AuthTenantModel(
+      id: json['id'],
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      address: json['address'] ?? '',
+      website: json['website'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      image: json['image'] ?? '',
+      isActive: json['is_active'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'address': address,
+      'website': website,
+      'email': email,
+      'phone': phone,
+      'image': image,
+      'is_active': isActive,
+    };
+  }
+}
+
+// Auth Branch Model
+class AuthBranchModel {
+  final int id;
+  final String name;
+  final String description;
+  final String address;
+  final String website;
+  final String email;
+  final String phone;
+  final String image;
+  final bool isActive;
+
+  AuthBranchModel({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.address,
+    required this.website,
+    required this.email,
+    required this.phone,
+    required this.image,
+    required this.isActive,
+  });
+
+  factory AuthBranchModel.fromJson(Map<String, dynamic> json) {
+    return AuthBranchModel(
+      id: json['id'],
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      address: json['address'] ?? '',
+      website: json['website'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      image: json['image'] ?? '',
+      isActive: json['is_active'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'address': address,
+      'website': website,
+      'email': email,
+      'phone': phone,
+      'image': image,
       'is_active': isActive,
     };
   }
@@ -93,25 +199,38 @@ class UserModel {
 class AuthResponseData {
   final String token;
   final UserModel user;
+  final AuthTenantModel tenant;
+  final AuthBranchModel branch;
 
-  AuthResponseData({required this.token, required this.user});
+  AuthResponseData({
+    required this.token,
+    required this.user,
+    required this.tenant,
+    required this.branch,
+  });
 
   factory AuthResponseData.fromJson(Map<String, dynamic> json) {
     return AuthResponseData(
       token: json['token'],
       user: UserModel.fromJson(json['user']),
+      tenant: AuthTenantModel.fromJson(json['tenant']),
+      branch: AuthBranchModel.fromJson(json['branch']),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'token': token, 'user': user.toJson()};
+    return {
+      'token': token,
+      'user': user.toJson(),
+      'tenant': tenant.toJson(),
+      'branch': branch.toJson(),
+    };
   }
 }
 
 // Profile User Model
 class ProfileUserModel {
   final int id;
-  final String username;
   final String email;
   final String fullName;
   final String role;
@@ -120,7 +239,6 @@ class ProfileUserModel {
 
   ProfileUserModel({
     required this.id,
-    required this.username,
     required this.email,
     required this.fullName,
     required this.role,
@@ -131,7 +249,6 @@ class ProfileUserModel {
   factory ProfileUserModel.fromJson(Map<String, dynamic> json) {
     return ProfileUserModel(
       id: json['id'],
-      username: json['username'],
       email: json['email'],
       fullName: json['full_name'],
       role: json['role'],
@@ -143,7 +260,6 @@ class ProfileUserModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'username': username,
       'email': email,
       'full_name': fullName,
       'role': role,
@@ -157,13 +273,11 @@ class ProfileUserModel {
 class ProfileTenantModel {
   final int id;
   final String name;
-  final String code;
   final bool isActive;
 
   ProfileTenantModel({
     required this.id,
     required this.name,
-    required this.code,
     required this.isActive,
   });
 
@@ -171,13 +285,12 @@ class ProfileTenantModel {
     return ProfileTenantModel(
       id: json['id'],
       name: json['name'],
-      code: json['code'],
       isActive: json['is_active'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'code': code, 'is_active': isActive};
+    return {'id': id, 'name': name, 'is_active': isActive};
   }
 }
 
@@ -185,7 +298,6 @@ class ProfileTenantModel {
 class ProfileBranchModel {
   final int id;
   final String name;
-  final String code;
   final String address;
   final String phone;
   final bool isActive;
@@ -193,7 +305,6 @@ class ProfileBranchModel {
   ProfileBranchModel({
     required this.id,
     required this.name,
-    required this.code,
     required this.address,
     required this.phone,
     required this.isActive,
@@ -203,7 +314,6 @@ class ProfileBranchModel {
     return ProfileBranchModel(
       id: json['id'],
       name: json['name'],
-      code: json['code'],
       address: json['address'],
       phone: json['phone'],
       isActive: json['is_active'],
@@ -214,7 +324,6 @@ class ProfileBranchModel {
     return {
       'id': id,
       'name': name,
-      'code': code,
       'address': address,
       'phone': phone,
       'is_active': isActive,
@@ -284,7 +393,6 @@ class DashboardModel {
 class TenantModel {
   final int id;
   final String name;
-  final String code;
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -292,7 +400,6 @@ class TenantModel {
   TenantModel({
     required this.id,
     required this.name,
-    required this.code,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
@@ -302,7 +409,6 @@ class TenantModel {
     return TenantModel(
       id: json['id'],
       name: json['name'],
-      code: json['code'],
       isActive: json['is_active'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
@@ -313,7 +419,6 @@ class TenantModel {
     return {
       'id': id,
       'name': name,
-      'code': code,
       'is_active': isActive,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
@@ -326,7 +431,6 @@ class BranchModel {
   final int id;
   final int tenantId;
   final String name;
-  final String code;
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -335,7 +439,6 @@ class BranchModel {
     required this.id,
     required this.tenantId,
     required this.name,
-    required this.code,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
@@ -346,7 +449,6 @@ class BranchModel {
       id: json['id'],
       tenantId: json['tenant_id'],
       name: json['name'],
-      code: json['code'],
       isActive: json['is_active'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
@@ -358,7 +460,6 @@ class BranchModel {
       'id': id,
       'tenant_id': tenantId,
       'name': name,
-      'code': code,
       'is_active': isActive,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),

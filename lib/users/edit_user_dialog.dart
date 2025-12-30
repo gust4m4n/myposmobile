@@ -23,7 +23,6 @@ class EditUserDialog extends StatefulWidget {
 
 class _EditUserDialogState extends State<EditUserDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _usernameController;
   late final TextEditingController _emailController;
   late final TextEditingController _fullNameController;
   late final TextEditingController _branchIdController;
@@ -39,9 +38,6 @@ class _EditUserDialogState extends State<EditUserDialog> {
     super.initState();
     TranslationService.setLanguage(widget.languageCode);
 
-    _usernameController = TextEditingController(
-      text: widget.user['username'] ?? '',
-    );
     _emailController = TextEditingController(text: widget.user['email'] ?? '');
     _fullNameController = TextEditingController(
       text: widget.user['full_name'] ?? '',
@@ -55,7 +51,6 @@ class _EditUserDialogState extends State<EditUserDialog> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _emailController.dispose();
     _fullNameController.dispose();
     _branchIdController.dispose();
@@ -77,7 +72,6 @@ class _EditUserDialogState extends State<EditUserDialog> {
 
     final response = await UsersManagementService.updateUser(
       id: userId,
-      username: _usernameController.text.trim(),
       email: _emailController.text.trim(),
       fullName: _fullNameController.text.trim(),
       role: _selectedRole,
@@ -126,26 +120,6 @@ class _EditUserDialogState extends State<EditUserDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Username Field
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'username'.tr,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.person),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'usernameRequired'.tr;
-                  }
-                  if (value.trim().length < 3) {
-                    return 'usernameMinLength'.tr;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
               // Full Name Field
               TextFormField(
                 controller: _fullNameController,
