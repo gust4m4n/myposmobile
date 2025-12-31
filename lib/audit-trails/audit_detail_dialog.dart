@@ -51,96 +51,22 @@ class AuditDetailDialog extends StatelessWidget {
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: changes.entries.map((entry) {
-        final field = entry.key;
-        final value = entry.value;
-
-        if (value is Map) {
-          final oldValue = value['old'];
-          final newValue = value['new'];
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  field,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.remove, color: Colors.red.shade700, size: 16),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: SelectableText(
-                          oldValue?.toString() ?? 'null',
-                          style: TextStyle(color: Colors.red.shade700),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.green.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.add, color: Colors.green.shade700, size: 16),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: SelectableText(
-                          newValue?.toString() ?? 'null',
-                          style: TextStyle(color: Colors.green.shade700),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  field,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                SelectableText(
-                  value?.toString() ?? 'null',
-                  style: const TextStyle(fontWeight: FontWeight.normal),
-                ),
-              ],
-            ),
-          );
-        }
-      }).toList(),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: SelectableText(
+        const JsonEncoder.withIndent('  ').convert(changes),
+        style: const TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 13,
+          color: Colors.black87,
+        ),
+      ),
     );
   }
 
@@ -152,13 +78,26 @@ class AuditDetailDialog extends StatelessWidget {
     final id = audit['id']?.toString() ?? 'N/A';
     final userName = audit['user_name'] ?? 'Unknown';
     final userId = audit['user_id']?.toString() ?? 'N/A';
+    final tenantId = audit['tenant_id']?.toString() ?? 'N/A';
+    final branchId = audit['branch_id']?.toString() ?? 'N/A';
     final entityType = audit['entity_type'] ?? 'N/A';
     final entityId = audit['entity_id']?.toString() ?? 'N/A';
     final action = audit['action'] ?? 'N/A';
-    final ipAddress = audit['ip_address'] ?? 'N/A';
-    final userAgent = audit['user_agent'] ?? 'N/A';
     final createdAt = audit['created_at'] ?? 'N/A';
-    final changes = audit['changes'] as Map<String, dynamic>?;
+
+    // Parse changes from JSON string to Map
+    Map<String, dynamic>? changes;
+    if (audit['changes'] != null) {
+      if (audit['changes'] is String) {
+        try {
+          changes = jsonDecode(audit['changes']) as Map<String, dynamic>?;
+        } catch (e) {
+          changes = null;
+        }
+      } else if (audit['changes'] is Map) {
+        changes = audit['changes'] as Map<String, dynamic>?;
+      }
+    }
 
     return DialogX(
       title: '${'auditTrail'.tr} #$id',
@@ -167,6 +106,7 @@ class AuditDetailDialog extends StatelessWidget {
       content: SizedBox(
         height: 600,
         child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -180,24 +120,12 @@ class AuditDetailDialog extends StatelessWidget {
               ),
               const Divider(),
               _buildInfoRow('user'.tr, '$userName (ID: $userId)', theme),
+              _buildInfoRow('tenantId'.tr, tenantId, theme),
+              _buildInfoRow('branchId'.tr, branchId, theme),
               _buildInfoRow('entityType'.tr, entityType, theme),
               _buildInfoRow('entityId'.tr, entityId, theme),
               _buildInfoRow('action'.tr, action, theme),
               _buildInfoRow('timestamp'.tr, createdAt, theme),
-
-              const SizedBox(height: 24),
-
-              // Technical Info Section
-              Text(
-                'technicalInformation'.tr,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const Divider(),
-              _buildInfoRow('ipAddress'.tr, ipAddress, theme),
-              _buildInfoRow('userAgent'.tr, userAgent, theme),
 
               const SizedBox(height: 24),
 
@@ -212,32 +140,6 @@ class AuditDetailDialog extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 8),
               _buildChangesSection(changes, theme),
-
-              const SizedBox(height: 24),
-
-              // Raw JSON Section (Expandable)
-              ExpansionTile(
-                title: Text(
-                  'rawJsonData'.tr,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: SelectableText(
-                      const JsonEncoder.withIndent('  ').convert(audit),
-                      style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
