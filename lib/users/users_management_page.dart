@@ -4,9 +4,9 @@ import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/data_table_x.dart';
 import '../translations/translation_extension.dart';
-import 'add_user_dialog.dart';
-import 'edit_user_dialog.dart';
-import 'users_management_service.dart';
+import 'services/users_management_service.dart';
+import 'views/add_user_dialog.dart';
+import 'views/edit_user_dialog.dart';
 
 class UsersManagementPage extends StatefulWidget {
   final String languageCode;
@@ -278,164 +278,178 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                             child: DataTableX(
                               maxHeight: double.infinity,
                               columnSpacing: 16,
-                          columns: [
-                            DataTableColumn.buildColumn(
-                              context: context,
-                              label: 'image'.tr,
-                            ),
-                            DataTableColumn.buildColumn(
-                              context: context,
-                              label: 'fullName'.tr,
-                            ),
-                            DataTableColumn.buildColumn(
-                              context: context,
+                              columns: [
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'image'.tr,
+                                ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'fullName'.tr,
+                                ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
 
-                              label: 'email'.tr,
-                            ),
-                            DataTableColumn.buildColumn(
-                              context: context,
-                              label: 'role'.tr,
-                            ),
-                            DataTableColumn.buildColumn(
-                              context: context,
-                              label: 'status'.tr,
-                            ),
-                            DataTableColumn.buildColumn(
-                              context: context,
-                              label: 'actions'.tr,
-                            ),
-                          ],
-                          rows: _users.map((user) {
-                            final fullName = user['full_name'] ?? '';
-                            final email = user['email'] ?? '';
-                            final role = user['role'] ?? 'user';
-                            final isActive = user['is_active'] ?? false;
-                            final userId = user['id'] as int;
-                            final image = user['image'] as String?;
-
-                            return DataRow(
-                              cells: [
-                                DataCell(
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: image != null && image.isNotEmpty
-                                        ? Image.network(
-                                            'http://localhost:8080$image',
-                                            width: 40,
-                                            height: 40,
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                                  return Container(
-                                                    width: 40,
-                                                    height: 40,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey[300],
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.person,
-                                                      size: 24,
-                                                      color: Colors.grey[600],
-                                                    ),
-                                                  );
-                                                },
-                                          )
-                                        : Container(
-                                            width: 40,
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.person,
-                                              size: 24,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                  ),
+                                  label: 'email'.tr,
                                 ),
-                                DataCell(Text(fullName)),
-                                DataCell(Text(email)),
-                                DataCell(
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Color(
-                                        int.parse(
-                                          _getRoleBadgeColor(
-                                            role,
-                                          ).replaceFirst('#', '0xFF'),
-                                        ),
-                                      ),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      role,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'role'.tr,
                                 ),
-                                DataCell(
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: isActive
-                                          ? Colors.green.shade100
-                                          : Colors.red.shade100,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      isActive ? 'active'.tr : 'inactive'.tr,
-                                      style: TextStyle(
-                                        color: isActive
-                                            ? Colors.green.shade700
-                                            : Colors.red.shade700,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'status'.tr,
                                 ),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                          size: 20,
-                                          color: Colors.blue,
-                                        ),
-                                        onPressed: () =>
-                                            _showEditUserDialog(user),
-                                        tooltip: 'edit'.tr,
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          size: 20,
-                                          color: Colors.red,
-                                        ),
-                                        onPressed: () =>
-                                            _deleteUser(userId, email),
-                                        tooltip: 'delete'.tr,
-                                      ),
-                                    ],
-                                  ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'actions'.tr,
                                 ),
                               ],
-                            );
-                          }).toList(),
+                              rows: _users.map((user) {
+                                final fullName = user['full_name'] ?? '';
+                                final email = user['email'] ?? '';
+                                final role = user['role'] ?? 'user';
+                                final isActive = user['is_active'] ?? false;
+                                final userId = user['id'] as int;
+                                final image = user['image'] as String?;
+
+                                return DataRow(
+                                  cells: [
+                                    DataCell(
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: image != null && image.isNotEmpty
+                                            ? Image.network(
+                                                'http://localhost:8080$image',
+                                                width: 40,
+                                                height: 40,
+                                                fit: BoxFit.cover,
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) {
+                                                      return Container(
+                                                        width: 40,
+                                                        height: 40,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                              color: Colors
+                                                                  .grey[300],
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                        child: Icon(
+                                                          Icons.person,
+                                                          size: 24,
+                                                          color:
+                                                              Colors.grey[600],
+                                                        ),
+                                                      );
+                                                    },
+                                              )
+                                            : Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[300],
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.person,
+                                                  size: 24,
+                                                  color: Colors.grey[600],
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                    DataCell(Text(fullName)),
+                                    DataCell(Text(email)),
+                                    DataCell(
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Color(
+                                            int.parse(
+                                              _getRoleBadgeColor(
+                                                role,
+                                              ).replaceFirst('#', '0xFF'),
+                                            ),
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          role,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: isActive
+                                              ? Colors.green.shade100
+                                              : Colors.red.shade100,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          isActive
+                                              ? 'active'.tr
+                                              : 'inactive'.tr,
+                                          style: TextStyle(
+                                            color: isActive
+                                                ? Colors.green.shade700
+                                                : Colors.red.shade700,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                              color: Colors.blue,
+                                            ),
+                                            onPressed: () =>
+                                                _showEditUserDialog(user),
+                                            tooltip: 'edit'.tr,
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              size: 20,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () =>
+                                                _deleteUser(userId, email),
+                                            tooltip: 'delete'.tr,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),

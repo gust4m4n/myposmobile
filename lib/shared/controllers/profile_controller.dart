@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../profile/profile_service.dart';
+import '../../profile/services/profile_service.dart';
 import '../api_models.dart';
 
 class ProfileController extends GetxController {

@@ -3,8 +3,8 @@ import 'package:get/get.dart' hide Trans;
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'home/home_page.dart';
-import 'login/login_page.dart';
+import 'home/views/home_page.dart';
+import 'login/views/login_page.dart';
 import 'shared/controllers/auth_controller.dart';
 import 'shared/controllers/language_controller.dart';
 import 'shared/controllers/profile_controller.dart';
