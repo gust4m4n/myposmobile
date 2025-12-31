@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../home/product_model.dart';
+import '../shared/config/api_config.dart';
 import '../shared/utils/image_upload_service.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
-import '../shared/widgets/image_crop_editor.dart';
 import '../translations/translation_extension.dart';
 import 'products_management_service.dart';
 
@@ -105,24 +105,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
           return;
         }
 
-        // Open crop editor
-        if (mounted) {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ImageCropEditor(
-                imageFile: file,
-                onCancel: () => Navigator.of(context).pop(),
-                onCropComplete: (croppedFile) {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    _selectedPhotoPath = croppedFile.path;
-                  });
-                },
-              ),
-              fullscreenDialog: true,
-            ),
-          );
-        }
+        setState(() {
+          _selectedPhotoPath = file.path;
+        });
       }
     } catch (e) {
       if (kDebugMode) {
@@ -249,6 +234,35 @@ class _EditProductDialogState extends State<EditProductDialog> {
       _isSubmitting = true;
     });
 
+    // Upload photo first if there's a selected photo
+    if (_selectedPhotoPath != null) {
+      final uploadResponse = await ImageUploadService.uploadProductPhoto(
+        productId: widget.product.id!,
+        filePath: _selectedPhotoPath!,
+      );
+
+      if (uploadResponse.statusCode != 200) {
+        if (!mounted) return;
+        setState(() {
+          _isSubmitting = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(uploadResponse.message ?? 'photoUploadFailed'.tr),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      // Update photo path from response
+      if (uploadResponse.data != null &&
+          uploadResponse.data!['image'] != null) {
+        _photoPath = uploadResponse.data!['image'];
+        _selectedPhotoPath = null;
+      }
+    }
+
     final response = await ProductsManagementService.updateProduct(
       id: widget.product.id!,
       name: _nameController.text.trim(),
@@ -291,7 +305,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
     final String? displayPhotoUrl = hasExistingPhoto
         ? (_photoPath!.startsWith('http')
               ? _photoPath
-              : 'http://localhost:8080$_photoPath')
+              : '${ApiConfig.baseUrl}$_photoPath')
         : null;
 
     return Container(
@@ -314,97 +328,57 @@ class _EditProductDialogState extends State<EditProductDialog> {
           ),
           const SizedBox(height: 16),
 
-          // Photo preview
+          // Photo preview with change button
           Center(
-            child: Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: theme.dividerColor),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: hasSelectedPhoto
-                    ? Image.file(
-                        File(_selectedPhotoPath!),
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.broken_image, size: 64);
-                        },
-                      )
-                    : hasExistingPhoto
-                    ? Image.network(
-                        displayPhotoUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.broken_image, size: 64);
-                        },
-                      )
-                    : Icon(Icons.image, size: 64, color: Colors.grey[600]),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Action buttons
-          if (hasSelectedPhoto) ...[
-            Row(
+            child: Stack(
               children: [
-                Expanded(
-                  child: ButtonX(
-                    onPressed: _isUploadingPhoto
-                        ? null
-                        : () => setState(() => _selectedPhotoPath = null),
-                    icon: Icons.close,
-                    label: 'cancel'.tr,
-                    backgroundColor: theme.colorScheme.surface,
-                    foregroundColor: theme.colorScheme.onSurface,
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: theme.dividerColor),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: hasSelectedPhoto
+                        ? Image.file(
+                            File(_selectedPhotoPath!),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.broken_image, size: 64);
+                            },
+                          )
+                        : hasExistingPhoto
+                        ? Image.network(
+                            displayPhotoUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.broken_image, size: 64);
+                            },
+                          )
+                        : Icon(Icons.image, size: 64, color: Colors.grey[600]),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ButtonX(
-                    onPressed: _isUploadingPhoto ? null : _uploadPhoto,
-                    icon: Icons.upload,
-                    label: _isUploadingPhoto ? 'uploading'.tr : 'upload'.tr,
-                    backgroundColor: const Color(0xFF007AFF),
-                  ),
-                ),
-              ],
-            ),
-          ] else ...[
-            Row(
-              children: [
-                Expanded(
-                  child: ButtonX(
-                    onPressed: _isUploadingPhoto || _isDeletingPhoto
-                        ? null
-                        : _pickPhoto,
-                    icon: Icons.photo_library,
-                    label: 'selectPhoto'.tr,
-                    backgroundColor: const Color(0xFF007AFF),
-                  ),
-                ),
-                if (hasExistingPhoto) ...[
-                  const SizedBox(width: 8),
-                  Expanded(
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: SizedBox(
+                    height: 32,
                     child: ButtonX(
                       onPressed: _isUploadingPhoto || _isDeletingPhoto
                           ? null
-                          : _deletePhoto,
-                      icon: Icons.delete,
-                      label: _isDeletingPhoto
-                          ? 'deleting'.tr
-                          : 'deletePhoto'.tr,
-                      backgroundColor: Colors.red,
+                          : _pickPhoto,
+                      label: 'change'.tr,
+                      backgroundColor: Colors.white.withOpacity(0.5),
+                      foregroundColor: Colors.black,
                     ),
                   ),
-                ],
+                ),
               ],
             ),
-          ],
+          ),
         ],
       ),
     );

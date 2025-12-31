@@ -102,16 +102,6 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    // Fetch profile when app resumes from background
-    final authController = Get.find<AuthController>();
-    if (state == AppLifecycleState.resumed && authController.isAuthenticated) {
-      profileController.fetchProfile();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
     final languageController = Get.find<LanguageController>();

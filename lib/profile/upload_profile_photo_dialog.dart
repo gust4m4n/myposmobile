@@ -8,7 +8,6 @@ import '../shared/config/api_config.dart';
 import '../shared/utils/image_upload_service.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/dialog_x.dart';
-import '../shared/widgets/image_crop_editor.dart';
 import '../translations/translation_extension.dart';
 
 class UploadProfilePhotoDialog extends StatefulWidget {
@@ -54,24 +53,9 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
           print('📸 File size: ${file.lengthSync()} bytes');
         }
 
-        // Open crop editor
-        if (mounted) {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ImageCropEditor(
-                imageFile: file,
-                onCancel: () => Navigator.of(context).pop(),
-                onCropComplete: (croppedFile) {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    _selectedFile = croppedFile;
-                  });
-                },
-              ),
-              fullscreenDialog: true,
-            ),
-          );
-        }
+        setState(() {
+          _selectedFile = file;
+        });
       }
     } catch (e) {
       if (kDebugMode) {

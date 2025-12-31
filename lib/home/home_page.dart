@@ -3,6 +3,7 @@ import 'package:get/get.dart' hide Trans;
 import 'package:myposmobile/shared/widgets/button_x.dart';
 
 import '../audit-trails/audit_trails_page.dart';
+import '../branches/branches_management_page.dart';
 import '../change-password/change_password_dialog.dart';
 import '../faq/faq_page.dart';
 import '../orders/orders_page.dart';
@@ -23,6 +24,7 @@ import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/connectivity_indicator.dart';
 import '../shared/widgets/dialog_x.dart';
+import '../tenants/tenants_management_page.dart';
 import '../tnc/tnc_page.dart';
 import '../translations/translation_extension.dart';
 import '../users/users_management_page.dart';
@@ -1073,6 +1075,51 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                       builder: (context) =>
                           AuditTrailsPage(languageCode: widget.languageCode),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.business,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'tenantsManagement'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TenantsManagementPage(
+                        languageCode: widget.languageCode,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.store, color: theme.colorScheme.onSurface),
+                title: Text(
+                  'branchesManagement'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BranchesManagementPage(
+                        languageCode: widget.languageCode,
+                      ),
                     ),
                   );
                 },

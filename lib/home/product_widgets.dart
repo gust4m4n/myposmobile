@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../shared/config/api_config.dart';
 import '../shared/utils/currency_formatter.dart';
 import '../shared/widgets/search_field.dart';
 import 'product_model.dart';
@@ -32,12 +33,20 @@ class _ProductsWidgetState extends State<ProductsWidget> {
   String _searchQuery = '';
 
   List<ProductModel> get _filteredProducts {
+    List<ProductModel> filtered;
     if (_searchQuery.isEmpty) {
-      return widget.products;
+      filtered = widget.products;
+    } else {
+      filtered = widget.products.where((product) {
+        return product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      }).toList();
     }
-    return widget.products.where((product) {
-      return product.name.toLowerCase().contains(_searchQuery.toLowerCase());
-    }).toList();
+
+    // Sort by name
+    filtered.sort(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
+    return filtered;
   }
 
   @override
@@ -303,51 +312,117 @@ class _ProductItemState extends State<_ProductItem> {
             width: _isPressed ? 2 : 1,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(widget.padding),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                flex: 2,
-                child: Icon(
-                  widget.product.category == 'Makanan'
-                      ? Icons.restaurant
-                      : Icons.local_drink,
-                  size: widget.iconSize,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              SizedBox(height: widget.padding / 2),
-              Flexible(
-                flex: 2,
-                child: Text(
-                  widget.product.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: widget.fontSize,
-                    color: theme.colorScheme.onSurface,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final imageHeight = constraints.maxHeight * 0.5;
+
+            return SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: imageHeight,
+                    width: double.infinity,
+                    child:
+                        widget.product.image != null &&
+                            widget.product.image!.isNotEmpty
+                        ? Image.network(
+                            '${ApiConfig.baseUrl}${widget.product.image}',
+                            width: double.infinity,
+                            height: imageHeight,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                height: imageHeight,
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withOpacity(
+                                    0.1,
+                                  ),
+                                ),
+                                child: Icon(
+                                  widget.product.category == 'Makanan'
+                                      ? Icons.restaurant
+                                      : Icons.local_drink,
+                                  size: widget.iconSize,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                width: double.infinity,
+                                height: imageHeight,
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withOpacity(
+                                    0.1,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value:
+                                        loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress
+                                                  .expectedTotalBytes!
+                                        : null,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Container(
+                            width: double.infinity,
+                            height: imageHeight,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withOpacity(0.1),
+                            ),
+                            child: Icon(
+                              widget.product.category == 'Makanan'
+                                  ? Icons.restaurant
+                                  : Icons.local_drink,
+                              size: widget.iconSize,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
                   ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              SizedBox(height: widget.padding / 3),
-              Flexible(
-                flex: 1,
-                child: Text(
-                  CurrencyFormatter.format(widget.product.price),
-                  style: TextStyle(
-                    color: theme.colorScheme.secondary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: widget.priceSize,
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: widget.padding),
+                    child: Column(
+                      children: [
+                        Text(
+                          widget.product.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: widget.fontSize,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: widget.padding / 3),
+                        Text(
+                          CurrencyFormatter.format(widget.product.price),
+                          style: TextStyle(
+                            color: theme.colorScheme.secondary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: widget.priceSize,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

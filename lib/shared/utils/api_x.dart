@@ -449,4 +449,182 @@ class ApiX {
       return ApiResponse<T>(error: 'Upload failed: $e', statusCode: 0);
     }
   }
+
+  /// POST request with multipart/form-data (for forms with optional file upload)
+  /// [endpoint] - API endpoint (e.g., '/api/tenants')
+  /// [fields] - form fields as key-value pairs
+  /// [filePath] - optional file path to upload
+  /// [fileFieldName] - field name for the file (default: 'image')
+  /// [requiresAuth] - whether to include auth token in headers
+  /// [fromJson] - optional function to parse response data into type T
+  static Future<ApiResponse<T>> postMultipart<T>(
+    String endpoint, {
+    required Map<String, String> fields,
+    String? filePath,
+    String fileFieldName = 'image',
+    bool requiresAuth = false,
+    T Function(dynamic)? fromJson,
+  }) async {
+    try {
+      final url = '${ApiConfig.baseUrl}$endpoint';
+      final uri = Uri.parse(url);
+
+      final request = http.MultipartRequest('POST', uri);
+
+      // Add auth header if required
+      if (requiresAuth && _authToken != null) {
+        request.headers['Authorization'] = 'Bearer $_authToken';
+      }
+
+      // Add form fields
+      request.fields.addAll(fields);
+
+      // Add file if provided
+      if (filePath != null) {
+        final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
+        request.files.add(file);
+        appLog('📤 File added: ${file.filename}, size: ${file.length} bytes');
+      }
+
+      appLog(
+        '📤 POST Multipart to: $endpoint',
+        endpoint: url,
+        headers: request.headers,
+        body: 'Fields: ${request.fields}, Files: ${request.files.length}',
+      );
+
+      final streamedResponse = await request.send().timeout(
+        ApiConfig.connectTimeout,
+      );
+      final response = await http.Response.fromStream(streamedResponse);
+
+      appLog(
+        '',
+        endpoint: url,
+        status: response.statusCode,
+        response: response.body,
+      );
+
+      final jsonResponse = _tryParseJson(response.body);
+
+      if (jsonResponse == null) {
+        return ApiResponse<T>(
+          error: 'Invalid JSON response: ${response.body}',
+          statusCode: response.statusCode,
+        );
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return ApiResponse<T>.fromJson(
+          jsonResponse,
+          fromJson,
+          response.statusCode,
+        );
+      } else {
+        if (response.statusCode == 401) {
+          await _handle401();
+        }
+
+        return ApiResponse<T>(
+          error:
+              jsonResponse['error'] ??
+              jsonResponse['message'] ??
+              'Request failed with status ${response.statusCode}',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      appLog('❌ Multipart POST error', error: e);
+      return ApiResponse<T>(error: 'Request failed: $e', statusCode: 0);
+    }
+  }
+
+  /// PUT request with multipart/form-data (for forms with optional file upload)
+  /// [endpoint] - API endpoint (e.g., '/api/tenants/1')
+  /// [fields] - form fields as key-value pairs
+  /// [filePath] - optional file path to upload
+  /// [fileFieldName] - field name for the file (default: 'image')
+  /// [requiresAuth] - whether to include auth token in headers
+  /// [fromJson] - optional function to parse response data into type T
+  static Future<ApiResponse<T>> putMultipart<T>(
+    String endpoint, {
+    required Map<String, String> fields,
+    String? filePath,
+    String fileFieldName = 'image',
+    bool requiresAuth = false,
+    T Function(dynamic)? fromJson,
+  }) async {
+    try {
+      final url = '${ApiConfig.baseUrl}$endpoint';
+      final uri = Uri.parse(url);
+
+      final request = http.MultipartRequest('PUT', uri);
+
+      // Add auth header if required
+      if (requiresAuth && _authToken != null) {
+        request.headers['Authorization'] = 'Bearer $_authToken';
+      }
+
+      // Add form fields
+      request.fields.addAll(fields);
+
+      // Add file if provided
+      if (filePath != null) {
+        final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
+        request.files.add(file);
+        appLog('📤 File added: ${file.filename}, size: ${file.length} bytes');
+      }
+
+      appLog(
+        '📤 PUT Multipart to: $endpoint',
+        endpoint: url,
+        headers: request.headers,
+        body: 'Fields: ${request.fields}, Files: ${request.files.length}',
+      );
+
+      final streamedResponse = await request.send().timeout(
+        ApiConfig.connectTimeout,
+      );
+      final response = await http.Response.fromStream(streamedResponse);
+
+      appLog(
+        '',
+        endpoint: url,
+        status: response.statusCode,
+        response: response.body,
+      );
+
+      final jsonResponse = _tryParseJson(response.body);
+
+      if (jsonResponse == null) {
+        return ApiResponse<T>(
+          error: 'Invalid JSON response: ${response.body}',
+          statusCode: response.statusCode,
+        );
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return ApiResponse<T>.fromJson(
+          jsonResponse,
+          fromJson,
+          response.statusCode,
+        );
+      } else {
+        if (response.statusCode == 401) {
+          await _handle401();
+        }
+
+        return ApiResponse<T>(
+          error:
+              jsonResponse['error'] ??
+              jsonResponse['message'] ??
+              'Request failed with status ${response.statusCode}',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      appLog('❌ Multipart PUT error', error: e);
+      return ApiResponse<T>(error: 'Request failed: $e', statusCode: 0);
+    }
+  }
 }
