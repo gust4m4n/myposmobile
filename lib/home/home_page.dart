@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoadingMore = false;
   bool _hasMoreData = true;
   int _currentPage = 1;
-  final int _pageSize = 20;
+  final int _pageSize = 32;
   final _profileService = ProfileService();
   ProfileModel? _profile;
   String _appTitle = 'MyPOSMobile';
@@ -123,7 +123,10 @@ class _HomePageState extends State<HomePage> {
             .map((json) => ProductModel.fromJson(json))
             .toList();
         _hasMoreData = response.data!.length >= _pageSize;
-        _extractCategories();
+        // Only extract categories on first load (when category list is empty)
+        if (_categories.isEmpty) {
+          _extractCategories();
+        }
       });
     }
 
@@ -169,8 +172,20 @@ class _HomePageState extends State<HomePage> {
 
   void _extractCategories() {
     TranslationService.setLanguage(widget.languageCode);
-    final categorySet = _products.map((p) => p.category).toSet();
-    _categories = ['all'.tr, ...categorySet];
+    // Load all products without filter to get all categories
+    ProductsService.getProducts(page: 1, pageSize: 1000).then((response) {
+      if (response.statusCode == 200 && response.data != null) {
+        final allProducts = response.data!
+            .map((json) => ProductModel.fromJson(json))
+            .toList();
+        final categorySet = allProducts.map((p) => p.category).toSet();
+        if (mounted) {
+          setState(() {
+            _categories = ['all'.tr, ...categorySet];
+          });
+        }
+      }
+    });
   }
 
   String get selectedCategory {

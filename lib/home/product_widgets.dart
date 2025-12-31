@@ -15,6 +15,9 @@ class ProductsWidget extends StatefulWidget {
   final bool isMobile;
   final List<String> categories;
   final ScrollController? scrollController;
+  final VoidCallback? onLoadMore;
+  final bool? isLoadingMore;
+  final bool? hasMoreData;
 
   const ProductsWidget({
     super.key,
@@ -25,6 +28,9 @@ class ProductsWidget extends StatefulWidget {
     this.isMobile = false,
     required this.categories,
     this.scrollController,
+    this.onLoadMore,
+    this.isLoadingMore,
+    this.hasMoreData,
   });
 
   @override
@@ -72,6 +78,9 @@ class _ProductsWidgetState extends State<ProductsWidget> {
             onProductTap: widget.onProductTap,
             isMobile: widget.isMobile,
             scrollController: widget.scrollController,
+            onLoadMore: widget.onLoadMore,
+            isLoadingMore: widget.isLoadingMore ?? false,
+            hasMoreData: widget.hasMoreData ?? false,
           ),
         ),
       ],
@@ -201,12 +210,18 @@ class _ProductGrid extends StatelessWidget {
   final Function(ProductModel) onProductTap;
   final bool isMobile;
   final ScrollController? scrollController;
+  final VoidCallback? onLoadMore;
+  final bool isLoadingMore;
+  final bool hasMoreData;
 
   const _ProductGrid({
     required this.products,
     required this.onProductTap,
     this.isMobile = false,
     this.scrollController,
+    this.onLoadMore,
+    this.isLoadingMore = false,
+    this.hasMoreData = false,
   });
 
   @override
@@ -241,28 +256,51 @@ class _ProductGrid extends StatelessWidget {
           padding = 12;
         }
 
-        return GridView.builder(
-          controller: scrollController,
-          padding: EdgeInsets.zero,
-          physics: const ClampingScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: maxExtent,
-            childAspectRatio: 0.85,
-            crossAxisSpacing: 0,
-            mainAxisSpacing: 0,
-          ),
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return _ProductItem(
-              product: product,
-              onTap: () => onProductTap(product),
-              iconSize: iconSize,
-              fontSize: fontSize,
-              priceSize: priceSize,
-              padding: padding,
-            );
+        return NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (onLoadMore != null &&
+                scrollInfo.metrics.pixels >=
+                    scrollInfo.metrics.maxScrollExtent - 200) {
+              if (!isLoadingMore && hasMoreData) {
+                onLoadMore!();
+              }
+            }
+            return false;
           },
+          child: Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                  controller: scrollController,
+                  padding: EdgeInsets.zero,
+                  physics: const ClampingScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: maxExtent,
+                    childAspectRatio: 0.85,
+                    crossAxisSpacing: 0,
+                    mainAxisSpacing: 0,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return _ProductItem(
+                      product: product,
+                      onTap: () => onProductTap(product),
+                      iconSize: iconSize,
+                      fontSize: fontSize,
+                      priceSize: priceSize,
+                      padding: padding,
+                    );
+                  },
+                ),
+              ),
+              if (isLoadingMore)
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ),
+            ],
+          ),
         );
       },
     );
