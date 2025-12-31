@@ -19,19 +19,46 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   List<Map<String, dynamic>> _orders = [];
   bool _isLoading = false;
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
+  int _currentPage = 1;
+  final int _perPage = 32;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadOrders();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (!_isLoadingMore && _hasMoreData) {
+        _loadMoreOrders();
+      }
+    }
   }
 
   Future<void> _loadOrders() async {
     setState(() {
       _isLoading = true;
+      _currentPage = 1;
+      _hasMoreData = true;
     });
 
-    final response = await OrdersService.getOrders();
+    final response = await OrdersService.getOrders(
+      page: _currentPage,
+      perPage: _perPage,
+    );
 
     if (!mounted) return;
 
@@ -40,6 +67,7 @@ class _OrdersPageState extends State<OrdersPage> {
       if (data is List) {
         setState(() {
           _orders = data.cast<Map<String, dynamic>>();
+          _hasMoreData = data.length >= _perPage;
         });
       }
     }
@@ -47,6 +75,39 @@ class _OrdersPageState extends State<OrdersPage> {
     if (mounted) {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadMoreOrders() async {
+    if (_isLoadingMore || !_hasMoreData) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    _currentPage++;
+    final response = await OrdersService.getOrders(
+      page: _currentPage,
+      perPage: _perPage,
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200 && response.data != null) {
+      final data = (response.data as Map<String, dynamic>)['data'];
+      if (data is List) {
+        final newOrders = data.cast<Map<String, dynamic>>();
+        setState(() {
+          _orders.addAll(newOrders);
+          _hasMoreData = newOrders.length >= _perPage;
+          _isLoadingMore = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoadingMore = false;
+        _currentPage--;
       });
     }
   }
@@ -112,79 +173,102 @@ class _OrdersPageState extends State<OrdersPage> {
                 ],
               ),
             )
-          : DataTableX(
-              maxHeight: double.infinity,
-              columnSpacing: 20,
-              columns: [
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'orderNumber'.tr,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'totalAmount'.tr,
-                  numeric: true,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'status'.tr,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'createdAt'.tr,
-                ),
-              ],
-              rows: _orders.map((order) {
-                final orderNumber = order['order_number'] ?? 'N/A';
-                final totalAmount = order['total_amount'] ?? 0;
-                final status = order['status'] ?? 'pending';
-                final createdAt = order['created_at'] ?? '';
-
-                return DataRow(
-                  onSelectChanged: (_) => _showOrderDetail(order),
-                  cells: [
-                    DataCell(
-                      Text(
-                        orderNumber,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+          : ListView(
+              controller: _scrollController,
+              children: [
+                DataTableX(
+                  maxHeight: null,
+                  columnSpacing: 20,
+                  columns: [
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'orderNumber'.tr,
                     ),
-                    DataCell(
-                      Text(
-                        CurrencyFormatter.format(totalAmount.toDouble()),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'totalAmount'.tr,
+                      numeric: true,
                     ),
-                    DataCell(
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(status).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: _getStatusColor(status),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          status.toUpperCase(),
-                          style: TextStyle(
-                            color: _getStatusColor(status),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'status'.tr,
                     ),
-                    DataCell(
-                      Text(createdAt, style: const TextStyle(fontSize: 16.0)),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'createdAt'.tr,
                     ),
                   ],
-                );
-              }).toList(),
+                  rows: _orders.map((order) {
+                    final orderNumber = order['order_number'] ?? 'N/A';
+                    final totalAmount = order['total_amount'] ?? 0;
+                    final status = order['status'] ?? 'pending';
+                    final createdAt = order['created_at'] ?? '';
+
+                    return DataRow(
+                      onSelectChanged: (_) => _showOrderDetail(order),
+                      cells: [
+                        DataCell(
+                          Text(
+                            orderNumber,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            CurrencyFormatter.format(totalAmount.toDouble()),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getStatusColor(status).withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: _getStatusColor(status),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              status.toUpperCase(),
+                              style: TextStyle(
+                                color: _getStatusColor(status),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            createdAt,
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+                if (_isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                if (!_hasMoreData && _orders.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Text(
+                        'noMoreData'.tr,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      ),
+                    ),
+                  ),
+              ],
             ),
     );
   }

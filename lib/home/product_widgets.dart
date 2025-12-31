@@ -14,6 +14,7 @@ class ProductsWidget extends StatefulWidget {
   final Function(ProductModel) onProductTap;
   final bool isMobile;
   final List<String> categories;
+  final ScrollController? scrollController;
 
   const ProductsWidget({
     super.key,
@@ -23,6 +24,7 @@ class ProductsWidget extends StatefulWidget {
     required this.onProductTap,
     this.isMobile = false,
     required this.categories,
+    this.scrollController,
   });
 
   @override
@@ -69,6 +71,7 @@ class _ProductsWidgetState extends State<ProductsWidget> {
             products: _filteredProducts,
             onProductTap: widget.onProductTap,
             isMobile: widget.isMobile,
+            scrollController: widget.scrollController,
           ),
         ),
       ],
@@ -197,11 +200,13 @@ class _ProductGrid extends StatelessWidget {
   final List<ProductModel> products;
   final Function(ProductModel) onProductTap;
   final bool isMobile;
+  final ScrollController? scrollController;
 
   const _ProductGrid({
     required this.products,
     required this.onProductTap,
     this.isMobile = false,
+    this.scrollController,
   });
 
   @override
@@ -237,6 +242,7 @@ class _ProductGrid extends StatelessWidget {
         }
 
         return GridView.builder(
+          controller: scrollController,
           padding: EdgeInsets.zero,
           physics: const ClampingScrollPhysics(),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

@@ -49,15 +49,37 @@ class _HomePageState extends State<HomePage> {
   List<ProductModel> _products = [];
   List<String> _categories = [];
   bool _isLoading = false;
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
+  int _currentPage = 1;
+  final int _pageSize = 20;
   final _profileService = ProfileService();
   ProfileModel? _profile;
   String _appTitle = 'MyPOSMobile';
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadProfile();
     _loadProducts();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (!_isLoadingMore && _hasMoreData) {
+        _loadMoreProducts();
+      }
+    }
   }
 
   @override
@@ -83,9 +105,15 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadProducts() async {
     setState(() {
       _isLoading = true;
+      _currentPage = 1;
+      _hasMoreData = true;
     });
 
-    final response = await ProductsService.getProducts();
+    final response = await ProductsService.getProducts(
+      category: _selectedCategory == 'all'.tr ? null : _selectedCategory,
+      page: _currentPage,
+      pageSize: _pageSize,
+    );
 
     if (!mounted) return;
 
@@ -94,6 +122,7 @@ class _HomePageState extends State<HomePage> {
         _products = response.data!
             .map((json) => ProductModel.fromJson(json))
             .toList();
+        _hasMoreData = response.data!.length >= _pageSize;
         _extractCategories();
       });
     }
@@ -101,6 +130,39 @@ class _HomePageState extends State<HomePage> {
     if (mounted) {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadMoreProducts() async {
+    if (_isLoadingMore || !_hasMoreData) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    _currentPage++;
+    final response = await ProductsService.getProducts(
+      category: _selectedCategory == 'all'.tr ? null : _selectedCategory,
+      page: _currentPage,
+      pageSize: _pageSize,
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200 && response.data != null) {
+      final newProducts = response.data!
+          .map((json) => ProductModel.fromJson(json))
+          .toList();
+      setState(() {
+        _products.addAll(newProducts);
+        _hasMoreData = newProducts.length >= _pageSize;
+        _isLoadingMore = false;
+      });
+    } else {
+      setState(() {
+        _isLoadingMore = false;
+        _currentPage--;
       });
     }
   }
@@ -116,12 +178,17 @@ class _HomePageState extends State<HomePage> {
     return _selectedCategory ?? 'all'.tr;
   }
 
+  void _onCategoryChanged(String category) {
+    setState(() {
+      _selectedCategory = category;
+      _currentPage = 1;
+      _hasMoreData = true;
+    });
+    _loadProducts();
+  }
+
   List<ProductModel> get _filteredProducts {
-    TranslationService.setLanguage(widget.languageCode);
-    if (selectedCategory == 'all'.tr) {
-      return _products;
-    }
-    return _products.where((p) => p.category == selectedCategory).toList();
+    return _products;
   }
 
   void _addToCart(ProductModel product) {
@@ -594,17 +661,25 @@ class _HomePageState extends State<HomePage> {
                 // Produk Section
                 Expanded(
                   flex: 2,
-                  child: ProductsWidget(
-                    products: _filteredProducts,
-                    selectedCategory: selectedCategory,
-                    categories: _categories,
-                    onCategorySelected: (category) {
-                      setState(() {
-                        _selectedCategory = category;
-                      });
-                    },
-                    onProductTap: _addToCart,
-                    isMobile: false,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ProductsWidget(
+                          products: _filteredProducts,
+                          selectedCategory: selectedCategory,
+                          categories: _categories,
+                          onCategorySelected: _onCategoryChanged,
+                          onProductTap: _addToCart,
+                          isMobile: false,
+                          scrollController: _scrollController,
+                        ),
+                      ),
+                      if (_isLoadingMore)
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                    ],
                   ),
                 ),
 
@@ -795,17 +870,25 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             )
-          : ProductsWidget(
-              products: _filteredProducts,
-              selectedCategory: selectedCategory,
-              categories: _categories,
-              onCategorySelected: (category) {
-                setState(() {
-                  _selectedCategory = category;
-                });
-              },
-              onProductTap: _addToCart,
-              isMobile: true,
+          : Column(
+              children: [
+                Expanded(
+                  child: ProductsWidget(
+                    products: _filteredProducts,
+                    selectedCategory: selectedCategory,
+                    categories: _categories,
+                    onCategorySelected: _onCategoryChanged,
+                    onProductTap: _addToCart,
+                    isMobile: true,
+                    scrollController: _scrollController,
+                  ),
+                ),
+                if (_isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+              ],
             ),
       floatingActionButton: !isTabletOrDesktop && _cart.isNotEmpty
           ? FloatingActionButton.extended(

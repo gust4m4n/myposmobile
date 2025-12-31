@@ -237,6 +237,7 @@ const Map<String, String> id = {
   'confirmDeleteUser': 'Apakah Anda yakin ingin menghapus pengguna {username}?',
   'noUsers': 'Tidak ada pengguna',
   'totalUsers': 'Total Pengguna: {count}',
+  'noMoreData': 'Tidak ada data lagi',
   'role': 'Role',
   'actions': 'Aksi',
   'edit': 'Edit',

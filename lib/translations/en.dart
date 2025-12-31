@@ -239,6 +239,7 @@ const Map<String, String> en = {
   'confirmDeleteUser': 'Are you sure you want to delete user {username}?',
   'noUsers': 'No users found',
   'totalUsers': 'Total Users: {count}',
+  'noMoreData': 'No more data',
   'role': 'Role',
   'actions': 'Actions',
   'edit': 'Edit',

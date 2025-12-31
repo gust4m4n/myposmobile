@@ -19,19 +19,46 @@ class PaymentsPage extends StatefulWidget {
 class _PaymentsPageState extends State<PaymentsPage> {
   List<Map<String, dynamic>> _payments = [];
   bool _isLoading = false;
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
+  int _currentPage = 1;
+  final int _perPage = 32;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadPayments();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (!_isLoadingMore && _hasMoreData) {
+        _loadMorePayments();
+      }
+    }
   }
 
   Future<void> _loadPayments() async {
     setState(() {
       _isLoading = true;
+      _currentPage = 1;
+      _hasMoreData = true;
     });
 
-    final response = await PaymentsService.getPayments();
+    final response = await PaymentsService.getPayments(
+      page: _currentPage,
+      perPage: _perPage,
+    );
 
     if (!mounted) return;
 
@@ -40,6 +67,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
       if (data is List) {
         setState(() {
           _payments = data.cast<Map<String, dynamic>>();
+          _hasMoreData = data.length >= _perPage;
         });
       }
     }
@@ -47,6 +75,39 @@ class _PaymentsPageState extends State<PaymentsPage> {
     if (mounted) {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadMorePayments() async {
+    if (_isLoadingMore || !_hasMoreData) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    _currentPage++;
+    final response = await PaymentsService.getPayments(
+      page: _currentPage,
+      perPage: _perPage,
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200 && response.data != null) {
+      final data = (response.data as Map<String, dynamic>)['data'];
+      if (data is List) {
+        final newPayments = data.cast<Map<String, dynamic>>();
+        setState(() {
+          _payments.addAll(newPayments);
+          _hasMoreData = newPayments.length >= _perPage;
+          _isLoadingMore = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoadingMore = false;
+        _currentPage--;
       });
     }
   }
@@ -113,91 +174,114 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 ],
               ),
             )
-          : DataTableX(
-              maxHeight: double.infinity,
-              columnSpacing: 20,
-              columns: [
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'paymentId'.tr,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'orderId'.tr,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'amount'.tr,
-                  numeric: true,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'method'.tr,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'status'.tr,
-                ),
-                DataTableColumn.buildColumn(
-                  context: context,
-                  label: 'createdAt'.tr,
-                ),
-              ],
-              rows: _payments.map((payment) {
-                final paymentId = payment['id'] ?? 0;
-                final orderId = payment['order_id'] ?? 0;
-                final amount = payment['amount'] ?? 0;
-                final paymentMethod = payment['payment_method'] ?? 'N/A';
-                final status = payment['status'] ?? 'pending';
-                final createdAt = payment['created_at'] ?? '';
-
-                return DataRow(
-                  onSelectChanged: (_) => _showPaymentDetail(payment),
-                  cells: [
-                    DataCell(
-                      Text(
-                        '#$paymentId',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+          : ListView(
+              controller: _scrollController,
+              children: [
+                DataTableX(
+                  maxHeight: null,
+                  columnSpacing: 20,
+                  columns: [
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'paymentId'.tr,
                     ),
-                    DataCell(Text('#$orderId')),
-                    DataCell(
-                      Text(
-                        CurrencyFormatter.format(amount.toDouble()),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'orderId'.tr,
                     ),
-                    DataCell(Text(paymentMethod)),
-                    DataCell(
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(status).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: _getStatusColor(status),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          status.toUpperCase(),
-                          style: TextStyle(
-                            color: _getStatusColor(status),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'amount'.tr,
+                      numeric: true,
                     ),
-                    DataCell(
-                      Text(createdAt, style: const TextStyle(fontSize: 16.0)),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'method'.tr,
+                    ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'status'.tr,
+                    ),
+                    DataTableColumn.buildColumn(
+                      context: context,
+                      label: 'createdAt'.tr,
                     ),
                   ],
-                );
-              }).toList(),
+                  rows: _payments.map((payment) {
+                    final paymentId = payment['id'] ?? 0;
+                    final orderId = payment['order_id'] ?? 0;
+                    final amount = payment['amount'] ?? 0;
+                    final paymentMethod = payment['payment_method'] ?? 'N/A';
+                    final status = payment['status'] ?? 'pending';
+                    final createdAt = payment['created_at'] ?? '';
+
+                    return DataRow(
+                      onSelectChanged: (_) => _showPaymentDetail(payment),
+                      cells: [
+                        DataCell(
+                          Text(
+                            '#$paymentId',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataCell(Text('#$orderId')),
+                        DataCell(
+                          Text(
+                            CurrencyFormatter.format(amount.toDouble()),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        DataCell(Text(paymentMethod)),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getStatusColor(status).withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: _getStatusColor(status),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              status.toUpperCase(),
+                              style: TextStyle(
+                                color: _getStatusColor(status),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            createdAt,
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+                if (_isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                if (!_hasMoreData && _payments.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Text(
+                        'noMoreData'.tr,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      ),
+                    ),
+                  ),
+              ],
             ),
     );
   }

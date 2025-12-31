@@ -2,12 +2,21 @@ import '../shared/api_models.dart';
 import '../shared/utils/api_x.dart';
 
 class CategoriesService {
-  /// Get all categories for tenant
+  /// Get all categories for tenant with optional pagination
   static Future<ApiResponse<List<dynamic>>> getCategories({
     bool activeOnly = false,
+    int? page,
+    int? pageSize,
   }) async {
-    final queryParams = activeOnly ? '?active_only=true' : '';
-    return await ApiX.get('/api/v1/categories$queryParams', requiresAuth: true);
+    final queryParams = <String>[];
+    if (activeOnly) queryParams.add('active_only=true');
+    if (page != null) queryParams.add('page=$page');
+    if (pageSize != null) queryParams.add('page_size=$pageSize');
+
+    final queryString = queryParams.isNotEmpty
+        ? '?${queryParams.join('&')}'
+        : '';
+    return await ApiX.get('/api/v1/categories$queryString', requiresAuth: true);
   }
 
   /// Get category by ID

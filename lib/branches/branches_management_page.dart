@@ -24,12 +24,34 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
   TenantModel? _selectedTenant;
   bool _isLoadingTenants = true;
   bool _isLoadingBranches = false;
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
+  int _currentPage = 1;
+  final int _pageSize = 20;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     TranslationService.setLanguage(widget.languageCode);
     _loadTenants();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (!_isLoadingMore && _hasMoreData) {
+        _loadMoreBranches();
+      }
+    }
   }
 
   Future<void> _loadTenants() async {
@@ -56,14 +78,6 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
       setState(() {
         _isLoadingTenants = false;
       });
-      // if (mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text(response.message ?? 'loadTenantsFailed'.tr),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
     }
   }
 
@@ -72,30 +86,62 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
 
     setState(() {
       _isLoadingBranches = true;
+      _currentPage = 1;
+      _hasMoreData = true;
     });
 
     final service = BranchesManagementService();
-    final response = await service.getBranches(_selectedTenant!.id!);
+    final response = await service.getBranches(
+      _selectedTenant!.id!,
+      page: _currentPage,
+      pageSize: _pageSize,
+    );
 
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
+      final branches = response.data!.cast<BranchModel>();
       setState(() {
-        _branches = response.data!.cast<BranchModel>();
+        _branches = branches;
+        _hasMoreData = branches.length >= _pageSize;
         _isLoadingBranches = false;
       });
     } else {
       setState(() {
         _isLoadingBranches = false;
       });
-      // if (mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text(response.message ?? 'loadBranchesFailed'.tr),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
+    }
+  }
+
+  Future<void> _loadMoreBranches() async {
+    if (_selectedTenant == null || _isLoadingMore || !_hasMoreData) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    _currentPage++;
+    final service = BranchesManagementService();
+    final response = await service.getBranches(
+      _selectedTenant!.id!,
+      page: _currentPage,
+      pageSize: _pageSize,
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200 && response.data != null) {
+      final newBranches = response.data!.cast<BranchModel>();
+      setState(() {
+        _branches.addAll(newBranches);
+        _hasMoreData = newBranches.length >= _pageSize;
+        _isLoadingMore = false;
+      });
+    } else {
+      setState(() {
+        _isLoadingMore = false;
+        _currentPage--;
+      });
     }
   }
 
@@ -240,137 +286,168 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
                           ),
                         )
                       : SingleChildScrollView(
+                          controller: _scrollController,
                           child: Container(
                             padding: const EdgeInsets.all(16),
-                            child: DataTableX(
-                              columns: [
-                                DataColumn(label: Text('image'.tr)),
-                                DataColumn(label: Text('branchName'.tr)),
-                                DataColumn(label: Text('email'.tr)),
-                                DataColumn(label: Text('phone'.tr)),
-                                DataColumn(label: Text('status'.tr)),
-                                DataColumn(label: Text('actions'.tr)),
-                              ],
-                              rows: _branches.map((branch) {
-                                return DataRow(
-                                  cells: [
-                                    DataCell(
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child:
-                                            branch.image != null &&
-                                                branch.image!.isNotEmpty
-                                            ? Image.network(
-                                                'http://localhost:8080${branch.image}',
-                                                width: 40,
-                                                height: 40,
-                                                fit: BoxFit.cover,
-                                                errorBuilder:
-                                                    (
-                                                      context,
-                                                      error,
-                                                      stackTrace,
-                                                    ) {
-                                                      return Container(
-                                                        width: 40,
-                                                        height: 40,
-                                                        color: Colors.grey[300],
-                                                        child: Icon(
-                                                          Icons.store,
-                                                          size: 24,
-                                                          color:
-                                                              Colors.grey[600],
-                                                        ),
-                                                      );
-                                                    },
-                                              )
-                                            : Container(
-                                                width: 40,
-                                                height: 40,
-                                                color: Colors.grey[300],
-                                                child: Icon(
-                                                  Icons.store,
-                                                  size: 24,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                      ),
-                                    ),
-                                    DataCell(Text(branch.name)),
-                                    DataCell(Text(branch.email ?? '-')),
-                                    DataCell(Text(branch.phone ?? '-')),
-                                    DataCell(
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: branch.isActive == true
-                                              ? Colors.green.withOpacity(0.1)
-                                              : Colors.red.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          branch.isActive == true
-                                              ? 'active'.tr
-                                              : 'inactive'.tr,
-                                          style: TextStyle(
-                                            color: branch.isActive == true
-                                                ? Colors.green
-                                                : Colors.red,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              size: 20,
-                                            ),
-                                            onPressed: () async {
-                                              final result =
-                                                  await showDialog<bool>(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        EditBranchDialog(
-                                                          languageCode: widget
-                                                              .languageCode,
-                                                          tenant:
-                                                              _selectedTenant!,
-                                                          branch: branch,
-                                                        ),
-                                                  );
-                                              if (result == true) {
-                                                _loadBranches();
-                                              }
-                                            },
-                                            tooltip: 'edit'.tr,
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.delete,
-                                              size: 20,
-                                            ),
-                                            onPressed: () =>
-                                                _showDeleteConfirmation(branch),
-                                            tooltip: 'delete'.tr,
-                                            color: Colors.red,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                            child: Column(
+                              children: [
+                                DataTableX(
+                                  columns: [
+                                    DataColumn(label: Text('image'.tr)),
+                                    DataColumn(label: Text('branchName'.tr)),
+                                    DataColumn(label: Text('email'.tr)),
+                                    DataColumn(label: Text('phone'.tr)),
+                                    DataColumn(label: Text('status'.tr)),
+                                    DataColumn(label: Text('actions'.tr)),
                                   ],
-                                );
-                              }).toList(),
+                                  rows: _branches.map((branch) {
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child:
+                                                branch.image != null &&
+                                                    branch.image!.isNotEmpty
+                                                ? Image.network(
+                                                    'http://localhost:8080${branch.image}',
+                                                    width: 40,
+                                                    height: 40,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) {
+                                                          return Container(
+                                                            width: 40,
+                                                            height: 40,
+                                                            color: Colors
+                                                                .grey[300],
+                                                            child: Icon(
+                                                              Icons.store,
+                                                              size: 24,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          );
+                                                        },
+                                                  )
+                                                : Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    color: Colors.grey[300],
+                                                    child: Icon(
+                                                      Icons.store,
+                                                      size: 24,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                        DataCell(Text(branch.name)),
+                                        DataCell(Text(branch.email ?? '-')),
+                                        DataCell(Text(branch.phone ?? '-')),
+                                        DataCell(
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: branch.isActive == true
+                                                  ? Colors.green.withOpacity(
+                                                      0.1,
+                                                    )
+                                                  : Colors.red.withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Text(
+                                              branch.isActive == true
+                                                  ? 'active'.tr
+                                                  : 'inactive'.tr,
+                                              style: TextStyle(
+                                                color: branch.isActive == true
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.edit,
+                                                  size: 20,
+                                                ),
+                                                onPressed: () async {
+                                                  final result =
+                                                      await showDialog<bool>(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            EditBranchDialog(
+                                                              languageCode: widget
+                                                                  .languageCode,
+                                                              tenant:
+                                                                  _selectedTenant!,
+                                                              branch: branch,
+                                                            ),
+                                                      );
+                                                  if (result == true) {
+                                                    _loadBranches();
+                                                  }
+                                                },
+                                                tooltip: 'edit'.tr,
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.delete,
+                                                  size: 20,
+                                                ),
+                                                onPressed: () =>
+                                                    _showDeleteConfirmation(
+                                                      branch,
+                                                    ),
+                                                tooltip: 'delete'.tr,
+                                                color: Colors.red,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                                if (_isLoadingMore)
+                                  const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                if (!_hasMoreData && _branches.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Center(
+                                      child: Text(
+                                        'noMoreData'.tr,
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                         ),

@@ -6,13 +6,26 @@ import '../shared/utils/api_x.dart';
 
 class SuperadminTenantsService {
   /// GET /api/v1/superadmin/tenants
-  /// Get list of all tenants
+  /// Get list of all tenants with optional pagination
   /// Requires JWT token with superadmin role
   ///
   /// Returns: List of TenantModel
-  Future<ApiResponse<List<TenantModel>>> listTenants() async {
+  Future<ApiResponse<List<TenantModel>>> listTenants({
+    int? page,
+    int? pageSize,
+  }) async {
+    String url = ApiConfig.superadminTenants;
+    final queryParams = <String>[];
+
+    if (page != null) queryParams.add('page=$page');
+    if (pageSize != null) queryParams.add('page_size=$pageSize');
+
+    if (queryParams.isNotEmpty) {
+      url += '?${queryParams.join('&')}';
+    }
+
     return await ApiX.get(
-      ApiConfig.superadminTenants,
+      url,
       requiresAuth: true,
       fromJson: (data) =>
           (data as List).map((json) => TenantModel.fromJson(json)).toList(),

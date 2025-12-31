@@ -1310,7 +1310,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/categories",
+							"raw": "{{base_url}}/api/v1/categories?page=1&page_size=10",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1321,6 +1321,16 @@
 							],
 							"query": [
 								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "page_size",
+									"value": "10",
+									"description": "Items per page (default: 10, max: 100)"
+								},
+								{
 									"key": "active_only",
 									"value": "true",
 									"description": "Filter to show only active categories",
@@ -1328,7 +1338,7 @@
 								}
 							]
 						},
-						"description": "Get list of all product categories for the authenticated tenant. Categories are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- active_only (optional): Set to 'true' to show only active categories"
+						"description": "Get list of all product categories for the authenticated tenant with pagination support. Categories are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n- active_only (optional): Set to 'true' to show only active categories\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of items\n- total_pages: Total number of pages\n- data: Array of category items"
 					},
 					"response": [
 						{
@@ -1343,7 +1353,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/categories",
+									"raw": "{{base_url}}/api/v1/categories?page=1&page_size=10",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1351,6 +1361,16 @@
 										"api",
 										"v1",
 										"categories"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -1364,7 +1384,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Makanan Utama\",\n      \"description\": \"Kategori untuk makanan utama seperti nasi, mie, dll\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"updated_at\": \"2025-12-27 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Minuman\",\n      \"description\": \"Kategori untuk minuman panas dan dingin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:01:00\",\n      \"updated_at\": \"2025-12-27 10:01:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"name\": \"Snack\",\n      \"description\": \"Kategori untuk makanan ringan\",\n      \"is_active\": false,\n      \"created_at\": \"2025-12-27 10:02:00\",\n      \"updated_at\": \"2025-12-27 10:02:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 8,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Beverages\",\n      \"description\": \"Coffee, tea, and other drinks\",\n      \"image\": \"http://localhost:8080/uploads/categories/1_20241230_142208.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"updated_at\": \"2025-12-27 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Electronics\",\n      \"description\": \"Electronic devices and accessories\",\n      \"image\": \"\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:01:00\",\n      \"updated_at\": \"2025-12-27 10:01:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"name\": \"Snack\",\n      \"description\": \"Kategori untuk makanan ringan\",\n      \"image\": \"\",\n      \"is_active\": false,\n      \"created_at\": \"2025-12-27 10:02:00\",\n      \"updated_at\": \"2025-12-27 10:02:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -1761,7 +1781,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/products",
+							"raw": "{{base_url}}/api/v1/products?page=1&page_size=10",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1771,6 +1791,16 @@
 								"products"
 							],
 							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "page_size",
+									"value": "10",
+									"description": "Items per page (default: 10, max: 100)"
+								},
 								{
 									"key": "category",
 									"value": "Minuman",
@@ -1785,7 +1815,7 @@
 								}
 							]
 						},
-						"description": "Get list of all products for the authenticated tenant. Products are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- category (optional): Filter by exact category name\n- search (optional): Search keyword in name, description, or SKU (case-insensitive)\n- Both filters can be combined\n\nExamples:\n- All products: /products\n- By category: /products?category=Minuman\n- By search: /products?search=ayam\n- Combined: /products?category=Makanan%20Utama&search=goreng"
+						"description": "Get list of all products for the authenticated tenant with pagination support. Products are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n- category (optional): Filter by exact category name\n- search (optional): Search keyword in name, description, or SKU (case-insensitive)\n- All filters can be combined with pagination\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of items\n- total_pages: Total number of pages\n- data: Array of product items\n\nExamples:\n- All products page 1: /products?page=1&page_size=10\n- By category: /products?category=Minuman&page=1\n- By search: /products?search=ayam&page=1\n- Combined: /products?category=Makanan%20Utama&search=goreng&page=2&page_size=20"
 					},
 					"response": [
 						{
@@ -1800,7 +1830,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/products",
+									"raw": "{{base_url}}/api/v1/products?page=1&page_size=10",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1808,6 +1838,16 @@
 										"api",
 										"v1",
 										"products"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -1821,7 +1861,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"image\": \"/uploads/products/product_1_1735296000.jpg\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 100,\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"image\": \"/uploads/products/product_1_1735296000.jpg\"\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 25,\n  \"total_pages\": 3,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"image\": \"http://localhost:8080/uploads/products/product_1_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 100,\n      \"image\": \"http://localhost:8080/uploads/products/product_2_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -2868,7 +2908,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users",
+							"raw": "{{base_url}}/api/v1/users?page=1&page_size=10",
 							"host": [
 								"{{base_url}}"
 							],
@@ -2876,9 +2916,21 @@
 								"api",
 								"v1",
 								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "page_size",
+									"value": "10",
+									"description": "Items per page (default: 10, max: 100)"
+								}
 							]
 						},
-						"description": "Get list of all users for the authenticated tenant. Users are automatically filtered by tenant_id from JWT token."
+						"description": "Get list of all users for the authenticated tenant with pagination support. Users are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of users\n- total_pages: Total number of pages\n- data: Array of user items"
 					},
 					"response": [
 						{
@@ -2893,7 +2945,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/users",
+									"raw": "{{base_url}}/api/v1/users?page=1&page_size=10",
 									"host": [
 										"{{base_url}}"
 									],
@@ -2901,6 +2953,16 @@
 										"api",
 										"v1",
 										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -2914,7 +2976,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"user1\",\n      \"email\": \"user1@example.com\",\n      \"full_name\": \"User Satu\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"admin1\",\n      \"email\": \"admin1@example.com\",\n      \"full_name\": \"Admin Satu\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:05:00\"\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 25,\n  \"total_pages\": 3,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"user1@example.com\",\n      \"full_name\": \"User Satu\",\n      \"image\": \"http://localhost:8080/uploads/profiles/user1.jpg\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"created_by\": null,\n      \"created_by_name\": null,\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"admin1@example.com\",\n      \"full_name\": \"Admin Satu\",\n      \"image\": \"\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:05:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"cashier1@example.com\",\n      \"full_name\": \"Kasir Satu\",\n      \"image\": \"\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:10:00\",\n      \"created_by\": 2,\n      \"created_by_name\": \"Admin Satu\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -3000,15 +3062,48 @@
 							]
 						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "johndoe@example.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								},
+								{
+									"key": "full_name",
+									"value": "John Doe",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"type": "text",
+									"description": "user | branchadmin | tenantadmin"
+								},
+								{
+									"key": "branch_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Optional: Profile image (JPEG/PNG)"
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users",
@@ -3021,18 +3116,14 @@
 								"users"
 							]
 						},
-						"description": "Create a new user for the authenticated tenant. User will be automatically assigned to tenant_id from JWT token.\n\nValidations:\n- username: min 3 characters, unique per tenant\n- email: valid email format, globally unique\n- password: min 6 characters\n- role: must be one of: user, branchadmin, tenantadmin\n- branch_id: must exist and belong to tenant"
+						"description": "Create a new user with OPTIONAL profile image upload. User will be automatically assigned to tenant_id from JWT token.\n\n**Required Fields:**\n- email: valid email format, globally unique\n- password: min 6 characters\n- full_name: user's full name\n- role: user | branchadmin | tenantadmin\n- branch_id: must exist and belong to tenant\n- is_active: true | false\n\n**Optional Fields:**\n- image: Profile image file (JPEG/PNG). Image will be uploaded to /uploads/profiles/\n\n**How to test in Postman:**\n1. Select 'image' field\n2. Click 'Select Files'\n3. Choose a JPEG/PNG image from your computer\n4. Send request\n\n**Response will include:**\n- image: URL of uploaded image (e.g., \"uploads/profiles/user_10_1234567890.jpg\")\n- OR null if no image was uploaded"
 					},
 					"response": [
 						{
-							"name": "Create User Success",
+							"name": "Create User with Image Success",
 							"originalRequest": {
 								"method": "POST",
 								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
 									{
 										"key": "Authorization",
 										"value": "Bearer {{auth_token}}",
@@ -3040,8 +3131,44 @@
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "johndoe@example.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "password123",
+											"type": "text"
+										},
+										{
+											"key": "full_name",
+											"value": "John Doe",
+											"type": "text"
+										},
+										{
+											"key": "role",
+											"value": "user",
+											"type": "text"
+										},
+										{
+											"key": "branch_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/path/to/profile.jpg"
+										}
+									]
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/users",
@@ -3065,7 +3192,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"User created successfully\",\n  \"data\": {\n    \"id\": 10,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"newuser\",\n    \"email\": \"newuser@example.com\",\n    \"full_name\": \"New User\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 11:00:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"User created successfully\",\n  \"data\": {\n    \"id\": 11,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"email\": \"johndoe@example.com\",\n    \"full_name\": \"John Doe\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"image\": \"uploads/profiles/user_11_1735291200.jpg\",\n    \"created_at\": \"2025-12-27 11:00:00\"\n  }\n}"
 						}
 					]
 				},
@@ -3083,15 +3210,41 @@
 							]
 						},
 						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "full_name",
+									"value": "Jane Doe Updated",
+									"type": "text",
+									"description": "Optional: Update full name"
+								},
+								{
+									"key": "role",
+									"value": "branchadmin",
+									"type": "text",
+									"description": "Optional: Update role"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text",
+									"description": "Optional: Update active status"
+								},
+								{
+									"key": "password",
+									"value": "newpassword123",
+									"type": "text",
+									"description": "Optional: Update password"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Optional: New profile image (replaces old image)"
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users/1",
@@ -3105,27 +3258,39 @@
 								"1"
 							]
 						},
-						"description": "Update an existing user. Replace '1' with actual user ID. User must belong to authenticated tenant.\n\nAll fields are optional for update. Only send the fields you want to change.\n\nPartial update example (only update role):\n{\n  \"role\": \"branchadmin\"\n}\n\nPassword update (will be automatically hashed):\n{\n  \"password\": \"newpassword123\"\n}"
+						"description": "Update an existing user with OPTIONAL profile image replacement. Replace '1' in URL with actual user ID. User must belong to authenticated tenant.\n\n**All fields are OPTIONAL - only send what you want to update:**\n- full_name: User's full name\n- role: user | branchadmin | tenantadmin\n- is_active: true | false\n- password: New password (will be hashed)\n- branch_id: New branch assignment\n- image: New profile image (JPEG/PNG). Will REPLACE existing image.\n\n**Partial Update Examples:**\n\n1. **Update only name:**\n   - Send only: full_name\n\n2. **Update only image:**\n   - Send only: image (file)\n\n3. **Update name + image:**\n   - Send: full_name + image\n\n**How to test in Postman:**\n1. Enable/disable fields you want to update\n2. For image: Select 'image' field → Click 'Select Files'\n3. Choose JPEG/PNG from your computer\n4. Send request\n\n**Response will include:**\n- Updated user data with new image URL if uploaded"
 					},
 					"response": [
 						{
-							"name": "Update User Success",
+							"name": "Update User with New Image Success",
 							"originalRequest": {
 								"method": "PUT",
 								"header": [
 									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
 										"key": "Authorization",
 										"value": "Bearer {{auth_token}}",
 										"type": "text"
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "full_name",
+											"value": "Jane Doe Updated",
+											"type": "text"
+										},
+										{
+											"key": "role",
+											"value": "branchadmin",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/path/to/new_profile.jpg"
+										}
+									]
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/users/1",
@@ -3150,382 +3315,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"message\": \"User updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"user1\",\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"Updated User Name\",\n    \"role\": \"branchadmin\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
-						}
-					]
-				},
-				{
-					"name": "Delete User",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"1"
-							]
-						},
-						"description": "Delete a user (soft delete). Replace '1' with actual user ID. User must belong to authenticated tenant.\n\nNote: This is a soft delete. User record will be marked as deleted but not removed from database."
-					},
-					"response": [
-						{
-							"name": "Delete User Success",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{base_url}}/api/v1/users/1",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"users",
-										"1"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"message\": \"User deleted successfully\"\n}"
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "List Users",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/users",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users"
-							]
-						},
-						"description": "Get list of all users for the authenticated tenant. Users are automatically filtered by tenant_id from JWT token."
-					},
-					"response": [
-						{
-							"name": "List Users Success",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{base_url}}/api/v1/users",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"users"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"user1\",\n      \"email\": \"user1@example.com\",\n      \"full_name\": \"User Satu\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"username\": \"admin1\",\n      \"email\": \"admin1@example.com\",\n      \"full_name\": \"Admin Satu\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:05:00\"\n    }\n  ]\n}"
-						}
-					]
-				},
-				{
-					"name": "Get User by ID",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"1"
-							]
-						},
-						"description": "Get user details by ID. Replace '1' with actual user ID. User must belong to authenticated tenant."
-					},
-					"response": [
-						{
-							"name": "Get User Success",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{base_url}}/api/v1/users/1",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"users",
-										"1"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"user1\",\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"User Satu\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
-						}
-					]
-				},
-				{
-					"name": "Create User",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users"
-							]
-						},
-						"description": "Create a new user for the authenticated tenant. User will be automatically assigned to tenant_id from JWT token.\n\nValidations:\n- username: min 3 characters, unique per tenant\n- email: valid email format, globally unique\n- password: min 6 characters\n- role: must be one of: user, branchadmin, tenantadmin\n- branch_id: must exist and belong to tenant"
-					},
-					"response": [
-						{
-							"name": "Create User Success",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
-								},
-								"url": {
-									"raw": "{{base_url}}/api/v1/users",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"users"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"message\": \"User created successfully\",\n  \"data\": {\n    \"id\": 10,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"newuser\",\n    \"email\": \"newuser@example.com\",\n    \"full_name\": \"New User\",\n    \"role\": \"user\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 11:00:00\"\n  }\n}"
-						}
-					]
-				},
-				{
-					"name": "Update User",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"1"
-							]
-						},
-						"description": "Update an existing user. Replace '1' with actual user ID. User must belong to authenticated tenant.\n\nAll fields are optional for update. Only send the fields you want to change.\n\nPartial update example (only update role):\n{\n  \"role\": \"branchadmin\"\n}\n\nPassword update (will be automatically hashed):\n{\n  \"password\": \"newpassword123\"\n}"
-					},
-					"response": [
-						{
-							"name": "Update User Success",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"full_name\": \"Updated User Name\",\n  \"role\": \"branchadmin\",\n  \"is_active\": true\n}"
-								},
-								"url": {
-									"raw": "{{base_url}}/api/v1/users/1",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"users",
-										"1"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"message\": \"User updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"username\": \"user1\",\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"Updated User Name\",\n    \"role\": \"branchadmin\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
+							"body": "{\n  \"message\": \"User updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"branch_id\": 1,\n    \"email\": \"user1@example.com\",\n    \"full_name\": \"Jane Doe Updated\",\n    \"role\": \"branchadmin\",\n    \"is_active\": true,\n    \"image\": \"uploads/profiles/user_1_1735291800.jpg\",\n    \"created_at\": \"2025-12-27 10:00:00\"\n  }\n}"
 						}
 					]
 				},
@@ -3686,7 +3476,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/superadmin/tenants",
+							"raw": "{{base_url}}/api/v1/superadmin/tenants?page=1&page_size=10",
 							"host": [
 								"{{base_url}}"
 							],
@@ -3695,9 +3485,21 @@
 								"v1",
 								"superadmin",
 								"tenants"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "page_size",
+									"value": "10",
+									"description": "Items per page (default: 10, max: 100)"
+								}
 							]
 						},
-						"description": "Mendapatkan list semua tenant yang ada di sistem. Hanya superadmin yang bisa akses."
+						"description": "Mendapatkan list semua tenant yang ada di sistem dengan pagination support. Hanya superadmin yang bisa akses.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of tenants\n- total_pages: Total number of pages\n- data: Array of tenant items"
 					},
 					"response": [
 						{
@@ -3712,7 +3514,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/superadmin/tenants",
+									"raw": "{{base_url}}/api/v1/superadmin/tenants?page=1&page_size=10",
 									"host": [
 										"{{base_url}}"
 									],
@@ -3721,6 +3523,16 @@
 										"v1",
 										"superadmin",
 										"tenants"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -3734,7 +3546,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Food Corner 99\",\n      \"code\": \"resto01\",\n      \"description\": \"Restoran modern dengan berbagai pilihan menu internasional dan lokal untuk pengalaman kuliner terbaik\",\n      \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n      \"website\": \"https://www.foodcorner99.com\",\n      \"email\": \"info@foodcorner99.com\",\n      \"phone\": \"021-3199-8899\",\n      \"image\": \"/uploads/tenants/tenant_foodcorner99_1704000000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 1,\n      \"updated_by_name\": \"Super Admin\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion Store 101\",\n      \"code\": \"fashion01\",\n      \"description\": \"Pusat fashion terlengkap dengan koleksi pakaian, sepatu, dan aksesoris trendy untuk pria dan wanita\",\n      \"address\": \"Grand Indonesia Shopping Town Tower C, Jl. M.H. Thamrin No. 1, Menteng, Jakarta Pusat, DKI Jakarta 10310\",\n      \"website\": \"https://www.fashionstore101.com\",\n      \"email\": \"contact@fashionstore101.com\",\n      \"phone\": \"021-2358-1010\",\n      \"image\": \"/uploads/tenants/tenant_fashionstore101_1704001000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-25 14:30:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 2,\n      \"updated_by_name\": \"John Admin\"\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 3,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Food Corner 99\",\n      \"description\": \"Restoran modern dengan berbagai pilihan menu internasional dan lokal untuk pengalaman kuliner terbaik\",\n      \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n      \"website\": \"https://www.foodcorner99.com\",\n      \"email\": \"info@foodcorner99.com\",\n      \"phone\": \"021-3199-8899\",\n      \"image\": \"http://localhost:8080/uploads/tenants/tenant_foodcorner99_1704000000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 1,\n      \"updated_by_name\": \"Super Admin\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion Store 101\",\n      \"description\": \"Pusat fashion terlengkap dengan koleksi pakaian, sepatu, dan aksesoris trendy untuk pria dan wanita\",\n      \"address\": \"Grand Indonesia Shopping Town Tower C, Jl. M.H. Thamrin No. 1, Menteng, Jakarta Pusat, DKI Jakarta 10310\",\n      \"website\": \"https://www.fashionstore101.com\",\n      \"email\": \"contact@fashionstore101.com\",\n      \"phone\": \"021-2358-1010\",\n      \"image\": \"http://localhost:8080/uploads/tenants/tenant_fashionstore101_1704001000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-25 14:30:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 2,\n      \"updated_by_name\": \"John Admin\"\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -4075,18 +3887,6 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"message\": \"Tenant updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Updated Tenant Name\",\n    \"code\": \"TENANT002\",\n    \"description\": \"Updated business description with new logo\",\n    \"address\": \"New Address, Jakarta\",\n    \"website\": \"https://updatedtenant.com\",\n    \"email\": \"newemail@tenant.com\",\n    \"phone\": \"021-11112222\",\n    \"image\": \"/uploads/tenants/tenant_TENANT002_1704007200.png\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30 10:00:00\",\n    \"updated_at\": \"2025-12-30 17:00:00\",\n    \"updated_by\": 1\n  }\n}"
-						}
-					]
-				},
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"message\": \"Tenant updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Updated Tenant Name\",\n    \"code\": \"TENANT002\",\n    \"description\": \"Updated business description\",\n    \"address\": \"New Address, Jakarta\",\n    \"website\": \"https://updatedtenant.com\",\n    \"email\": \"newemail@tenant.com\",\n    \"phone\": \"021-11112222\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-30T10:00:00+07:00\"\n  }\n}"
 						}
 					]
 				},
@@ -6328,285 +6128,6 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"error\": \"insufficient permission: can only change PIN for lower role users\"\n}"
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "PIN Management",
-			"item": [
-				{
-					"name": "Create PIN",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/pin/create",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"pin",
-								"create"
-							]
-						},
-						"description": "Create a new 6-digit PIN for the authenticated user."
-					},
-					"response": [
-						{
-							"name": "Create PIN Success",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
-								},
-								"url": {
-									"raw": "{{base_url}}/api/v1/pin/create",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"pin",
-										"create"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"message\": \"PIN created successfully\"\n}"
-						}
-					]
-				},
-				{
-					"name": "Change PIN",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/pin/change",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"pin",
-								"change"
-							]
-						},
-						"description": "Change existing PIN for the authenticated user."
-					},
-					"response": [
-						{
-							"name": "Change PIN Success",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
-								},
-								"url": {
-									"raw": "{{base_url}}/api/v1/pin/change",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"pin",
-										"change"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"message\": \"PIN changed successfully\"\n}"
-						}
-					]
-				},
-				{
-					"name": "Check PIN Status",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{auth_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/pin/check",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"pin",
-								"check"
-							]
-						},
-						"description": "Check whether the authenticated user has set a PIN."
-					},
-					"response": [
-						{
-							"name": "Check PIN - Has PIN",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{base_url}}/api/v1/pin/check",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"pin",
-										"check"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"has_pin\": true\n}"
-						},
-						{
-							"name": "Check PIN - No PIN",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{auth_token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{base_url}}/api/v1/pin/check",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"pin",
-										"check"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n  \"has_pin\": false\n}"
 						}
 					]
 				}

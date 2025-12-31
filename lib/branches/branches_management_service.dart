@@ -6,10 +6,24 @@ import '../shared/utils/api_x.dart';
 import 'branch_model.dart';
 
 class BranchesManagementService {
-  /// Get list of branches for a specific tenant
-  Future<ApiResponse<List<BranchModel>>> getBranches(int tenantId) async {
+  /// Get list of branches for a specific tenant with optional pagination
+  Future<ApiResponse<List<BranchModel>>> getBranches(
+    int tenantId, {
+    int? page,
+    int? pageSize,
+  }) async {
+    String url = ApiConfig.superadminTenantBranches(tenantId);
+    final queryParams = <String>[];
+
+    if (page != null) queryParams.add('page=$page');
+    if (pageSize != null) queryParams.add('page_size=$pageSize');
+
+    if (queryParams.isNotEmpty) {
+      url += '?${queryParams.join('&')}';
+    }
+
     return await ApiX.get(
-      ApiConfig.superadminTenantBranches(tenantId),
+      url,
       requiresAuth: true,
       fromJson: (data) =>
           (data as List).map((json) => BranchModel.fromJson(json)).toList(),

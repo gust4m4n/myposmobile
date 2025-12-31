@@ -6,10 +6,23 @@ import '../shared/utils/api_x.dart';
 import 'tenant_model.dart';
 
 class TenantsManagementService {
-  /// Get list of all tenants
-  Future<ApiResponse<List<TenantModel>>> getTenants() async {
+  /// Get list of all tenants with optional pagination
+  Future<ApiResponse<List<TenantModel>>> getTenants({
+    int? page,
+    int? pageSize,
+  }) async {
+    String url = ApiConfig.superadminTenants;
+    final queryParams = <String>[];
+
+    if (page != null) queryParams.add('page=$page');
+    if (pageSize != null) queryParams.add('page_size=$pageSize');
+
+    if (queryParams.isNotEmpty) {
+      url += '?${queryParams.join('&')}';
+    }
+
     return await ApiX.get(
-      ApiConfig.superadminTenants,
+      url,
       requiresAuth: true,
       fromJson: (data) =>
           (data as List).map((json) => TenantModel.fromJson(json)).toList(),

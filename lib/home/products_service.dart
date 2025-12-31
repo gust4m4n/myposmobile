@@ -40,6 +40,8 @@ class ProductsService {
   static Future<ApiResponse<List<Map<String, dynamic>>>> getProducts({
     String? category,
     String? search,
+    int? page,
+    int? pageSize,
   }) async {
     // Build query parameters
     final queryParams = <String, String>{};
@@ -48,6 +50,12 @@ class ProductsService {
     }
     if (search != null && search.isNotEmpty) {
       queryParams['search'] = search;
+    }
+    if (page != null) {
+      queryParams['page'] = page.toString();
+    }
+    if (pageSize != null) {
+      queryParams['page_size'] = pageSize.toString();
     }
 
     // Build URL with query params
