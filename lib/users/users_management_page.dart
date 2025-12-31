@@ -200,6 +200,10 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                       columns: [
                         DataTableColumn.buildColumn(
                           context: context,
+                          label: 'image'.tr,
+                        ),
+                        DataTableColumn.buildColumn(
+                          context: context,
                           label: 'fullName'.tr,
                         ),
                         DataTableColumn.buildColumn(
@@ -226,9 +230,51 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                         final role = user['role'] ?? 'user';
                         final isActive = user['is_active'] ?? false;
                         final userId = user['id'] as int;
+                        final image = user['image'] as String?;
 
                         return DataRow(
                           cells: [
+                            DataCell(
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: image != null && image.isNotEmpty
+                                    ? Image.network(
+                                        'http://localhost:8080$image',
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[300],
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.person,
+                                                  size: 24,
+                                                  color: Colors.grey[600],
+                                                ),
+                                              );
+                                            },
+                                      )
+                                    : Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[300],
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 24,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                              ),
+                            ),
                             DataCell(Text(fullName)),
                             DataCell(Text(email)),
                             DataCell(

@@ -1,12 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
-
 import '../shared/api_models.dart';
-import '../shared/config/api_config.dart';
 import '../shared/utils/api_x.dart';
-import '../shared/utils/storage_service.dart';
 
 class BranchesService {
   /// Get branches by tenant ID (Superadmin only)
@@ -43,62 +38,23 @@ class BranchesService {
     required bool isActive,
     File? imageFile,
   }) async {
-    try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-
-      if (token == null) {
-        return ApiResponse<Map<String, dynamic>>(
-          error: 'No authentication token',
-          statusCode: 401,
-        );
-      }
-
-      final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/superadmin/branches');
-      final request = http.MultipartRequest('POST', uri);
-
-      // Add auth header
-      request.headers['Authorization'] = 'Bearer $token';
-
-      // Add form fields
-      request.fields['tenant_id'] = tenantId.toString();
-      request.fields['name'] = name;
-      request.fields['code'] = code;
-      request.fields['description'] = description;
-      request.fields['address'] = address;
-      request.fields['website'] = website;
-      request.fields['email'] = email;
-      request.fields['phone'] = phone;
-      request.fields['is_active'] = isActive.toString();
-
-      // Add image file if provided
-      if (imageFile != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('image', imageFile.path),
-        );
-      }
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body) as Map<String, dynamic>;
-        return ApiResponse<Map<String, dynamic>>(
-          data: data,
-          statusCode: response.statusCode,
-        );
-      } else {
-        return ApiResponse<Map<String, dynamic>>(
-          error: response.body,
-          statusCode: response.statusCode,
-        );
-      }
-    } catch (e) {
-      return ApiResponse<Map<String, dynamic>>(
-        error: 'Failed to create branch: $e',
-        statusCode: 0,
-      );
-    }
+    return await ApiX.postMultipart(
+      '/api/v1/superadmin/branches',
+      fields: {
+        'tenant_id': tenantId.toString(),
+        'name': name,
+        'code': code,
+        'description': description,
+        'address': address,
+        'website': website,
+        'email': email,
+        'phone': phone,
+        'is_active': isActive.toString(),
+      },
+      filePath: imageFile?.path,
+      fileFieldName: 'image',
+      requiresAuth: true,
+    );
   }
 
   /// Update existing branch (Superadmin only)
@@ -114,63 +70,22 @@ class BranchesService {
     required bool isActive,
     File? imageFile,
   }) async {
-    try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-
-      if (token == null) {
-        return ApiResponse<Map<String, dynamic>>(
-          error: 'No authentication token',
-          statusCode: 401,
-        );
-      }
-
-      final uri = Uri.parse(
-        '${ApiConfig.baseUrl}/api/v1/superadmin/branches/$branchId',
-      );
-      final request = http.MultipartRequest('PUT', uri);
-
-      // Add auth header
-      request.headers['Authorization'] = 'Bearer $token';
-
-      // Add form fields
-      request.fields['name'] = name;
-      request.fields['code'] = code;
-      request.fields['description'] = description;
-      request.fields['address'] = address;
-      request.fields['website'] = website;
-      request.fields['email'] = email;
-      request.fields['phone'] = phone;
-      request.fields['is_active'] = isActive.toString();
-
-      // Add image file if provided
-      if (imageFile != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('image', imageFile.path),
-        );
-      }
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body) as Map<String, dynamic>;
-        return ApiResponse<Map<String, dynamic>>(
-          data: data,
-          statusCode: response.statusCode,
-        );
-      } else {
-        return ApiResponse<Map<String, dynamic>>(
-          error: response.body,
-          statusCode: response.statusCode,
-        );
-      }
-    } catch (e) {
-      return ApiResponse<Map<String, dynamic>>(
-        error: 'Failed to update branch: $e',
-        statusCode: 0,
-      );
-    }
+    return await ApiX.putMultipart(
+      '/api/v1/superadmin/branches/$branchId',
+      fields: {
+        'name': name,
+        'code': code,
+        'description': description,
+        'address': address,
+        'website': website,
+        'email': email,
+        'phone': phone,
+        'is_active': isActive.toString(),
+      },
+      filePath: imageFile?.path,
+      fileFieldName: 'image',
+      requiresAuth: true,
+    );
   }
 
   /// Delete branch (Superadmin only)

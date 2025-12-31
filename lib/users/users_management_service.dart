@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../shared/api_models.dart';
 import '../shared/utils/api_x.dart';
 
@@ -20,7 +22,27 @@ class UsersManagementService {
     required String role,
     required int branchId,
     bool isActive = true,
+    File? imageFile,
   }) async {
+    // If image is provided, use multipart
+    if (imageFile != null) {
+      return await ApiX.postMultipart(
+        '/api/v1/users',
+        fields: {
+          'email': email,
+          'password': password,
+          'full_name': fullName,
+          'role': role,
+          'branch_id': branchId.toString(),
+          'is_active': isActive.toString(),
+        },
+        filePath: imageFile.path,
+        fileFieldName: 'image',
+        requiresAuth: true,
+      );
+    }
+
+    // Otherwise use JSON
     return await ApiX.post(
       '/api/v1/users',
       requiresAuth: true,
@@ -44,7 +66,28 @@ class UsersManagementService {
     String? role,
     int? branchId,
     bool? isActive,
+    File? imageFile,
   }) async {
+    // If image is provided, use multipart
+    if (imageFile != null) {
+      final fields = <String, String>{};
+      if (email != null) fields['email'] = email;
+      if (password != null) fields['password'] = password;
+      if (fullName != null) fields['full_name'] = fullName;
+      if (role != null) fields['role'] = role;
+      if (branchId != null) fields['branch_id'] = branchId.toString();
+      if (isActive != null) fields['is_active'] = isActive.toString();
+
+      return await ApiX.putMultipart(
+        '/api/v1/users/$id',
+        fields: fields,
+        filePath: imageFile.path,
+        fileFieldName: 'image',
+        requiresAuth: true,
+      );
+    }
+
+    // Otherwise use JSON
     final body = <String, dynamic>{};
     if (email != null) body['email'] = email;
     if (password != null) body['password'] = password;

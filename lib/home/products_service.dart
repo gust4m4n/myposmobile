@@ -1,12 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:http/http.dart' as http;
 
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
 import '../shared/utils/api_x.dart';
-import '../shared/utils/storage_service.dart';
 
 /// Service untuk operasi produk (CRUD dan categories).
 /// Memerlukan JWT token untuk authentication.
@@ -247,58 +243,13 @@ class ProductsService {
     required int productId,
     required File imageFile,
   }) async {
-    try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-
-      if (token == null) {
-        return ApiResponse<Map<String, dynamic>>(
-          error: 'No authentication token',
-          statusCode: 401,
-        );
-      }
-
-      final uri = Uri.parse(
-        '${ApiConfig.baseUrl}${ApiConfig.products}/$productId/photo',
-      );
-      final request = http.MultipartRequest('POST', uri);
-
-      // Add auth header
-      request.headers['Authorization'] = 'Bearer $token';
-
-      // Add image file
-      request.files.add(
-        await http.MultipartFile.fromPath('image', imageFile.path),
-      );
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200) {
-        try {
-          final data = json.decode(response.body) as Map<String, dynamic>;
-          return ApiResponse<Map<String, dynamic>>(
-            data: data,
-            statusCode: response.statusCode,
-          );
-        } catch (e) {
-          return ApiResponse<Map<String, dynamic>>(
-            data: {},
-            statusCode: response.statusCode,
-          );
-        }
-      } else {
-        return ApiResponse<Map<String, dynamic>>(
-          error: response.body,
-          statusCode: response.statusCode,
-        );
-      }
-    } catch (e) {
-      return ApiResponse<Map<String, dynamic>>(
-        error: 'Failed to upload image: $e',
-        statusCode: 0,
-      );
-    }
+    return await ApiX.postMultipart(
+      '${ApiConfig.products}/$productId/photo',
+      fields: {},
+      filePath: imageFile.path,
+      fileFieldName: 'image',
+      requiresAuth: true,
+    );
   }
 
   /// DELETE /api/v1/products/:id/photo

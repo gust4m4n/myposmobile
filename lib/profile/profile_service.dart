@@ -1,12 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:http/http.dart' as http;
 
 import '../shared/api_models.dart';
 import '../shared/config/api_config.dart';
 import '../shared/utils/api_x.dart';
-import '../shared/utils/storage_service.dart';
 
 class ProfileService {
   /// GET /api/v1/profile
@@ -65,49 +61,14 @@ class ProfileService {
   Future<ApiResponse<ProfileModel>> uploadProfileImage({
     required File imageFile,
   }) async {
-    try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-
-      if (token == null) {
-        return ApiResponse<ProfileModel>(
-          error: 'No authentication token',
-          statusCode: 401,
-        );
-      }
-
-      final uri = Uri.parse('${ApiConfig.baseUrl}${ApiConfig.profile}/photo');
-      final request = http.MultipartRequest('POST', uri);
-
-      // Add auth header
-      request.headers['Authorization'] = 'Bearer $token';
-
-      // Add image file
-      request.files.add(
-        await http.MultipartFile.fromPath('image', imageFile.path),
-      );
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body) as Map<String, dynamic>;
-        return ApiResponse<ProfileModel>(
-          data: ProfileModel.fromJson(data),
-          statusCode: response.statusCode,
-        );
-      } else {
-        return ApiResponse<ProfileModel>(
-          error: response.body,
-          statusCode: response.statusCode,
-        );
-      }
-    } catch (e) {
-      return ApiResponse<ProfileModel>(
-        error: 'Failed to upload profile image: $e',
-        statusCode: 0,
-      );
-    }
+    return await ApiX.postMultipart<ProfileModel>(
+      '${ApiConfig.profile}/photo',
+      fields: {},
+      filePath: imageFile.path,
+      fileFieldName: 'image',
+      requiresAuth: true,
+      fromJson: (data) => ProfileModel.fromJson(data),
+    );
   }
 
   /// DELETE /api/v1/profile/photo
