@@ -195,38 +195,68 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                 ),
               ),
             )
-          : SingleChildScrollView(
-              controller: _scrollController,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    DataTableX(
-                      columns: [
-                        DataColumn(label: Text('image'.tr)),
-                        DataColumn(label: Text('tenantName'.tr)),
-                        DataColumn(label: Text('email'.tr)),
-                        DataColumn(label: Text('phone'.tr)),
-                        DataColumn(label: Text('status'.tr)),
-                        DataColumn(label: Text('actions'.tr)),
-                      ],
-                      rows: _tenants.map((tenant) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child:
-                                    tenant.image != null &&
-                                        tenant.image!.isNotEmpty
-                                    ? Image.network(
-                                        'http://localhost:8080${tenant.image}',
-                                        width: 40,
-                                        height: 40,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Container(
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (ScrollNotification scrollInfo) {
+                              if (scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent - 200) {
+                                if (!_isLoadingMore && _hasMoreData) {
+                                  _loadMoreTenants();
+                                }
+                              }
+                              return false;
+                            },
+                            child: DataTableX(
+                              maxHeight: double.infinity,
+                              columns: [
+                                DataColumn(label: Text('image'.tr)),
+                                DataColumn(label: Text('tenantName'.tr)),
+                                DataColumn(label: Text('email'.tr)),
+                                DataColumn(label: Text('phone'.tr)),
+                                DataColumn(label: Text('status'.tr)),
+                                DataColumn(label: Text('actions'.tr)),
+                              ],
+                              rows: _tenants.map((tenant) {
+                                return DataRow(
+                                  cells: [
+                                    DataCell(
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child:
+                                            tenant.image != null &&
+                                                tenant.image!.isNotEmpty
+                                            ? Image.network(
+                                                'http://localhost:8080${tenant.image}',
+                                                width: 40,
+                                                height: 40,
+                                                fit: BoxFit.cover,
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) {
+                                                      return Container(
+                                                        width: 40,
+                                                        height: 40,
+                                                        color: Colors.grey[300],
+                                                        child: Icon(
+                                                          Icons.business,
+                                                          size: 24,
+                                                          color:
+                                                              Colors.grey[600],
+                                                        ),
+                                                      );
+                                                    },
+                                              )
+                                            : Container(
                                                 width: 40,
                                                 height: 40,
                                                 color: Colors.grey[300],
@@ -235,104 +265,107 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                                                   size: 24,
                                                   color: Colors.grey[600],
                                                 ),
-                                              );
-                                            },
-                                      )
-                                    : Container(
-                                        width: 40,
-                                        height: 40,
-                                        color: Colors.grey[300],
-                                        child: Icon(
-                                          Icons.business,
-                                          size: 24,
-                                          color: Colors.grey[600],
+                                              ),
+                                      ),
+                                    ),
+                                    DataCell(Text(tenant.name)),
+                                    DataCell(Text(tenant.email ?? '-')),
+                                    DataCell(Text(tenant.phone ?? '-')),
+                                    DataCell(
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: tenant.isActive == true
+                                              ? Colors.green.withOpacity(0.1)
+                                              : Colors.red.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          tenant.isActive == true
+                                              ? 'active'.tr
+                                              : 'inactive'.tr,
+                                          style: TextStyle(
+                                            color: tenant.isActive == true
+                                                ? Colors.green
+                                                : Colors.red,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                              ),
-                            ),
-                            DataCell(Text(tenant.name)),
-                            DataCell(Text(tenant.email ?? '-')),
-                            DataCell(Text(tenant.phone ?? '-')),
-                            DataCell(
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: tenant.isActive == true
-                                      ? Colors.green.withOpacity(0.1)
-                                      : Colors.red.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  tenant.isActive == true
-                                      ? 'active'.tr
-                                      : 'inactive'.tr,
-                                  style: TextStyle(
-                                    color: tenant.isActive == true
-                                        ? Colors.green
-                                        : Colors.red,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, size: 20),
-                                    onPressed: () async {
-                                      final result = await showDialog<bool>(
-                                        context: context,
-                                        builder: (context) => EditTenantDialog(
-                                          languageCode: widget.languageCode,
-                                          tenant: tenant,
-                                        ),
-                                      );
-                                      if (result == true) {
-                                        _loadTenants();
-                                      }
-                                    },
-                                    tooltip: 'edit'.tr,
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, size: 20),
-                                    onPressed: () =>
-                                        _showDeleteConfirmation(tenant),
-                                    tooltip: 'delete'.tr,
-                                    color: Colors.red,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
-                    if (_isLoadingMore)
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      ),
-                    if (!_hasMoreData && _tenants.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(
-                          child: Text(
-                            'noMoreData'.tr,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
+                                    ),
+                                    DataCell(
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                            ),
+                                            onPressed: () async {
+                                              final result =
+                                                  await showDialog<bool>(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        EditTenantDialog(
+                                                          languageCode: widget
+                                                              .languageCode,
+                                                          tenant: tenant,
+                                                        ),
+                                                  );
+                                              if (result == true) {
+                                                _loadTenants();
+                                              }
+                                            },
+                                            tooltip: 'edit'.tr,
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              size: 20,
+                                            ),
+                                            onPressed: () =>
+                                                _showDeleteConfirmation(tenant),
+                                            tooltip: 'delete'.tr,
+                                            color: Colors.red,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
+                        if (_isLoadingMore)
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                        if (!_hasMoreData && _tenants.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(
+                              child: Text(
+                                'noMoreData'.tr,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
     );

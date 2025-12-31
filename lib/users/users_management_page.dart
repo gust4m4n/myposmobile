@@ -262,12 +262,22 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                    child: ListView(
-                      controller: _scrollController,
+                    child: Column(
                       children: [
-                        DataTableX(
-                          maxHeight: null,
-                          columnSpacing: 16,
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (ScrollNotification scrollInfo) {
+                              if (scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent - 200) {
+                                if (!_isLoadingMore && _hasMoreData) {
+                                  _loadMoreUsers();
+                                }
+                              }
+                              return false;
+                            },
+                            child: DataTableX(
+                              maxHeight: double.infinity,
+                              columnSpacing: 16,
                           columns: [
                             DataTableColumn.buildColumn(
                               context: context,
@@ -426,6 +436,8 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                               ],
                             );
                           }).toList(),
+                            ),
+                          ),
                         ),
                         if (_isLoadingMore)
                           const Padding(

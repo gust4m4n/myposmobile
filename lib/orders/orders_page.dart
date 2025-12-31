@@ -173,102 +173,138 @@ class _OrdersPageState extends State<OrdersPage> {
                 ],
               ),
             )
-          : ListView(
-              controller: _scrollController,
-              children: [
-                DataTableX(
-                  maxHeight: null,
-                  columnSpacing: 20,
-                  columns: [
-                    DataTableColumn.buildColumn(
-                      context: context,
-                      label: 'orderNumber'.tr,
-                    ),
-                    DataTableColumn.buildColumn(
-                      context: context,
-                      label: 'totalAmount'.tr,
-                      numeric: true,
-                    ),
-                    DataTableColumn.buildColumn(
-                      context: context,
-                      label: 'status'.tr,
-                    ),
-                    DataTableColumn.buildColumn(
-                      context: context,
-                      label: 'createdAt'.tr,
-                    ),
-                  ],
-                  rows: _orders.map((order) {
-                    final orderNumber = order['order_number'] ?? 'N/A';
-                    final totalAmount = order['total_amount'] ?? 0;
-                    final status = order['status'] ?? 'pending';
-                    final createdAt = order['created_at'] ?? '';
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (ScrollNotification scrollInfo) {
+                              if (scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent - 200) {
+                                if (!_isLoadingMore && _hasMoreData) {
+                                  _loadMoreOrders();
+                                }
+                              }
+                              return false;
+                            },
+                            child: DataTableX(
+                              maxHeight: double.infinity,
+                              columnSpacing: 20,
+                              columns: [
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'orderNumber'.tr,
+                                ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'totalAmount'.tr,
+                                  numeric: true,
+                                ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'status'.tr,
+                                ),
+                                DataTableColumn.buildColumn(
+                                  context: context,
+                                  label: 'createdAt'.tr,
+                                ),
+                              ],
+                              rows: _orders.map((order) {
+                                final orderNumber =
+                                    order['order_number'] ?? 'N/A';
+                                final totalAmount = order['total_amount'] ?? 0;
+                                final status = order['status'] ?? 'pending';
+                                final createdAt = order['created_at'] ?? '';
 
-                    return DataRow(
-                      onSelectChanged: (_) => _showOrderDetail(order),
-                      cells: [
-                        DataCell(
-                          Text(
-                            orderNumber,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            CurrencyFormatter.format(totalAmount.toDouble()),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataCell(
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
+                                return DataRow(
+                                  onSelectChanged: (_) =>
+                                      _showOrderDetail(order),
+                                  cells: [
+                                    DataCell(
+                                      Text(
+                                        orderNumber,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Text(
+                                        CurrencyFormatter.format(
+                                          totalAmount.toDouble(),
+                                        ),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: _getStatusColor(
+                                            status,
+                                          ).withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          border: Border.all(
+                                            color: _getStatusColor(status),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          status.toUpperCase(),
+                                          style: TextStyle(
+                                            color: _getStatusColor(status),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Text(
+                                        createdAt,
+                                        style: const TextStyle(fontSize: 16.0),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
                             ),
-                            decoration: BoxDecoration(
-                              color: _getStatusColor(status).withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: _getStatusColor(status),
-                                width: 1,
+                          ),
+                        ),
+                        if (_isLoadingMore)
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                        if (!_hasMoreData && _orders.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(
+                              child: Text(
+                                'noMoreData'.tr,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
-                            child: Text(
-                              status.toUpperCase(),
-                              style: TextStyle(
-                                color: _getStatusColor(status),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                            ),
                           ),
-                        ),
-                        DataCell(
-                          Text(
-                            createdAt,
-                            style: const TextStyle(fontSize: 16.0),
-                          ),
-                        ),
                       ],
-                    );
-                  }).toList(),
-                ),
-                if (_isLoadingMore)
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                if (!_hasMoreData && _orders.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Text(
-                        'noMoreData'.tr,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                      ),
                     ),
                   ),
-              ],
+                ],
+              ),
             ),
     );
   }

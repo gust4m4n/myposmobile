@@ -285,44 +285,86 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
                             ),
                           ),
                         )
-                      : SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                DataTableX(
-                                  columns: [
-                                    DataColumn(label: Text('image'.tr)),
-                                    DataColumn(label: Text('branchName'.tr)),
-                                    DataColumn(label: Text('email'.tr)),
-                                    DataColumn(label: Text('phone'.tr)),
-                                    DataColumn(label: Text('status'.tr)),
-                                    DataColumn(label: Text('actions'.tr)),
-                                  ],
-                                  rows: _branches.map((branch) {
-                                    return DataRow(
-                                      cells: [
-                                        DataCell(
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
+                      : Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: NotificationListener<ScrollNotification>(
+                                        onNotification:
+                                            (ScrollNotification scrollInfo) {
+                                              if (scrollInfo.metrics.pixels >=
+                                                  scrollInfo
+                                                          .metrics
+                                                          .maxScrollExtent -
+                                                      200) {
+                                                if (!_isLoadingMore &&
+                                                    _hasMoreData) {
+                                                  _loadMoreBranches();
+                                                }
+                                              }
+                                              return false;
+                                            },
+                                        child: DataTableX(
+                                          maxHeight: double.infinity,
+                                          columns: [
+                                            DataColumn(label: Text('image'.tr)),
+                                            DataColumn(
+                                              label: Text('branchName'.tr),
                                             ),
-                                            child:
-                                                branch.image != null &&
-                                                    branch.image!.isNotEmpty
-                                                ? Image.network(
-                                                    'http://localhost:8080${branch.image}',
-                                                    width: 40,
-                                                    height: 40,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder:
-                                                        (
-                                                          context,
-                                                          error,
-                                                          stackTrace,
-                                                        ) {
-                                                          return Container(
+                                            DataColumn(label: Text('email'.tr)),
+                                            DataColumn(label: Text('phone'.tr)),
+                                            DataColumn(
+                                              label: Text('status'.tr),
+                                            ),
+                                            DataColumn(
+                                              label: Text('actions'.tr),
+                                            ),
+                                          ],
+                                          rows: _branches.map((branch) {
+                                            return DataRow(
+                                              cells: [
+                                                DataCell(
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                    child:
+                                                        branch.image != null &&
+                                                            branch
+                                                                .image!
+                                                                .isNotEmpty
+                                                        ? Image.network(
+                                                            'http://localhost:8080${branch.image}',
+                                                            width: 40,
+                                                            height: 40,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (
+                                                                  context,
+                                                                  error,
+                                                                  stackTrace,
+                                                                ) {
+                                                                  return Container(
+                                                                    width: 40,
+                                                                    height: 40,
+                                                                    color: Colors
+                                                                        .grey[300],
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .store,
+                                                                      size: 24,
+                                                                      color: Colors
+                                                                          .grey[600],
+                                                                    ),
+                                                                  );
+                                                                },
+                                                          )
+                                                        : Container(
                                                             width: 40,
                                                             height: 40,
                                                             color: Colors
@@ -333,122 +375,132 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
                                                               color: Colors
                                                                   .grey[600],
                                                             ),
-                                                          );
-                                                        },
-                                                  )
-                                                : Container(
-                                                    width: 40,
-                                                    height: 40,
-                                                    color: Colors.grey[300],
-                                                    child: Icon(
-                                                      Icons.store,
-                                                      size: 24,
-                                                      color: Colors.grey[600],
+                                                          ),
+                                                  ),
+                                                ),
+                                                DataCell(Text(branch.name)),
+                                                DataCell(
+                                                  Text(branch.email ?? '-'),
+                                                ),
+                                                DataCell(
+                                                  Text(branch.phone ?? '-'),
+                                                ),
+                                                DataCell(
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 4,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          branch.isActive ==
+                                                              true
+                                                          ? Colors.green
+                                                                .withOpacity(
+                                                                  0.1,
+                                                                )
+                                                          : Colors.red
+                                                                .withOpacity(
+                                                                  0.1,
+                                                                ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                    child: Text(
+                                                      branch.isActive == true
+                                                          ? 'active'.tr
+                                                          : 'inactive'.tr,
+                                                      style: TextStyle(
+                                                        color:
+                                                            branch.isActive ==
+                                                                true
+                                                            ? Colors.green
+                                                            : Colors.red,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
                                                   ),
-                                          ),
-                                        ),
-                                        DataCell(Text(branch.name)),
-                                        DataCell(Text(branch.email ?? '-')),
-                                        DataCell(Text(branch.phone ?? '-')),
-                                        DataCell(
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: branch.isActive == true
-                                                  ? Colors.green.withOpacity(
-                                                      0.1,
-                                                    )
-                                                  : Colors.red.withOpacity(0.1),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Text(
-                                              branch.isActive == true
-                                                  ? 'active'.tr
-                                                  : 'inactive'.tr,
-                                              style: TextStyle(
-                                                color: branch.isActive == true
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.edit,
-                                                  size: 20,
                                                 ),
-                                                onPressed: () async {
-                                                  final result =
-                                                      await showDialog<bool>(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            EditBranchDialog(
-                                                              languageCode: widget
-                                                                  .languageCode,
-                                                              tenant:
-                                                                  _selectedTenant!,
-                                                              branch: branch,
+                                                DataCell(
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      IconButton(
+                                                        icon: const Icon(
+                                                          Icons.edit,
+                                                          size: 20,
+                                                        ),
+                                                        onPressed: () async {
+                                                          final result = await showDialog<bool>(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                EditBranchDialog(
+                                                                  languageCode:
+                                                                      widget
+                                                                          .languageCode,
+                                                                  tenant:
+                                                                      _selectedTenant!,
+                                                                  branch:
+                                                                      branch,
+                                                                ),
+                                                          );
+                                                          if (result == true) {
+                                                            _loadBranches();
+                                                          }
+                                                        },
+                                                        tooltip: 'edit'.tr,
+                                                      ),
+                                                      IconButton(
+                                                        icon: const Icon(
+                                                          Icons.delete,
+                                                          size: 20,
+                                                        ),
+                                                        onPressed: () =>
+                                                            _showDeleteConfirmation(
+                                                              branch,
                                                             ),
-                                                      );
-                                                  if (result == true) {
-                                                    _loadBranches();
-                                                  }
-                                                },
-                                                tooltip: 'edit'.tr,
-                                              ),
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.delete,
-                                                  size: 20,
+                                                        tooltip: 'delete'.tr,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                onPressed: () =>
-                                                    _showDeleteConfirmation(
-                                                      branch,
-                                                    ),
-                                                tooltip: 'delete'.tr,
-                                                color: Colors.red,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }).toList(),
-                                ),
-                                if (_isLoadingMore)
-                                  const Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                if (!_hasMoreData && _branches.isNotEmpty)
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Center(
-                                      child: Text(
-                                        'noMoreData'.tr,
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 14,
+                                              ],
+                                            );
+                                          }).toList(),
                                         ),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            ),
+                                    if (_isLoadingMore)
+                                      const Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    if (!_hasMoreData && _branches.isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Center(
+                                          child: Text(
+                                            'noMoreData'.tr,
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                 ),
