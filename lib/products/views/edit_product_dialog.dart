@@ -114,7 +114,8 @@ class _EditProductDialogState extends State<EditProductDialog> {
     }
   }
 
-  Future<void> _uploadPhoto() async {
+  // ignore: unused_element
+  Future<void> _uploadPhotoUnused() async {
     if (_selectedPhotoPath == null || widget.product.id == null) return;
 
     setState(() {
@@ -147,7 +148,8 @@ class _EditProductDialogState extends State<EditProductDialog> {
     }
   }
 
-  Future<void> _deletePhoto() async {
+  // ignore: unused_element
+  Future<void> _deletePhotoUnused() async {
     if (_photoPath == null || widget.product.id == null) return;
 
     final confirm = await showDialog<bool>(
@@ -157,12 +159,12 @@ class _EditProductDialogState extends State<EditProductDialog> {
         content: Text('deletePhotoConfirmation'.tr),
         actions: [
           ButtonX(
-            onPressed: () => Navigator.pop(context, false),
+            onClicked: () => Navigator.pop(context, false),
             label: 'cancel'.tr,
             backgroundColor: Colors.grey,
           ),
           ButtonX(
-            onPressed: () => Navigator.pop(context, true),
+            onClicked: () => Navigator.pop(context, true),
             label: 'delete'.tr,
             backgroundColor: Colors.red,
           ),
@@ -324,7 +326,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                   child: SizedBox(
                     height: 32,
                     child: ButtonX(
-                      onPressed: _isUploadingPhoto || _isDeletingPhoto
+                      onClicked: _isUploadingPhoto || _isDeletingPhoto
                           ? null
                           : _pickPhoto,
                       label: 'change'.tr,
@@ -509,8 +511,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
       actions: [
         Expanded(
           child: ButtonX(
-            onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
-            icon: Icons.close,
+            onClicked: _isSubmitting ? null : () => Navigator.of(context).pop(),
             label: 'cancel'.tr,
             backgroundColor: theme.colorScheme.surface,
             foregroundColor: theme.colorScheme.onSurface,
@@ -519,8 +520,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
         const SizedBox(width: 12),
         Expanded(
           child: ButtonX(
-            onPressed: _isSubmitting ? null : _handleSubmit,
-            icon: Icons.save,
+            onClicked: _isSubmitting ? null : _handleSubmit,
             label: _isSubmitting ? 'saving'.tr : 'save'.tr,
             backgroundColor: const Color(0xFF34C759),
           ),

@@ -359,10 +359,9 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
           children: [
             Expanded(
               child: ButtonX(
-                onPressed: _orderData == null
+                onClicked: _orderData == null
                     ? null
                     : () => _generateAndDownloadReceipt(context),
-                icon: Icons.print,
                 label: 'printReceipt'.tr,
                 backgroundColor: const Color(0xFFFF9500),
               ),
@@ -370,8 +369,7 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
             const SizedBox(width: 12),
             Expanded(
               child: ButtonX(
-                onPressed: () => Navigator.pop(context),
-                icon: Icons.close,
+                onClicked: () => Navigator.pop(context),
                 label: 'close'.tr,
                 backgroundColor: theme.colorScheme.primary,
               ),

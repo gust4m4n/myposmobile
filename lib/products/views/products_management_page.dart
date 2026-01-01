@@ -173,12 +173,12 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
         content: Text('${'deleteProductConfirmation'.tr}\n\n${product.name}'),
         actions: [
           ButtonX(
-            onPressed: () => Navigator.pop(context, false),
+            onClicked: () => Navigator.pop(context, false),
             label: 'cancel'.tr,
             backgroundColor: Colors.grey,
           ),
           ButtonX(
-            onPressed: () => Navigator.pop(context, true),
+            onClicked: () => Navigator.pop(context, true),
             label: 'delete'.tr,
             backgroundColor: Colors.red,
           ),
@@ -272,11 +272,10 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
             child: SizedBox(
               width: 160,
               child: ButtonX(
-                onPressed: () {
+                onClicked: () {
                   // TODO: Navigate to category management
                   ToastX.error(context, 'Category management coming soon');
                 },
-                icon: Icons.category,
                 label: 'Manage Categories',
                 backgroundColor: const Color(0xFF007AFF),
               ),
@@ -287,8 +286,7 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
             child: SizedBox(
               width: 160,
               child: ButtonX(
-                onPressed: _showAddProductDialog,
-                icon: Icons.add,
+                onClicked: _showAddProductDialog,
                 label: 'addProduct'.tr,
                 backgroundColor: const Color(0xFF34C759),
               ),

@@ -95,6 +95,7 @@ class _TncPageState extends State<TncPage> {
         width: 700,
         onClose: () => Navigator.pop(context),
         content: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -169,6 +170,7 @@ class _TncPageState extends State<TncPage> {
               Container(
                 constraints: const BoxConstraints(maxHeight: 500),
                 child: Markdown(
+                  physics: const ClampingScrollPhysics(),
                   data: tnc['content'],
                   shrinkWrap: true,
                   styleSheet: MarkdownStyleSheet(
@@ -219,8 +221,7 @@ class _TncPageState extends State<TncPage> {
         ),
         actions: [
           ButtonX(
-            onPressed: () => Navigator.pop(context),
-            icon: Icons.close,
+            onClicked: () => Navigator.pop(context),
             label: 'close'.tr,
             backgroundColor: theme.colorScheme.primary,
           ),
@@ -256,6 +257,7 @@ class _TncPageState extends State<TncPage> {
     }
 
     return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       child: Card(
         elevation: 2,
@@ -425,6 +427,7 @@ class _TncPageState extends State<TncPage> {
     }
 
     return ListView.builder(
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       itemCount: _tncList.length,
       itemBuilder: (context, index) {

@@ -14,19 +14,19 @@ class PinKeypad extends StatelessWidget {
     this.obscureText = true,
   });
 
-  void _onNumberPressed(String number) {
+  void _onNumberClicked(String number) {
     if (pin.length < pinLength) {
       onPinChanged(pin + number);
     }
   }
 
-  void _onDeletePressed() {
+  void _onDeleteClicked() {
     if (pin.isNotEmpty) {
       onPinChanged(pin.substring(0, pin.length - 1));
     }
   }
 
-  void _onClearPressed() {
+  void _onClearClicked() {
     onPinChanged('');
   }
 
@@ -86,14 +86,14 @@ class PinKeypad extends StatelessWidget {
                 children: [
                   _buildActionButton(
                     icon: Icons.clear,
-                    onPressed: _onClearPressed,
+                    onClicked: _onClearClicked,
                     theme: theme,
                     label: 'C',
                   ),
                   _buildNumberButton('0', theme),
                   _buildActionButton(
                     icon: Icons.backspace_outlined,
-                    onPressed: _onDeletePressed,
+                    onClicked: _onDeleteClicked,
                     theme: theme,
                   ),
                 ],
@@ -116,7 +116,7 @@ class PinKeypad extends StatelessWidget {
 
   Widget _buildNumberButton(String number, ThemeData theme) {
     return InkWell(
-      onTap: () => _onNumberPressed(number),
+      onTap: () => _onNumberClicked(number),
       borderRadius: BorderRadius.circular(50),
       child: Container(
         width: 70,
@@ -145,12 +145,12 @@ class PinKeypad extends StatelessWidget {
 
   Widget _buildActionButton({
     required IconData icon,
-    required VoidCallback onPressed,
+    required VoidCallback onClicked,
     required ThemeData theme,
     String? label,
   }) {
     return InkWell(
-      onTap: onPressed,
+      onTap: onClicked,
       borderRadius: BorderRadius.circular(50),
       child: Container(
         width: 70,

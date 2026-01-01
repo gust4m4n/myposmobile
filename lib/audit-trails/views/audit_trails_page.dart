@@ -247,7 +247,7 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
         ),
         actions: [
           ButtonX(
-            onPressed: () {
+            onClicked: () {
               setState(() {
                 _filterEntityType = null;
                 _filterAction = null;
@@ -264,7 +264,7 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
             backgroundColor: Colors.grey,
           ),
           ButtonX(
-            onPressed: () {
+            onClicked: () {
               Navigator.pop(context);
               setState(() {
                 _currentPage = 1;

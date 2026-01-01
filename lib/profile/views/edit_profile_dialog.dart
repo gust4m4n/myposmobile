@@ -134,10 +134,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
           children: [
             Expanded(
               child: ButtonX(
-                onPressed: _isSubmitting
+                onClicked: _isSubmitting
                     ? null
                     : () => Navigator.of(context).pop(),
-                icon: Icons.close,
                 label: 'cancel'.tr,
                 backgroundColor: theme.colorScheme.surface,
                 foregroundColor: theme.colorScheme.onSurface,
@@ -146,8 +145,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             const SizedBox(width: 12),
             Expanded(
               child: ButtonX(
-                onPressed: _isSubmitting ? null : _handleSubmit,
-                icon: Icons.save,
+                onClicked: _isSubmitting ? null : _handleSubmit,
                 label: _isSubmitting ? 'saving'.tr : 'save'.tr,
                 backgroundColor: theme.colorScheme.primary,
               ),

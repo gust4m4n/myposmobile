@@ -4,8 +4,8 @@ import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../translations/translation_extension.dart';
-import 'payment_detail_dialog.dart';
 import '../services/payments_service.dart';
+import 'payment_detail_dialog.dart';
 
 class PaymentsPage extends StatefulWidget {
   final String languageCode;

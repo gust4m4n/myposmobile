@@ -205,8 +205,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       ),
       actions: [
         ButtonX(
-          onPressed: () => Navigator.pop(context),
-          icon: Icons.cancel,
+          onClicked: () => Navigator.pop(context),
           label: 'cancel'.tr,
           backgroundColor: theme.colorScheme.surface,
           foregroundColor: theme.colorScheme.onSurface,

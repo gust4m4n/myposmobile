@@ -532,8 +532,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   width: double.infinity,
                   child: ButtonX(
-                    onPressed: _cart.isEmpty ? null : _checkout,
-                    icon: Icons.shopping_cart_checkout,
+                    onClicked: _cart.isEmpty ? null : _checkout,
                     label: 'checkout'.tr,
                     backgroundColor: theme.colorScheme.primary,
                   ),
@@ -862,8 +861,7 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               width: double.infinity,
                               child: ButtonX(
-                                onPressed: _cart.isEmpty ? null : _checkout,
-                                icon: Icons.shopping_cart_checkout,
+                                onClicked: _cart.isEmpty ? null : _checkout,
                                 label: 'checkout'.tr,
                                 backgroundColor: theme.colorScheme.primary,
                               ),
@@ -1323,8 +1321,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       actions: [
                         ButtonX(
-                          onPressed: () => Navigator.pop(context),
-                          icon: Icons.close,
+                          onClicked: () => Navigator.pop(context),
                           label: 'close'.tr,
                           backgroundColor: theme.colorScheme.surface,
                           foregroundColor: theme.colorScheme.onSurface,
@@ -1361,15 +1358,13 @@ class _HomePageState extends State<HomePage> {
                       content: Text('logoutConfirmation'.tr),
                       actions: [
                         ButtonX(
-                          onPressed: () => Navigator.pop(context, false),
-                          icon: Icons.cancel,
+                          onClicked: () => Navigator.pop(context, false),
                           label: 'cancel'.tr,
                           backgroundColor: theme.colorScheme.surface,
                           foregroundColor: theme.colorScheme.onSurface,
                         ),
                         ButtonX(
-                          onPressed: () => Navigator.pop(context, true),
-                          icon: Icons.logout,
+                          onClicked: () => Navigator.pop(context, true),
                           label: 'logout'.tr,
                           backgroundColor: theme.colorScheme.error,
                         ),

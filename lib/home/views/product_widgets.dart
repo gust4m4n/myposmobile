@@ -285,7 +285,7 @@ class _ProductGrid extends StatelessWidget {
                     final product = products[index];
                     return _ProductItem(
                       product: product,
-                      onTap: () => onProductTap(product),
+                      onClicked: () => onProductTap(product),
                       iconSize: iconSize,
                       fontSize: fontSize,
                       priceSize: priceSize,
@@ -313,7 +313,7 @@ class _ProductGrid extends StatelessWidget {
 
 class _ProductItem extends StatefulWidget {
   final ProductModel product;
-  final VoidCallback onTap;
+  final VoidCallback onClicked;
   final double iconSize;
   final double fontSize;
   final double priceSize;
@@ -321,7 +321,7 @@ class _ProductItem extends StatefulWidget {
 
   const _ProductItem({
     required this.product,
-    required this.onTap,
+    required this.onClicked,
     this.iconSize = 36,
     this.fontSize = 16.0,
     this.priceSize = 16.0,
@@ -333,27 +333,27 @@ class _ProductItem extends StatefulWidget {
 }
 
 class _ProductItemState extends State<_ProductItem> {
-  bool _isPressed = false;
+  bool _isClicked = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: widget.onTap,
+      onTapDown: (_) => setState(() => _isClicked = true),
+      onTapUp: (_) => setState(() => _isClicked = false),
+      onTapCancel: () => setState(() => _isClicked = false),
+      onTap: widget.onClicked,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
-        transform: Matrix4.identity()..scale(_isPressed ? 0.95 : 1.0),
+        transform: Matrix4.identity()..scale(_isClicked ? 0.95 : 1.0),
         decoration: BoxDecoration(
-          color: _isPressed
+          color: _isClicked
               ? theme.colorScheme.primary.withOpacity(0.1)
               : theme.cardColor,
           border: Border.all(
-            color: _isPressed ? theme.colorScheme.primary : theme.dividerColor,
-            width: _isPressed ? 2 : 1,
+            color: _isClicked ? theme.colorScheme.primary : theme.dividerColor,
+            width: _isClicked ? 2 : 1,
           ),
         ),
         child: LayoutBuilder(

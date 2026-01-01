@@ -241,7 +241,7 @@ class _EditTenantDialogState extends State<EditTenantDialog> {
               // Change Image Button
               Center(
                 child: ButtonX(
-                  onPressed: _pickImage,
+                  onClicked: _pickImage,
                   label: 'changeImage'.tr,
                   backgroundColor: Colors.white.withOpacity(0.5),
                   foregroundColor: Colors.black,
@@ -372,7 +372,7 @@ class _EditTenantDialogState extends State<EditTenantDialog> {
           child: Text('cancel'.tr),
         ),
         ButtonX(
-          onPressed: _isSubmitting ? null : _handleSubmit,
+          onClicked: _isSubmitting ? null : _handleSubmit,
           label: _isSubmitting ? 'saving'.tr : 'save'.tr,
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),

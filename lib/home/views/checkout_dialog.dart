@@ -120,38 +120,34 @@ class CheckoutDialog extends StatelessWidget {
       ),
       actions: [
         ButtonX(
-          onPressed: () async {
+          onClicked: () async {
             Navigator.pop(context);
             await onProcessCheckout('cash');
           },
-          icon: Icons.money,
           label: 'cash'.tr,
           backgroundColor: const Color(0xFF34C759),
         ),
         ButtonX(
-          onPressed: () async {
+          onClicked: () async {
             Navigator.pop(context);
             await onProcessCheckout('card');
           },
-          icon: Icons.credit_card,
           label: 'card'.tr,
           backgroundColor: const Color(0xFF007AFF),
         ),
         ButtonX(
-          onPressed: () async {
+          onClicked: () async {
             Navigator.pop(context);
             await onProcessCheckout('transfer');
           },
-          icon: Icons.account_balance,
           label: 'Transfer',
           backgroundColor: const Color(0xFFFF9500),
         ),
         ButtonX(
-          onPressed: () async {
+          onClicked: () async {
             Navigator.pop(context);
             await onProcessCheckout('qris');
           },
-          icon: Icons.qr_code,
           label: 'QRIS',
           backgroundColor: const Color(0xFF5856D6),
         ),

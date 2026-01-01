@@ -201,7 +201,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
               // Change/Select Image Button
               Center(
                 child: ButtonX(
-                  onPressed: _pickImage,
+                  onClicked: _pickImage,
                   label: _selectedImage == null
                       ? 'selectImage'.tr
                       : 'changeImage'.tr,
@@ -334,7 +334,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
           child: Text('cancel'.tr),
         ),
         ButtonX(
-          onPressed: _isSubmitting ? null : _handleSubmit,
+          onClicked: _isSubmitting ? null : _handleSubmit,
           label: _isSubmitting ? 'saving'.tr : 'save'.tr,
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),

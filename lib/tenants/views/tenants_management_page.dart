@@ -120,12 +120,12 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
         content: Text('${'deleteTenantConfirmation'.tr} "${tenant.name}"?'),
         actions: [
           ButtonX(
-            onPressed: () => Navigator.pop(context, false),
+            onClicked: () => Navigator.pop(context, false),
             label: 'cancel'.tr,
             backgroundColor: Colors.grey,
           ),
           ButtonX(
-            onPressed: () => Navigator.pop(context, true),
+            onClicked: () => Navigator.pop(context, true),
             label: 'delete'.tr,
             backgroundColor: Colors.red,
           ),

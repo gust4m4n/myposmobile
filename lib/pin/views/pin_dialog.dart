@@ -23,7 +23,6 @@ class PinDialog extends StatefulWidget {
 }
 
 class _PinDialogState extends State<PinDialog> {
-  final _formKey = GlobalKey<FormState>();
   String _oldPin = '';
   String _pin = '';
   String _confirmPin = '';
@@ -250,8 +249,7 @@ class _PinDialogState extends State<PinDialog> {
       ),
       actions: [
         ButtonX(
-          onPressed: _isSubmitting ? null : _handleBack,
-          icon: _step > 0 ? Icons.arrow_back : Icons.close,
+          onClicked: _isSubmitting ? null : _handleBack,
           label: _step > 0 ? 'Back' : 'cancel'.tr,
           backgroundColor: theme.colorScheme.surface,
           foregroundColor: theme.colorScheme.onSurface,

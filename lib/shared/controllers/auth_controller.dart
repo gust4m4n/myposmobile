@@ -24,11 +24,6 @@ class AuthController extends GetxController {
     if (savedToken != null) {
       ApiX.setAuthToken(savedToken);
     }
-
-    // Set login success callback for 401 handling
-    ApiX.setLoginSuccessCallback((token) {
-      authToken.value = token;
-    });
   }
 
   Future<void> login(String token) async {

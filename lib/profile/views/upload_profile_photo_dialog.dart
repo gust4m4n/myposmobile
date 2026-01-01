@@ -107,12 +107,12 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
         content: Text('deletePhotoConfirmation'.tr),
         actions: [
           ButtonX(
-            onPressed: () => Navigator.of(context).pop(false),
+            onClicked: () => Navigator.of(context).pop(false),
             label: 'cancel'.tr,
             backgroundColor: Colors.grey,
           ),
           ButtonX(
-            onPressed: () => Navigator.of(context).pop(true),
+            onClicked: () => Navigator.of(context).pop(true),
             label: 'delete'.tr,
             backgroundColor: Colors.red,
           ),
@@ -196,8 +196,7 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
           // Pick Image Button
           if (_selectedFile == null)
             ButtonX(
-              onPressed: _isUploading || _isDeleting ? null : _pickImage,
-              icon: Icons.image,
+              onClicked: _isUploading || _isDeleting ? null : _pickImage,
               label: 'selectPhoto'.tr,
               backgroundColor: theme.colorScheme.primary,
             ),
@@ -205,17 +204,15 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
           // Upload Button (shown when file selected)
           if (_selectedFile != null) ...[
             ButtonX(
-              onPressed: _isUploading ? null : _uploadPhoto,
-              icon: Icons.upload,
+              onClicked: _isUploading ? null : _uploadPhoto,
               label: _isUploading ? 'uploading'.tr : 'uploadPhoto'.tr,
               backgroundColor: theme.colorScheme.primary,
             ),
             const SizedBox(height: 12),
             ButtonX(
-              onPressed: _isUploading
+              onClicked: _isUploading
                   ? null
                   : () => setState(() => _selectedFile = null),
-              icon: Icons.close,
               label: 'cancel'.tr,
               backgroundColor: theme.colorScheme.surface,
               foregroundColor: theme.colorScheme.onSurface,
@@ -226,8 +223,7 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
           if (widget.currentImageUrl != null && _selectedFile == null) ...[
             const SizedBox(height: 12),
             ButtonX(
-              onPressed: _isDeleting ? null : _deletePhoto,
-              icon: Icons.delete,
+              onClicked: _isDeleting ? null : _deletePhoto,
               label: _isDeleting ? 'deleting'.tr : 'deletePhoto'.tr,
               backgroundColor: Colors.red,
             ),

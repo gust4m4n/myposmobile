@@ -241,8 +241,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
       actions: [
         Expanded(
           child: ButtonX(
-            onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
-            icon: Icons.close,
+            onClicked: _isSubmitting ? null : () => Navigator.of(context).pop(),
             label: 'cancel'.tr,
             backgroundColor: theme.colorScheme.surface,
             foregroundColor: theme.colorScheme.onSurface,
@@ -251,8 +250,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         const SizedBox(width: 12),
         Expanded(
           child: ButtonX(
-            onPressed: _isSubmitting ? null : _handleSubmit,
-            icon: Icons.save,
+            onClicked: _isSubmitting ? null : _handleSubmit,
             label: _isSubmitting ? 'saving'.tr : 'save'.tr,
             backgroundColor: const Color(0xFF34C759),
           ),

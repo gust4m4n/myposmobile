@@ -232,7 +232,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
               // Change Image Button
               Center(
                 child: ButtonX(
-                  onPressed: _pickImage,
+                  onClicked: _pickImage,
                   label: 'changeImage'.tr,
                   backgroundColor: Colors.white.withOpacity(0.5),
                   foregroundColor: Colors.black,
@@ -365,10 +365,9 @@ class _EditUserDialogState extends State<EditUserDialog> {
           children: [
             Expanded(
               child: ButtonX(
-                onPressed: _isSubmitting
+                onClicked: _isSubmitting
                     ? null
                     : () => Navigator.of(context).pop(),
-                icon: Icons.close,
                 label: 'cancel'.tr,
                 backgroundColor: Colors.grey,
               ),
@@ -376,8 +375,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
             const SizedBox(width: 12),
             Expanded(
               child: ButtonX(
-                onPressed: _isSubmitting ? null : _handleSubmit,
-                icon: Icons.save,
+                onClicked: _isSubmitting ? null : _handleSubmit,
                 label: _isSubmitting ? 'saving'.tr : 'save'.tr,
                 backgroundColor: theme.colorScheme.primary,
               ),

@@ -15,16 +15,10 @@ import 'storage_service.dart';
 class ApiX {
   static String? _authToken;
   static GlobalKey<NavigatorState>? _navigatorKey;
-  static Function(String)? _onLoginSuccessCallback;
 
   /// Set navigator key for handling 401 redirects
   static void setNavigatorKey(GlobalKey<NavigatorState> key) {
     _navigatorKey = key;
-  }
-
-  /// Set callback for handling login success after 401 redirect
-  static void setLoginSuccessCallback(Function(String) callback) {
-    _onLoginSuccessCallback = callback;
   }
 
   /// Handle 401 Unauthorized - logout and redirect to login

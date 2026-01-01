@@ -79,8 +79,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   actions: [
                     ButtonX(
-                      onPressed: () => Get.back(),
-                      icon: Icons.close,
+                      onClicked: () => Get.back(),
                       label: 'close'.tr,
                       backgroundColor: theme.colorScheme.surface,
                       foregroundColor: theme.colorScheme.onSurface,

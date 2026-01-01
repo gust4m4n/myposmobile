@@ -155,8 +155,7 @@ class _FaqPageState extends State<FaqPage> {
         ),
         actions: [
           ButtonX(
-            onPressed: () => Navigator.pop(context),
-            icon: Icons.close,
+            onClicked: () => Navigator.pop(context),
             label: 'close'.tr,
             backgroundColor: theme.colorScheme.primary,
           ),
@@ -225,6 +224,7 @@ class _FaqPageState extends State<FaqPage> {
                       SizedBox(
                         height: 40,
                         child: ListView.builder(
+                          physics: const ClampingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           itemCount: _categories.length,
                           itemBuilder: (context, index) {
@@ -304,6 +304,7 @@ class _FaqPageState extends State<FaqPage> {
                           ),
                         )
                       : ListView.builder(
+                          physics: const ClampingScrollPhysics(),
                           padding: const EdgeInsets.all(16),
                           itemCount: _filteredFaqs.length,
                           itemBuilder: (context, index) {

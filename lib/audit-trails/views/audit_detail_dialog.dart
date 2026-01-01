@@ -149,8 +149,7 @@ class AuditDetailDialog extends StatelessWidget {
           children: [
             Expanded(
               child: ButtonX(
-                onPressed: () => Navigator.pop(context),
-                icon: Icons.close,
+                onClicked: () => Navigator.pop(context),
                 label: 'close'.tr,
                 backgroundColor: theme.colorScheme.primary,
               ),

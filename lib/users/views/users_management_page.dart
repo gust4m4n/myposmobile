@@ -159,12 +159,12 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
         content: Text('confirmDeleteUser'.tr.replaceAll('{username}', email)),
         actions: [
           ButtonX(
-            onPressed: () => Navigator.pop(context, false),
+            onClicked: () => Navigator.pop(context, false),
             label: 'cancel'.tr,
             backgroundColor: Colors.grey,
           ),
           ButtonX(
-            onPressed: () => Navigator.pop(context, true),
+            onClicked: () => Navigator.pop(context, true),
             label: 'delete'.tr,
             backgroundColor: Colors.red,
           ),
@@ -246,8 +246,7 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                         ),
                       ),
                       ButtonX(
-                        onPressed: _showAddUserDialog,
-                        icon: Icons.add,
+                        onClicked: _showAddUserDialog,
                         label: 'addUser'.tr,
                         backgroundColor: Colors.green,
                       ),

@@ -4,8 +4,8 @@ import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../translations/translation_extension.dart';
-import 'order_detail_dialog.dart';
 import '../services/orders_service.dart';
+import 'order_detail_dialog.dart';
 
 class OrdersPage extends StatefulWidget {
   final String languageCode;

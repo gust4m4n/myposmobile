@@ -288,7 +288,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
               // Select/Change Image Button
               Center(
                 child: ButtonX(
-                  onPressed: _pickImage,
+                  onClicked: _pickImage,
                   label: _selectedImage == null
                       ? 'selectImage'.tr
                       : 'changeImage'.tr,
@@ -439,10 +439,9 @@ class _AddUserDialogState extends State<AddUserDialog> {
           children: [
             Expanded(
               child: ButtonX(
-                onPressed: _isSubmitting
+                onClicked: _isSubmitting
                     ? null
                     : () => Navigator.of(context).pop(),
-                icon: Icons.close,
                 label: 'cancel'.tr,
                 backgroundColor: Colors.grey,
               ),
@@ -450,8 +449,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
             const SizedBox(width: 12),
             Expanded(
               child: ButtonX(
-                onPressed: _isSubmitting ? null : _handleSubmit,
-                icon: Icons.save,
+                onClicked: _isSubmitting ? null : _handleSubmit,
                 label: _isSubmitting ? 'saving'.tr : 'save'.tr,
                 backgroundColor: theme.colorScheme.primary,
               ),

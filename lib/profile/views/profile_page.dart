@@ -4,8 +4,8 @@ import '../../shared/api_models.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/app_bar_x.dart';
 import '../../translations/translation_extension.dart';
-import 'edit_profile_dialog.dart';
 import '../services/profile_service.dart';
+import 'edit_profile_dialog.dart';
 import 'upload_profile_photo_dialog.dart';
 
 class ProfilePage extends StatefulWidget {
