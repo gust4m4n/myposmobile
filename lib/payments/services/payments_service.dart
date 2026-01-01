@@ -1,6 +1,7 @@
 import '../../shared/api_models.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
+import '../models/payment_performance_model.dart';
 
 /// Service untuk operasi payments (Create, List, Get by ID).
 /// Memerlukan JWT token untuk authentication.
@@ -97,6 +98,29 @@ class PaymentsService {
       '${ApiConfig.payments}/$paymentId',
       requiresAuth: true,
       fromJson: (data) => data as Map<String, dynamic>,
+    );
+  }
+
+  /// Get payment performance statistics for chart
+  ///
+  /// Parameters:
+  /// - days: Number of days to look back (default: 7)
+  ///
+  /// Returns:
+  /// - List<PaymentPerformanceModel> daily payment statistics
+  ///
+  /// Example:
+  /// ```dart
+  /// final result = await PaymentsService.getPaymentPerformance(days: 30);
+  /// ```
+  static Future<ApiResponse<List<PaymentPerformanceModel>>>
+  getPaymentPerformance({int days = 7}) async {
+    return ApiX.get<List<PaymentPerformanceModel>>(
+      '${ApiConfig.payments}/performance?days=$days',
+      requiresAuth: true,
+      fromJson: (data) => (data as List)
+          .map((item) => PaymentPerformanceModel.fromJson(item))
+          .toList(),
     );
   }
 }

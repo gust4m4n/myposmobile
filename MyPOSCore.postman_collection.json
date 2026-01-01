@@ -21,7 +21,7 @@
 						"health"
 					]
 				},
-				"description": "Endpoint untuk mengecek status server"
+				"description": "Endpoint untuk mengecek status server, versi aplikasi, koneksi database, uptime, dan resource usage"
 			},
 			"response": [
 				{
@@ -49,7 +49,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n  \"status\": \"healthy\",\n  \"message\": \"Server is running\",\n  \"timestamp\": \"2025-12-26T10:00:00+07:00\"\n}"
+					"body": "{\n  \"status\": \"ok\",\n  \"version\": \"1.0.0\",\n  \"startup_time\": \"2026-01-01 10:30:45\",\n  \"uptime\": \"5 days, 3 hours, 25 minutes, 42 seconds\",\n  \"uptime_details\": {\n    \"days\": 5,\n    \"hours\": 3,\n    \"minutes\": 25,\n    \"seconds\": 42\n  },\n  \"system\": {\n    \"hostname\": \"server-01\",\n    \"os\": \"darwin\",\n    \"architecture\": \"arm64\",\n    \"go_version\": \"go1.21.0\",\n    \"cpu_cores\": 8\n  },\n  \"resources\": {\n    \"goroutines\": 12,\n    \"memory\": {\n      \"allocated_mb\": \"45.23\",\n      \"total_alloc_mb\": \"128.45\",\n      \"system_mb\": \"72.56\",\n      \"gc_cycles\": 15\n    }\n  },\n  \"database\": {\n    \"status\": \"connected\",\n    \"version\": \"PostgreSQL 15.3 on aarch64-apple-darwin21.6.0, compiled by Apple clang version 14.0.0 (clang-1400.0.29.102), 64-bit\",\n    \"pool\": {\n      \"max_open_connections\": 0,\n      \"open_connections\": 2,\n      \"in_use\": 0,\n      \"idle\": 2,\n      \"wait_count\": 0,\n      \"wait_duration\": \"0s\"\n    }\n  },\n  \"server\": {\n    \"port\": \"8080\",\n    \"environment\": \"development\"\n  }\n}"
 				}
 			]
 		},
@@ -1310,7 +1310,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/categories?page=1&page_size=10",
+							"raw": "{{base_url}}/api/v1/categories?page=1&page_size=32",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1327,8 +1327,8 @@
 								},
 								{
 									"key": "page_size",
-									"value": "10",
-									"description": "Items per page (default: 10, max: 100)"
+									"value": "32",
+									"description": "Items per page (default: 32)"
 								},
 								{
 									"key": "active_only",
@@ -1338,7 +1338,7 @@
 								}
 							]
 						},
-						"description": "Get list of all product categories for the authenticated tenant with pagination support. Categories are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n- active_only (optional): Set to 'true' to show only active categories\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of items\n- total_pages: Total number of pages\n- data: Array of category items"
+						"description": "Get list of all product categories for the authenticated tenant with pagination support. Categories are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 32\n- active_only (optional): Set to 'true' to show only active categories\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of items\n- total_pages: Total number of pages\n- data: Array of category items"
 					},
 					"response": [
 						{
@@ -1353,7 +1353,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/categories?page=1&page_size=10",
+									"raw": "{{base_url}}/api/v1/categories?page=1&page_size=32",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1369,7 +1369,7 @@
 										},
 										{
 											"key": "page_size",
-											"value": "10"
+											"value": "32"
 										}
 									]
 								}
@@ -1384,7 +1384,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 8,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Beverages\",\n      \"description\": \"Coffee, tea, and other drinks\",\n      \"image\": \"http://localhost:8080/uploads/categories/1_20241230_142208.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"updated_at\": \"2025-12-27 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Electronics\",\n      \"description\": \"Electronic devices and accessories\",\n      \"image\": \"\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:01:00\",\n      \"updated_at\": \"2025-12-27 10:01:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"name\": \"Snack\",\n      \"description\": \"Kategori untuk makanan ringan\",\n      \"image\": \"\",\n      \"is_active\": false,\n      \"created_at\": \"2025-12-27 10:02:00\",\n      \"updated_at\": \"2025-12-27 10:02:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 8,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Beverages\",\n      \"description\": \"Coffee, tea, and other drinks\",\n      \"image\": \"http://localhost:8080/uploads/categories/1_20241230_142208.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"updated_at\": \"2025-12-27 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Electronics\",\n      \"description\": \"Electronic devices and accessories\",\n      \"image\": \"\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:01:00\",\n      \"updated_at\": \"2025-12-27 10:01:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"name\": \"Snack\",\n      \"description\": \"Kategori untuk makanan ringan\",\n      \"image\": \"\",\n      \"is_active\": false,\n      \"created_at\": \"2025-12-27 10:02:00\",\n      \"updated_at\": \"2025-12-27 10:02:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -1781,7 +1781,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/products?page=1&page_size=10",
+							"raw": "{{base_url}}/api/v1/products?page=1&page_size=32",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1798,8 +1798,8 @@
 								},
 								{
 									"key": "page_size",
-									"value": "10",
-									"description": "Items per page (default: 10, max: 100)"
+									"value": "32",
+									"description": "Items per page (default: 32)"
 								},
 								{
 									"key": "category",
@@ -1815,7 +1815,7 @@
 								}
 							]
 						},
-						"description": "Get list of all products for the authenticated tenant with pagination support. Products are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n- category (optional): Filter by exact category name\n- search (optional): Search keyword in name, description, or SKU (case-insensitive)\n- All filters can be combined with pagination\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of items\n- total_pages: Total number of pages\n- data: Array of product items\n\nExamples:\n- All products page 1: /products?page=1&page_size=10\n- By category: /products?category=Minuman&page=1\n- By search: /products?search=ayam&page=1\n- Combined: /products?category=Makanan%20Utama&search=goreng&page=2&page_size=20"
+						"description": "Get list of all products for the authenticated tenant with pagination support. Products are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 32\n- category (optional): Filter by exact category name\n- search (optional): Search keyword in name, description, or SKU (case-insensitive)\n- All filters can be combined with pagination\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of items\n- total_pages: Total number of pages\n- data: Array of product items\n\nExamples:\n- All products page 1: /products?page=1&page_size=32\n- By category: /products?category=Minuman&page=1\n- By search: /products?search=ayam&page=1\n- Combined: /products?category=Makanan%20Utama&search=goreng&page=2&page_size=32"
 					},
 					"response": [
 						{
@@ -1830,7 +1830,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/products?page=1&page_size=10",
+									"raw": "{{base_url}}/api/v1/products?page=1&page_size=32",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1846,7 +1846,7 @@
 										},
 										{
 											"key": "page_size",
-											"value": "10"
+											"value": "32"
 										}
 									]
 								}
@@ -1861,7 +1861,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 25,\n  \"total_pages\": 3,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"image\": \"http://localhost:8080/uploads/products/product_1_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 100,\n      \"image\": \"http://localhost:8080/uploads/products/product_2_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 25,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"image\": \"http://localhost:8080/uploads/products/product_1_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Es Teh Manis\",\n      \"description\": \"Teh manis dingin segar\",\n      \"category\": \"Minuman\",\n      \"sku\": \"DRINK-001\",\n      \"price\": 5000,\n      \"stock\": 100,\n      \"image\": \"http://localhost:8080/uploads/products/product_2_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25T10:00:00+07:00\",\n      \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -2451,11 +2451,11 @@
 								{
 									"key": "per_page",
 									"value": "32",
-									"description": "Items per page (default: 32, max: 100)"
+									"description": "Items per page (default: 32)"
 								}
 							]
 						},
-						"description": "Get list of all orders for the authenticated tenant and branch. Orders are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of orders with complete details\n- Each order includes all order items\n- Orders sorted by creation date (newest first)\n\nPagination:\n- page: Page number (default: 1)\n- per_page: Items per page (default: 32, max: 100)\n\nReturns pagination metadata"
+						"description": "Get list of all orders for the authenticated tenant and branch. Orders are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of orders with complete details\n- Each order includes all order items\n- Orders sorted by creation date (newest first)\n\nPagination:\n- page: Page number (default: 1)\n- per_page: Items per page (default: 32)\n\nReturns pagination metadata"
 					},
 					"response": [
 						{
@@ -2765,11 +2765,11 @@
 								{
 									"key": "per_page",
 									"value": "32",
-									"description": "Items per page (default: 32, max: 100)"
+									"description": "Items per page (default: 32)"
 								}
 							]
 						},
-						"description": "Get list of all payments for the authenticated tenant and branch. Payments are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of payments with complete details\n- Payment status and method\n- Sorted by creation date (newest first)\n\nPagination:\n- page: Page number (default: 1)\n- per_page: Items per page (default: 32, max: 100)\n\nReturns pagination metadata"
+						"description": "Get list of all payments for the authenticated tenant and branch. Payments are automatically filtered by tenant_id and branch_id from JWT token.\n\nReturns:\n- Array of payments with complete details\n- Payment status and method\n- Sorted by creation date (newest first)\n\nPagination:\n- page: Page number (default: 1)\n- per_page: Items per page (default: 32)\n\nReturns pagination metadata"
 					},
 					"response": [
 						{
@@ -2886,6 +2886,87 @@
 							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 3,\n    \"amount\": 85000,\n    \"payment_method\": \"cash\",\n    \"status\": \"completed\",\n    \"notes\": \"Cash payment\",\n    \"created_at\": \"2025-12-25 14:45:00\",\n    \"updated_at\": \"2025-12-25 14:45:00\",\n    \"created_by\": 1,\n    \"created_by_name\": \"Super Admin\",\n    \"updated_by\": null,\n    \"updated_by_name\": null\n  }\n}"
 						}
 					]
+				},
+				{
+					"name": "Get Payment Performance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments/performance?days=7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"performance"
+							],
+							"query": [
+								{
+									"key": "days",
+									"value": "7",
+									"description": "Number of days to look back (default: 7)"
+								}
+							]
+						},
+						"description": "Get daily payment statistics for the last N days. Returns array of daily data with qty and total amount for chart visualization.\n\nQuery Parameters:\n- days (optional): Number of days to look back, default 7. Can be any positive number (1, 7, 30, 90, etc.)\n\nResponse:\n- Array of daily payment statistics\n- Each item contains: date, qty (number of transactions), total_amount (sum in Rupiah)\n- Sorted by date ascending"
+					},
+					"response": [
+						{
+							"name": "Get Payment Performance Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/payments/performance?days=7",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"payments",
+										"performance"
+									],
+									"query": [
+										{
+											"key": "days",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"date\": \"2025-12-24\",\n      \"qty\": 15,\n      \"total_amount\": 750000.00\n    },\n    {\n      \"date\": \"2025-12-25\",\n      \"qty\": 23,\n      \"total_amount\": 1150000.00\n    },\n    {\n      \"date\": \"2025-12-26\",\n      \"qty\": 18,\n      \"total_amount\": 900000.00\n    },\n    {\n      \"date\": \"2025-12-27\",\n      \"qty\": 31,\n      \"total_amount\": 1550000.00\n    },\n    {\n      \"date\": \"2025-12-28\",\n      \"qty\": 27,\n      \"total_amount\": 1350000.00\n    },\n    {\n      \"date\": \"2025-12-29\",\n      \"qty\": 20,\n      \"total_amount\": 1000000.00\n    },\n    {\n      \"date\": \"2025-12-30\",\n      \"qty\": 25,\n      \"total_amount\": 1250000.00\n    }\n  ]\n}"
+						}
+					]
 				}
 			]
 		},
@@ -2908,7 +2989,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users?page=1&page_size=10",
+							"raw": "{{base_url}}/api/v1/users?page=1&page_size=32",
 							"host": [
 								"{{base_url}}"
 							],
@@ -2925,12 +3006,12 @@
 								},
 								{
 									"key": "page_size",
-									"value": "10",
-									"description": "Items per page (default: 10, max: 100)"
+									"value": "32",
+									"description": "Items per page (default: 32)"
 								}
 							]
 						},
-						"description": "Get list of all users for the authenticated tenant with pagination support. Users are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of users\n- total_pages: Total number of pages\n- data: Array of user items"
+						"description": "Get list of all users for the authenticated tenant with pagination support. Users are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 32\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of users\n- total_pages: Total number of pages\n- data: Array of user items"
 					},
 					"response": [
 						{
@@ -2945,7 +3026,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/users?page=1&page_size=10",
+									"raw": "{{base_url}}/api/v1/users?page=1&page_size=32",
 									"host": [
 										"{{base_url}}"
 									],
@@ -2961,7 +3042,7 @@
 										},
 										{
 											"key": "page_size",
-											"value": "10"
+											"value": "32"
 										}
 									]
 								}
@@ -2976,7 +3057,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 25,\n  \"total_pages\": 3,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"user1@example.com\",\n      \"full_name\": \"User Satu\",\n      \"image\": \"http://localhost:8080/uploads/profiles/user1.jpg\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"created_by\": null,\n      \"created_by_name\": null,\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"admin1@example.com\",\n      \"full_name\": \"Admin Satu\",\n      \"image\": \"\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:05:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"cashier1@example.com\",\n      \"full_name\": \"Kasir Satu\",\n      \"image\": \"\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:10:00\",\n      \"created_by\": 2,\n      \"created_by_name\": \"Admin Satu\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 25,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"user1@example.com\",\n      \"full_name\": \"User Satu\",\n      \"image\": \"http://localhost:8080/uploads/profiles/user1.jpg\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:00:00\",\n      \"created_by\": null,\n      \"created_by_name\": null,\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"admin1@example.com\",\n      \"full_name\": \"Admin Satu\",\n      \"image\": \"\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:05:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"cashier1@example.com\",\n      \"full_name\": \"Kasir Satu\",\n      \"image\": \"\",\n      \"role\": \"user\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-27 10:10:00\",\n      \"created_by\": 2,\n      \"created_by_name\": \"Admin Satu\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -3419,7 +3500,7 @@
 								"dashboard"
 							]
 						},
-						"description": "Get comprehensive dashboard statistics including:\n- Total tenants and their list\n- Total branches\n- Total users\n- Total products\n- Total orders (all time, today, this week, this month)\n\nRequires superadmin role."
+						"description": "Get comprehensive dashboard statistics including:\n- Total counts: tenants, branches, users, products, categories\n- Transactions statistics (qty and total amount for all time, today, last 7/30/90/180/360 days) - for chart\n\nRequires superadmin role."
 					},
 					"response": [
 						{
@@ -3456,7 +3537,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": {\n    \"total_tenants\": 5,\n    \"total_branches\": 12,\n    \"total_users\": 45,\n    \"total_products\": 234,\n    \"total_orders\": 1523,\n    \"total_orders_today\": 23,\n    \"total_orders_this_week\": 156,\n    \"total_orders_this_month\": 678,\n    \"tenants\": [\n      {\n        \"id\": 1,\n        \"name\": \"Warung Makan Sederhana\",\n        \"code\": \"WMS001\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-15 10:30:00\"\n      },\n      {\n        \"id\": 2,\n        \"name\": \"Kopi Kita\",\n        \"code\": \"KK002\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-16 14:20:00\"\n      },\n      {\n        \"id\": 3,\n        \"name\": \"Toko Kelontong Jaya\",\n        \"code\": \"TKJ003\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-18 09:15:00\"\n      },\n      {\n        \"id\": 4,\n        \"name\": \"Resto Seafood\",\n        \"code\": \"RS004\",\n        \"is_active\": false,\n        \"created_at\": \"2025-01-20 16:45:00\"\n      },\n      {\n        \"id\": 5,\n        \"name\": \"Bakery Fresh\",\n        \"code\": \"BF005\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-22 11:00:00\"\n      }\n    ]\n  }\n}"
+							"body": "{\n  \"data\": {\n    \"total_tenants\": 10,\n    \"total_branches\": 25,\n    \"total_users\": 150,\n    \"total_products\": 500,\n    \"total_categories\": 50,\n    \"transactions\": {\n      \"all_time\": {\n        \"qty\": 1000,\n        \"total_amount\": 50000000.00\n      },\n      \"today\": {\n        \"qty\": 5,\n        \"total_amount\": 250000.00\n      },\n      \"last_7_days\": {\n        \"qty\": 45,\n        \"total_amount\": 2250000.00\n      },\n      \"last_30_days\": {\n        \"qty\": 200,\n        \"total_amount\": 10000000.00\n      },\n      \"last_90_days\": {\n        \"qty\": 550,\n        \"total_amount\": 27500000.00\n      },\n      \"last_180_days\": {\n        \"qty\": 800,\n        \"total_amount\": 40000000.00\n      },\n      \"last_360_days\": {\n        \"qty\": 950,\n        \"total_amount\": 47500000.00\n      }\n    }\n  }\n}"
 						}
 					]
 				},
@@ -3476,7 +3557,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/superadmin/tenants?page=1&page_size=10",
+							"raw": "{{base_url}}/api/v1/superadmin/tenants?page=1&page_size=32",
 							"host": [
 								"{{base_url}}"
 							],
@@ -3494,12 +3575,12 @@
 								},
 								{
 									"key": "page_size",
-									"value": "10",
-									"description": "Items per page (default: 10, max: 100)"
+									"value": "32",
+									"description": "Items per page (default: 32)"
 								}
 							]
 						},
-						"description": "Mendapatkan list semua tenant yang ada di sistem dengan pagination support. Hanya superadmin yang bisa akses.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 10, max 100\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of tenants\n- total_pages: Total number of pages\n- data: Array of tenant items"
+						"description": "Mendapatkan list semua tenant yang ada di sistem dengan pagination support. Hanya superadmin yang bisa akses.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 32\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of tenants\n- total_pages: Total number of pages\n- data: Array of tenant items"
 					},
 					"response": [
 						{
@@ -3514,7 +3595,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/v1/superadmin/tenants?page=1&page_size=10",
+									"raw": "{{base_url}}/api/v1/superadmin/tenants?page=1&page_size=32",
 									"host": [
 										"{{base_url}}"
 									],
@@ -3531,7 +3612,7 @@
 										},
 										{
 											"key": "page_size",
-											"value": "10"
+											"value": "32"
 										}
 									]
 								}
@@ -3546,7 +3627,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"page\": 1,\n  \"page_size\": 10,\n  \"total_items\": 3,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Food Corner 99\",\n      \"description\": \"Restoran modern dengan berbagai pilihan menu internasional dan lokal untuk pengalaman kuliner terbaik\",\n      \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n      \"website\": \"https://www.foodcorner99.com\",\n      \"email\": \"info@foodcorner99.com\",\n      \"phone\": \"021-3199-8899\",\n      \"image\": \"http://localhost:8080/uploads/tenants/tenant_foodcorner99_1704000000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 1,\n      \"updated_by_name\": \"Super Admin\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion Store 101\",\n      \"description\": \"Pusat fashion terlengkap dengan koleksi pakaian, sepatu, dan aksesoris trendy untuk pria dan wanita\",\n      \"address\": \"Grand Indonesia Shopping Town Tower C, Jl. M.H. Thamrin No. 1, Menteng, Jakarta Pusat, DKI Jakarta 10310\",\n      \"website\": \"https://www.fashionstore101.com\",\n      \"email\": \"contact@fashionstore101.com\",\n      \"phone\": \"021-2358-1010\",\n      \"image\": \"http://localhost:8080/uploads/tenants/tenant_fashionstore101_1704001000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-25 14:30:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 2,\n      \"updated_by_name\": \"John Admin\"\n    }\n  ]\n}"
+							"body": "{\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 3,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Food Corner 99\",\n      \"description\": \"Restoran modern dengan berbagai pilihan menu internasional dan lokal untuk pengalaman kuliner terbaik\",\n      \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n      \"website\": \"https://www.foodcorner99.com\",\n      \"email\": \"info@foodcorner99.com\",\n      \"phone\": \"021-3199-8899\",\n      \"image\": \"http://localhost:8080/uploads/tenants/tenant_foodcorner99_1704000000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 1,\n      \"updated_by_name\": \"Super Admin\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Fashion Store 101\",\n      \"description\": \"Pusat fashion terlengkap dengan koleksi pakaian, sepatu, dan aksesoris trendy untuk pria dan wanita\",\n      \"address\": \"Grand Indonesia Shopping Town Tower C, Jl. M.H. Thamrin No. 1, Menteng, Jakarta Pusat, DKI Jakarta 10310\",\n      \"website\": \"https://www.fashionstore101.com\",\n      \"email\": \"contact@fashionstore101.com\",\n      \"phone\": \"021-2358-1010\",\n      \"image\": \"http://localhost:8080/uploads/tenants/tenant_fashionstore101_1704001000.png\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-25 14:30:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": 2,\n      \"updated_by_name\": \"John Admin\"\n    }\n  ]\n}"
 						}
 					]
 				},
@@ -6163,7 +6244,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/v1/audit-trails?page=1&limit=20&user_id=&entity_type=&entity_id=&action=&date_from=&date_to=",
+							"raw": "{{base_url}}/api/v1/audit-trails?page=1&limit=32&user_id=&entity_type=&entity_id=&action=&date_from=&date_to=",
 							"host": [
 								"{{base_url}}"
 							],
@@ -6180,7 +6261,7 @@
 								},
 								{
 									"key": "limit",
-									"value": "20",
+									"value": "32",
 									"description": "Items per page"
 								},
 								{
@@ -6266,7 +6347,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 45,\n    \"page\": 1,\n    \"limit\": 20,\n    \"total_pages\": 3\n  }\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 45,\n    \"page\": 1,\n    \"limit\": 32,\n    \"total_pages\": 2\n  }\n}"
 						}
 					]
 				},
@@ -6460,7 +6541,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 5,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 30000,\n          \"new\": 35000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T14:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 3,\n      \"user_name\": \"Jane Smith\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"create\",\n      \"changes\": {\n        \"name\": \"Nasi Goreng\",\n        \"price\": 25000,\n        \"category_id\": 1\n      },\n      \"ip_address\": \"192.168.1.105\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-29T09:00:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 3,\n    \"page\": 1,\n    \"limit\": 20,\n    \"total_pages\": 1\n  }\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 5,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 30000,\n          \"new\": 35000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T14:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 3,\n      \"user_name\": \"Jane Smith\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"create\",\n      \"changes\": {\n        \"name\": \"Nasi Goreng\",\n        \"price\": 25000,\n        \"category_id\": 1\n      },\n      \"ip_address\": \"192.168.1.105\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-29T09:00:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 3,\n    \"page\": 1,\n    \"limit\": 32,\n    \"total_pages\": 1\n  }\n}"
 						}
 					]
 				},
@@ -6568,7 +6649,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": [\n    {\n      \"id\": 15,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"payment\",\n      \"entity_id\": 8,\n      \"action\": \"create\",\n      \"changes\": {\n        \"order_id\": 10,\n        \"amount\": 150000,\n        \"payment_method\": \"cash\"\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T11:00:00+07:00\"\n    },\n    {\n      \"id\": 12,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    },\n    {\n      \"id\": 8,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"user\",\n      \"entity_id\": 2,\n      \"action\": \"login\",\n      \"changes\": {},\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T09:00:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 24,\n    \"page\": 1,\n    \"limit\": 20,\n    \"total_pages\": 2\n  }\n}"
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 15,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"payment\",\n      \"entity_id\": 8,\n      \"action\": \"create\",\n      \"changes\": {\n        \"order_id\": 10,\n        \"amount\": 150000,\n        \"payment_method\": \"cash\"\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T11:00:00+07:00\"\n    },\n    {\n      \"id\": 12,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    },\n    {\n      \"id\": 8,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"user\",\n      \"entity_id\": 2,\n      \"action\": \"login\",\n      \"changes\": {},\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T09:00:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 24,\n    \"page\": 1,\n    \"limit\": 32,\n    \"total_pages\": 1\n  }\n}"
 						}
 					]
 				}

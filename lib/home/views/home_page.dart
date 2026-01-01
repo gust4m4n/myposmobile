@@ -5,6 +5,7 @@ import 'package:myposmobile/shared/widgets/button_x.dart';
 import '../../audit-trails/views/audit_trails_page.dart';
 import '../../branches/views/branches_management_page.dart';
 import '../../change-password/views/change_password_dialog.dart';
+import '../../dashboard/views/dashboard_page.dart';
 import '../../faq/views/faq_page.dart';
 import '../../orders/services/orders_service.dart';
 import '../../orders/views/orders_page.dart';
@@ -920,50 +921,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             physics: const ClampingScrollPhysics(),
             children: [
-              Container(
-                color: theme.colorScheme.primary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        size: 24,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        _profile?.user.fullName ?? 'user'.tr,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.person_outline,
-                  color: theme.colorScheme.onSurface,
-                ),
-                title: Text(
-                  'profile'.tr,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
+              InkWell(
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -974,6 +932,91 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 },
+                child: Container(
+                  color: theme.colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: theme.colorScheme.primary,
+                        backgroundImage:
+                            _profile?.user.image != null &&
+                                _profile!.user.image!.isNotEmpty
+                            ? NetworkImage(
+                                _profile!.user.image!.startsWith('http')
+                                    ? _profile!.user.image!
+                                    : 'http://localhost:8080${_profile!.user.image!}',
+                              )
+                            : null,
+                        child:
+                            _profile?.user.image == null ||
+                                _profile!.user.image!.isEmpty
+                            ? const Icon(
+                                Icons.person,
+                                size: 20,
+                                color: Colors.white,
+                              )
+                            : null,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _profile?.user.fullName ?? 'user'.tr,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Dashboard Section
+              ListTile(
+                leading: Icon(
+                  Icons.dashboard_outlined,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'Dashboard',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DashboardPage(),
+                    ),
+                  );
+                },
+              ),
+              Divider(color: theme.dividerColor, height: 1),
+              // User Profile Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  'Account',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
               ),
               ListTile(
                 leading: Icon(
@@ -998,7 +1041,7 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.pin_outlined,
+                  Icons.lock_outline,
                   color: theme.colorScheme.onSurface,
                 ),
                 title: Text(
@@ -1026,6 +1069,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 },
+              ),
+              Divider(color: theme.dividerColor, height: 1),
+              // Transactions Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  'Transactions',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
               ),
               ListTile(
                 leading: Icon(
@@ -1069,6 +1128,67 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                       builder: (context) =>
                           PaymentsPage(languageCode: widget.languageCode),
+                    ),
+                  );
+                },
+              ),
+              Divider(color: theme.dividerColor, height: 1),
+              // Management Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  'Management',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.business,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Text(
+                  'tenantsManagement'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TenantsManagementPage(
+                        languageCode: widget.languageCode,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.store, color: theme.colorScheme.onSurface),
+                title: Text(
+                  'branchesManagement'.tr,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BranchesManagementPage(
+                        languageCode: widget.languageCode,
+                      ),
                     ),
                   );
                 },
@@ -1144,52 +1264,22 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.business,
-                  color: theme.colorScheme.onSurface,
-                ),
-                title: Text(
-                  'tenantsManagement'.tr,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TenantsManagementPage(
-                        languageCode: widget.languageCode,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.store, color: theme.colorScheme.onSurface),
-                title: Text(
-                  'branchesManagement'.tr,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BranchesManagementPage(
-                        languageCode: widget.languageCode,
-                      ),
-                    ),
-                  );
-                },
-              ),
               Divider(color: theme.dividerColor, height: 1),
+              // Help & Support Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  'Help & Support',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
+              ),
               ListTile(
                 leading: Icon(
                   Icons.help_outline,
@@ -1237,6 +1327,21 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               Divider(color: theme.dividerColor, height: 1),
+              // Settings Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  'Settings',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
+              ),
               ListTile(
                 leading: Icon(
                   Icons.language,
