@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../shared/widgets/app_bar_x.dart';
-import '../shared/widgets/button_x.dart';
 import '../shared/widgets/data_table_x.dart';
 import '../shared/widgets/dialog_x.dart';
+import '../shared/widgets/gray_button.dart';
+import '../shared/widgets/green_button.dart';
+import '../shared/widgets/red_button.dart';
 import '../shared/widgets/toast_x.dart';
 import '../translations/translation_extension.dart';
 import 'services/users_management_service.dart';
@@ -158,15 +160,13 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
         title: 'deleteUser'.tr,
         content: Text('confirmDeleteUser'.tr.replaceAll('{username}', email)),
         actions: [
-          ButtonX(
+          GrayButton(
             onClicked: () => Navigator.pop(context, false),
-            label: 'cancel'.tr,
-            backgroundColor: Colors.grey,
+            title: 'cancel'.tr,
           ),
-          ButtonX(
+          RedButton(
             onClicked: () => Navigator.pop(context, true),
-            label: 'delete'.tr,
-            backgroundColor: Colors.red,
+            title: 'delete'.tr,
           ),
         ],
       ),
@@ -245,10 +245,9 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      ButtonX(
+                      GreenButton(
                         onClicked: _showAddUserDialog,
-                        label: 'addUser'.tr,
-                        backgroundColor: Colors.green,
+                        title: 'addUser'.tr,
                       ),
                     ],
                   ),
@@ -449,19 +448,6 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                           const Padding(
                             padding: EdgeInsets.all(16.0),
                             child: Center(child: CircularProgressIndicator()),
-                          ),
-                        if (!_hasMoreData && _users.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: Text(
-                                'noMoreData'.tr,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
                           ),
                       ],
                     ),

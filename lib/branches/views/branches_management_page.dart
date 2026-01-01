@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/red_button.dart';
 import '../../tenants/models/tenant_model.dart';
 import '../../tenants/services/tenants_management_service.dart';
 import '../../translations/translation_extension.dart';
@@ -154,15 +155,13 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
         title: 'deleteBranch'.tr,
         content: Text('${'deleteBranchConfirmation'.tr} "${branch.name}"?'),
         actions: [
-          ButtonX(
+          GrayButton(
             onClicked: () => Navigator.pop(context, false),
-            label: 'cancel'.tr,
-            backgroundColor: Colors.grey,
+            title: 'cancel'.tr,
           ),
-          ButtonX(
+          RedButton(
             onClicked: () => Navigator.pop(context, true),
-            label: 'delete'.tr,
-            backgroundColor: Colors.red,
+            title: 'delete'.tr,
           ),
         ],
       ),

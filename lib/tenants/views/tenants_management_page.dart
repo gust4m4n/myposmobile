@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/red_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../models/tenant_model.dart';
@@ -119,15 +120,13 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
         title: 'deleteTenant'.tr,
         content: Text('${'deleteTenantConfirmation'.tr} "${tenant.name}"?'),
         actions: [
-          ButtonX(
+          GrayButton(
             onClicked: () => Navigator.pop(context, false),
-            label: 'cancel'.tr,
-            backgroundColor: Colors.grey,
+            title: 'cancel'.tr,
           ),
-          ButtonX(
+          RedButton(
             onClicked: () => Navigator.pop(context, true),
-            label: 'delete'.tr,
-            backgroundColor: Colors.red,
+            title: 'delete'.tr,
           ),
         ],
       ),
@@ -347,19 +346,6 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                           const Padding(
                             padding: EdgeInsets.all(16.0),
                             child: Center(child: CircularProgressIndicator()),
-                          ),
-                        if (!_hasMoreData && _tenants.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: Text(
-                                'noMoreData'.tr,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
                           ),
                       ],
                     ),

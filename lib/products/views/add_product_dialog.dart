@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/green_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/products_management_service.dart';
@@ -240,19 +241,16 @@ class _AddProductDialogState extends State<AddProductDialog> {
       ),
       actions: [
         Expanded(
-          child: ButtonX(
+          child: GrayButton(
             onClicked: _isSubmitting ? null : () => Navigator.of(context).pop(),
-            label: 'cancel'.tr,
-            backgroundColor: theme.colorScheme.surface,
-            foregroundColor: theme.colorScheme.onSurface,
+            title: 'cancel'.tr,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: ButtonX(
+          child: GreenButton(
             onClicked: _isSubmitting ? null : _handleSubmit,
-            label: _isSubmitting ? 'saving'.tr : 'save'.tr,
-            backgroundColor: const Color(0xFF34C759),
+            title: _isSubmitting ? 'saving'.tr : 'save'.tr,
           ),
         ),
       ],

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/green_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../tenants/models/tenant_model.dart';
 import '../../translations/translation_extension.dart';
@@ -373,10 +374,9 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
           onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
           child: Text('cancel'.tr),
         ),
-        ButtonX(
+        GreenButton(
           onClicked: _isSubmitting ? null : _handleSubmit,
-          label: _isSubmitting ? 'saving'.tr : 'save'.tr,
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: _isSubmitting ? 'saving'.tr : 'save'.tr,
         ),
       ],
     );

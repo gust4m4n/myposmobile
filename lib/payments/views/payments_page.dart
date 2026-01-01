@@ -300,19 +300,6 @@ class _PaymentsPageState extends State<PaymentsPage> {
                             padding: EdgeInsets.all(16.0),
                             child: Center(child: CircularProgressIndicator()),
                           ),
-                        if (!_hasMoreData && _payments.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: Text(
-                                'noMoreData'.tr,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ),
                       ],
                     ),
                   ),

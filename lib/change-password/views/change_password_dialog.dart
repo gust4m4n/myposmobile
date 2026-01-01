@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/gray_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/change_password_service.dart';
@@ -204,12 +204,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         ),
       ),
       actions: [
-        ButtonX(
-          onClicked: () => Navigator.pop(context),
-          label: 'cancel'.tr,
-          backgroundColor: theme.colorScheme.surface,
-          foregroundColor: theme.colorScheme.onSurface,
-        ),
+        GrayButton(onClicked: () => Navigator.pop(context), title: 'cancel'.tr),
         SizedBox(
           height: 40,
           child: ElevatedButton.icon(

@@ -6,8 +6,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../faq/views/faq_page.dart';
 import '../../shared/controllers/language_controller.dart';
 import '../../shared/widgets/app_bar_x.dart';
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/gray_button.dart';
 import '../../tnc/views/tnc_page.dart';
 import '../../translations/translation_extension.dart';
 import '../services/login_controller.dart';
@@ -78,12 +78,7 @@ class LoginPage extends StatelessWidget {
                     ],
                   ),
                   actions: [
-                    ButtonX(
-                      onClicked: () => Get.back(),
-                      label: 'close'.tr,
-                      backgroundColor: theme.colorScheme.surface,
-                      foregroundColor: theme.colorScheme.onSurface,
-                    ),
+                    GrayButton(onClicked: () => Get.back(), title: 'close'.tr),
                   ],
                 ),
               );

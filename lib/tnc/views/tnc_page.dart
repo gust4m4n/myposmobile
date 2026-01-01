@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../shared/widgets/app_bar_x.dart';
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/green_button.dart';
 import '../../translations/translation_extension.dart';
 import '../services/tnc_service.dart';
 
@@ -220,10 +220,9 @@ class _TncPageState extends State<TncPage> {
           ),
         ),
         actions: [
-          ButtonX(
+          GreenButton(
             onClicked: () => Navigator.pop(context),
-            label: 'close'.tr,
-            backgroundColor: theme.colorScheme.primary,
+            title: 'close'.tr,
           ),
         ],
       ),

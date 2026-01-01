@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/green_button.dart';
 import '../../translations/translation_extension.dart';
 
 class AuditDetailDialog extends StatelessWidget {
@@ -148,10 +148,9 @@ class AuditDetailDialog extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: ButtonX(
+              child: GreenButton(
                 onClicked: () => Navigator.pop(context),
-                label: 'close'.tr,
-                backgroundColor: theme.colorScheme.primary,
+                title: 'close'.tr,
               ),
             ),
           ],
