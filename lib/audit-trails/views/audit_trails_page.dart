@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../shared/widgets/app_bar_x.dart';
+import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
+import '../../shared/widgets/dialog_x.dart';
 import '../../translations/translation_extension.dart';
-import 'audit_detail_dialog.dart';
 import '../services/audit_trails_service.dart';
+import 'audit_detail_dialog.dart';
 
 class AuditTrailsPage extends StatefulWidget {
   final String languageCode;
@@ -22,7 +24,7 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
   int _currentPage = 1;
   int _totalPages = 1;
   int _totalRecords = 0;
-  final int _limit = 20;
+  final int _limit = 32;
 
   // Filters
   String? _filterEntityType;
@@ -116,8 +118,8 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
   void _showFilterDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('filters'.tr),
+      builder: (context) => DialogX(
+        title: 'filters'.tr,
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -244,7 +246,7 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
           ),
         ),
         actions: [
-          TextButton(
+          ButtonX(
             onPressed: () {
               setState(() {
                 _filterEntityType = null;
@@ -258,9 +260,10 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
               Navigator.pop(context);
               _loadAuditTrails();
             },
-            child: Text('clearFilters'.tr),
+            label: 'clearFilters'.tr,
+            backgroundColor: Colors.grey,
           ),
-          TextButton(
+          ButtonX(
             onPressed: () {
               Navigator.pop(context);
               setState(() {
@@ -268,7 +271,8 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
               });
               _loadAuditTrails();
             },
-            child: Text('applyFilters'.tr),
+            label: 'applyFilters'.tr,
+            backgroundColor: Colors.blue,
           ),
         ],
       ),

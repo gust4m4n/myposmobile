@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/profile_service.dart';
 
@@ -64,20 +65,10 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('profileUpdatedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'profileUpdatedSuccess'.tr);
       Navigator.of(context).pop(true); // Return true to indicate success
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'profileUpdateFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'profileUpdateFailed'.tr);
     }
   }
 

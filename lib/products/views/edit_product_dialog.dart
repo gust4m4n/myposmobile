@@ -10,6 +10,7 @@ import '../../shared/config/api_config.dart';
 import '../../shared/utils/image_upload_service.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/products_management_service.dart';
 
@@ -96,12 +97,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
         final fileSize = file.lengthSync();
         if (fileSize > 5 * 1024 * 1024) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('photoTooLarge'.tr),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ToastX.error(context, 'photoTooLarge'.tr);
           return;
         }
 
@@ -114,12 +110,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
         print('Error picking photo: $e');
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('photoPickFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, 'photoPickFailed'.tr);
     }
   }
 
@@ -142,12 +133,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('photoUploadedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'photoUploadedSuccess'.tr);
 
       // Update photo path from response
       if (response.data != null && response.data!['image'] != null) {
@@ -157,12 +143,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
         });
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'photoUploadFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'photoUploadFailed'.tr);
     }
   }
 
@@ -171,18 +152,19 @@ class _EditProductDialogState extends State<EditProductDialog> {
 
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('deletePhoto'.tr),
+      builder: (context) => DialogX(
+        title: 'deletePhoto'.tr,
         content: Text('deletePhotoConfirmation'.tr),
         actions: [
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('cancel'.tr),
+            label: 'cancel'.tr,
+            backgroundColor: Colors.grey,
           ),
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('delete'.tr),
+            label: 'delete'.tr,
+            backgroundColor: Colors.red,
           ),
         ],
       ),
@@ -205,23 +187,13 @@ class _EditProductDialogState extends State<EditProductDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('photoDeletedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'photoDeletedSuccess'.tr);
       setState(() {
         _photoPath = null;
         _selectedPhotoPath = null;
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'photoDeleteFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'photoDeleteFailed'.tr);
     }
   }
 
@@ -246,12 +218,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
         setState(() {
           _isSubmitting = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(uploadResponse.message ?? 'photoUploadFailed'.tr),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ToastX.error(context, uploadResponse.message ?? 'photoUploadFailed'.tr);
         return;
       }
 
@@ -281,20 +248,10 @@ class _EditProductDialogState extends State<EditProductDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('productUpdatedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'productUpdatedSuccess'.tr);
       Navigator.of(context).pop(true); // Return true to indicate success
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'productUpdatedFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'productUpdatedFailed'.tr);
     }
   }
 

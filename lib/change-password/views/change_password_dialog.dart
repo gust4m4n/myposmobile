@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/change_password_service.dart';
 
@@ -66,12 +67,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       // Close dialog and show success message
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('passwordChangedSuccessfully'.tr),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ToastX.success(context, 'passwordChangedSuccessfully'.tr);
       }
     }
 

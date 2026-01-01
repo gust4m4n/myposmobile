@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
+import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
-import 'add_tenant_dialog.dart';
-import 'edit_tenant_dialog.dart';
 import '../models/tenant_model.dart';
 import '../services/tenants_management_service.dart';
+import 'add_tenant_dialog.dart';
+import 'edit_tenant_dialog.dart';
 
 class TenantsManagementPage extends StatefulWidget {
   final String languageCode;
@@ -22,7 +25,7 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
   bool _isLoadingMore = false;
   bool _hasMoreData = true;
   int _currentPage = 1;
-  final int _pageSize = 20;
+  final int _pageSize = 32;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -112,18 +115,19 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
   void _showDeleteConfirmation(TenantModel tenant) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('deleteTenant'.tr),
+      builder: (context) => DialogX(
+        title: 'deleteTenant'.tr,
         content: Text('${'deleteTenantConfirmation'.tr} "${tenant.name}"?'),
         actions: [
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('cancel'.tr),
+            label: 'cancel'.tr,
+            backgroundColor: Colors.grey,
           ),
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('delete'.tr),
+            label: 'delete'.tr,
+            backgroundColor: Colors.red,
           ),
         ],
       ),
@@ -141,12 +145,7 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('tenantDeletedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'tenantDeletedSuccess'.tr);
       _loadTenants();
     } // else {
     //   ScaffoldMessenger.of(context).showSnackBar(

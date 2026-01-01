@@ -9,6 +9,7 @@ import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 
 class PaymentDetailDialog extends StatefulWidget {
@@ -200,30 +201,16 @@ class _PaymentDetailDialogState extends State<PaymentDetailDialog> {
       await file.writeAsBytes(await pdf.save());
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('receiptSaved'.tr.replaceAll('{fileName}', fileName)),
-            backgroundColor: Colors.green,
-            action: SnackBarAction(
-              label: 'openFolder'.tr,
-              textColor: Colors.white,
-              onPressed: () {
-                // Open Downloads folder in Finder
-                Process.run('open', [downloadsPath]);
-              },
-            ),
-          ),
+        ToastX.success(
+          context,
+          'receiptSaved'.tr.replaceAll('{fileName}', fileName),
         );
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'receiptFailed'.tr.replaceAll('{error}', e.toString()),
-            ),
-            backgroundColor: Colors.red,
-          ),
+        ToastX.error(
+          context,
+          'receiptFailed'.tr.replaceAll('{error}', e.toString()),
         );
       }
     }

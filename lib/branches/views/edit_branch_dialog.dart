@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../tenants/models/tenant_model.dart';
 import '../../translations/translation_extension.dart';
 import '../models/branch_model.dart';
@@ -109,12 +110,7 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
         final fileSize = file.lengthSync();
         if (fileSize > 5 * 1024 * 1024) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('fileSizeExceeded'.tr),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ToastX.error(context, 'fileSizeExceeded'.tr);
           return;
         }
 
@@ -127,12 +123,7 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
         print('❌ Error picking image: $e');
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'imagePickFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
     }
   }
 
@@ -148,8 +139,7 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
     try {
       final service = BranchesManagementService();
       final response = await service.updateBranch(
-        id: widget.branch.id!,
-        tenantId: widget.tenant.id!,
+        branchId: widget.branch.id!,
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         address: _addressController.text.trim(),
@@ -157,35 +147,19 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim(),
         isActive: _isActive,
-        imageFile: _selectedImage,
+        image: _selectedImage,
       );
 
       if (!mounted) return;
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('branchUpdatedSuccess'.tr),
-            backgroundColor: Colors.green,
-          ),
-        );
         Navigator.of(context).pop(true);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.message ?? 'branchUpdateFailed'.tr),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ToastX.error(context, response.message ?? 'branchUpdateFailed'.tr);
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'branchUpdateFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"branchUpdateFailed".tr}: \$e');
     } finally {
       if (mounted) {
         setState(() {

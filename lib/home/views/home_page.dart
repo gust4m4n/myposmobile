@@ -6,16 +6,16 @@ import '../../audit-trails/views/audit_trails_page.dart';
 import '../../branches/views/branches_management_page.dart';
 import '../../change-password/views/change_password_dialog.dart';
 import '../../faq/views/faq_page.dart';
-import '../../orders/views/orders_page.dart';
 import '../../orders/services/orders_service.dart';
+import '../../orders/views/orders_page.dart';
+import '../../payments/services/payments_service.dart';
 import '../../payments/views/payment_detail_dialog.dart';
 import '../../payments/views/payments_page.dart';
-import '../../payments/services/payments_service.dart';
-import '../../pin/views/pin_dialog.dart';
 import '../../pin/services/pin_service.dart';
+import '../../pin/views/pin_dialog.dart';
 import '../../products/views/products_management_page.dart';
-import '../../profile/views/profile_page.dart';
 import '../../profile/services/profile_service.dart';
+import '../../profile/views/profile_page.dart';
 import '../../shared/api_models.dart';
 import '../../shared/controllers/auth_controller.dart';
 import '../../shared/controllers/language_controller.dart';
@@ -24,14 +24,15 @@ import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/connectivity_indicator.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../tenants/views/tenants_management_page.dart';
 import '../../tnc/views/tnc_page.dart';
 import '../../translations/translation_extension.dart';
 import '../../users/views/users_management_page.dart';
-import 'checkout_dialog.dart';
 import '../models/product_model.dart';
-import 'product_widgets.dart';
 import '../services/products_service.dart';
+import 'checkout_dialog.dart';
+import 'product_widgets.dart';
 
 class HomePage extends StatefulWidget {
   final String languageCode;
@@ -315,23 +316,13 @@ class _HomePageState extends State<HomePage> {
         );
       } else {
         // Payment failed
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(paymentResponse.message ?? 'paymentFailed'.tr),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ToastX.error(context, paymentResponse.message ?? 'paymentFailed'.tr);
       }
     } else {
       // Order failed
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(orderResponse.message ?? 'orderFailed'.tr),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ToastX.error(context, orderResponse.message ?? 'orderFailed'.tr);
       }
     }
   }

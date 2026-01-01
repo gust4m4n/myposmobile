@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/users_management_service.dart';
 
@@ -97,12 +98,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
         final fileSize = file.lengthSync();
         if (fileSize > 5 * 1024 * 1024) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('fileSizeExceeded'.tr),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ToastX.error(context, 'fileSizeExceeded'.tr);
           return;
         }
 
@@ -115,12 +111,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
         print('❌ Error picking image: $e');
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'imagePickFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
     }
   }
 
@@ -154,21 +145,11 @@ class _EditUserDialogState extends State<EditUserDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('userUpdatedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'userUpdatedSuccess'.tr);
       Navigator.of(context).pop();
       widget.onSuccess();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'userUpdatedFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'userUpdatedFailed'.tr);
     }
   }
 

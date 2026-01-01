@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../shared/widgets/app_bar_x.dart';
 import '../shared/widgets/button_x.dart';
 import '../shared/widgets/data_table_x.dart';
+import '../shared/widgets/dialog_x.dart';
+import '../shared/widgets/toast_x.dart';
 import '../translations/translation_extension.dart';
 import 'services/users_management_service.dart';
 import 'views/add_user_dialog.dart';
@@ -23,7 +25,7 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
   bool _isLoadingMore = false;
   bool _hasMoreData = true;
   int _currentPage = 1;
-  final int _pageSize = 20;
+  final int _pageSize = 32;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -152,18 +154,19 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
   Future<void> _deleteUser(int userId, String email) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('deleteUser'.tr),
+      builder: (context) => DialogX(
+        title: 'deleteUser'.tr,
         content: Text('confirmDeleteUser'.tr.replaceAll('{username}', email)),
         actions: [
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('cancel'.tr),
+            label: 'cancel'.tr,
+            backgroundColor: Colors.grey,
           ),
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('delete'.tr),
+            label: 'delete'.tr,
+            backgroundColor: Colors.red,
           ),
         ],
       ),
@@ -176,20 +179,10 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('userDeletedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'userDeletedSuccess'.tr);
       _loadUsers();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'userDeleteFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'userDeleteFailed'.tr);
     }
   }
 

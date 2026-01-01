@@ -5,7 +5,7 @@ class AuditTrailsService {
   /// Get paginated list of audit trails with filters
   static Future<ApiResponse<Map<String, dynamic>>> getAuditTrails({
     int page = 1,
-    int limit = 20,
+    int limit = 32,
     int? userId,
     String? entityType,
     int? entityId,
@@ -48,7 +48,7 @@ class AuditTrailsService {
     required String entityType,
     required int entityId,
     int page = 1,
-    int limit = 20,
+    int limit = 32,
   }) async {
     final queryParams = <String, String>{
       'page': page.toString(),
@@ -67,7 +67,7 @@ class AuditTrailsService {
   static Future<ApiResponse<Map<String, dynamic>>> getUserActivityLog({
     required int userId,
     int page = 1,
-    int limit = 20,
+    int limit = 32,
   }) async {
     final queryParams = <String, String>{
       'page': page.toString(),

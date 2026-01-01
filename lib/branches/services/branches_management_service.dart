@@ -6,97 +6,132 @@ import '../../shared/utils/api_x.dart';
 import '../models/branch_model.dart';
 
 class BranchesManagementService {
-  /// Get list of branches for a specific tenant with optional pagination
-  Future<ApiResponse<List<BranchModel>>> getBranches(
+  /// Get list of branches for a specific tenant with pagination
+  ///
+  /// Parameters:
+  /// - tenantId: ID of the tenant
+  /// - page: Page number (default: 1)
+  /// - pageSize: Items per page (default: 20)
+  ///
+  /// Returns:
+  /// - BranchListResponse containing paginated branch data
+  ///
+  /// Example:
+  /// ```dart
+  /// final response = await service.getBranches(18, page: 1, pageSize: 20);
+  /// if (response.statusCode == 200 && response.data != null) {
+  ///   final branchList = response.data!;
+  ///   print('Total branches: ${branchList.totalItems}');
+  ///   for (var branch in branchList.data) {
+  ///     print(branch.name);
+  ///   }
+  /// }
+  /// ```
+  Future<ApiResponse<BranchListResponse>> getBranches(
     int tenantId, {
-    int? page,
-    int? pageSize,
+    int page = 1,
+    int pageSize = 20,
   }) async {
     String url = ApiConfig.superadminTenantBranches(tenantId);
-    final queryParams = <String>[];
-
-    if (page != null) queryParams.add('page=$page');
-    if (pageSize != null) queryParams.add('page_size=$pageSize');
-
-    if (queryParams.isNotEmpty) {
-      url += '?${queryParams.join('&')}';
-    }
+    url += '?page=$page&page_size=$pageSize';
 
     return await ApiX.get(
       url,
       requiresAuth: true,
-      fromJson: (data) =>
-          (data as List).map((json) => BranchModel.fromJson(json)).toList(),
+      fromJson: (data) {
+        // Handle both List response (old format) and paginated response (new format)
+        if (data is List) {
+          // Old format: API returns List directly, create pagination wrapper manually
+          return BranchListResponse(
+            page: page,
+            pageSize: pageSize,
+            totalItems: data.length,
+            totalPages: 1,
+            data: data
+                .map(
+                  (json) => BranchModel.fromJson(json as Map<String, dynamic>),
+                )
+                .toList(),
+          );
+        } else if (data is Map<String, dynamic>) {
+          // New format: API returns paginated response
+          return BranchListResponse.fromJson(data);
+        } else {
+          throw Exception('Unexpected response format');
+        }
+      },
     );
   }
 
-  /// Create new branch
+  /// Create new branch for a tenant
   Future<ApiResponse<BranchModel>> createBranch({
     required int tenantId,
     required String name,
-    required String description,
-    required String address,
-    required String website,
-    required String email,
-    required String phone,
-    required bool isActive,
-    File? imageFile,
+    String? description,
+    String? address,
+    String? website,
+    String? email,
+    String? phone,
+    bool? isActive,
+    File? image,
   }) async {
-    return await ApiX.postMultipart(
-      '${ApiConfig.apiPrefix}/superadmin/branches',
-      fields: {
-        'tenant_id': tenantId.toString(),
-        'name': name,
+    final fields = <String, String>{
+      'tenant_id': tenantId.toString(),
+      'name': name,
+      if (description != null && description.isNotEmpty)
         'description': description,
-        'address': address,
-        'website': website,
-        'email': email,
-        'phone': phone,
-        'is_active': isActive.toString(),
-      },
-      filePath: imageFile?.path,
-      fileFieldName: 'image',
+      if (address != null && address.isNotEmpty) 'address': address,
+      if (website != null && website.isNotEmpty) 'website': website,
+      if (email != null && email.isNotEmpty) 'email': email,
+      if (phone != null && phone.isNotEmpty) 'phone': phone,
+      if (isActive != null) 'is_active': isActive.toString(),
+    };
+
+    return await ApiX.postMultipart(
+      ApiConfig.superadminBranches,
+      fields: fields,
+      filePath: image?.path,
       requiresAuth: true,
-      fromJson: (data) => BranchModel.fromJson(data),
+      fromJson: (data) => BranchModel.fromJson(data as Map<String, dynamic>),
     );
   }
 
   /// Update existing branch
   Future<ApiResponse<BranchModel>> updateBranch({
-    required int id,
-    required int tenantId,
-    required String name,
-    required String description,
-    required String address,
-    required String website,
-    required String email,
-    required String phone,
-    required bool isActive,
-    File? imageFile,
+    required int branchId,
+    String? name,
+    String? description,
+    String? address,
+    String? website,
+    String? email,
+    String? phone,
+    bool? isActive,
+    File? image,
   }) async {
-    return await ApiX.putMultipart(
-      '${ApiConfig.apiPrefix}/superadmin/branches/$id',
-      fields: {
-        'tenant_id': tenantId.toString(),
-        'name': name,
+    final fields = <String, String>{
+      if (name != null && name.isNotEmpty) 'name': name,
+      if (description != null && description.isNotEmpty)
         'description': description,
-        'address': address,
-        'website': website,
-        'email': email,
-        'phone': phone,
-        'is_active': isActive.toString(),
-      },
-      filePath: imageFile?.path,
-      fileFieldName: 'image',
+      if (address != null && address.isNotEmpty) 'address': address,
+      if (website != null && website.isNotEmpty) 'website': website,
+      if (email != null && email.isNotEmpty) 'email': email,
+      if (phone != null && phone.isNotEmpty) 'phone': phone,
+      if (isActive != null) 'is_active': isActive.toString(),
+    };
+
+    return await ApiX.putMultipart(
+      '${ApiConfig.superadminBranches}/$branchId',
+      fields: fields,
+      filePath: image?.path,
       requiresAuth: true,
-      fromJson: (data) => BranchModel.fromJson(data),
+      fromJson: (data) => BranchModel.fromJson(data as Map<String, dynamic>),
     );
   }
 
-  /// Delete branch
-  Future<ApiResponse<void>> deleteBranch(int id) async {
+  /// Delete branch by ID
+  Future<ApiResponse<void>> deleteBranch(int branchId) async {
     return await ApiX.delete(
-      '${ApiConfig.apiPrefix}/superadmin/branches/$id',
+      '${ApiConfig.superadminBranches}/$branchId',
       requiresAuth: true,
     );
   }

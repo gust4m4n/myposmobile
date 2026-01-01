@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../tenants/models/tenant_model.dart';
 import '../../translations/translation_extension.dart';
 import '../services/branches_management_service.dart';
@@ -90,12 +91,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
         final fileSize = file.lengthSync();
         if (fileSize > 5 * 1024 * 1024) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('fileSizeExceeded'.tr),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ToastX.error(context, 'fileSizeExceeded'.tr);
           return;
         }
 
@@ -108,12 +104,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
         print('❌ Error picking image: $e');
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'imagePickFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
     }
   }
 
@@ -137,35 +128,20 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim(),
         isActive: _isActive,
-        imageFile: _selectedImage,
+        image: _selectedImage,
       );
 
       if (!mounted) return;
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('branchCreatedSuccess'.tr),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ToastX.success(context, 'branchCreatedSuccess'.tr);
         Navigator.of(context).pop(true);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.message ?? 'branchCreationFailed'.tr),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ToastX.error(context, response.message ?? 'branchCreationFailed'.tr);
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'branchCreationFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"branchCreationFailed".tr}: \$e');
     } finally {
       if (mounted) {
         setState(() {

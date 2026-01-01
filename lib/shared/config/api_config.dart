@@ -38,6 +38,7 @@ class ApiConfig {
   // Superadmin endpoints
   static const String superadminDashboard = '$apiPrefix/superadmin/dashboard';
   static const String superadminTenants = '$apiPrefix/superadmin/tenants';
+  static const String superadminBranches = '$apiPrefix/superadmin/branches';
 
   // FAQ endpoints (public)
   static const String faq = '$apiPrefix/faq';

@@ -77,3 +77,45 @@ class BranchModel {
     };
   }
 }
+
+class BranchListResponse {
+  final int page;
+  final int pageSize;
+  final int totalItems;
+  final int totalPages;
+  final List<BranchModel> data;
+
+  BranchListResponse({
+    required this.page,
+    required this.pageSize,
+    required this.totalItems,
+    required this.totalPages,
+    required this.data,
+  });
+
+  factory BranchListResponse.fromJson(Map<String, dynamic> json) {
+    return BranchListResponse(
+      page: json['page'] ?? 1,
+      pageSize: json['page_size'] ?? 20,
+      totalItems: json['total_items'] ?? 0,
+      totalPages: json['total_pages'] ?? 1,
+      data:
+          (json['data'] as List<dynamic>?)
+              ?.map(
+                (item) => BranchModel.fromJson(item as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'page': page,
+      'page_size': pageSize,
+      'total_items': totalItems,
+      'total_pages': totalPages,
+      'data': data.map((branch) => branch.toJson()).toList(),
+    };
+  }
+}

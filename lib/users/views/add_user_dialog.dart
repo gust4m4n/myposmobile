@@ -10,6 +10,7 @@ import '../../shared/api_models.dart';
 import '../../shared/controllers/profile_controller.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/users_management_service.dart';
 
@@ -99,12 +100,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
           print('❌ Tenant ID is null from profile');
         }
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('tenantIdNotFound'.tr),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ToastX.error(context, 'tenantIdNotFound'.tr);
         setState(() {
           _isLoadingBranches = false;
         });
@@ -136,11 +132,9 @@ class _AddUserDialogState extends State<AddUserDialog> {
         if (kDebugMode) {
           print('❌ Failed to load branches: ${response.message}');
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${'failedToLoadBranches'.tr}: ${response.message}'),
-            backgroundColor: Colors.red,
-          ),
+        ToastX.error(
+          context,
+          '\${"failedToLoadBranches".tr}: \${response.message}',
         );
       }
     } catch (e) {
@@ -151,12 +145,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
       setState(() {
         _isLoadingBranches = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'failedToLoadBranches'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"failedToLoadBranches".tr}: \$e');
     }
   }
 
@@ -190,12 +179,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
         final fileSize = file.lengthSync();
         if (fileSize > 5 * 1024 * 1024) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('fileSizeExceeded'.tr),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ToastX.error(context, 'fileSizeExceeded'.tr);
           return;
         }
 
@@ -208,12 +192,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
         print('❌ Error picking image: $e');
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'imagePickFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
     }
   }
 
@@ -223,12 +202,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
     }
 
     if (_selectedBranch == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('branchRequired'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, 'branchRequired'.tr);
       return;
     }
 
@@ -253,21 +227,11 @@ class _AddUserDialogState extends State<AddUserDialog> {
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('userCreatedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'userCreatedSuccess'.tr);
       Navigator.of(context).pop();
       widget.onSuccess();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'userCreatedFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'userCreatedFailed'.tr);
     }
   }
 

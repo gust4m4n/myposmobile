@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
+import '../../shared/widgets/dialog_x.dart';
 import '../../tenants/models/tenant_model.dart';
 import '../../tenants/services/tenants_management_service.dart';
 import '../../translations/translation_extension.dart';
-import 'add_branch_dialog.dart';
 import '../models/branch_model.dart';
 import '../services/branches_management_service.dart';
+import 'add_branch_dialog.dart';
 import 'edit_branch_dialog.dart';
 
 class BranchesManagementPage extends StatefulWidget {
@@ -27,7 +29,7 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
   bool _isLoadingMore = false;
   bool _hasMoreData = true;
   int _currentPage = 1;
-  final int _pageSize = 20;
+  final int _pageSize = 32;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -100,10 +102,10 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final branches = response.data!.cast<BranchModel>();
+      final branchList = response.data!;
       setState(() {
-        _branches = branches;
-        _hasMoreData = branches.length >= _pageSize;
+        _branches = branchList.data;
+        _hasMoreData = branchList.page < branchList.totalPages;
         _isLoadingBranches = false;
       });
     } else {
@@ -131,10 +133,10 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final newBranches = response.data!.cast<BranchModel>();
+      final branchList = response.data!;
       setState(() {
-        _branches.addAll(newBranches);
-        _hasMoreData = newBranches.length >= _pageSize;
+        _branches.addAll(branchList.data);
+        _hasMoreData = branchList.page < branchList.totalPages;
         _isLoadingMore = false;
       });
     } else {
@@ -148,18 +150,19 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
   void _showDeleteConfirmation(BranchModel branch) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('deleteBranch'.tr),
+      builder: (context) => DialogX(
+        title: 'deleteBranch'.tr,
         content: Text('${'deleteBranchConfirmation'.tr} "${branch.name}"?'),
         actions: [
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('cancel'.tr),
+            label: 'cancel'.tr,
+            backgroundColor: Colors.grey,
           ),
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('delete'.tr),
+            label: 'delete'.tr,
+            backgroundColor: Colors.red,
           ),
         ],
       ),
@@ -177,12 +180,6 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('branchDeletedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
       _loadBranches();
     } // else {
     //   ScaffoldMessenger.of(context).showSnackBar(
@@ -482,19 +479,6 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
                                         padding: EdgeInsets.all(16.0),
                                         child: Center(
                                           child: CircularProgressIndicator(),
-                                        ),
-                                      ),
-                                    if (!_hasMoreData && _branches.isNotEmpty)
-                                      Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Center(
-                                          child: Text(
-                                            'noMoreData'.tr,
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 14,
-                                            ),
-                                          ),
                                         ),
                                       ),
                                   ],

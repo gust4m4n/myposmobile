@@ -8,6 +8,7 @@ import '../../shared/config/api_config.dart';
 import '../../shared/utils/image_upload_service.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 
 class UploadProfilePhotoDialog extends StatefulWidget {
@@ -62,13 +63,7 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
         print('❌ Error picking image: $e');
       }
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${'failedToPickImage'.tr}: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 5),
-          ),
-        );
+        ToastX.error(context, '\${"failedToPickImage".tr}: \$e');
       }
     }
   }
@@ -95,20 +90,10 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('photoUploadedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'photoUploadedSuccess'.tr);
       Navigator.of(context).pop(true);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'photoUploadFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'photoUploadFailed'.tr);
     }
   }
 
@@ -117,17 +102,19 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('deletePhoto'.tr),
+      builder: (context) => DialogX(
+        title: 'deletePhoto'.tr,
         content: Text('deletePhotoConfirmation'.tr),
         actions: [
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('cancel'.tr),
+            label: 'cancel'.tr,
+            backgroundColor: Colors.grey,
           ),
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('delete'.tr),
+            label: 'delete'.tr,
+            backgroundColor: Colors.red,
           ),
         ],
       ),
@@ -148,20 +135,10 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('photoDeletedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'photoDeletedSuccess'.tr);
       Navigator.of(context).pop(true);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'photoDeleteFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'photoDeleteFailed'.tr);
     }
   }
 

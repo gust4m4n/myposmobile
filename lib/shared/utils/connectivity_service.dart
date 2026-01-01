@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/toast_x.dart';
+
 class ConnectivityService {
   static final ConnectivityService _instance = ConnectivityService._internal();
   factory ConnectivityService() => _instance;
@@ -64,22 +66,10 @@ class ConnectivityService {
         ? 'Internet connection restored'
         : 'No internet connection';
 
-    final backgroundColor = isConnected ? Colors.green : Colors.red;
-    final icon = isConnected ? Icons.wifi : Icons.wifi_off;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(icon, color: Colors.white),
-            const SizedBox(width: 12),
-            Text(message),
-          ],
-        ),
-        backgroundColor: backgroundColor,
-        duration: Duration(seconds: isConnected ? 2 : 4),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    if (isConnected) {
+      ToastX.success(context, message);
+    } else {
+      ToastX.error(context, message);
+    }
   }
 }

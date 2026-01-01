@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/tenants_management_service.dart';
 
@@ -84,12 +85,7 @@ class _AddTenantDialogState extends State<AddTenantDialog> {
         final fileSize = file.lengthSync();
         if (fileSize > 5 * 1024 * 1024) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('fileSizeExceeded'.tr),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ToastX.error(context, 'fileSizeExceeded'.tr);
           return;
         }
 
@@ -102,12 +98,7 @@ class _AddTenantDialogState extends State<AddTenantDialog> {
         print('❌ Error picking image: $e');
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'imagePickFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
     }
   }
 
@@ -151,20 +142,10 @@ class _AddTenantDialogState extends State<AddTenantDialog> {
       if (!mounted) return;
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('tenantCreatedSuccess'.tr),
-            backgroundColor: Colors.green,
-          ),
-        );
+        ToastX.success(context, 'tenantCreatedSuccess'.tr);
         Navigator.of(context).pop(true);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.message ?? 'tenantCreationFailed'.tr),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ToastX.error(context, response.message ?? 'tenantCreationFailed'.tr);
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -172,12 +153,7 @@ class _AddTenantDialogState extends State<AddTenantDialog> {
         print('❌ Stack trace: $stackTrace');
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${'tenantCreationFailed'.tr}: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, '\${"tenantCreationFailed".tr}: \$e');
     } finally {
       if (mounted) {
         setState(() {

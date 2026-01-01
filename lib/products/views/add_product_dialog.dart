@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/products_management_service.dart';
 
@@ -69,20 +70,10 @@ class _AddProductDialogState extends State<AddProductDialog> {
     });
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('productCreatedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'productCreatedSuccess'.tr);
       Navigator.of(context).pop(true); // Return true to indicate success
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'productCreatedFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'productCreatedFailed'.tr);
     }
   }
 

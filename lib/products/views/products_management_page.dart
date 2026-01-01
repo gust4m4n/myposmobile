@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../home/models/product_model.dart';
-import '../../home/views/product_widgets.dart';
 import '../../home/services/products_service.dart';
+import '../../home/views/product_widgets.dart';
 import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/button_x.dart';
+import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
+import '../services/products_management_service.dart';
 import 'add_product_dialog.dart';
 import 'edit_product_dialog.dart';
-import '../services/products_management_service.dart';
 
 class ProductsManagementPage extends StatefulWidget {
   final String languageCode;
@@ -166,18 +168,19 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
   void _showDeleteConfirmation(ProductModel product) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('deleteProduct'.tr),
+      builder: (context) => DialogX(
+        title: 'deleteProduct'.tr,
         content: Text('${'deleteProductConfirmation'.tr}\n\n${product.name}'),
         actions: [
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('cancel'.tr),
+            label: 'cancel'.tr,
+            backgroundColor: Colors.grey,
           ),
-          TextButton(
+          ButtonX(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('delete'.tr),
+            label: 'delete'.tr,
+            backgroundColor: Colors.red,
           ),
         ],
       ),
@@ -193,20 +196,10 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('productDeletedSuccess'.tr),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ToastX.success(context, 'productDeletedSuccess'.tr);
       _loadProducts();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message ?? 'productDeletedFailed'.tr),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastX.error(context, response.message ?? 'productDeletedFailed'.tr);
     }
   }
 
@@ -281,12 +274,7 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
               child: ButtonX(
                 onPressed: () {
                   // TODO: Navigate to category management
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Category management coming soon'),
-                      backgroundColor: Colors.blue,
-                    ),
-                  );
+                  ToastX.error(context, 'Category management coming soon');
                 },
                 icon: Icons.category,
                 label: 'Manage Categories',
