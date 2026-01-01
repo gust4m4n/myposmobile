@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/api_models.dart';
 import '../../shared/config/api_config.dart';
-import '../../shared/widgets/app_bar_x.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/profile_service.dart';
 import 'edit_profile_dialog.dart';
@@ -88,9 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final theme = Theme.of(context);
     TranslationService.setLanguage(widget.languageCode);
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBarX(title: 'profile'.tr),
+    return PageX(
+      title: 'profile'.tr,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _profile == null

@@ -5,9 +5,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../faq/views/faq_page.dart';
 import '../../shared/controllers/language_controller.dart';
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../tnc/views/tnc_page.dart';
 import '../../translations/translation_extension.dart';
 import '../services/login_controller.dart';
@@ -29,68 +29,66 @@ class LoginPage extends StatelessWidget {
       loginController.passwordController.text = '123456';
     }
 
-    return Scaffold(
+    return PageX(
+      title: 'login'.tr,
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBarX(
-        title: 'login'.tr,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.language),
-            tooltip: 'language'.tr,
-            onPressed: () async {
-              TranslationService.setLanguage(languageCtrl.languageCode.value);
-              // Show language selection dialog
-              final selectedLanguage = await showDialog<String>(
-                context: context,
-                builder: (context) => DialogX(
-                  title: 'selectLanguage'.tr,
-                  width: 400,
-                  onClose: () => Get.back(),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Obx(
-                        () => ListTile(
-                          leading: languageCtrl.languageCode.value == 'en'
-                              ? const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                )
-                              : const Icon(Icons.circle_outlined),
-                          title: Text('english'.tr),
-                          onTap: () => Get.back(result: 'en'),
-                          selected: languageCtrl.languageCode.value == 'en',
-                        ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.language),
+          tooltip: 'language'.tr,
+          onPressed: () async {
+            TranslationService.setLanguage(languageCtrl.languageCode.value);
+            // Show language selection dialog
+            final selectedLanguage = await showDialog<String>(
+              context: context,
+              builder: (context) => DialogX(
+                title: 'selectLanguage'.tr,
+                width: 400,
+                onClose: () => Get.back(),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Obx(
+                      () => ListTile(
+                        leading: languageCtrl.languageCode.value == 'en'
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              )
+                            : const Icon(Icons.circle_outlined),
+                        title: Text('english'.tr),
+                        onTap: () => Get.back(result: 'en'),
+                        selected: languageCtrl.languageCode.value == 'en',
                       ),
-                      Obx(
-                        () => ListTile(
-                          leading: languageCtrl.languageCode.value == 'id'
-                              ? const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                )
-                              : const Icon(Icons.circle_outlined),
-                          title: Text('indonesian'.tr),
-                          onTap: () => Get.back(result: 'id'),
-                          selected: languageCtrl.languageCode.value == 'id',
-                        ),
+                    ),
+                    Obx(
+                      () => ListTile(
+                        leading: languageCtrl.languageCode.value == 'id'
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              )
+                            : const Icon(Icons.circle_outlined),
+                        title: Text('indonesian'.tr),
+                        onTap: () => Get.back(result: 'id'),
+                        selected: languageCtrl.languageCode.value == 'id',
                       ),
-                    ],
-                  ),
-                  actions: [
-                    GrayButton(onClicked: () => Get.back(), title: 'close'.tr),
+                    ),
                   ],
                 ),
-              );
+                actions: [
+                  GrayButton(onClicked: () => Get.back(), title: 'close'.tr),
+                ],
+              ),
+            );
 
-              if (selectedLanguage != null &&
-                  selectedLanguage != languageCtrl.languageCode.value) {
-                languageCtrl.toggleLanguage();
-              }
-            },
-          ),
-        ],
-      ),
+            if (selectedLanguage != null &&
+                selectedLanguage != languageCtrl.languageCode.value) {
+              languageCtrl.toggleLanguage();
+            }
+          },
+        ),
+      ],
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),

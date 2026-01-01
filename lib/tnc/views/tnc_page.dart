@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/green_button.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/tnc_service.dart';
 
@@ -529,30 +529,28 @@ class _TncPageState extends State<TncPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBarX(
-        title: 'termsAndConditions'.tr,
-        actions: [
-          // Toggle view button
-          TextButton.icon(
-            onPressed: () {
-              if (_showingActive) {
-                _loadAllTnc();
-              } else {
-                _loadActiveTnc();
-              }
-            },
-            icon: Icon(
-              _showingActive ? Icons.list : Icons.star,
-              color: theme.colorScheme.onPrimary,
-            ),
-            label: Text(
-              _showingActive ? 'viewAll'.tr : 'viewActive'.tr,
-              style: TextStyle(color: theme.colorScheme.onPrimary),
-            ),
+    return PageX(
+      title: 'termsAndConditions'.tr,
+      actions: [
+        // Toggle view button
+        TextButton.icon(
+          onPressed: () {
+            if (_showingActive) {
+              _loadAllTnc();
+            } else {
+              _loadActiveTnc();
+            }
+          },
+          icon: Icon(
+            _showingActive ? Icons.list : Icons.star,
+            color: theme.colorScheme.onPrimary,
           ),
-        ],
-      ),
+          label: Text(
+            _showingActive ? 'viewAll'.tr : 'viewActive'.tr,
+            style: TextStyle(color: theme.colorScheme.onPrimary),
+          ),
+        ),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _showingActive

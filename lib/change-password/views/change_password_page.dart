@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/app_bar_x.dart';
+import '../../shared/widgets/page_x.dart';
 import '../services/change_password_service.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -77,14 +77,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Scaffold(
+    return PageX(
+      title: 'Change Password',
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBarX(
-        title: 'Change Password',
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: theme.dividerColor, height: 1),
-        ),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(color: theme.dividerColor, height: 1),
       ),
       body: Center(
         child: SingleChildScrollView(

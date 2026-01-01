@@ -21,9 +21,9 @@ import '../../shared/controllers/auth_controller.dart';
 import '../../shared/controllers/language_controller.dart';
 import '../../shared/controllers/profile_controller.dart';
 import '../../shared/utils/currency_formatter.dart';
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/connectivity_indicator.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../tenants/views/tenants_management_page.dart';
 import '../../tnc/views/tnc_page.dart';
@@ -552,112 +552,90 @@ class _HomePageState extends State<HomePage> {
     final theme = Theme.of(context);
     TranslationService.setLanguage(widget.languageCode);
 
-    return Scaffold(
-      key: _scaffoldKey,
+    return PageX(
+      scaffoldKey: _scaffoldKey,
+      title: _appTitle,
       backgroundColor: theme.scaffoldBackgroundColor,
       drawerScrimColor: Colors.black54,
       drawerEnableOpenDragGesture: false,
-      appBar: AppBarX(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
+      leading: IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: () {
+          _scaffoldKey.currentState?.openDrawer();
+        },
+        tooltip: 'menu'.tr,
+      ),
+      actions: [
+        const ConnectivityIndicator(),
+        // User Profile Photo
+        GestureDetector(
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ProfilePage(languageCode: widget.languageCode),
+              ),
+            );
+            // Reload profile when returning from profile page
+            _loadProfile();
           },
-          tooltip: 'menu'.tr,
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.store,
-              size: 24,
-              color: theme.appBarTheme.foregroundColor,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                _appTitle,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          const ConnectivityIndicator(),
-          // User Profile Photo
-          GestureDetector(
-            onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ProfilePage(languageCode: widget.languageCode),
-                ),
-              );
-              // Reload profile when returning from profile page
-              _loadProfile();
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: theme.colorScheme.primary,
-                backgroundImage:
-                    _profile?.user.image != null &&
-                        _profile!.user.image!.isNotEmpty
-                    ? NetworkImage(
-                        _profile!.user.image!.startsWith('http')
-                            ? _profile!.user.image!
-                            : 'http://localhost:8080${_profile!.user.image!}',
-                      )
-                    : null,
-                child:
-                    _profile?.user.image == null ||
-                        _profile!.user.image!.isEmpty
-                    ? const Icon(Icons.person, size: 20, color: Colors.white)
-                    : null,
-              ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: CircleAvatar(
+              radius: 18,
+              backgroundColor: theme.colorScheme.primary,
+              backgroundImage:
+                  _profile?.user.image != null &&
+                      _profile!.user.image!.isNotEmpty
+                  ? NetworkImage(
+                      _profile!.user.image!.startsWith('http')
+                          ? _profile!.user.image!
+                          : 'http://localhost:8080${_profile!.user.image!}',
+                    )
+                  : null,
+              child:
+                  _profile?.user.image == null || _profile!.user.image!.isEmpty
+                  ? const Icon(Icons.person, size: 20, color: Colors.white)
+                  : null,
             ),
           ),
-          if (!isTabletOrDesktop)
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart),
-                  onPressed: () => _showCartBottomSheet(context),
-                ),
-                if (_cart.isNotEmpty)
-                  Positioned(
-                    right: 8,
-                    top: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.error,
-                        shape: BoxShape.circle,
+        ),
+        if (!isTabletOrDesktop)
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.shopping_cart),
+                onPressed: () => _showCartBottomSheet(context),
+              ),
+              if (_cart.isNotEmpty)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.error,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    ),
+                    child: Text(
+                      '${_cart.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      constraints: const BoxConstraints(
-                        minWidth: 20,
-                        minHeight: 20,
-                      ),
-                      child: Text(
-                        '${_cart.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-              ],
-            ),
-        ],
-      ),
+                ),
+            ],
+          ),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : isTabletOrDesktop

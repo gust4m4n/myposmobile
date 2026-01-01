@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/audit_trails_service.dart';
 import 'audit_detail_dialog.dart';
@@ -308,22 +308,20 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
   Widget build(BuildContext context) {
     TranslationService.setLanguage(widget.languageCode);
 
-    return Scaffold(
-      appBar: AppBarX(
-        title: 'auditTrails'.tr,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-            tooltip: 'filters'.tr,
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadAuditTrails,
-            tooltip: 'refresh'.tr,
-          ),
-        ],
-      ),
+    return PageX(
+      title: 'auditTrails'.tr,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.filter_list),
+          onPressed: _showFilterDialog,
+          tooltip: 'filters'.tr,
+        ),
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: _loadAuditTrails,
+          tooltip: 'refresh'.tr,
+        ),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _auditTrails.isEmpty

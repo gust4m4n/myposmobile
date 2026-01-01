@@ -21,10 +21,14 @@ class AppBarX extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       leading: leading,
+      centerTitle: true,
       title: title is String
           ? Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0)
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
             )
           : title,
       actions: actions,

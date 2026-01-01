@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../shared/widgets/red_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
@@ -160,27 +161,24 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('tenantsManagement'.tr),
-        backgroundColor: theme.colorScheme.surface,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () async {
-              final result = await showDialog<bool>(
-                context: context,
-                builder: (context) =>
-                    AddTenantDialog(languageCode: widget.languageCode),
-              );
-              if (result == true) {
-                _loadTenants();
-              }
-            },
-            tooltip: 'addTenant'.tr,
-          ),
-        ],
-      ),
+    return PageX(
+      title: 'tenantsManagement'.tr,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () async {
+            final result = await showDialog<bool>(
+              context: context,
+              builder: (context) =>
+                  AddTenantDialog(languageCode: widget.languageCode),
+            );
+            if (result == true) {
+              _loadTenants();
+            }
+          },
+          tooltip: 'addTenant'.tr,
+        ),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _tenants.isEmpty

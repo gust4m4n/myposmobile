@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/utils/currency_formatter.dart';
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/data_table_x.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/orders_service.dart';
 import 'order_detail_dialog.dart';
@@ -146,13 +146,11 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget build(BuildContext context) {
     TranslationService.setLanguage(widget.languageCode);
 
-    return Scaffold(
-      appBar: AppBarX(
-        title: 'orders'.tr,
-        actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadOrders),
-        ],
-      ),
+    return PageX(
+      title: 'orders'.tr,
+      actions: [
+        IconButton(icon: const Icon(Icons.refresh), onPressed: _loadOrders),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _orders.isEmpty

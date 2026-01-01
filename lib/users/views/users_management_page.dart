@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../shared/widgets/red_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
@@ -204,13 +204,11 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
   Widget build(BuildContext context) {
     TranslationService.setLanguage(widget.languageCode);
 
-    return Scaffold(
-      appBar: AppBarX(
-        title: 'userManagement'.tr,
-        actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadUsers),
-        ],
-      ),
+    return PageX(
+      title: 'userManagement'.tr,
+      actions: [
+        IconButton(icon: const Icon(Icons.refresh), onPressed: _loadUsers),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _users.isEmpty

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../home/models/product_model.dart';
 import '../../home/services/products_service.dart';
 import '../../home/views/product_widgets.dart';
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/products_management_service.dart';
@@ -242,58 +242,40 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
+    return PageX(
+      title: 'productsManagement'.tr,
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBarX(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.inventory_2,
-              size: 24,
-              color: theme.appBarTheme.foregroundColor,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'productsManagement'.tr,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: SizedBox(
-              width: 160,
-              child: ButtonX(
-                onClicked: () {
-                  // TODO: Navigate to category management
-                  ToastX.error(context, 'Category management coming soon');
-                },
-                label: 'Manage Categories',
-                backgroundColor: const Color(0xFF007AFF),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: SizedBox(
-              width: 160,
-              child: ButtonX(
-                onClicked: _showAddProductDialog,
-                label: 'addProduct'.tr,
-                backgroundColor: const Color(0xFF34C759),
-              ),
-            ),
-          ),
-        ],
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.pop(context),
       ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: SizedBox(
+            width: 160,
+            child: ButtonX(
+              onClicked: () {
+                // TODO: Navigate to category management
+                ToastX.error(context, 'Category management coming soon');
+              },
+              label: 'Manage Categories',
+              backgroundColor: const Color(0xFF007AFF),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: SizedBox(
+            width: 160,
+            child: ButtonX(
+              onClicked: _showAddProductDialog,
+              label: 'addProduct'.tr,
+              backgroundColor: const Color(0xFF34C759),
+            ),
+          ),
+        ),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ProductsWidget(

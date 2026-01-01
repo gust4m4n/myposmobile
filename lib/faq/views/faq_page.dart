@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/green_button.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/faq_service.dart';
 
@@ -167,8 +167,8 @@ class _FaqPageState extends State<FaqPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBarX(title: 'faq'.tr),
+    return PageX(
+      title: 'faq'.tr,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(

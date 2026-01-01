@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/utils/currency_formatter.dart';
-import '../../shared/widgets/app_bar_x.dart';
 import '../../shared/widgets/data_table_x.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/payments_service.dart';
 import 'payment_detail_dialog.dart';
@@ -147,13 +147,11 @@ class _PaymentsPageState extends State<PaymentsPage> {
     // Initialize translations with current language
     TranslationService.setLanguage(widget.languageCode);
 
-    return Scaffold(
-      appBar: AppBarX(
-        title: 'payments'.tr,
-        actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadPayments),
-        ],
-      ),
+    return PageX(
+      title: 'payments'.tr,
+      actions: [
+        IconButton(icon: const Icon(Icons.refresh), onPressed: _loadPayments),
+      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _payments.isEmpty

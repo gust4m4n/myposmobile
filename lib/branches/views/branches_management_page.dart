@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/page_x.dart';
 import '../../shared/widgets/red_button.dart';
 import '../../tenants/models/tenant_model.dart';
 import '../../tenants/services/tenants_management_service.dart';
@@ -194,30 +195,27 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('branchesManagement'.tr),
-        backgroundColor: theme.colorScheme.surface,
-        actions: [
-          if (_selectedTenant != null)
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () async {
-                final result = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AddBranchDialog(
-                    languageCode: widget.languageCode,
-                    tenant: _selectedTenant!,
-                  ),
-                );
-                if (result == true) {
-                  _loadBranches();
-                }
-              },
-              tooltip: 'addBranch'.tr,
-            ),
-        ],
-      ),
+    return PageX(
+      title: 'branchesManagement'.tr,
+      actions: [
+        if (_selectedTenant != null)
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              final result = await showDialog<bool>(
+                context: context,
+                builder: (context) => AddBranchDialog(
+                  languageCode: widget.languageCode,
+                  tenant: _selectedTenant!,
+                ),
+              );
+              if (result == true) {
+                _loadBranches();
+              }
+            },
+            tooltip: 'addBranch'.tr,
+          ),
+      ],
       body: _isLoadingTenants
           ? const Center(child: CircularProgressIndicator())
           : Column(
