@@ -264,7 +264,7 @@ class LoginPage extends StatelessWidget {
               Text(
                 ' | ',
                 style: TextStyle(
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
               TextButton(
@@ -288,14 +288,14 @@ class LoginPage extends StatelessWidget {
               Text(
                 ' | ',
                 style: TextStyle(
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
               Text(
                 appVersion,
                 style: TextStyle(
                   fontSize: 16.0,
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             ],

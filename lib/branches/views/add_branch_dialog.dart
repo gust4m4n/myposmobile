@@ -8,6 +8,7 @@ import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../tenants/models/tenant_model.dart';
 import '../../translations/translation_extension.dart';
@@ -207,19 +208,16 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
                   label: _selectedImage == null
                       ? 'selectImage'.tr
                       : 'changeImage'.tr,
-                  backgroundColor: Colors.white.withOpacity(0.5),
+                  backgroundColor: Colors.white.withValues(alpha: 0.5),
                   foregroundColor: Colors.black,
                 ),
               ),
               const SizedBox(height: 24),
 
               // Name
-              TextFormField(
+              TextFieldX(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: '${'name'.tr} *',
-                  border: const OutlineInputBorder(),
-                ),
+                hintText: '${'name'.tr} *',
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'fieldRequired'.tr;
@@ -230,13 +228,9 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
               const SizedBox(height: 16),
 
               // Description
-              TextFormField(
+              TextFieldX(
                 controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: '${'description'.tr} *',
-                  border: const OutlineInputBorder(),
-                ),
-                maxLines: 3,
+                hintText: '${'description'.tr} *',
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'fieldRequired'.tr;
@@ -247,13 +241,9 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
               const SizedBox(height: 16),
 
               // Address
-              TextFormField(
+              TextFieldX(
                 controller: _addressController,
-                decoration: InputDecoration(
-                  labelText: '${'address'.tr} *',
-                  border: const OutlineInputBorder(),
-                ),
-                maxLines: 2,
+                hintText: '${'address'.tr} *',
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'fieldRequired'.tr;
@@ -264,12 +254,9 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
               const SizedBox(height: 16),
 
               // Website
-              TextFormField(
+              TextFieldX(
                 controller: _websiteController,
-                decoration: InputDecoration(
-                  labelText: '${'website'.tr} *',
-                  border: const OutlineInputBorder(),
-                ),
+                hintText: '${'website'.tr} *',
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'fieldRequired'.tr;
@@ -280,12 +267,9 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
               const SizedBox(height: 16),
 
               // Email
-              TextFormField(
+              TextFieldX(
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: '${'email'.tr} *',
-                  border: const OutlineInputBorder(),
-                ),
+                hintText: '${'email'.tr} *',
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -300,12 +284,9 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
               const SizedBox(height: 16),
 
               // Phone
-              TextFormField(
+              TextFieldX(
                 controller: _phoneController,
-                decoration: InputDecoration(
-                  labelText: '${'phone'.tr} *',
-                  border: const OutlineInputBorder(),
-                ),
+                hintText: '${'phone'.tr} *',
                 keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {

@@ -1016,7 +1016,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -1084,7 +1084,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -1146,7 +1146,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -1278,7 +1278,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -1340,7 +1340,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -1363,7 +1363,7 @@ class _HomePageState extends State<HomePage> {
                       widget.languageCode == 'en' ? '(English)' : '(Indonesia)',
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

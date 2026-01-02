@@ -21,7 +21,7 @@ class DataTableX extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final defaultHeadingColor =
-        headingRowColor ?? theme.colorScheme.primary.withOpacity(0.1);
+        headingRowColor ?? theme.colorScheme.primary.withValues(alpha: 0.1);
     final spacing = columnSpacing ?? 16;
     final isFullHeight = maxHeight == double.infinity;
 

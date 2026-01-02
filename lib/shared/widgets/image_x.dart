@@ -34,7 +34,7 @@ class ImageX extends StatelessWidget {
           height: size,
           decoration: BoxDecoration(
             color:
-                backgroundColor ?? theme.colorScheme.primary.withOpacity(0.1),
+                backgroundColor ?? theme.colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(cornerRadius),
           ),
           child: imageUrl != null
@@ -64,7 +64,7 @@ class ImageX extends StatelessWidget {
             width: size,
             height: size,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(cornerRadius),
             ),
             child: const Center(

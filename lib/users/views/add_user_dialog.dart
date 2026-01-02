@@ -12,6 +12,7 @@ import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/users_management_service.dart';
@@ -292,20 +293,17 @@ class _AddUserDialogState extends State<AddUserDialog> {
                   label: _selectedImage == null
                       ? 'selectImage'.tr
                       : 'changeImage'.tr,
-                  backgroundColor: Colors.white.withOpacity(0.5),
+                  backgroundColor: Colors.white.withValues(alpha: 0.5),
                   foregroundColor: Colors.black,
                 ),
               ),
               const SizedBox(height: 24),
 
               // Full Name Field
-              TextFormField(
+              TextFieldX(
                 controller: _fullNameController,
-                decoration: InputDecoration(
-                  labelText: 'fullName'.tr,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.badge),
-                ),
+                hintText: 'fullName'.tr,
+                prefixIcon: Icons.badge,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'fullNameRequired'.tr;
@@ -316,13 +314,10 @@ class _AddUserDialogState extends State<AddUserDialog> {
               const SizedBox(height: 16),
 
               // Email Field
-              TextFormField(
+              TextFieldX(
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'email'.tr,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.email),
-                ),
+                hintText: 'email'.tr,
+                prefixIcon: Icons.email,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -337,13 +332,10 @@ class _AddUserDialogState extends State<AddUserDialog> {
               const SizedBox(height: 16),
 
               // Password Field
-              TextFormField(
+              TextFieldX(
                 controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'password'.tr,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.lock),
-                ),
+                hintText: 'password'.tr,
+                prefixIcon: Icons.lock,
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {

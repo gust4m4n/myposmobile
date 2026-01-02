@@ -31,7 +31,7 @@ class PaymentPerformanceChart extends StatelessWidget {
               horizontalInterval: _getMaxAmount() / 5,
               getDrawingHorizontalLine: (value) {
                 return FlLine(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.grey.withValues(alpha: 0.2),
                   strokeWidth: 1,
                 );
               },
@@ -89,7 +89,7 @@ class PaymentPerformanceChart extends StatelessWidget {
             ),
             borderData: FlBorderData(
               show: true,
-              border: Border.all(color: Colors.grey.withOpacity(0.2)),
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
             ),
             minX: 0,
             maxX: (data.length - 1).toDouble(),
@@ -123,8 +123,8 @@ class PaymentPerformanceChart extends StatelessWidget {
                   show: true,
                   gradient: LinearGradient(
                     colors: [
-                      Colors.blue.withOpacity(0.3),
-                      Colors.blue.withOpacity(0.05),
+                      Colors.blue.withValues(alpha: 0.3),
+                      Colors.blue.withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,

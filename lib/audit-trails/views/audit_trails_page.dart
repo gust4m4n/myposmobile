@@ -5,6 +5,7 @@ import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/page_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/audit_trails_service.dart';
 import 'audit_detail_dialog.dart';
@@ -122,12 +123,9 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // User ID Filter
-              TextField(
+              TextFieldX(
                 controller: _userIdController,
-                decoration: InputDecoration(
-                  labelText: 'userId'.tr,
-                  border: const OutlineInputBorder(),
-                ),
+                hintText: 'userId'.tr,
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
@@ -154,12 +152,9 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
               const SizedBox(height: 16),
 
               // Entity ID Filter
-              TextField(
+              TextFieldX(
                 controller: _entityIdController,
-                decoration: InputDecoration(
-                  labelText: 'entityId'.tr,
-                  border: const OutlineInputBorder(),
-                ),
+                hintText: 'entityId'.tr,
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),

@@ -162,14 +162,16 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? theme.colorScheme.primary
-                              : theme.colorScheme.primary.withOpacity(0.5),
+                              : theme.colorScheme.primary.withValues(
+                                  alpha: 0.5,
+                                ),
                         ),
                         child: Text(
                           category,
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white
-                                : Colors.white.withOpacity(0.7),
+                                : Colors.white.withValues(alpha: 0.7),
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.normal,
@@ -349,7 +351,7 @@ class _ProductItemState extends State<_ProductItem> {
         transform: Matrix4.identity()..scale(_isClicked ? 0.95 : 1.0),
         decoration: BoxDecoration(
           color: _isClicked
-              ? theme.colorScheme.primary.withOpacity(0.1)
+              ? theme.colorScheme.primary.withValues(alpha: 0.1)
               : theme.cardColor,
           border: Border.all(
             color: _isClicked ? theme.colorScheme.primary : theme.dividerColor,
@@ -382,8 +384,8 @@ class _ProductItemState extends State<_ProductItem> {
                                 width: double.infinity,
                                 height: imageHeight,
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withOpacity(
-                                    0.1,
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.1,
                                   ),
                                 ),
                                 child: Icon(
@@ -401,8 +403,8 @@ class _ProductItemState extends State<_ProductItem> {
                                 width: double.infinity,
                                 height: imageHeight,
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withOpacity(
-                                    0.1,
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.1,
                                   ),
                                 ),
                                 child: Center(
@@ -425,7 +427,9 @@ class _ProductItemState extends State<_ProductItem> {
                             width: double.infinity,
                             height: imageHeight,
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withOpacity(0.1),
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
+                              ),
                             ),
                             child: Icon(
                               widget.product.category == 'Makanan'

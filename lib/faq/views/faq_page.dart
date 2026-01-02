@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/page_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/faq_service.dart';
 
@@ -180,43 +181,19 @@ class _FaqPageState extends State<FaqPage> {
                   child: Column(
                     children: [
                       // Search bar
-                      TextField(
+                      TextFieldX(
                         controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search FAQs...',
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: _searchController.text.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    _filterFaqs();
-                                  },
-                                )
-                              : null,
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey[400]!),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey[400]!),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: theme.colorScheme.primary,
-                              width: 2,
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                        onChanged: (value) => _filterFaqs(),
+                        hintText: 'Search FAQs...',
+                        prefixIcon: Icons.search,
+                        suffixIcon: _searchController.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  _filterFaqs();
+                                },
+                              )
+                            : null,
                       ),
                       const SizedBox(height: 12),
                       // Category filter
@@ -263,8 +240,8 @@ class _FaqPageState extends State<FaqPage> {
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  color: theme.colorScheme.surfaceContainerHighest.withOpacity(
-                    0.3,
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.3,
                   ),
                   child: Row(
                     children: [

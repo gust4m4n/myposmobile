@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/change_password_service.dart';
@@ -79,9 +80,6 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return DialogX(
       title: 'changePassword'.tr,
       width: 500,
@@ -93,30 +91,21 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Old Password Field
-            TextFormField(
+            TextFieldX(
               controller: _oldPasswordController,
-              obscureText: _obscureOldPassword,
-              decoration: InputDecoration(
-                labelText: 'currentPassword'.tr,
-                prefixIcon: const Icon(Icons.lock),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureOldPassword
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureOldPassword = !_obscureOldPassword;
-                    });
-                  },
+              hintText: 'currentPassword'.tr,
+              prefixIcon: Icons.lock,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureOldPassword ? Icons.visibility : Icons.visibility_off,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                filled: true,
-                fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                onPressed: () {
+                  setState(() {
+                    _obscureOldPassword = !_obscureOldPassword;
+                  });
+                },
               ),
+              obscureText: _obscureOldPassword,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'pleaseEnterCurrentPassword'.tr;
@@ -128,30 +117,21 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             const SizedBox(height: 16),
 
             // New Password Field
-            TextFormField(
+            TextFieldX(
               controller: _newPasswordController,
-              obscureText: _obscureNewPassword,
-              decoration: InputDecoration(
-                labelText: 'newPassword'.tr,
-                prefixIcon: const Icon(Icons.lock_open),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureNewPassword
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureNewPassword = !_obscureNewPassword;
-                    });
-                  },
+              hintText: 'newPassword'.tr,
+              prefixIcon: Icons.lock_open,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureNewPassword ? Icons.visibility : Icons.visibility_off,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                filled: true,
-                fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                onPressed: () {
+                  setState(() {
+                    _obscureNewPassword = !_obscureNewPassword;
+                  });
+                },
               ),
+              obscureText: _obscureNewPassword,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'pleaseEnterNewPassword'.tr;
@@ -166,30 +146,23 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             const SizedBox(height: 16),
 
             // Confirm Password Field
-            TextFormField(
+            TextFieldX(
               controller: _confirmPasswordController,
-              obscureText: _obscureConfirmPassword,
-              decoration: InputDecoration(
-                labelText: 'confirmNewPassword'.tr,
-                prefixIcon: const Icon(Icons.lock_open),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureConfirmPassword
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureConfirmPassword = !_obscureConfirmPassword;
-                    });
-                  },
+              hintText: 'confirmNewPassword'.tr,
+              prefixIcon: Icons.lock_open,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility
+                      : Icons.visibility_off,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                filled: true,
-                fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                onPressed: () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
               ),
+              obscureText: _obscureConfirmPassword,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'pleaseConfirmPassword'.tr;
@@ -205,7 +178,10 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         ),
       ),
       actions: [
-        GrayButtonX(onClicked: () => Navigator.pop(context), title: 'cancel'.tr),
+        GrayButtonX(
+          onClicked: () => Navigator.pop(context),
+          title: 'cancel'.tr,
+        ),
         GreenButtonX(
           onClicked: _handleChangePassword,
           title: _isLoading ? 'changing'.tr : 'changePassword'.tr,

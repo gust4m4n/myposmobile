@@ -273,8 +273,8 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
                             'noBranchesFound'.tr,
                             style: TextStyle(
                               fontSize: 16,
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.6,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.6,
                               ),
                             ),
                           ),
@@ -381,9 +381,12 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
                                                     color:
                                                         branch.isActive == true
                                                         ? Colors.green
-                                                              .withOpacity(0.1)
-                                                        : Colors.red
-                                                              .withOpacity(0.1),
+                                                              .withValues(
+                                                                alpha: 0.1,
+                                                              )
+                                                        : Colors.red.withValues(
+                                                            alpha: 0.1,
+                                                          ),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           12,

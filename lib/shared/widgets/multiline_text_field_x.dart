@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-class TextFieldX extends StatelessWidget {
+class MultilineTextFieldX extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
-  final bool obscureText;
+  final int maxLines;
   final String? Function(String?)? validator;
   final bool enabled;
 
-  const TextFieldX({
+  const MultilineTextFieldX({
     super.key,
     required this.controller,
     required this.hintText,
     this.prefixIcon,
     this.suffixIcon,
     this.keyboardType,
-    this.obscureText = false,
+    this.maxLines = 3,
     this.validator,
     this.enabled = true,
   });
@@ -29,8 +29,8 @@ class TextFieldX extends StatelessWidget {
 
     return TextFormField(
       controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
+      keyboardType: keyboardType ?? TextInputType.multiline,
+      maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(

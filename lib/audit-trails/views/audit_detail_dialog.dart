@@ -27,7 +27,7 @@ class AuditDetailDialog extends StatelessWidget {
               '$label:',
               style: TextStyle(
                 fontSize: 12,
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ),
@@ -40,11 +40,6 @@ class AuditDetailDialog extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _colorizeJson(String jsonString) {
-    // Add color codes to JSON using ANSI-like approach with TextSpan
-    return jsonString;
   }
 
   Widget _buildChangesSection(Map<String, dynamic>? changes, ThemeData theme) {
@@ -89,10 +84,6 @@ class AuditDetailDialog extends StatelessWidget {
 
   List<TextSpan> _buildColoredJson(String json) {
     final List<TextSpan> spans = [];
-    final RegExp keyPattern = RegExp(r'"([^"]+)":');
-    final RegExp stringPattern = RegExp(r':\s*"([^"]*)"');
-    final RegExp numberPattern = RegExp(r':\s*(\d+\.?\d*)');
-    final RegExp boolPattern = RegExp(r':\s*(true|false|null)');
 
     int lastIndex = 0;
 

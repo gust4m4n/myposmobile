@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../home/models/product_model.dart';
 import '../../shared/config/api_config.dart';
@@ -12,7 +11,9 @@ import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/multiline_text_field_x.dart';
 import '../../shared/widgets/red_button_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/products_management_service.dart';
@@ -331,7 +332,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                           ? null
                           : _pickPhoto,
                       label: 'change'.tr,
-                      backgroundColor: Colors.white.withOpacity(0.5),
+                      backgroundColor: Colors.white.withValues(alpha: 0.5),
                       foregroundColor: Colors.black,
                     ),
                   ),
@@ -364,14 +365,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
               const SizedBox(height: 16),
 
               // Product Name
-              TextFormField(
+              TextFieldX(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'productName'.tr,
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                  fillColor: theme.colorScheme.surface,
-                ),
+                hintText: 'productName'.tr,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'productNameRequired'.tr;
@@ -382,14 +378,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
               const SizedBox(height: 16),
 
               // Description
-              TextFormField(
+              MultilineTextFieldX(
                 controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'description'.tr,
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                  fillColor: theme.colorScheme.surface,
-                ),
+                hintText: 'description'.tr,
                 maxLines: 3,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -401,14 +392,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
               const SizedBox(height: 16),
 
               // Category
-              TextFormField(
+              TextFieldX(
                 controller: _categoryController,
-                decoration: InputDecoration(
-                  labelText: 'category'.tr,
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                  fillColor: theme.colorScheme.surface,
-                ),
+                hintText: 'category'.tr,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'categoryRequired'.tr;
@@ -419,14 +405,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
               const SizedBox(height: 16),
 
               // SKU
-              TextFormField(
+              TextFieldX(
                 controller: _skuController,
-                decoration: InputDecoration(
-                  labelText: 'sku'.tr,
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                  fillColor: theme.colorScheme.surface,
-                ),
+                hintText: 'sku'.tr,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'skuRequired'.tr;
@@ -440,16 +421,10 @@ class _EditProductDialogState extends State<EditProductDialog> {
               Row(
                 children: [
                   Expanded(
-                    child: TextFormField(
+                    child: TextFieldX(
                       controller: _priceController,
-                      decoration: InputDecoration(
-                        labelText: 'price'.tr,
-                        border: const OutlineInputBorder(),
-                        filled: true,
-                        fillColor: theme.colorScheme.surface,
-                      ),
+                      hintText: 'price'.tr,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'priceRequired'.tr;
@@ -464,16 +439,10 @@ class _EditProductDialogState extends State<EditProductDialog> {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: TextFormField(
+                    child: TextFieldX(
                       controller: _stockController,
-                      decoration: InputDecoration(
-                        labelText: 'stock'.tr,
-                        border: const OutlineInputBorder(),
-                        filled: true,
-                        fillColor: theme.colorScheme.surface,
-                      ),
+                      hintText: 'stock'.tr,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'stockRequired'.tr;

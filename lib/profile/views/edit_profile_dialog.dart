@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/profile_service.dart';
@@ -75,8 +76,6 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return DialogX(
       title: 'editProfile'.tr,
       width: 500,
@@ -88,14 +87,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Full Name
-            TextFormField(
+            TextFieldX(
               controller: _fullNameController,
-              decoration: InputDecoration(
-                labelText: 'fullName'.tr,
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: theme.colorScheme.surface,
-              ),
+              hintText: 'fullName'.tr,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'fullNameRequired'.tr;
@@ -106,14 +100,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             const SizedBox(height: 16),
 
             // Email
-            TextFormField(
+            TextFieldX(
               controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'email'.tr,
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: theme.colorScheme.surface,
-              ),
+              hintText: 'email'.tr,
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {

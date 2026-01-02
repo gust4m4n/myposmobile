@@ -26,7 +26,7 @@ class SearchFieldX extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
-            color: theme.colorScheme.onSurface.withOpacity(0.8),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
           ),
           prefixIcon: Icon(Icons.search, color: theme.hintColor),
           suffixIcon: controller.text.isNotEmpty
