@@ -1,12 +1,18 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/api_models.dart';
 import '../../shared/config/api_config.dart';
+import '../../shared/utils/image_upload_service.dart';
+import '../../shared/widgets/image_x.dart';
 import '../../shared/widgets/page_x.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/profile_service.dart';
 import 'edit_profile_dialog.dart';
-import 'upload_profile_photo_dialog.dart';
 
 class ProfilePage extends StatefulWidget {
   final String languageCode;
@@ -20,6 +26,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _profileService = ProfileService();
   bool _isLoading = true;
+  bool _isUploading = false;
   ProfileModel? _profile;
 
   @override
@@ -68,18 +75,82 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<void> _showUploadPhotoDialog() async {
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => UploadProfilePhotoDialog(
-        languageCode: widget.languageCode,
-        currentImageUrl: _profile?.user.image,
-      ),
-    );
+  Future<void> _pickAndUploadPhoto() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+        allowMultiple: false,
+        dialogTitle: 'Select Photo',
+      );
 
-    // Reload profile if photo was uploaded/deleted
-    if (result == true) {
-      await _loadProfile();
+      if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
+        if (kDebugMode) {
+          print('📸 Selected file path: ${file.path}');
+          print('📸 File exists: ${file.existsSync()}');
+          print('📸 File size: ${file.lengthSync()} bytes');
+        }
+
+        if (!mounted) return;
+
+        // Upload photo
+        if (kDebugMode) {
+          print('📤 Starting upload...');
+        }
+
+        setState(() {
+          _isUploading = true;
+        });
+
+        final response = await ImageUploadService.uploadProfilePhoto(
+          filePath: file.path,
+        );
+
+        if (kDebugMode) {
+          print('📥 Upload response: statusCode=${response.statusCode}');
+          print('📥 Upload response: message=${response.message}');
+          print('📥 Upload response: error=${response.error}');
+          print('📥 Upload response: data=${response.data}');
+        }
+
+        if (!mounted) return;
+
+        setState(() {
+          _isUploading = false;
+        });
+
+        if (response.statusCode == 200 && response.data != null) {
+          if (kDebugMode) {
+            print('✅ Upload successful, updating profile...');
+          }
+          // Update profile with new data from response
+          // Response format: {code: 0, message: "...", data: {user, tenant, branch}}
+          final profileData = response.data!['data'] as Map<String, dynamic>;
+          setState(() {
+            _profile = ProfileModel.fromJson(profileData);
+          });
+          if (kDebugMode) {
+            print('✅ Profile updated');
+          }
+        } else {
+          if (kDebugMode) {
+            print('❌ Upload failed: ${response.message ?? response.error}');
+          }
+          ToastX.error(
+            context,
+            response.message ?? response.error ?? 'Failed to upload photo',
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('❌ Error picking/uploading image: $e');
+        print('❌ Stack trace: $stackTrace');
+      }
+      if (mounted) {
+        ToastX.error(context, 'Failed to pick image: $e');
+      }
     }
   }
 
@@ -136,69 +207,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Row(
                               children: [
                                 // Profile Photo
-                                Stack(
-                                  children: [
-                                    Container(
-                                      width: 80,
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.primary
-                                            .withOpacity(0.1),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: _profile!.user.image != null
-                                          ? ClipOval(
-                                              child: Image.network(
-                                                '${ApiConfig.baseUrl}${_profile!.user.image}',
-                                                fit: BoxFit.cover,
-                                                errorBuilder:
-                                                    (
-                                                      context,
-                                                      error,
-                                                      stackTrace,
-                                                    ) {
-                                                      return Icon(
-                                                        Icons.person,
-                                                        size: 40,
-                                                        color: theme
-                                                            .colorScheme
-                                                            .primary,
-                                                      );
-                                                    },
-                                              ),
-                                            )
-                                          : Icon(
-                                              Icons.person,
-                                              size: 40,
-                                              color: theme.colorScheme.primary,
-                                            ),
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: theme.colorScheme.primary,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: theme.colorScheme.surface,
-                                            width: 2,
-                                          ),
-                                        ),
-                                        child: IconButton(
-                                          onPressed: _showUploadPhotoDialog,
-                                          icon: const Icon(
-                                            Icons.camera_alt,
-                                            size: 16,
-                                          ),
-                                          iconSize: 16,
-                                          padding: const EdgeInsets.all(4),
-                                          constraints: const BoxConstraints(),
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                ImageX(
+                                  imageUrl: _profile!.user.image,
+                                  baseUrl: ApiConfig.baseUrl,
+                                  size: 80,
+                                  cornerRadius: 40,
+                                  onPicked: _pickAndUploadPhoto,
+                                  isLoading: _isUploading,
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(

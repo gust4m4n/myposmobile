@@ -7,7 +7,9 @@ import '../../faq/views/faq_page.dart';
 import '../../shared/controllers/language_controller.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
+import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/page_x.dart';
+import '../../shared/widgets/text_field_x.dart';
 import '../../tnc/views/tnc_page.dart';
 import '../../translations/translation_extension.dart';
 import '../services/login_controller.dart';
@@ -153,19 +155,13 @@ class LoginPage extends StatelessWidget {
     ThemeData theme,
   ) {
     TranslationService.setLanguage(languageCode);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Obx(
-      () => TextFormField(
+      () => TextFieldX(
         controller: controller.emailController,
+        hintText: 'email'.tr,
+        prefixIcon: Icons.email,
         keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-          labelText: 'email'.tr,
-          prefixIcon: const Icon(Icons.email),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          filled: true,
-          fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
-        ),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'pleaseEnterEmail'.tr;
@@ -186,26 +182,21 @@ class LoginPage extends StatelessWidget {
     ThemeData theme,
   ) {
     TranslationService.setLanguage(languageCode);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Obx(
-      () => TextFormField(
+      () => TextFieldX(
         controller: controller.passwordController,
+        hintText: 'password'.tr,
+        prefixIcon: Icons.lock,
         obscureText: controller.obscurePassword.value,
-        decoration: InputDecoration(
-          labelText: 'password'.tr,
-          prefixIcon: const Icon(Icons.lock),
-          suffixIcon: IconButton(
-            icon: Icon(
-              controller.obscurePassword.value
-                  ? Icons.visibility
-                  : Icons.visibility_off,
-            ),
-            onPressed: controller.togglePasswordVisibility,
+        suffixIcon: IconButton(
+          icon: Icon(
+            controller.obscurePassword.value
+                ? Icons.visibility
+                : Icons.visibility_off,
+            size: 20,
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          filled: true,
-          fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+          onPressed: controller.togglePasswordVisibility,
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -226,49 +217,10 @@ class LoginPage extends StatelessWidget {
     TranslationService.setLanguage(languageCode);
 
     return Obx(
-      () => SizedBox(
-        height: 50,
-        child: ElevatedButton(
-          onPressed: controller.isLoading.value ? null : controller.login,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: theme.colorScheme.primary,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            disabledBackgroundColor: theme.colorScheme.primary.withOpacity(0.6),
-          ),
-          child: controller.isLoading.value
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'loggingIn'.tr,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                )
-              : Text(
-                  'loginButton'.tr,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-        ),
+      () => GreenButtonX(
+        onClicked: controller.login,
+        title: controller.isLoading.value ? 'loggingIn'.tr : 'loginButton'.tr,
+        enabled: !controller.isLoading.value,
       ),
     );
   }
