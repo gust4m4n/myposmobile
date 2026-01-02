@@ -21,7 +21,7 @@ class _DashboardPageState extends State<DashboardPage> {
   DashboardModel? _dashboard;
   bool _isLoading = false;
 
-  // Payment Performance Chart
+  // Performance Chart
   List<PaymentPerformanceModel> _performanceData = [];
   bool _isLoadingPerformance = false;
   int _selectedDays = 7;
@@ -66,10 +66,7 @@ class _DashboardPageState extends State<DashboardPage> {
       setState(() => _performanceData = response.data!);
     } else {
       if (mounted) {
-        ToastX.error(
-          context,
-          response.message ?? 'Failed to load payment performance',
-        );
+        ToastX.error(context, response.message ?? 'Failed to load performance');
       }
     }
   }
@@ -111,16 +108,35 @@ class _DashboardPageState extends State<DashboardPage> {
                     _buildSummaryCards(),
                     const SizedBox(height: 24),
 
-                    // Payment Performance Chart
-                    _buildSectionTitle('Payment Performance'),
-                    const SizedBox(height: 12),
-                    _buildPaymentPerformanceSection(),
-                    const SizedBox(height: 24),
-
-                    // Transactions Statistics
-                    _buildSectionTitle('Transactions Statistics'),
-                    const SizedBox(height: 12),
-                    _buildTransactionsStats(),
+                    // Performance & Transactions (2 columns)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Performance Chart (Left Column)
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildSectionTitle('Performance'),
+                              const SizedBox(height: 12),
+                              _buildPaymentPerformanceSection(),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        // Transactions (Right Column)
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildSectionTitle('Transactions'),
+                              const SizedBox(height: 12),
+                              _buildTransactionsStats(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -156,12 +172,6 @@ class _DashboardPageState extends State<DashboardPage> {
           _dashboard!.totalProducts.toString(),
           Icons.shopping_bag,
           Colors.purple,
-        ),
-        _buildSummaryCard(
-          'Categories',
-          _dashboard!.totalCategories.toString(),
-          Icons.category,
-          Colors.teal,
         ),
       ],
     );
@@ -265,13 +275,18 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           children: [
             _buildStatRow(
-              'All Time',
-              CurrencyFormatter.format(transactions.allTime),
+              'Today',
+              CurrencyFormatter.format(transactions.today),
             ),
             const Divider(),
             _buildStatRow(
-              'Today',
-              CurrencyFormatter.format(transactions.today),
+              'This Week',
+              CurrencyFormatter.format(transactions.thisWeek),
+            ),
+            const Divider(),
+            _buildStatRow(
+              'This Month',
+              CurrencyFormatter.format(transactions.thisMonth),
             ),
             const Divider(),
             _buildStatRow(
@@ -297,6 +312,11 @@ class _DashboardPageState extends State<DashboardPage> {
             _buildStatRow(
               'Last 360 Days',
               CurrencyFormatter.format(transactions.last360Days),
+            ),
+            const Divider(),
+            _buildStatRow(
+              'All Time',
+              CurrencyFormatter.format(transactions.allTime),
             ),
           ],
         ),
