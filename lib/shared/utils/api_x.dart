@@ -481,19 +481,20 @@ class ApiX {
       // Add form fields
       request.fields.addAll(fields);
 
+      // Log request before adding file
+      appLog(
+        '📤 POST Multipart to: $endpoint',
+        endpoint: url,
+        headers: request.headers,
+        body: 'Fields: ${request.fields}, FilePath: ${filePath ?? "none"}',
+      );
+
       // Add file if provided
       if (filePath != null) {
         final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
         request.files.add(file);
         appLog('📤 File added: ${file.filename}, size: ${file.length} bytes');
       }
-
-      appLog(
-        '📤 POST Multipart to: $endpoint',
-        endpoint: url,
-        headers: request.headers,
-        body: 'Fields: ${request.fields}, Files: ${request.files.length}',
-      );
 
       final streamedResponse = await request.send().timeout(
         ApiConfig.connectTimeout,
@@ -570,19 +571,20 @@ class ApiX {
       // Add form fields
       request.fields.addAll(fields);
 
+      // Log request before adding file
+      appLog(
+        '📤 PUT Multipart to: $endpoint',
+        endpoint: url,
+        headers: request.headers,
+        body: 'Fields: ${request.fields}, FilePath: ${filePath ?? "none"}',
+      );
+
       // Add file if provided
       if (filePath != null) {
         final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
         request.files.add(file);
         appLog('📤 File added: ${file.filename}, size: ${file.length} bytes');
       }
-
-      appLog(
-        '📤 PUT Multipart to: $endpoint',
-        endpoint: url,
-        headers: request.headers,
-        body: 'Fields: ${request.fields}, Files: ${request.files.length}',
-      );
 
       final streamedResponse = await request.send().timeout(
         ApiConfig.connectTimeout,

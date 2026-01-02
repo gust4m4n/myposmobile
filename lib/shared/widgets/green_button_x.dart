@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'button_x.dart';
 
-class GrayButton extends StatelessWidget {
+class GreenButtonX extends StatelessWidget {
   final VoidCallback? onClicked;
   final String title;
   final bool enabled;
 
-  const GrayButton({
+  const GreenButtonX({
     super.key,
     required this.onClicked,
     this.title = 'Button',
@@ -19,7 +19,7 @@ class GrayButton extends StatelessWidget {
     return ButtonX(
       onClicked: enabled ? onClicked : null,
       label: title,
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.green,
     );
   }
 }

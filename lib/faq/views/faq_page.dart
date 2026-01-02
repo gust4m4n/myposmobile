@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/green_button.dart';
+import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/page_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/faq_service.dart';
@@ -154,7 +154,7 @@ class _FaqPageState extends State<FaqPage> {
           ],
         ),
         actions: [
-          GreenButton(
+          GreenButtonX(
             onClicked: () => Navigator.pop(context),
             title: 'close'.tr,
           ),

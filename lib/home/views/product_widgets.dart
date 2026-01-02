@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/currency_formatter.dart';
-import '../../shared/widgets/search_field.dart';
+import '../../shared/widgets/search_field_x.dart';
 import '../models/product_model.dart';
 
 /// Combined widget untuk menampilkan daftar produk dengan category filter dan grid
@@ -186,7 +186,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
           const SizedBox(width: 12),
           Padding(
             padding: EdgeInsets.only(right: widget.isMobile ? 12 : 16),
-            child: SearchField(
+            child: SearchFieldX(
               controller: _searchController,
               onChanged: (value) {
                 widget.onSearchChanged(value);

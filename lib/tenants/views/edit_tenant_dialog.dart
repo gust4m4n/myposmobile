@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/green_button.dart';
+import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../models/tenant_model.dart';
@@ -372,7 +372,7 @@ class _EditTenantDialogState extends State<EditTenantDialog> {
           onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
           child: Text('cancel'.tr),
         ),
-        GreenButton(
+        GreenButtonX(
           onClicked: _isSubmitting ? null : _handleSubmit,
           title: _isSubmitting ? 'saving'.tr : 'save'.tr,
         ),

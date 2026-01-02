@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/gray_button.dart';
-import '../../shared/widgets/green_button.dart';
+import '../../shared/widgets/gray_button_x.dart';
+import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/users_management_service.dart';
@@ -365,7 +365,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
         Row(
           children: [
             Expanded(
-              child: GrayButton(
+              child: GrayButtonX(
                 onClicked: _isSubmitting
                     ? null
                     : () => Navigator.of(context).pop(),
@@ -374,7 +374,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: GreenButton(
+              child: GreenButtonX(
                 onClicked: _isSubmitting ? null : _handleSubmit,
                 title: _isSubmitting ? 'saving'.tr : 'save'.tr,
               ),

@@ -8,8 +8,8 @@ import '../../shared/config/api_config.dart';
 import '../../shared/utils/image_upload_service.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/gray_button.dart';
-import '../../shared/widgets/red_button.dart';
+import '../../shared/widgets/gray_button_x.dart';
+import '../../shared/widgets/red_button_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 
@@ -108,11 +108,11 @@ class _UploadProfilePhotoDialogState extends State<UploadProfilePhotoDialog> {
         title: 'deletePhoto'.tr,
         content: Text('deletePhotoConfirmation'.tr),
         actions: [
-          GrayButton(
+          GrayButtonX(
             onClicked: () => Navigator.of(context).pop(false),
             title: 'cancel'.tr,
           ),
-          RedButton(
+          RedButtonX(
             onClicked: () => Navigator.of(context).pop(true),
             title: 'delete'.tr,
           ),

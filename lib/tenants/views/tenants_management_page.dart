@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/data_table_x.dart';
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/page_x.dart';
-import '../../shared/widgets/red_button.dart';
+import '../../shared/widgets/red_button_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../models/tenant_model.dart';
@@ -121,11 +121,11 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
         title: 'deleteTenant'.tr,
         content: Text('${'deleteTenantConfirmation'.tr} "${tenant.name}"?'),
         actions: [
-          GrayButton(
+          GrayButtonX(
             onClicked: () => Navigator.pop(context, false),
             title: 'cancel'.tr,
           ),
-          RedButton(
+          RedButtonX(
             onClicked: () => Navigator.pop(context, true),
             title: 'delete'.tr,
           ),
@@ -191,165 +191,155 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                 ),
               ),
             )
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (ScrollNotification scrollInfo) {
-                              if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent - 200) {
-                                if (!_isLoadingMore && _hasMoreData) {
-                                  _loadMoreTenants();
-                                }
+          : Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollInfo) {
+                            if (scrollInfo.metrics.pixels >=
+                                scrollInfo.metrics.maxScrollExtent - 200) {
+                              if (!_isLoadingMore && _hasMoreData) {
+                                _loadMoreTenants();
                               }
-                              return false;
-                            },
-                            child: DataTableX(
-                              maxHeight: double.infinity,
-                              columns: [
-                                DataColumn(label: Text('image'.tr)),
-                                DataColumn(label: Text('tenantName'.tr)),
-                                DataColumn(label: Text('email'.tr)),
-                                DataColumn(label: Text('phone'.tr)),
-                                DataColumn(label: Text('status'.tr)),
-                                DataColumn(label: Text('actions'.tr)),
-                              ],
-                              rows: _tenants.map((tenant) {
-                                return DataRow(
-                                  cells: [
-                                    DataCell(
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child:
-                                            tenant.image != null &&
-                                                tenant.image!.isNotEmpty
-                                            ? Image.network(
-                                                'http://localhost:8080${tenant.image}',
-                                                width: 40,
-                                                height: 40,
-                                                fit: BoxFit.cover,
-                                                errorBuilder:
-                                                    (
-                                                      context,
-                                                      error,
-                                                      stackTrace,
-                                                    ) {
-                                                      return Container(
-                                                        width: 40,
-                                                        height: 40,
-                                                        color: Colors.grey[300],
-                                                        child: Icon(
-                                                          Icons.business,
-                                                          size: 24,
-                                                          color:
-                                                              Colors.grey[600],
-                                                        ),
-                                                      );
-                                                    },
-                                              )
-                                            : Container(
-                                                width: 40,
-                                                height: 40,
-                                                color: Colors.grey[300],
-                                                child: Icon(
-                                                  Icons.business,
-                                                  size: 24,
-                                                  color: Colors.grey[600],
-                                                ),
+                            }
+                            return false;
+                          },
+                          child: DataTableX(
+                            maxHeight: double.infinity,
+                            columns: [
+                              DataColumn(label: Text('image'.tr)),
+                              DataColumn(label: Text('tenantName'.tr)),
+                              DataColumn(label: Text('email'.tr)),
+                              DataColumn(label: Text('phone'.tr)),
+                              DataColumn(label: Text('status'.tr)),
+                              DataColumn(label: Text('actions'.tr)),
+                            ],
+                            rows: _tenants.map((tenant) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child:
+                                          tenant.image != null &&
+                                              tenant.image!.isNotEmpty
+                                          ? Image.network(
+                                              'http://localhost:8080${tenant.image}',
+                                              width: 40,
+                                              height: 40,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Container(
+                                                      width: 40,
+                                                      height: 40,
+                                                      color: Colors.grey[300],
+                                                      child: Icon(
+                                                        Icons.business,
+                                                        size: 24,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                    );
+                                                  },
+                                            )
+                                          : Container(
+                                              width: 40,
+                                              height: 40,
+                                              color: Colors.grey[300],
+                                              child: Icon(
+                                                Icons.business,
+                                                size: 24,
+                                                color: Colors.grey[600],
                                               ),
-                                      ),
+                                            ),
                                     ),
-                                    DataCell(Text(tenant.name)),
-                                    DataCell(Text(tenant.email ?? '-')),
-                                    DataCell(Text(tenant.phone ?? '-')),
-                                    DataCell(
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
+                                  ),
+                                  DataCell(Text(tenant.name)),
+                                  DataCell(Text(tenant.email ?? '-')),
+                                  DataCell(Text(tenant.phone ?? '-')),
+                                  DataCell(
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: tenant.isActive == true
+                                            ? Colors.green.withOpacity(0.1)
+                                            : Colors.red.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        tenant.isActive == true
+                                            ? 'active'.tr
+                                            : 'inactive'.tr,
+                                        style: TextStyle(
                                           color: tenant.isActive == true
-                                              ? Colors.green.withOpacity(0.1)
-                                              : Colors.red.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          tenant.isActive == true
-                                              ? 'active'.tr
-                                              : 'inactive'.tr,
-                                          style: TextStyle(
-                                            color: tenant.isActive == true
-                                                ? Colors.green
-                                                : Colors.red,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    DataCell(
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              size: 20,
-                                            ),
-                                            onPressed: () async {
-                                              final result =
-                                                  await showDialog<bool>(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        EditTenantDialog(
-                                                          languageCode: widget
-                                                              .languageCode,
-                                                          tenant: tenant,
-                                                        ),
-                                                  );
-                                              if (result == true) {
-                                                _loadTenants();
-                                              }
-                                            },
-                                            tooltip: 'edit'.tr,
+                                  ),
+                                  DataCell(
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            size: 20,
                                           ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.delete,
-                                              size: 20,
-                                            ),
-                                            onPressed: () =>
-                                                _showDeleteConfirmation(tenant),
-                                            tooltip: 'delete'.tr,
-                                            color: Colors.red,
+                                          onPressed: () async {
+                                            final result =
+                                                await showDialog<bool>(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      EditTenantDialog(
+                                                        languageCode:
+                                                            widget.languageCode,
+                                                        tenant: tenant,
+                                                      ),
+                                                );
+                                            if (result == true) {
+                                              _loadTenants();
+                                            }
+                                          },
+                                          tooltip: 'edit'.tr,
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            size: 20,
                                           ),
-                                        ],
-                                      ),
+                                          onPressed: () =>
+                                              _showDeleteConfirmation(tenant),
+                                          tooltip: 'delete'.tr,
+                                          color: Colors.red,
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                );
-                              }).toList(),
-                            ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
                           ),
                         ),
-                        if (_isLoadingMore)
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                      ],
-                    ),
+                      ),
+                      if (_isLoadingMore)
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
     );
   }

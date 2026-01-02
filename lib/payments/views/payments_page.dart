@@ -180,137 +180,132 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 ],
               ),
             )
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (ScrollNotification scrollInfo) {
-                              if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent - 200) {
-                                if (!_isLoadingMore && _hasMoreData) {
-                                  _loadMorePayments();
-                                }
+          : Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollInfo) {
+                            if (scrollInfo.metrics.pixels >=
+                                scrollInfo.metrics.maxScrollExtent - 200) {
+                              if (!_isLoadingMore && _hasMoreData) {
+                                _loadMorePayments();
                               }
-                              return false;
-                            },
-                            child: DataTableX(
-                              maxHeight: double.infinity,
-                              columnSpacing: 20,
-                              columns: [
-                                DataTableColumn.buildColumn(
-                                  context: context,
-                                  label: 'paymentId'.tr,
-                                ),
-                                DataTableColumn.buildColumn(
-                                  context: context,
-                                  label: 'orderId'.tr,
-                                ),
-                                DataTableColumn.buildColumn(
-                                  context: context,
-                                  label: 'amount'.tr,
-                                  numeric: true,
-                                ),
-                                DataTableColumn.buildColumn(
-                                  context: context,
-                                  label: 'method'.tr,
-                                ),
-                                DataTableColumn.buildColumn(
-                                  context: context,
-                                  label: 'status'.tr,
-                                ),
-                                DataTableColumn.buildColumn(
-                                  context: context,
-                                  label: 'createdAt'.tr,
-                                ),
-                              ],
-                              rows: _payments.map((payment) {
-                                final paymentId = payment['id'] ?? 0;
-                                final orderId = payment['order_id'] ?? 0;
-                                final amount = payment['amount'] ?? 0;
-                                final paymentMethod =
-                                    payment['payment_method'] ?? 'N/A';
-                                final status = payment['status'] ?? 'pending';
-                                final createdAt = payment['created_at'] ?? '';
+                            }
+                            return false;
+                          },
+                          child: DataTableX(
+                            maxHeight: double.infinity,
+                            columnSpacing: 20,
+                            columns: [
+                              DataTableColumn.buildColumn(
+                                context: context,
+                                label: 'paymentId'.tr,
+                              ),
+                              DataTableColumn.buildColumn(
+                                context: context,
+                                label: 'orderId'.tr,
+                              ),
+                              DataTableColumn.buildColumn(
+                                context: context,
+                                label: 'amount'.tr,
+                                numeric: true,
+                              ),
+                              DataTableColumn.buildColumn(
+                                context: context,
+                                label: 'method'.tr,
+                              ),
+                              DataTableColumn.buildColumn(
+                                context: context,
+                                label: 'status'.tr,
+                              ),
+                              DataTableColumn.buildColumn(
+                                context: context,
+                                label: 'createdAt'.tr,
+                              ),
+                            ],
+                            rows: _payments.map((payment) {
+                              final paymentId = payment['id'] ?? 0;
+                              final orderId = payment['order_id'] ?? 0;
+                              final amount = payment['amount'] ?? 0;
+                              final paymentMethod =
+                                  payment['payment_method'] ?? 'N/A';
+                              final status = payment['status'] ?? 'pending';
+                              final createdAt = payment['created_at'] ?? '';
 
-                                return DataRow(
-                                  onSelectChanged: (_) =>
-                                      _showPaymentDetail(payment),
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        '#$paymentId',
-                                        style: const TextStyle(
+                              return DataRow(
+                                onSelectChanged: (_) =>
+                                    _showPaymentDetail(payment),
+                                cells: [
+                                  DataCell(
+                                    Text(
+                                      '#$paymentId',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(Text('#$orderId')),
+                                  DataCell(
+                                    Text(
+                                      CurrencyFormatter.format(
+                                        amount.toDouble(),
+                                      ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(Text(paymentMethod)),
+                                  DataCell(
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: _getStatusColor(
+                                          status,
+                                        ).withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: _getStatusColor(status),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        status.toUpperCase(),
+                                        style: TextStyle(
+                                          color: _getStatusColor(status),
                                           fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
                                         ),
                                       ),
                                     ),
-                                    DataCell(Text('#$orderId')),
-                                    DataCell(
-                                      Text(
-                                        CurrencyFormatter.format(
-                                          amount.toDouble(),
-                                        ),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      createdAt,
+                                      style: const TextStyle(fontSize: 16.0),
                                     ),
-                                    DataCell(Text(paymentMethod)),
-                                    DataCell(
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 6,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: _getStatusColor(
-                                            status,
-                                          ).withOpacity(0.2),
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          border: Border.all(
-                                            color: _getStatusColor(status),
-                                            width: 1,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          status.toUpperCase(),
-                                          style: TextStyle(
-                                            color: _getStatusColor(status),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        createdAt,
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
-                            ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
                           ),
                         ),
-                        if (_isLoadingMore)
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                      ],
-                    ),
+                      ),
+                      if (_isLoadingMore)
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
     );
   }

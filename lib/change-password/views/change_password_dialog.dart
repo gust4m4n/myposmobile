@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/gray_button.dart';
-import '../../shared/widgets/green_button.dart';
+import '../../shared/widgets/gray_button_x.dart';
+import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/change_password_service.dart';
@@ -205,8 +205,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         ),
       ),
       actions: [
-        GrayButton(onClicked: () => Navigator.pop(context), title: 'cancel'.tr),
-        GreenButton(
+        GrayButtonX(onClicked: () => Navigator.pop(context), title: 'cancel'.tr),
+        GreenButtonX(
           onClicked: _handleChangePassword,
           title: _isLoading ? 'changing'.tr : 'changePassword'.tr,
           enabled: !_isLoading,
