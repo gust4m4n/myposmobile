@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/green_button.dart';
 import '../../translations/translation_extension.dart';
 
 class AuditDetailDialog extends StatelessWidget {
@@ -23,19 +22,19 @@ class AuditDetailDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 120,
+            width: 100,
             child: Text(
               '$label:',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                fontSize: 12,
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
           ),
           Expanded(
             child: SelectableText(
               value,
-              style: const TextStyle(fontWeight: FontWeight.normal),
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
             ),
           ),
         ],
@@ -43,31 +42,137 @@ class AuditDetailDialog extends StatelessWidget {
     );
   }
 
+  String _colorizeJson(String jsonString) {
+    // Add color codes to JSON using ANSI-like approach with TextSpan
+    return jsonString;
+  }
+
   Widget _buildChangesSection(Map<String, dynamic>? changes, ThemeData theme) {
     if (changes == null || changes.isEmpty) {
-      return Text(
-        'noChanges'.tr,
-        style: TextStyle(color: Colors.grey[600], fontStyle: FontStyle.italic),
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          'noChanges'.tr,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
       );
     }
 
+    final jsonString = const JsonEncoder.withIndent('  ').convert(changes);
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: Colors.black,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
       ),
-      child: SelectableText(
-        const JsonEncoder.withIndent('  ').convert(changes),
-        style: const TextStyle(
-          fontFamily: 'monospace',
-          fontSize: 13,
-          color: Colors.black87,
+      child: SelectableText.rich(
+        TextSpan(
+          children: _buildColoredJson(jsonString),
+          style: const TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 13,
+            height: 1.5,
+          ),
         ),
       ),
     );
+  }
+
+  List<TextSpan> _buildColoredJson(String json) {
+    final List<TextSpan> spans = [];
+    final RegExp keyPattern = RegExp(r'"([^"]+)":');
+    final RegExp stringPattern = RegExp(r':\s*"([^"]*)"');
+    final RegExp numberPattern = RegExp(r':\s*(\d+\.?\d*)');
+    final RegExp boolPattern = RegExp(r':\s*(true|false|null)');
+
+    int lastIndex = 0;
+
+    // Process the JSON string character by character
+    for (int i = 0; i < json.length; i++) {
+      final char = json[i];
+
+      // Check for keys (property names)
+      if (char == '"' && i > 0 && json[i - 1] != '\\') {
+        if (lastIndex < i) {
+          spans.add(
+            TextSpan(
+              text: json.substring(lastIndex, i),
+              style: const TextStyle(color: Colors.white70),
+            ),
+          );
+        }
+
+        final endQuote = json.indexOf('"', i + 1);
+        if (endQuote != -1) {
+          final key = json.substring(i, endQuote + 1);
+          final nextChar = endQuote + 1 < json.length ? json[endQuote + 1] : '';
+
+          if (nextChar == ':') {
+            // This is a key
+            spans.add(
+              TextSpan(
+                text: key,
+                style: const TextStyle(color: Color(0xFF9CDCFE)), // Light blue
+              ),
+            );
+            i = endQuote;
+            lastIndex = endQuote + 1;
+          } else {
+            // This is a string value
+            spans.add(
+              TextSpan(
+                text: key,
+                style: const TextStyle(color: Color(0xFFCE9178)), // Orange
+              ),
+            );
+            i = endQuote;
+            lastIndex = endQuote + 1;
+          }
+        }
+      }
+    }
+
+    // Add remaining text
+    if (lastIndex < json.length) {
+      final remaining = json.substring(lastIndex);
+      // Color numbers, booleans, null
+      final parts = remaining.split(RegExp(r'(\d+\.?\d*|true|false|null)'));
+      for (var part in parts) {
+        if (RegExp(r'^\d+\.?\d*$').hasMatch(part)) {
+          spans.add(
+            TextSpan(
+              text: part,
+              style: const TextStyle(color: Color(0xFFB5CEA8)), // Light green
+            ),
+          );
+        } else if (part == 'true' || part == 'false' || part == 'null') {
+          spans.add(
+            TextSpan(
+              text: part,
+              style: const TextStyle(color: Color(0xFF569CD6)), // Blue
+            ),
+          );
+        } else {
+          spans.add(
+            TextSpan(
+              text: part,
+              style: const TextStyle(color: Colors.white70),
+            ),
+          );
+        }
+      }
+    }
+
+    return spans;
   }
 
   @override
@@ -119,13 +224,37 @@ class AuditDetailDialog extends StatelessWidget {
                 ),
               ),
               const Divider(),
-              _buildInfoRow('user'.tr, '$userName (ID: $userId)', theme),
-              _buildInfoRow('tenantId'.tr, tenantId, theme),
-              _buildInfoRow('branchId'.tr, branchId, theme),
-              _buildInfoRow('entityType'.tr, entityType, theme),
-              _buildInfoRow('entityId'.tr, entityId, theme),
-              _buildInfoRow('action'.tr, action, theme),
-              _buildInfoRow('timestamp'.tr, createdAt, theme),
+
+              // 2-column layout for basic information
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          'user'.tr,
+                          '$userName (ID: $userId)',
+                          theme,
+                        ),
+                        _buildInfoRow('tenantId'.tr, tenantId, theme),
+                        _buildInfoRow('entityType'.tr, entityType, theme),
+                        _buildInfoRow('action'.tr, action, theme),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _buildInfoRow('branchId'.tr, branchId, theme),
+                        _buildInfoRow('entityId'.tr, entityId, theme),
+                        _buildInfoRow('timestamp'.tr, createdAt, theme),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
 
               const SizedBox(height: 24),
 
@@ -144,18 +273,6 @@ class AuditDetailDialog extends StatelessWidget {
           ),
         ),
       ),
-      actions: [
-        Row(
-          children: [
-            Expanded(
-              child: GreenButton(
-                onClicked: () => Navigator.pop(context),
-                title: 'close'.tr,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

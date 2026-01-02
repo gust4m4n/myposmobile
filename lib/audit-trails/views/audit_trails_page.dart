@@ -312,11 +312,6 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
           onPressed: _showFilterDialog,
           tooltip: 'filters'.tr,
         ),
-        IconButton(
-          icon: const Icon(Icons.refresh),
-          onPressed: _loadAuditTrails,
-          tooltip: 'refresh'.tr,
-        ),
       ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -334,85 +329,63 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
                 ],
               ),
             )
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: DataTableX(
-                maxHeight: double.infinity,
-                columnSpacing: 12,
-                columns: [
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'user'.tr,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'action'.tr,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'entity'.tr,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'timestamp'.tr,
-                  ),
-                  DataTableColumn.buildColumn(
-                    context: context,
-                    label: 'details'.tr,
-                  ),
-                ],
-                rows: _auditTrails.map((audit) {
-                  final userName = audit['user_name'] ?? 'Unknown';
-                  final action = audit['action'] ?? '';
-                  final entityType = audit['entity_type'] ?? '';
-                  final entityId = audit['entity_id']?.toString() ?? '';
-                  final createdAt = audit['created_at'] ?? '';
+          : DataTableX(
+              maxHeight: double.infinity,
+              columnSpacing: 12,
+              columns: [
+                DataTableColumn.buildColumn(context: context, label: 'user'.tr),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'action'.tr,
+                ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'entity'.tr,
+                ),
+                DataTableColumn.buildColumn(
+                  context: context,
+                  label: 'timestamp'.tr,
+                ),
+              ],
+              rows: _auditTrails.map((audit) {
+                final userName = audit['user_name'] ?? 'Unknown';
+                final action = audit['action'] ?? '';
+                final entityType = audit['entity_type'] ?? '';
+                final entityId = audit['entity_id']?.toString() ?? '';
+                final createdAt = audit['created_at'] ?? '';
 
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(userName)),
-                      DataCell(
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(
-                              int.parse(
-                                _getActionColor(
-                                  action,
-                                ).replaceFirst('#', '0xFF'),
-                              ),
+                return DataRow(
+                  onSelectChanged: (_) => _showAuditDetail(audit),
+                  cells: [
+                    DataCell(Text(userName)),
+                    DataCell(
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color(
+                            int.parse(
+                              _getActionColor(action).replaceFirst('#', '0xFF'),
                             ),
-                            borderRadius: BorderRadius.circular(4),
                           ),
-                          child: Text(
-                            action,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          action,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
                           ),
                         ),
                       ),
-                      DataCell(Text('$entityType #$entityId')),
-                      DataCell(Text(createdAt)),
-                      DataCell(
-                        IconButton(
-                          icon: const Icon(
-                            Icons.visibility,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          onPressed: () => _showAuditDetail(audit),
-                          tooltip: 'viewDetails'.tr,
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
+                    ),
+                    DataCell(Text('$entityType #$entityId')),
+                    DataCell(Text(createdAt)),
+                  ],
+                );
+              }).toList(),
             ),
     );
   }
