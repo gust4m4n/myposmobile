@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/image_x.dart';
 import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../tenants/models/tenant_model.dart';
@@ -38,7 +37,8 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
   final _phoneController = TextEditingController();
   bool _isActive = true;
   bool _isSubmitting = false;
-  File? _selectedImage;
+  bool _isUploading = false;
+  String? _uploadedImagePath;
 
   @override
   void initState() {
@@ -72,42 +72,30 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage(File imageFile) async {
+    setState(() {
+      _isUploading = true;
+    });
     try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        allowMultiple: false,
-      );
-
-      if (result != null && result.files.single.path != null) {
-        final filePath = result.files.single.path!;
-        final file = File(filePath);
-
-        if (kDebugMode) {
-          print('📷 Selected image: $filePath');
-          print('📷 File exists: ${file.existsSync()}');
-          print('📷 File size: ${file.lengthSync()} bytes');
-        }
-
-        // Check file size (max 5MB)
-        final fileSize = file.lengthSync();
-        if (fileSize > 5 * 1024 * 1024) {
-          if (!mounted) return;
-          ToastX.error(context, 'fileSizeExceeded'.tr);
-          return;
-        }
-
+      final fileSize = imageFile.lengthSync();
+      if (fileSize > 5 * 1024 * 1024) {
+        if (!mounted) return;
+        ToastX.error(context, 'fileSizeExceeded'.tr);
         setState(() {
-          _selectedImage = file;
+          _isUploading = false;
         });
+        return;
       }
+      setState(() {
+        _uploadedImagePath = imageFile.path;
+        _isUploading = false;
+      });
     } catch (e) {
-      if (kDebugMode) {
-        print('❌ Error picking image: $e');
-      }
       if (!mounted) return;
       ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
+      setState(() {
+        _isUploading = false;
+      });
     }
   }
 
@@ -131,7 +119,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim(),
         isActive: _isActive,
-        image: _selectedImage,
+        image: _uploadedImagePath != null ? File(_uploadedImagePath!) : null,
       );
 
       if (!mounted) return;
@@ -166,50 +154,14 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image
-              if (_selectedImage != null) ...[
-                Center(
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          _selectedImage!,
-                          height: 150,
-                          width: 150,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        top: 4,
-                        right: 4,
-                        child: IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.black54,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _selectedImage = null;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Change/Select Image Button
               Center(
-                child: ButtonX(
-                  onClicked: _pickImage,
-                  label: _selectedImage == null
-                      ? 'selectImage'.tr
-                      : 'changeImage'.tr,
-                  backgroundColor: Colors.white.withValues(alpha: 0.5),
-                  foregroundColor: Colors.black,
+                child: ImageX(
+                  imageUrl: null,
+                  baseUrl: null,
+                  size: 120,
+                  cornerRadius: 8,
+                  onPicked: _pickImage,
+                  isLoading: _isUploading,
                 ),
               ),
               const SizedBox(height: 24),

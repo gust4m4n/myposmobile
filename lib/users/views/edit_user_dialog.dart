@@ -1,14 +1,13 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/config/api_config.dart';
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/image_x.dart';
 import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
@@ -39,8 +38,9 @@ class _EditUserDialogState extends State<EditUserDialog> {
   late String _selectedRole;
   late bool _isActive;
   bool _isSubmitting = false;
+  bool _isUploading = false;
   String? _existingImageUrl;
-  File? _selectedImage;
+  String? _uploadedImagePath;
 
   final List<String> _roles = ['user', 'branchadmin', 'tenantadmin'];
 
@@ -79,42 +79,31 @@ class _EditUserDialogState extends State<EditUserDialog> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage(File imageFile) async {
+    setState(() {
+      _isUploading = true;
+    });
     try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        allowMultiple: false,
-      );
-
-      if (result != null && result.files.single.path != null) {
-        final filePath = result.files.single.path!;
-        final file = File(filePath);
-
-        if (kDebugMode) {
-          print('📷 Selected image: $filePath');
-          print('📷 File exists: ${file.existsSync()}');
-          print('📷 File size: ${file.lengthSync()} bytes');
-        }
-
-        // Check file size (max 5MB)
-        final fileSize = file.lengthSync();
-        if (fileSize > 5 * 1024 * 1024) {
-          if (!mounted) return;
-          ToastX.error(context, 'fileSizeExceeded'.tr);
-          return;
-        }
-
+      final fileSize = imageFile.lengthSync();
+      if (fileSize > 5 * 1024 * 1024) {
+        if (!mounted) return;
+        ToastX.error(context, 'fileSizeExceeded'.tr);
         setState(() {
-          _selectedImage = file;
+          _isUploading = false;
         });
+        return;
       }
+      setState(() {
+        _uploadedImagePath = imageFile.path;
+        _existingImageUrl = null;
+        _isUploading = false;
+      });
     } catch (e) {
-      if (kDebugMode) {
-        print('❌ Error picking image: $e');
-      }
       if (!mounted) return;
       ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
+      setState(() {
+        _isUploading = false;
+      });
     }
   }
 
@@ -138,7 +127,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
       branchId: int.parse(_branchIdController.text.trim()),
       isActive: _isActive,
       password: password.isNotEmpty ? password : null,
-      imageFile: _selectedImage,
+      imageFile: _uploadedImagePath != null ? File(_uploadedImagePath!) : null,
     );
 
     if (!mounted) return;
@@ -158,10 +147,6 @@ class _EditUserDialogState extends State<EditUserDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = _existingImageUrl != null
-        ? '${ApiConfig.baseUrl}$_existingImageUrl'
-        : null;
-
     return DialogX(
       title: 'editUser'.tr,
       width: 600,
@@ -173,71 +158,14 @@ class _EditUserDialogState extends State<EditUserDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image
-              if (_selectedImage != null || imageUrl != null) ...[
-                Center(
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(75),
-                        child: _selectedImage != null
-                            ? Image.file(
-                                _selectedImage!,
-                                height: 150,
-                                width: 150,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                imageUrl!,
-                                height: 150,
-                                width: 150,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 150,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 48,
-                                      color: Colors.grey,
-                                    ),
-                                  );
-                                },
-                              ),
-                      ),
-                      if (_selectedImage != null)
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          child: IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            style: IconButton.styleFrom(
-                              backgroundColor: Colors.black54,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _selectedImage = null;
-                              });
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Change Image Button
               Center(
-                child: ButtonX(
-                  onClicked: _pickImage,
-                  label: 'changeImage'.tr,
-                  backgroundColor: Colors.white.withValues(alpha: 0.5),
-                  foregroundColor: Colors.black,
+                child: ImageX(
+                  imageUrl: _existingImageUrl,
+                  baseUrl: ApiConfig.baseUrl,
+                  size: 120,
+                  cornerRadius: 8,
+                  onPicked: _pickImage,
+                  isLoading: _isUploading,
                 ),
               ),
               const SizedBox(height: 24),

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -75,73 +74,70 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<void> _pickAndUploadPhoto() async {
+  Future<void> _pickAndUploadPhoto(File imageFile) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        allowMultiple: false,
-        dialogTitle: 'Select Photo',
+      if (kDebugMode) {
+        print('📸 Selected file path: ${imageFile.path}');
+        print('📸 File exists: ${imageFile.existsSync()}');
+        print('📸 File size: ${imageFile.lengthSync()} bytes');
+      }
+
+      if (!mounted) return;
+
+      // Check file size (max 5MB)
+      final fileSize = imageFile.lengthSync();
+      if (fileSize > 5 * 1024 * 1024) {
+        ToastX.error(context, 'photoTooLarge'.tr);
+        return;
+      }
+
+      // Upload photo
+      if (kDebugMode) {
+        print('📤 Starting upload...');
+      }
+
+      setState(() {
+        _isUploading = true;
+      });
+
+      final response = await ImageUploadService.uploadProfilePhoto(
+        filePath: imageFile.path,
       );
 
-      if (result != null && result.files.single.path != null) {
-        final file = File(result.files.single.path!);
+      if (kDebugMode) {
+        print('📥 Upload response: statusCode=${response.statusCode}');
+        print('📥 Upload response: message=${response.message}');
+        print('📥 Upload response: error=${response.error}');
+        print('📥 Upload response: data=${response.data}');
+      }
+
+      if (!mounted) return;
+
+      setState(() {
+        _isUploading = false;
+      });
+
+      if (response.statusCode == 200 && response.data != null) {
         if (kDebugMode) {
-          print('📸 Selected file path: ${file.path}');
-          print('📸 File exists: ${file.existsSync()}');
-          print('📸 File size: ${file.lengthSync()} bytes');
+          print('✅ Upload successful, updating profile...');
         }
-
-        if (!mounted) return;
-
-        // Upload photo
-        if (kDebugMode) {
-          print('📤 Starting upload...');
-        }
-
+        // Update profile with new data from response
+        // Response format: {code: 0, message: "...", data: {user, tenant, branch}}
+        final profileData = response.data!['data'] as Map<String, dynamic>;
         setState(() {
-          _isUploading = true;
+          _profile = ProfileModel.fromJson(profileData);
         });
-
-        final response = await ImageUploadService.uploadProfilePhoto(
-          filePath: file.path,
+        if (kDebugMode) {
+          print('✅ Profile updated');
+        }
+      } else {
+        if (kDebugMode) {
+          print('❌ Upload failed: ${response.message ?? response.error}');
+        }
+        ToastX.error(
+          context,
+          response.message ?? response.error ?? 'Failed to upload photo',
         );
-
-        if (kDebugMode) {
-          print('📥 Upload response: statusCode=${response.statusCode}');
-          print('📥 Upload response: message=${response.message}');
-          print('📥 Upload response: error=${response.error}');
-          print('📥 Upload response: data=${response.data}');
-        }
-
-        if (!mounted) return;
-
-        setState(() {
-          _isUploading = false;
-        });
-
-        if (response.statusCode == 200 && response.data != null) {
-          if (kDebugMode) {
-            print('✅ Upload successful, updating profile...');
-          }
-          // Update profile with new data from response
-          // Response format: {code: 0, message: "...", data: {user, tenant, branch}}
-          final profileData = response.data!['data'] as Map<String, dynamic>;
-          setState(() {
-            _profile = ProfileModel.fromJson(profileData);
-          });
-          if (kDebugMode) {
-            print('✅ Profile updated');
-          }
-        } else {
-          if (kDebugMode) {
-            print('❌ Upload failed: ${response.message ?? response.error}');
-          }
-          ToastX.error(
-            context,
-            response.message ?? response.error ?? 'Failed to upload photo',
-          );
-        }
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {

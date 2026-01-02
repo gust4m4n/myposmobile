@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class ImageX extends StatelessWidget {
@@ -5,7 +8,7 @@ class ImageX extends StatelessWidget {
   final String? baseUrl;
   final double size;
   final double cornerRadius;
-  final VoidCallback onPicked;
+  final Function(File) onPicked;
   final bool isLoading;
   final Color? backgroundColor;
   final Color? iconColor;
@@ -34,7 +37,8 @@ class ImageX extends StatelessWidget {
           height: size,
           decoration: BoxDecoration(
             color:
-                backgroundColor ?? theme.colorScheme.primary.withValues(alpha: 0.1),
+                backgroundColor ??
+                theme.colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(cornerRadius),
           ),
           child: imageUrl != null
@@ -76,15 +80,15 @@ class ImageX extends StatelessWidget {
           ),
         // Camera button
         Positioned(
-          right: 0,
-          bottom: 0,
+          right: 4,
+          bottom: 4,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.orange,
-              borderRadius: BorderRadius.circular(cornerRadius),
+              color: Colors.black.withValues(alpha: 0.5),
+              shape: BoxShape.circle,
             ),
             child: IconButton(
-              onPressed: isLoading ? null : onPicked,
+              onPressed: isLoading ? null : _handlePickImage,
               icon: Icon(Icons.camera_alt, size: size * 0.2 * 0.75),
               iconSize: size * 0.2,
               padding: EdgeInsets.all(size * 0.05),
@@ -95,5 +99,23 @@ class ImageX extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _handlePickImage() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final file = File(filePath);
+        onPicked(file);
+      }
+    } catch (e) {
+      // Error will be handled by parent
+    }
   }
 }

@@ -1,18 +1,15 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../home/models/product_model.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/image_upload_service.dart';
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
+import '../../shared/widgets/image_x.dart';
 import '../../shared/widgets/multiline_text_field_x.dart';
-import '../../shared/widgets/red_button_x.dart';
 import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
@@ -42,10 +39,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
   late TextEditingController _stockController;
   late bool _isActive;
   bool _isSubmitting = false;
-  bool _isUploadingPhoto = false;
-  bool _isDeletingPhoto = false;
+  bool _isUploading = false;
   String? _photoPath;
-  String? _selectedPhotoPath;
+  String? _uploadedImagePath;
 
   @override
   void initState() {
@@ -79,125 +75,31 @@ class _EditProductDialogState extends State<EditProductDialog> {
     super.dispose();
   }
 
-  Future<void> _pickPhoto() async {
+  Future<void> _pickImage(File imageFile) async {
+    setState(() {
+      _isUploading = true;
+    });
     try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        allowMultiple: false,
-      );
-
-      if (result != null && result.files.single.path != null) {
-        final filePath = result.files.single.path!;
-        final file = File(filePath);
-
-        if (kDebugMode) {
-          print('📷 Selected photo: $filePath');
-          print('📷 File exists: ${file.existsSync()}');
-          print('📷 File size: ${file.lengthSync()} bytes');
-        }
-
-        // Check file size (max 5MB)
-        final fileSize = file.lengthSync();
-        if (fileSize > 5 * 1024 * 1024) {
-          if (!mounted) return;
-          ToastX.error(context, 'photoTooLarge'.tr);
-          return;
-        }
-
+      final fileSize = imageFile.lengthSync();
+      if (fileSize > 5 * 1024 * 1024) {
+        if (!mounted) return;
+        ToastX.error(context, 'fileSizeExceeded'.tr);
         setState(() {
-          _selectedPhotoPath = file.path;
+          _isUploading = false;
         });
+        return;
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error picking photo: $e');
-      }
-      if (!mounted) return;
-      ToastX.error(context, 'photoPickFailed'.tr);
-    }
-  }
-
-  // ignore: unused_element
-  Future<void> _uploadPhotoUnused() async {
-    if (_selectedPhotoPath == null || widget.product.id == null) return;
-
-    setState(() {
-      _isUploadingPhoto = true;
-    });
-
-    final response = await ImageUploadService.uploadProductPhoto(
-      productId: widget.product.id!,
-      filePath: _selectedPhotoPath!,
-    );
-
-    if (!mounted) return;
-
-    setState(() {
-      _isUploadingPhoto = false;
-    });
-
-    if (response.statusCode == 200) {
-      ToastX.success(context, 'photoUploadedSuccess'.tr);
-
-      // Update photo path from response
-      if (response.data != null && response.data!['image'] != null) {
-        setState(() {
-          _photoPath = response.data!['image'];
-          _selectedPhotoPath = null;
-        });
-      }
-    } else {
-      ToastX.error(context, response.message ?? 'photoUploadFailed'.tr);
-    }
-  }
-
-  // ignore: unused_element
-  Future<void> _deletePhotoUnused() async {
-    if (_photoPath == null || widget.product.id == null) return;
-
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => DialogX(
-        title: 'deletePhoto'.tr,
-        content: Text('deletePhotoConfirmation'.tr),
-        actions: [
-          GrayButtonX(
-            onClicked: () => Navigator.pop(context, false),
-            title: 'cancel'.tr,
-          ),
-          RedButtonX(
-            onClicked: () => Navigator.pop(context, true),
-            title: 'delete'.tr,
-          ),
-        ],
-      ),
-    );
-
-    if (confirm != true) return;
-
-    setState(() {
-      _isDeletingPhoto = true;
-    });
-
-    final response = await ImageUploadService.deleteProductPhoto(
-      productId: widget.product.id!,
-    );
-
-    if (!mounted) return;
-
-    setState(() {
-      _isDeletingPhoto = false;
-    });
-
-    if (response.statusCode == 200) {
-      ToastX.success(context, 'photoDeletedSuccess'.tr);
       setState(() {
+        _uploadedImagePath = imageFile.path;
         _photoPath = null;
-        _selectedPhotoPath = null;
+        _isUploading = false;
       });
-    } else {
-      ToastX.error(context, response.message ?? 'photoDeleteFailed'.tr);
+    } catch (e) {
+      if (!mounted) return;
+      ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
+      setState(() {
+        _isUploading = false;
+      });
     }
   }
 
@@ -210,11 +112,11 @@ class _EditProductDialogState extends State<EditProductDialog> {
       _isSubmitting = true;
     });
 
-    // Upload photo first if there's a selected photo
-    if (_selectedPhotoPath != null) {
+    // Upload photo first if there's an uploaded image
+    if (_uploadedImagePath != null) {
       final uploadResponse = await ImageUploadService.uploadProductPhoto(
         productId: widget.product.id!,
-        filePath: _selectedPhotoPath!,
+        filePath: _uploadedImagePath!,
       );
 
       if (uploadResponse.statusCode != 200) {
@@ -230,7 +132,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
       if (uploadResponse.data != null &&
           uploadResponse.data!['image'] != null) {
         _photoPath = uploadResponse.data!['image'];
-        _selectedPhotoPath = null;
+        _uploadedImagePath = null;
       }
     }
 
@@ -260,87 +162,14 @@ class _EditProductDialogState extends State<EditProductDialog> {
   }
 
   Widget _buildPhotoSection() {
-    final theme = Theme.of(context);
-    final bool hasSelectedPhoto = _selectedPhotoPath != null;
-    final bool hasExistingPhoto = _photoPath != null;
-    final String? displayPhotoUrl = hasExistingPhoto
-        ? (_photoPath!.startsWith('http')
-              ? _photoPath
-              : '${ApiConfig.baseUrl}$_photoPath')
-        : null;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'productPhoto'.tr,
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Photo preview with change button
-          Center(
-            child: Stack(
-              children: [
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: theme.dividerColor),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: hasSelectedPhoto
-                        ? Image.file(
-                            File(_selectedPhotoPath!),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.broken_image, size: 64);
-                            },
-                          )
-                        : hasExistingPhoto
-                        ? Image.network(
-                            displayPhotoUrl!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.broken_image, size: 64);
-                            },
-                          )
-                        : Icon(Icons.image, size: 64, color: Colors.grey[600]),
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: SizedBox(
-                    height: 32,
-                    child: ButtonX(
-                      onClicked: _isUploadingPhoto || _isDeletingPhoto
-                          ? null
-                          : _pickPhoto,
-                      label: 'change'.tr,
-                      backgroundColor: Colors.white.withValues(alpha: 0.5),
-                      foregroundColor: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return Center(
+      child: ImageX(
+        imageUrl: _photoPath,
+        baseUrl: ApiConfig.baseUrl,
+        size: 120,
+        cornerRadius: 8,
+        onPicked: _pickImage,
+        isLoading: _isUploading,
       ),
     );
   }
