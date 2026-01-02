@@ -175,6 +175,8 @@ class ApiX {
       }
 
       return ApiResponse<T>(
+        code: jsonResponse['code'],
+        message: jsonResponse['message'],
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??
@@ -229,6 +231,8 @@ class ApiX {
       }
 
       return ApiResponse<T>(
+        code: jsonResponse['code'],
+        message: jsonResponse['message'],
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??
@@ -283,6 +287,8 @@ class ApiX {
       }
 
       return ApiResponse<T>(
+        code: jsonResponse['code'],
+        message: jsonResponse['message'],
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??
@@ -334,6 +340,8 @@ class ApiX {
       }
 
       return ApiResponse<T>(
+        code: jsonResponse['code'],
+        message: jsonResponse['message'],
         error:
             jsonResponse['error'] ??
             jsonResponse['message'] ??

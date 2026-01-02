@@ -63,13 +63,17 @@ class _PaymentsPageState extends State<PaymentsPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final data = (response.data as Map<String, dynamic>)['data'];
-      if (data is List) {
-        setState(() {
-          _payments = data.cast<Map<String, dynamic>>();
-          _hasMoreData = data.length >= _perPage;
-        });
-      }
+      final data = response.data as Map<String, dynamic>;
+      final dataObj = data['data'] as Map<String, dynamic>?;
+      final items = dataObj?['items'] as List?;
+      final pagination = dataObj?['pagination'] as Map<String, dynamic>?;
+
+      setState(() {
+        _payments = items?.cast<Map<String, dynamic>>() ?? [];
+        final currentPage = pagination?['page'] ?? 1;
+        final totalPages = pagination?['total_pages'] ?? 1;
+        _hasMoreData = currentPage < totalPages;
+      });
     }
 
     if (mounted) {
@@ -95,15 +99,19 @@ class _PaymentsPageState extends State<PaymentsPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final data = (response.data as Map<String, dynamic>)['data'];
-      if (data is List) {
-        final newPayments = data.cast<Map<String, dynamic>>();
-        setState(() {
-          _payments.addAll(newPayments);
-          _hasMoreData = newPayments.length >= _perPage;
-          _isLoadingMore = false;
-        });
-      }
+      final data = response.data as Map<String, dynamic>;
+      final dataObj = data['data'] as Map<String, dynamic>?;
+      final items = dataObj?['items'] as List?;
+      final pagination = dataObj?['pagination'] as Map<String, dynamic>?;
+
+      final newPayments = items?.cast<Map<String, dynamic>>() ?? [];
+      setState(() {
+        _payments.addAll(newPayments);
+        final currentPage = pagination?['page'] ?? _currentPage;
+        final totalPages = pagination?['total_pages'] ?? 1;
+        _hasMoreData = currentPage < totalPages;
+        _isLoadingMore = false;
+      });
     } else {
       setState(() {
         _isLoadingMore = false;

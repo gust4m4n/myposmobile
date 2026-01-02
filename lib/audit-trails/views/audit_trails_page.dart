@@ -22,8 +22,6 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
   List<Map<String, dynamic>> _auditTrails = [];
   bool _isLoading = false;
   int _currentPage = 1;
-  int _totalPages = 1;
-  int _totalRecords = 0;
   final int _limit = 32;
 
   // Filters
@@ -98,13 +96,11 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
 
     if (response.statusCode == 200 && response.data != null) {
       final data = response.data as Map<String, dynamic>;
-      final auditData = data['data'] as List?;
-      final pagination = data['pagination'] as Map<String, dynamic>?;
+      final dataObj = data['data'] as Map<String, dynamic>?;
+      final auditData = dataObj?['items'] as List?;
 
       setState(() {
         _auditTrails = auditData?.cast<Map<String, dynamic>>() ?? [];
-        _totalRecords = pagination?['total'] ?? 0;
-        _totalPages = pagination?['total_pages'] ?? 1;
       });
     }
 
@@ -340,135 +336,82 @@ class _AuditTrailsPageState extends State<AuditTrailsPage> {
             )
           : Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'totalRecords'.tr.replaceAll(
-                          '{count}',
-                          _totalRecords.toString(),
-                        ),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.chevron_left),
-                            onPressed: _currentPage > 1
-                                ? () {
-                                    setState(() {
-                                      _currentPage--;
-                                    });
-                                    _loadAuditTrails();
-                                  }
-                                : null,
-                          ),
-                          Text(
-                            '${'page'.tr} $_currentPage / $_totalPages',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.chevron_right),
-                            onPressed: _currentPage < _totalPages
-                                ? () {
-                                    setState(() {
-                                      _currentPage++;
-                                    });
-                                    _loadAuditTrails();
-                                  }
-                                : null,
-                          ),
-                        ],
-                      ),
-                    ],
+              child: DataTableX(
+                maxHeight: double.infinity,
+                columnSpacing: 12,
+                columns: [
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'user'.tr,
                   ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: DataTableX(
-                      maxHeight: double.infinity,
-                      columnSpacing: 12,
-                      columns: [
-                        DataTableColumn.buildColumn(
-                          context: context,
-                          label: 'user'.tr,
-                        ),
-                        DataTableColumn.buildColumn(
-                          context: context,
-                          label: 'action'.tr,
-                        ),
-                        DataTableColumn.buildColumn(
-                          context: context,
-                          label: 'entity'.tr,
-                        ),
-                        DataTableColumn.buildColumn(
-                          context: context,
-                          label: 'timestamp'.tr,
-                        ),
-                        DataTableColumn.buildColumn(
-                          context: context,
-                          label: 'details'.tr,
-                        ),
-                      ],
-                      rows: _auditTrails.map((audit) {
-                        final userName = audit['user_name'] ?? 'Unknown';
-                        final action = audit['action'] ?? '';
-                        final entityType = audit['entity_type'] ?? '';
-                        final entityId = audit['entity_id']?.toString() ?? '';
-                        final createdAt = audit['created_at'] ?? '';
-
-                        return DataRow(
-                          cells: [
-                            DataCell(Text(userName)),
-                            DataCell(
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Color(
-                                    int.parse(
-                                      _getActionColor(
-                                        action,
-                                      ).replaceFirst('#', '0xFF'),
-                                    ),
-                                  ),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  action,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DataCell(Text('$entityType #$entityId')),
-                            DataCell(Text(createdAt)),
-                            DataCell(
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.visibility,
-                                  size: 20,
-                                  color: Colors.blue,
-                                ),
-                                onPressed: () => _showAuditDetail(audit),
-                                tooltip: 'viewDetails'.tr,
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'action'.tr,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'entity'.tr,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'timestamp'.tr,
+                  ),
+                  DataTableColumn.buildColumn(
+                    context: context,
+                    label: 'details'.tr,
                   ),
                 ],
+                rows: _auditTrails.map((audit) {
+                  final userName = audit['user_name'] ?? 'Unknown';
+                  final action = audit['action'] ?? '';
+                  final entityType = audit['entity_type'] ?? '';
+                  final entityId = audit['entity_id']?.toString() ?? '';
+                  final createdAt = audit['created_at'] ?? '';
+
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(userName)),
+                      DataCell(
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color(
+                              int.parse(
+                                _getActionColor(
+                                  action,
+                                ).replaceFirst('#', '0xFF'),
+                              ),
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            action,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(Text('$entityType #$entityId')),
+                      DataCell(Text(createdAt)),
+                      DataCell(
+                        IconButton(
+                          icon: const Icon(
+                            Icons.visibility,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () => _showAuditDetail(audit),
+                          tooltip: 'viewDetails'.tr,
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
             ),
     );

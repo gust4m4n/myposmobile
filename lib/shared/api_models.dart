@@ -1,11 +1,18 @@
 // Base API Response
 class ApiResponse<T> {
+  final int? code;
   final String? message;
   final T? data;
   final String? error;
   final int statusCode;
 
-  ApiResponse({this.message, this.data, this.error, required this.statusCode});
+  ApiResponse({
+    this.code,
+    this.message,
+    this.data,
+    this.error,
+    required this.statusCode,
+  });
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,
@@ -13,8 +20,9 @@ class ApiResponse<T> {
     int statusCode,
   ) {
     // Handle different response formats:
-    // 1. Standard format: {message: "...", data: {...}, error: null}
-    // 2. Direct format (no data wrapper): {user: {...}, tenant: {...}, ...}
+    // 1. Standard format: {code: 0, message: "...", data: {...}}
+    // 2. Old format: {message: "...", data: {...}, error: null}
+    // 3. Direct format (no data wrapper): {user: {...}, tenant: {...}, ...}
 
     T? parsedData;
 
@@ -22,7 +30,9 @@ class ApiResponse<T> {
       if (json.containsKey('data') && json['data'] != null) {
         // Standard format with 'data' key
         parsedData = fromJsonT(json['data']);
-      } else if (!json.containsKey('message') && !json.containsKey('error')) {
+      } else if (!json.containsKey('message') &&
+          !json.containsKey('error') &&
+          !json.containsKey('code')) {
         // Direct format - entire json is the data
         parsedData = fromJsonT(json);
       }
@@ -32,6 +42,7 @@ class ApiResponse<T> {
     }
 
     return ApiResponse<T>(
+      code: json['code'],
       message: json['message'],
       data: parsedData,
       error: json['error'],

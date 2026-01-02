@@ -63,13 +63,17 @@ class _OrdersPageState extends State<OrdersPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final data = (response.data as Map<String, dynamic>)['data'];
-      if (data is List) {
-        setState(() {
-          _orders = data.cast<Map<String, dynamic>>();
-          _hasMoreData = data.length >= _perPage;
-        });
-      }
+      final data = response.data as Map<String, dynamic>;
+      final dataObj = data['data'] as Map<String, dynamic>?;
+      final items = dataObj?['items'] as List?;
+      final pagination = dataObj?['pagination'] as Map<String, dynamic>?;
+
+      setState(() {
+        _orders = items?.cast<Map<String, dynamic>>() ?? [];
+        final currentPage = pagination?['page'] ?? 1;
+        final totalPages = pagination?['total_pages'] ?? 1;
+        _hasMoreData = currentPage < totalPages;
+      });
     }
 
     if (mounted) {
@@ -95,15 +99,19 @@ class _OrdersPageState extends State<OrdersPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final data = (response.data as Map<String, dynamic>)['data'];
-      if (data is List) {
-        final newOrders = data.cast<Map<String, dynamic>>();
-        setState(() {
-          _orders.addAll(newOrders);
-          _hasMoreData = newOrders.length >= _perPage;
-          _isLoadingMore = false;
-        });
-      }
+      final data = response.data as Map<String, dynamic>;
+      final dataObj = data['data'] as Map<String, dynamic>?;
+      final items = dataObj?['items'] as List?;
+      final pagination = dataObj?['pagination'] as Map<String, dynamic>?;
+
+      final newOrders = items?.cast<Map<String, dynamic>>() ?? [];
+      setState(() {
+        _orders.addAll(newOrders);
+        final currentPage = pagination?['page'] ?? _currentPage;
+        final totalPages = pagination?['total_pages'] ?? 1;
+        _hasMoreData = currentPage < totalPages;
+        _isLoadingMore = false;
+      });
     } else {
       setState(() {
         _isLoadingMore = false;

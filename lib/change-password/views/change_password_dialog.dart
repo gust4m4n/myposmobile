@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button.dart';
+import '../../shared/widgets/green_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/change_password_service.dart';
@@ -205,33 +206,10 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       ),
       actions: [
         GrayButton(onClicked: () => Navigator.pop(context), title: 'cancel'.tr),
-        SizedBox(
-          height: 40,
-          child: ElevatedButton.icon(
-            onPressed: _isLoading ? null : _handleChangePassword,
-            icon: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Icon(Icons.lock_reset),
-            label: Text(_isLoading ? 'changing'.tr : 'changePassword'.tr),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              disabledBackgroundColor: theme.colorScheme.primary.withOpacity(
-                0.6,
-              ),
-            ),
-          ),
+        GreenButton(
+          onClicked: _handleChangePassword,
+          title: _isLoading ? 'changing'.tr : 'changePassword'.tr,
+          enabled: !_isLoading,
         ),
       ],
     );
