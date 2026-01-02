@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
@@ -342,13 +343,15 @@ class _AddTenantDialogState extends State<AddTenantDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
-          child: Text('cancel'.tr),
+        GrayButtonX(
+          onClicked: _isSubmitting ? null : () => Navigator.of(context).pop(),
+          title: 'cancel'.tr,
+          enabled: !_isSubmitting,
         ),
         GreenButtonX(
           onClicked: _isSubmitting ? null : _handleSubmit,
           title: _isSubmitting ? 'saving'.tr : 'save'.tr,
+          enabled: !_isSubmitting,
         ),
       ],
     );

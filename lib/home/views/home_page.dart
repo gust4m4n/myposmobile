@@ -24,7 +24,9 @@ import '../../shared/controllers/profile_controller.dart';
 import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/connectivity_indicator.dart';
 import '../../shared/widgets/dialog_x.dart';
+import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/page_x.dart';
+import '../../shared/widgets/red_button_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../tenants/views/tenants_management_page.dart';
 import '../../tnc/views/tnc_page.dart';
@@ -1440,16 +1442,13 @@ class _HomePageState extends State<HomePage> {
                       onClose: () => Navigator.pop(context, false),
                       content: Text('logoutConfirmation'.tr),
                       actions: [
-                        ButtonX(
+                        GrayButtonX(
                           onClicked: () => Navigator.pop(context, false),
-                          label: 'cancel'.tr,
-                          backgroundColor: theme.colorScheme.surface,
-                          foregroundColor: theme.colorScheme.onSurface,
+                          title: 'cancel'.tr,
                         ),
-                        ButtonX(
+                        RedButtonX(
                           onClicked: () => Navigator.pop(context, true),
-                          label: 'logout'.tr,
-                          backgroundColor: theme.colorScheme.error,
+                          title: 'logout'.tr,
                         ),
                       ],
                     ),
