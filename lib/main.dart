@@ -18,14 +18,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
+  // Initialize storage
+  final storage = await StorageService.getInstance();
+
+  // Load theme preference
+  final isDarkMode = storage.getIsDarkMode() ?? true;
+
   // Initialize GetX controllers
   Get.put(AuthController());
   Get.put(LanguageController());
   Get.put(ProfileController());
-  Get.put(ThemeController());
-
-  // Initialize storage
-  final storage = await StorageService.getInstance();
+  Get.put(ThemeController(initialIsDarkMode: isDarkMode));
 
   // Restore window size or calculate 80% of screen
   final savedWidth = storage.getWindowWidth();

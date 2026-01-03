@@ -4,17 +4,10 @@ import 'package:get/get.dart';
 import '../utils/storage_service.dart';
 
 class ThemeController extends GetxController {
-  var isDarkMode = true.obs;
+  late final Rx<bool> isDarkMode;
 
-  @override
-  void onInit() {
-    super.onInit();
-    _loadThemePreference();
-  }
-
-  Future<void> _loadThemePreference() async {
-    final storage = await StorageService.getInstance();
-    isDarkMode.value = storage.getIsDarkMode() ?? true;
+  ThemeController({bool initialIsDarkMode = true}) {
+    isDarkMode = initialIsDarkMode.obs;
   }
 
   Future<void> toggleTheme() async {

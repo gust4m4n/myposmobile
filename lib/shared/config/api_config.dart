@@ -48,7 +48,6 @@ class ApiConfig {
 
   // Terms & Conditions endpoints (public)
   static const String tnc = '$apiPrefix/tnc';
-  static const String tncActive = '$apiPrefix/tnc/active';
 
   // Superadmin TnC endpoints
   static const String superadminTnc = '$apiPrefix/superadmin/tnc';
