@@ -1,7 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/page_x.dart';
 import '../../shared/widgets/text_field_x.dart';
 import '../../translations/translation_extension.dart';
@@ -21,20 +21,29 @@ class _FaqPageState extends State<FaqPage> {
   List<dynamic> _faqs = [];
   List<dynamic> _filteredFaqs = [];
   bool _isLoading = true;
-  String _selectedCategory = 'All';
-  List<String> _categories = ['All'];
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
     _loadFaqs();
   }
 
   @override
   void dispose() {
+    _debounce?.cancel();
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      _filterFaqs();
+    });
   }
 
   Future<void> _loadFaqs() async {
@@ -60,18 +69,9 @@ class _FaqPageState extends State<FaqPage> {
 
       print('FAQ List count: ${faqList.length}'); // Debug print
 
-      // Extract unique categories
-      final categoriesSet = <String>{'All'};
-      for (var faq in faqList) {
-        if (faq['category'] != null && faq['category'].toString().isNotEmpty) {
-          categoriesSet.add(faq['category']);
-        }
-      }
-
       setState(() {
         _faqs = faqList;
         _filteredFaqs = faqList;
-        _categories = categoriesSet.toList();
       });
     }
 
@@ -82,86 +82,19 @@ class _FaqPageState extends State<FaqPage> {
 
   void _filterFaqs() {
     setState(() {
-      _filteredFaqs = _faqs.where((faq) {
-        // Filter by category
-        final categoryMatch =
-            _selectedCategory == 'All' || faq['category'] == _selectedCategory;
+      final searchText = _searchController.text.toLowerCase();
 
-        // Filter by search text
-        final searchText = _searchController.text.toLowerCase();
-        final textMatch =
-            searchText.isEmpty ||
-            faq['question'].toString().toLowerCase().contains(searchText) ||
-            faq['answer'].toString().toLowerCase().contains(searchText);
-
-        return categoryMatch && textMatch;
-      }).toList();
+      if (searchText.isEmpty) {
+        _filteredFaqs = _faqs;
+      } else {
+        _filteredFaqs = _faqs.where((faq) {
+          return faq['question'].toString().toLowerCase().contains(
+                searchText,
+              ) ||
+              faq['answer'].toString().toLowerCase().contains(searchText);
+        }).toList();
+      }
     });
-  }
-
-  void _showFaqDetail(dynamic faq) {
-    final theme = Theme.of(context);
-    showDialog(
-      context: context,
-      builder: (context) => DialogX(
-        title: 'FAQ',
-        width: 600,
-        onClose: () => Navigator.pop(context),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Category badge
-            if (faq['category'] != null &&
-                faq['category'].toString().isNotEmpty)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  faq['category'],
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: theme.colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ),
-            const SizedBox(height: 16),
-            // Question
-            Text(
-              faq['question'],
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Answer
-            Text(
-              faq['answer'],
-              style: TextStyle(
-                fontSize: 16.0,
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.5,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          GreenButtonX(
-            onClicked: () => Navigator.pop(context),
-            title: 'close'.tr,
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -178,82 +111,18 @@ class _FaqPageState extends State<FaqPage> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   color: theme.colorScheme.surface,
-                  child: Column(
-                    children: [
-                      // Search bar
-                      TextFieldX(
-                        controller: _searchController,
-                        hintText: 'Search FAQs...',
-                        prefixIcon: Icons.search,
-                        suffixIcon: _searchController.text.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  _filterFaqs();
-                                },
-                              )
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                      // Category filter
-                      SizedBox(
-                        height: 40,
-                        child: ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _categories.length,
-                          itemBuilder: (context, index) {
-                            final category = _categories[index];
-                            final isSelected = _selectedCategory == category;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: FilterChip(
-                                label: Text(category),
-                                selected: isSelected,
-                                onSelected: (selected) {
-                                  setState(() {
-                                    _selectedCategory = category;
-                                  });
-                                  _filterFaqs();
-                                },
-                                selectedColor:
-                                    theme.colorScheme.primaryContainer,
-                                checkmarkColor:
-                                    theme.colorScheme.onPrimaryContainer,
-                                labelStyle: TextStyle(
-                                  color: isSelected
-                                      ? theme.colorScheme.onPrimaryContainer
-                                      : theme.colorScheme.onSurface,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Results count
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.3,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        '${_filteredFaqs.length} FAQ(s) found',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
+                  child: TextFieldX(
+                    controller: _searchController,
+                    hintText: 'Search FAQs...',
+                    prefixIcon: Icons.search,
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _searchController.clear();
+                            },
+                          )
+                        : null,
                   ),
                 ),
                 // FAQ list
@@ -291,91 +160,45 @@ class _FaqPageState extends State<FaqPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: InkWell(
-                                onTap: () => _showFaqDetail(faq),
-                                borderRadius: BorderRadius.circular(12),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Category badge
-                                      if (faq['category'] != null &&
-                                          faq['category'].toString().isNotEmpty)
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                            bottom: 8,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: theme
-                                                .colorScheme
-                                                .primaryContainer,
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            faq['category'],
-                                            style: TextStyle(
-                                              fontSize: 16.0,
-                                              color: theme
-                                                  .colorScheme
-                                                  .onPrimaryContainer,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                      // Question
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.help_outline,
-                                            size: 20,
-                                            color: theme.colorScheme.primary,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              faq['question'],
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                                color:
-                                                    theme.colorScheme.onSurface,
-                                              ),
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.chevron_right,
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                          ),
-                                        ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Question
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
                                       ),
-                                      const SizedBox(height: 8),
-                                      // Answer preview
-                                      Text(
-                                        faq['answer'],
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+                                      decoration: BoxDecoration(
+                                        color: theme
+                                            .colorScheme
+                                            .primaryContainer
+                                            .withValues(alpha: 0.3),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        faq['question'],
                                         style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: theme
-                                              .colorScheme
-                                              .onSurfaceVariant,
-                                          height: 1.4,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.onSurface,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    // Answer
+                                    Text(
+                                      faq['answer'],
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
