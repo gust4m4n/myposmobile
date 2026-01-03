@@ -143,10 +143,12 @@ const Map<String, String> en = {
   'totalAmount': 'Total Amount',
   'status': 'Status',
   'createdAt': 'Created At',
+  'orderFailed': 'Order failed',
 
   // Payments Page Additional
   'paymentId': 'Payment ID',
   'amount': 'Amount',
+  'paymentFailed': 'Payment failed',
 
   // Table Columns
   'product': 'Product',
@@ -184,7 +186,7 @@ const Map<String, String> en = {
 
   // Common
   'menu': 'Menu',
-  'user': 'User',
+  'user': 'Staff',
   'notAvailable': 'N/A',
   'unknown': 'Unknown',
   'selectLanguage': 'Select Language',
@@ -297,6 +299,8 @@ const Map<String, String> en = {
   'deleteTenant': 'Delete Tenant',
   'deleteTenantConfirmation': 'Are you sure you want to delete tenant',
   'tenantName': 'Tenant Name',
+  'tenantId': 'Tenant ID',
+  'tenantIdNotFound': 'Tenant ID not found',
   'noTenantsFound': 'No tenants found',
   'tenantCreatedSuccess': 'Tenant created successfully',
   'tenantCreationFailed': 'Failed to create tenant',
@@ -313,6 +317,8 @@ const Map<String, String> en = {
   'deleteBranch': 'Delete Branch',
   'deleteBranchConfirmation': 'Are you sure you want to delete branch',
   'branchName': 'Branch Name',
+  'branch': 'Branch',
+  'branchRequired': 'Branch is required',
   'noBranchesFound': 'No branches found',
   'branchCreatedSuccess': 'Branch created successfully',
   'branchCreationFailed': 'Failed to create branch',
@@ -321,6 +327,7 @@ const Map<String, String> en = {
   'branchDeletedSuccess': 'Branch deleted successfully',
   'branchDeleteFailed': 'Failed to delete branch',
   'loadBranchesFailed': 'Failed to load branches',
+  'failedToLoadBranches': 'Failed to load branches',
 
   // Common Fields
   'name': 'Name',
@@ -331,6 +338,8 @@ const Map<String, String> en = {
   'invalidEmail': 'Invalid email format',
   'selectImage': 'Select Image',
   'changeImage': 'Change Image',
+  'change': 'Change',
+  'image': 'Image',
   'fileSizeExceeded': 'File size exceeds 5MB',
   'imagePickFailed': 'Failed to pick image',
 };

@@ -220,7 +220,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildPaymentPerformanceSection() {
     return Card(
-      elevation: 2,
+      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -259,7 +259,7 @@ class _DashboardPageState extends State<DashboardPage> {
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected ? Colors.blue : Colors.grey[200],
         foregroundColor: isSelected ? Colors.white : Colors.black87,
-        elevation: isSelected ? 2 : 0,
+        elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       child: Text(label),
@@ -269,7 +269,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildTransactionsStats() {
     final transactions = _dashboard!.transactions;
     return Card(
-      elevation: 2,
+      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

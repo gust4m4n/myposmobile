@@ -259,7 +259,7 @@ class _TncPageState extends State<TncPage> {
       physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       child: Card(
-        elevation: 2,
+        elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -433,7 +433,7 @@ class _TncPageState extends State<TncPage> {
         final tnc = _tncList[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
-          elevation: 2,
+          elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

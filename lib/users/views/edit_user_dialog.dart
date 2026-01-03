@@ -42,7 +42,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
   String? _existingImageUrl;
   String? _uploadedImagePath;
 
-  final List<String> _roles = ['user', 'branchadmin', 'tenantadmin'];
+  final List<String> _roles = ['staff', 'branchadmin', 'tenantadmin'];
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
     _branchIdController = TextEditingController(
       text: widget.user['branch_id']?.toString() ?? '',
     );
-    _selectedRole = widget.user['role'] ?? 'user';
+    _selectedRole = widget.user['role'] ?? 'staff';
     _isActive = widget.user['is_active'] ?? true;
     _existingImageUrl = widget.user['image'] as String?;
 

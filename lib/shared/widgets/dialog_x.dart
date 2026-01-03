@@ -25,7 +25,7 @@ class DialogX extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title),
+          Expanded(child: Text(title, textAlign: TextAlign.center)),
           if (onClose != null)
             Container(
               decoration: BoxDecoration(

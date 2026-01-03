@@ -40,15 +40,6 @@ class _ConnectivityIndicatorState extends State<ConnectivityIndicator> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: _isConnected ? Colors.green : Colors.red,
-          boxShadow: [
-            BoxShadow(
-              color: (_isConnected ? Colors.green : Colors.red).withValues(
-                alpha: 0.5,
-              ),
-              blurRadius: 4,
-              spreadRadius: 1,
-            ),
-          ],
         ),
       ),
     );

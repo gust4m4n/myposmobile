@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../controllers/theme_controller.dart';
 import 'app_bar_x.dart';
 
 /// Reusable Page widget for consistent page structure across the application
@@ -34,21 +36,34 @@ class PageX extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: backgroundColor ?? theme.scaffoldBackgroundColor,
-      appBar: AppBarX(
-        title: title,
-        leading: leading,
-        actions: actions,
-        bottom: bottom,
+    return Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          gradient: themeController.isDarkMode.value
+              ? null
+              : themeController.lightGradient,
+          color: themeController.isDarkMode.value
+              ? (backgroundColor ?? theme.scaffoldBackgroundColor)
+              : null,
+        ),
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: Colors.transparent,
+          appBar: AppBarX(
+            title: title,
+            leading: leading,
+            actions: actions,
+            bottom: bottom,
+          ),
+          body: body,
+          floatingActionButton: floatingActionButton,
+          drawer: drawer,
+          drawerScrimColor: drawerScrimColor,
+          drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+        ),
       ),
-      body: body,
-      floatingActionButton: floatingActionButton,
-      drawer: drawer,
-      drawerScrimColor: drawerScrimColor,
-      drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
     );
   }
 }

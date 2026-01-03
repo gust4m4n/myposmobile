@@ -21,12 +21,14 @@ import '../../shared/api_models.dart';
 import '../../shared/controllers/auth_controller.dart';
 import '../../shared/controllers/language_controller.dart';
 import '../../shared/controllers/profile_controller.dart';
+import '../../shared/controllers/theme_controller.dart';
 import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/connectivity_indicator.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/page_x.dart';
 import '../../shared/widgets/red_button_x.dart';
+import '../../shared/widgets/theme_toggle_button.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../tenants/views/tenants_management_page.dart';
 import '../../tnc/views/tnc_page.dart';
@@ -570,6 +572,7 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         const ConnectivityIndicator(),
+        const ThemeToggleButton(),
         // User Profile Photo
         GestureDetector(
           onTap: () async {
@@ -1363,7 +1366,9 @@ class _HomePageState extends State<HomePage> {
                       widget.languageCode == 'en' ? '(English)' : '(Indonesia)',
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],
@@ -1419,6 +1424,28 @@ class _HomePageState extends State<HomePage> {
                       selectedLanguage != widget.languageCode) {
                     Get.find<LanguageController>().toggleLanguage();
                   }
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.brightness_6,
+                  color: theme.colorScheme.onSurface,
+                ),
+                title: Row(
+                  children: [
+                    Text(
+                      'Theme',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    const Spacer(),
+                    const ThemeToggleButton(),
+                  ],
+                ),
+                onTap: () {
+                  Get.find<ThemeController>().toggleTheme();
                 },
               ),
               Divider(color: theme.dividerColor, height: 1),

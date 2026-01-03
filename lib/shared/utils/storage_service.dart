@@ -43,12 +43,12 @@ class StorageService {
   }
 
   // Dark Mode
-  Future<void> saveDarkMode(bool isDarkMode) async {
+  Future<void> saveIsDarkMode(bool isDarkMode) async {
     await _prefs?.setBool(_keyDarkMode, isDarkMode);
   }
 
-  bool getDarkMode() {
-    return _prefs?.getBool(_keyDarkMode) ?? false;
+  bool? getIsDarkMode() {
+    return _prefs?.getBool(_keyDarkMode);
   }
 
   // Window Size

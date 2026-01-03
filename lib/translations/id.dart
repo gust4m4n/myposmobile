@@ -142,10 +142,12 @@ const Map<String, String> id = {
   'totalAmount': 'Total Jumlah',
   'status': 'Status',
   'createdAt': 'Dibuat Pada',
+  'orderFailed': 'Pesanan gagal',
 
   // Payments Page Additional
   'paymentId': 'ID Pembayaran',
   'amount': 'Jumlah',
+  'paymentFailed': 'Pembayaran gagal',
 
   // Table Columns
   'product': 'Produk',
@@ -183,7 +185,7 @@ const Map<String, String> id = {
 
   // Common
   'menu': 'Menu',
-  'user': 'Pengguna',
+  'user': 'Staff',
   'notAvailable': 'T/A',
   'unknown': 'Tidak Diketahui',
   'selectLanguage': 'Pilih Bahasa',
@@ -295,6 +297,8 @@ const Map<String, String> id = {
   'deleteTenant': 'Hapus Tenant',
   'deleteTenantConfirmation': 'Apakah Anda yakin ingin menghapus tenant',
   'tenantName': 'Nama Tenant',
+  'tenantId': 'ID Tenant',
+  'tenantIdNotFound': 'ID Tenant tidak ditemukan',
   'noTenantsFound': 'Tidak ada tenant ditemukan',
   'tenantCreatedSuccess': 'Tenant berhasil ditambahkan',
   'tenantCreationFailed': 'Gagal menambahkan tenant',
@@ -311,6 +315,8 @@ const Map<String, String> id = {
   'deleteBranch': 'Hapus Cabang',
   'deleteBranchConfirmation': 'Apakah Anda yakin ingin menghapus cabang',
   'branchName': 'Nama Cabang',
+  'branch': 'Cabang',
+  'branchRequired': 'Cabang wajib dipilih',
   'noBranchesFound': 'Tidak ada cabang ditemukan',
   'branchCreatedSuccess': 'Cabang berhasil ditambahkan',
   'branchCreationFailed': 'Gagal menambahkan cabang',
@@ -319,6 +325,7 @@ const Map<String, String> id = {
   'branchDeletedSuccess': 'Cabang berhasil dihapus',
   'branchDeleteFailed': 'Gagal menghapus cabang',
   'loadBranchesFailed': 'Gagal memuat cabang',
+  'failedToLoadBranches': 'Gagal memuat cabang',
 
   // Common Fields
   'name': 'Nama',
@@ -329,6 +336,8 @@ const Map<String, String> id = {
   'invalidEmail': 'Format email tidak valid',
   'selectImage': 'Pilih Gambar',
   'changeImage': 'Ganti Gambar',
+  'change': 'Ubah',
+  'image': 'Gambar',
   'fileSizeExceeded': 'Ukuran file melebihi 5MB',
   'imagePickFailed': 'Gagal memilih gambar',
 };

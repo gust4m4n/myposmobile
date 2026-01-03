@@ -35,7 +35,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _fullNameController = TextEditingController();
-  String _selectedRole = 'user';
+  String _selectedRole = 'staff';
   bool _isActive = true;
   bool _isSubmitting = false;
   bool _isUploading = false;
@@ -45,7 +45,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   BranchModel? _selectedBranch;
   bool _isLoadingBranches = false;
 
-  final List<String> _roles = ['user', 'branchadmin', 'tenantadmin'];
+  final List<String> _roles = ['staff', 'branchadmin', 'tenantadmin'];
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
       _emailController.text =
           'testuser${DateTime.now().millisecondsSinceEpoch % 1000}@example.com';
       _passwordController.text = 'Password123!';
-      _selectedRole = 'user';
+      _selectedRole = 'staff';
       _isActive = true;
       print('🐛 Debug mode: Add user form prefilled with test data');
     }

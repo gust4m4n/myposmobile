@@ -194,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         // Profile Header
                         Card(
-                          elevation: 2,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -257,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ? (constraints.maxWidth - 16) / 2
                                       : constraints.maxWidth,
                                   child: Card(
-                                    elevation: 2,
+                                    elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -306,7 +306,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ? (constraints.maxWidth - 16) / 2
                                       : constraints.maxWidth,
                                   child: Card(
-                                    elevation: 2,
+                                    elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -353,7 +353,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(
                                   width: constraints.maxWidth,
                                   child: Card(
-                                    elevation: 2,
+                                    elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),

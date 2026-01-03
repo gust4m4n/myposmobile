@@ -8,6 +8,7 @@ import 'login/views/login_page.dart';
 import 'shared/controllers/auth_controller.dart';
 import 'shared/controllers/language_controller.dart';
 import 'shared/controllers/profile_controller.dart';
+import 'shared/controllers/theme_controller.dart';
 import 'shared/utils/api_x.dart';
 import 'shared/utils/connectivity_service.dart';
 import 'shared/utils/storage_service.dart';
@@ -21,6 +22,7 @@ void main() async {
   Get.put(AuthController());
   Get.put(LanguageController());
   Get.put(ProfileController());
+  Get.put(ThemeController());
 
   // Initialize storage
   final storage = await StorageService.getInstance();
@@ -105,42 +107,17 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp>
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
     final languageController = Get.find<LanguageController>();
+    final themeController = Get.find<ThemeController>();
 
     return Obx(
       () => GetMaterialApp(
         title: 'MyPOSMobile',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          scaffoldBackgroundColor: const Color(0xFF000000),
-          colorScheme: const ColorScheme.dark(
-            primary: Color(0xFF0A84FF),
-            secondary: Color(0xFF32D74B),
-            error: Color(0xFFFF453A),
-            surface: Color(0xFF1C1C1E),
-            onSurface: Colors.white,
-          ),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFF1C1C1E),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            iconTheme: IconThemeData(color: Colors.white),
-          ),
-          cardColor: const Color(0xFF1C1C1E),
-          dividerColor: Color(0xFF38383A),
-          useMaterial3: true,
-          pageTransitionsTheme: const PageTransitionsTheme(
-            builders: {
-              TargetPlatform.android: _InstantPageTransitionsBuilder(),
-              TargetPlatform.iOS: _InstantPageTransitionsBuilder(),
-              TargetPlatform.linux: _InstantPageTransitionsBuilder(),
-              TargetPlatform.macOS: _InstantPageTransitionsBuilder(),
-              TargetPlatform.windows: _InstantPageTransitionsBuilder(),
-            },
-          ),
-        ),
-        themeMode: ThemeMode.dark,
+        theme: themeController.lightTheme,
+        darkTheme: themeController.darkTheme,
+        themeMode: themeController.isDarkMode.value
+            ? ThemeMode.dark
+            : ThemeMode.light,
         home: authController.isLoading.value
             ? const Scaffold(body: Center(child: CircularProgressIndicator()))
             : ConnectivityWrapper(
@@ -154,22 +131,5 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp>
               ),
       ),
     );
-  }
-}
-
-// Custom page transition builder with no animation for instant navigation
-class _InstantPageTransitionsBuilder extends PageTransitionsBuilder {
-  const _InstantPageTransitionsBuilder();
-
-  @override
-  Widget buildTransitions<T>(
-    PageRoute<T> route,
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    // Return child directly without any animation
-    return child;
   }
 }

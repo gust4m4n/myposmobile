@@ -194,7 +194,7 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
         return '#FF6B00';
       case 'branchadmin':
         return '#0066FF';
-      case 'user':
+      case 'staff':
       default:
         return '#00CC66';
     }
@@ -297,7 +297,7 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                             rows: _users.map((user) {
                               final fullName = user['full_name'] ?? '';
                               final email = user['email'] ?? '';
-                              final role = user['role'] ?? 'user';
+                              final role = user['role'] ?? 'staff';
                               final isActive = user['is_active'] ?? false;
                               final userId = user['id'] as int;
                               final image = user['image'] as String?;
