@@ -1,9 +1,5 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
 import '../../shared/config/api_config.dart';
-import '../../shared/utils/storage_service.dart';
+import '../../shared/utils/api_x.dart';
 
 class SuperadminTncService {
   /// Create new Terms & Conditions (Superadmin only)
@@ -18,38 +14,22 @@ class SuperadminTncService {
     required String version,
   }) async {
     try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-      if (token == null) {
-        return {'success': false, 'message': 'No authentication token found'};
-      }
-
-      final response = await http
-          .post(
-            Uri.parse('${ApiConfig.baseUrl}${ApiConfig.superadminTnc}'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            },
-            body: json.encode({
-              'title': title,
-              'content': content,
-              'version': version,
-            }),
-          )
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.post(
+        ApiConfig.superadminTnc,
+        body: {'title': title, 'content': content, 'version': version},
+        requiresAuth: true,
+      );
 
       if (response.statusCode == 200) {
         return {
           'success': true,
-          'data': json.decode(response.body),
+          'data': response.data,
           'message': 'Terms & Conditions created successfully',
         };
       } else {
         return {
           'success': false,
-          'message': 'Failed to create TnC: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to create TnC',
         };
       }
     } catch (e) {
@@ -73,40 +53,28 @@ class SuperadminTncService {
     bool? isActive,
   }) async {
     try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-      if (token == null) {
-        return {'success': false, 'message': 'No authentication token found'};
-      }
-
       Map<String, dynamic> body = {};
       if (title != null) body['title'] = title;
       if (content != null) body['content'] = content;
       if (version != null) body['version'] = version;
       if (isActive != null) body['is_active'] = isActive;
 
-      final response = await http
-          .put(
-            Uri.parse('${ApiConfig.baseUrl}${ApiConfig.superadminTncById(id)}'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            },
-            body: json.encode(body),
-          )
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.put(
+        ApiConfig.superadminTncById(id),
+        body: body,
+        requiresAuth: true,
+      );
 
       if (response.statusCode == 200) {
         return {
           'success': true,
-          'data': json.decode(response.body),
+          'data': response.data,
           'message': 'Terms & Conditions updated successfully',
         };
       } else {
         return {
           'success': false,
-          'message': 'Failed to update TnC: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to update TnC',
         };
       }
     } catch (e) {
@@ -117,21 +85,10 @@ class SuperadminTncService {
   /// Delete Terms & Conditions (Superadmin only)
   Future<Map<String, dynamic>> deleteTnc(int id) async {
     try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-      if (token == null) {
-        return {'success': false, 'message': 'No authentication token found'};
-      }
-
-      final response = await http
-          .delete(
-            Uri.parse('${ApiConfig.baseUrl}${ApiConfig.superadminTncById(id)}'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            },
-          )
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.delete(
+        ApiConfig.superadminTncById(id),
+        requiresAuth: true,
+      );
 
       if (response.statusCode == 200) {
         return {
@@ -141,8 +98,7 @@ class SuperadminTncService {
       } else {
         return {
           'success': false,
-          'message': 'Failed to delete TnC: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to delete TnC',
         };
       }
     } catch (e) {

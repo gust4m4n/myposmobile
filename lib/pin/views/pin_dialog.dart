@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../shared/api_models.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/pin_keypad.dart';
+import '../../shared/widgets/pin_keypad_x.dart';
 import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/pin_service.dart';
@@ -233,7 +233,7 @@ class _PinDialogState extends State<PinDialog> {
 
             // PIN Keypad
             if (!_isSubmitting)
-              PinKeypad(
+              PinKeypadX(
                 pin: _getCurrentPin(),
                 onPinChanged: _onPinChanged,
                 pinLength: 6,

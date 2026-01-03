@@ -1,9 +1,5 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
 import '../../shared/config/api_config.dart';
-import '../../shared/utils/storage_service.dart';
+import '../../shared/utils/api_x.dart';
 
 class SuperadminFaqService {
   /// Create new FAQ (Superadmin only)
@@ -20,39 +16,26 @@ class SuperadminFaqService {
     int? order,
   }) async {
     try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-      if (token == null) {
-        return {'success': false, 'message': 'No authentication token found'};
-      }
+      Map<String, dynamic> body = {'question': question, 'answer': answer};
+      if (category != null) body['category'] = category;
+      if (order != null) body['order'] = order;
 
-      final response = await http
-          .post(
-            Uri.parse('${ApiConfig.baseUrl}${ApiConfig.superadminFaq}'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            },
-            body: json.encode({
-              'question': question,
-              'answer': answer,
-              if (category != null) 'category': category,
-              if (order != null) 'order': order,
-            }),
-          )
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.post(
+        ApiConfig.superadminFaq,
+        body: body,
+        requiresAuth: true,
+      );
 
       if (response.statusCode == 200) {
         return {
           'success': true,
-          'data': json.decode(response.body),
+          'data': response.data,
           'message': 'FAQ created successfully',
         };
       } else {
         return {
           'success': false,
-          'message': 'Failed to create FAQ: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to create FAQ',
         };
       }
     } catch (e) {
@@ -78,12 +61,6 @@ class SuperadminFaqService {
     bool? isActive,
   }) async {
     try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-      if (token == null) {
-        return {'success': false, 'message': 'No authentication token found'};
-      }
-
       Map<String, dynamic> body = {};
       if (question != null) body['question'] = question;
       if (answer != null) body['answer'] = answer;
@@ -91,28 +68,22 @@ class SuperadminFaqService {
       if (order != null) body['order'] = order;
       if (isActive != null) body['is_active'] = isActive;
 
-      final response = await http
-          .put(
-            Uri.parse('${ApiConfig.baseUrl}${ApiConfig.superadminFaqById(id)}'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            },
-            body: json.encode(body),
-          )
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.put(
+        ApiConfig.superadminFaqById(id),
+        body: body,
+        requiresAuth: true,
+      );
 
       if (response.statusCode == 200) {
         return {
           'success': true,
-          'data': json.decode(response.body),
+          'data': response.data,
           'message': 'FAQ updated successfully',
         };
       } else {
         return {
           'success': false,
-          'message': 'Failed to update FAQ: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to update FAQ',
         };
       }
     } catch (e) {
@@ -123,29 +94,17 @@ class SuperadminFaqService {
   /// Delete FAQ (Superadmin only)
   Future<Map<String, dynamic>> deleteFaq(int id) async {
     try {
-      final storage = await StorageService.getInstance();
-      final token = storage.getToken();
-      if (token == null) {
-        return {'success': false, 'message': 'No authentication token found'};
-      }
-
-      final response = await http
-          .delete(
-            Uri.parse('${ApiConfig.baseUrl}${ApiConfig.superadminFaqById(id)}'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $token',
-            },
-          )
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.delete(
+        ApiConfig.superadminFaqById(id),
+        requiresAuth: true,
+      );
 
       if (response.statusCode == 200) {
         return {'success': true, 'message': 'FAQ deleted successfully'};
       } else {
         return {
           'success': false,
-          'message': 'Failed to delete FAQ: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to delete FAQ',
         };
       }
     } catch (e) {

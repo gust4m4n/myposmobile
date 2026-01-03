@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class PinKeypad extends StatelessWidget {
+class PinKeypadX extends StatelessWidget {
   final String pin;
   final ValueChanged<String> onPinChanged;
   final int pinLength;
   final bool obscureText;
 
-  const PinKeypad({
+  const PinKeypadX({
     super.key,
     required this.pin,
     required this.onPinChanged,

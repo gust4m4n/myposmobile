@@ -26,9 +26,12 @@ class SearchFieldX extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
-          prefixIcon: Icon(Icons.search, color: theme.hintColor),
+          prefixIcon: Icon(
+            Icons.search,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
           suffixIcon: controller.text.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.cancel, size: 20),
@@ -39,26 +42,24 @@ class SearchFieldX extends StatelessWidget {
                 )
               : null,
           filled: true,
-          fillColor: Color.lerp(
-            theme.scaffoldBackgroundColor,
-            Colors.white,
-            0.1,
-          ),
+          fillColor: theme.brightness == Brightness.light
+              ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+              : theme.colorScheme.onSurface.withValues(alpha: 0.12),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(color: theme.dividerColor, width: 1),
+            borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(color: theme.dividerColor, width: 1),
+            borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+            borderSide: BorderSide.none,
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
-            vertical: 12,
+            vertical: 14,
           ),
         ),
       ),

@@ -49,7 +49,18 @@ class DialogX extends StatelessWidget {
       ),
       titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
       content: SizedBox(width: width ?? 600, child: content),
-      actions: actions,
+      actions: actions != null
+          ? [
+              Row(
+                children: [
+                  for (int i = 0; i < actions!.length; i++) ...[
+                    Expanded(child: actions![i]),
+                    if (i < actions!.length - 1) const SizedBox(width: 8),
+                  ],
+                ],
+              ),
+            ]
+          : null,
     );
   }
 }

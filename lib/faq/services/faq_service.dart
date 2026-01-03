@@ -1,8 +1,5 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
 import '../../shared/config/api_config.dart';
+import '../../shared/utils/api_x.dart';
 
 class FaqService {
   /// Get all FAQ
@@ -16,32 +13,29 @@ class FaqService {
     bool activeOnly = false,
   }) async {
     try {
-      var uri = Uri.parse('${ApiConfig.baseUrl}${ApiConfig.faq}');
+      String endpoint = ApiConfig.faq;
 
       // Add query parameters if provided
-      Map<String, String> queryParams = {};
+      List<String> queryParams = [];
       if (category != null && category.isNotEmpty) {
-        queryParams['category'] = category;
+        queryParams.add('category=$category');
       }
       if (activeOnly) {
-        queryParams['active_only'] = 'true';
+        queryParams.add('active_only=true');
       }
 
       if (queryParams.isNotEmpty) {
-        uri = uri.replace(queryParameters: queryParams);
+        endpoint = '$endpoint?${queryParams.join('&')}';
       }
 
-      final response = await http
-          .get(uri, headers: {'Content-Type': 'application/json'})
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.get(endpoint, requiresAuth: false);
 
       if (response.statusCode == 200) {
-        return {'success': true, 'data': json.decode(response.body)};
+        return {'success': true, 'data': response.data};
       } else {
         return {
           'success': false,
-          'message': 'Failed to load FAQ: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to load FAQ',
         };
       }
     } catch (e) {
@@ -53,20 +47,17 @@ class FaqService {
   /// Public endpoint - tidak perlu authentication
   Future<Map<String, dynamic>> getFaqById(int id) async {
     try {
-      final response = await http
-          .get(
-            Uri.parse('${ApiConfig.baseUrl}${ApiConfig.faqById(id)}'),
-            headers: {'Content-Type': 'application/json'},
-          )
-          .timeout(ApiConfig.connectTimeout);
+      final response = await ApiX.get(
+        ApiConfig.faqById(id),
+        requiresAuth: false,
+      );
 
       if (response.statusCode == 200) {
-        return {'success': true, 'data': json.decode(response.body)};
+        return {'success': true, 'data': response.data};
       } else {
         return {
           'success': false,
-          'message': 'Failed to load FAQ: ${response.statusCode}',
-          'data': response.body,
+          'message': response.error ?? 'Failed to load FAQ',
         };
       }
     } catch (e) {
