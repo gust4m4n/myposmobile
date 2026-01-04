@@ -35,6 +35,12 @@ class ApiConfig {
   static const String pinChange = '$apiPrefix/pin/change';
   static const String pinCheck = '$apiPrefix/pin/check';
 
+  // Branch endpoints (Tenant Admin)
+  static const String branches = '$apiPrefix/branches';
+
+  // Tenant endpoints (Authenticated users)
+  static const String tenants = '$apiPrefix/tenants';
+
   // Superadmin endpoints
   static const String superadminDashboard = '$apiPrefix/superadmin/dashboard';
   static const String superadminTenants = '$apiPrefix/superadmin/tenants';
@@ -67,4 +73,12 @@ class ApiConfig {
   // TnC dynamic endpoints
   static String tncById(int id) => '$apiPrefix/tnc/$id';
   static String superadminTncById(int id) => '$apiPrefix/superadmin/tnc/$id';
+
+  // Branch dynamic endpoints (Tenant Admin)
+  static String branchById(int id) => '$apiPrefix/branches/$id';
+  static String branchUsers(int branchId) =>
+      '$apiPrefix/branches/$branchId/users';
+
+  // Tenant dynamic endpoints (Authenticated users)
+  static String tenantById(int id) => '$apiPrefix/tenants/$id';
 }

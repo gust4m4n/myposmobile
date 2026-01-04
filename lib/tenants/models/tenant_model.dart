@@ -1,6 +1,7 @@
 class TenantModel {
   final int? id;
   final String name;
+  final String? code;
   final String? description;
   final String? address;
   final String? website;
@@ -18,6 +19,7 @@ class TenantModel {
   TenantModel({
     this.id,
     required this.name,
+    this.code,
     this.description,
     this.address,
     this.website,
@@ -37,6 +39,7 @@ class TenantModel {
     return TenantModel(
       id: json['id'],
       name: json['name'] ?? '',
+      code: json['code'],
       description: json['description'],
       address: json['address'],
       website: json['website'],
@@ -57,6 +60,7 @@ class TenantModel {
     return {
       'id': id,
       'name': name,
+      'code': code,
       'description': description,
       'address': address,
       'website': website,

@@ -2,6 +2,7 @@ class BranchModel {
   final int? id;
   final int tenantId;
   final String name;
+  final String? code;
   final String? description;
   final String? address;
   final String? website;
@@ -20,6 +21,7 @@ class BranchModel {
     this.id,
     required this.tenantId,
     required this.name,
+    this.code,
     this.description,
     this.address,
     this.website,
@@ -36,10 +38,12 @@ class BranchModel {
   });
 
   factory BranchModel.fromJson(Map<String, dynamic> json) {
+    // Support both GORM format (uppercase) and snake_case format
     return BranchModel(
-      id: json['id'],
+      id: json['ID'] ?? json['id'],
       tenantId: json['tenant_id'],
       name: json['name'] ?? '',
+      code: json['code'],
       description: json['description'],
       address: json['address'],
       website: json['website'],
@@ -47,8 +51,8 @@ class BranchModel {
       phone: json['phone'],
       image: json['image'],
       isActive: json['is_active'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      createdAt: json['CreatedAt'] ?? json['created_at'],
+      updatedAt: json['UpdatedAt'] ?? json['updated_at'],
       createdBy: json['created_by'],
       createdByName: json['created_by_name'],
       updatedBy: json['updated_by'],
@@ -61,6 +65,7 @@ class BranchModel {
       'id': id,
       'tenant_id': tenantId,
       'name': name,
+      'code': code,
       'description': description,
       'address': address,
       'website': website,
