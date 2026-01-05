@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Trans;
 
-import '../../common/superadmin_branches_service.dart';
+import '../../branches/services/branches_service.dart';
 import '../../shared/api_models.dart';
 import '../../shared/controllers/profile_controller.dart';
 import '../../shared/widgets/dialog_x.dart';
@@ -110,8 +110,16 @@ class _AddUserDialogState extends State<AddUserDialog> {
         return;
       }
 
-      final service = SuperadminBranchesService();
-      final response = await service.listBranchesByTenant(tenantId);
+      final response = await BranchesService.getBranches();
+
+      if (kDebugMode) {
+        print(
+          '🔍 DEBUG BEFORE: Got response with status ${response.statusCode}',
+        );
+        print(
+          '🔍 DEBUG BEFORE: response.data type = ${response.data.runtimeType}',
+        );
+      }
 
       if (!mounted) return;
 
@@ -120,16 +128,58 @@ class _AddUserDialogState extends State<AddUserDialog> {
       });
 
       if (response.statusCode == 200 && response.data != null) {
-        setState(() {
-          _branches = response.data!;
-          // Auto-select first branch if available
-          if (_branches.isNotEmpty) {
-            _selectedBranch = _branches.first;
+        try {
+          if (kDebugMode) {
+            print(
+              '🔍 DEBUG: response.data type = ${response.data.runtimeType}',
+            );
+            print('🔍 DEBUG: response.data = ${response.data}');
           }
-        });
 
-        if (kDebugMode) {
-          print('📋 Loaded ${_branches.length} branches');
+          setState(() {
+            // Convert List<dynamic> to List<BranchModel>
+            final dynamic data = response.data;
+            List? branchList;
+
+            if (data is Map<String, dynamic>) {
+              // If data is a Map, try to get the 'data' field
+              if (data.containsKey('data')) {
+                final dataField = data['data'];
+                if (kDebugMode) {
+                  print('🔍 DEBUG: dataField type = ${dataField.runtimeType}');
+                }
+                if (dataField is List) {
+                  branchList = dataField;
+                }
+              }
+            } else if (data is List) {
+              branchList = data;
+            }
+
+            if (branchList != null) {
+              _branches = branchList
+                  .map(
+                    (json) =>
+                        BranchModel.fromJson(json as Map<String, dynamic>),
+                  )
+                  .toList();
+              // Auto-select first branch if available
+              if (_branches.isNotEmpty) {
+                _selectedBranch = _branches.first;
+              }
+            }
+          });
+
+          if (kDebugMode) {
+            print('📋 Loaded ${_branches.length} branches');
+          }
+        } catch (e, stackTrace) {
+          if (kDebugMode) {
+            print('❌ Error INSIDE parsing branches: $e');
+            print('Stack trace: $stackTrace');
+          }
+          if (!mounted) return;
+          ToastX.error(context, '${'failedToLoadBranches'.tr}: $e');
         }
       } else {
         if (kDebugMode) {
@@ -137,7 +187,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
         }
         ToastX.error(
           context,
-          '\${"failedToLoadBranches".tr}: \${response.message}',
+          '${'failedToLoadBranches'.tr}: ${response.message}',
         );
       }
     } catch (e) {
@@ -148,7 +198,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
       setState(() {
         _isLoadingBranches = false;
       });
-      ToastX.error(context, '\${"failedToLoadBranches".tr}: \$e');
+      ToastX.error(context, '${'failedToLoadBranches'.tr}: $e');
     }
   }
 
@@ -180,7 +230,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
       });
     } catch (e) {
       if (!mounted) return;
-      ToastX.error(context, '\${"imagePickFailed".tr}: \$e');
+      ToastX.error(context, '${'imagePickFailed'.tr}: $e');
       setState(() {
         _isUploading = false;
       });

@@ -2,7 +2,7 @@ import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class SuperadminFaqService {
-  /// Create new FAQ (Superadmin only)
+  /// Create new FAQ
   ///
   /// Request body:
   /// - question: Pertanyaan (required, min 5, max 500 characters)
@@ -21,7 +21,7 @@ class SuperadminFaqService {
       if (order != null) body['order'] = order;
 
       final response = await ApiX.post(
-        ApiConfig.superadminFaq,
+        ApiConfig.faq,
         body: body,
         requiresAuth: true,
       );
@@ -43,7 +43,7 @@ class SuperadminFaqService {
     }
   }
 
-  /// Update FAQ (Superadmin only)
+  /// Update FAQ
   /// All fields are optional
   ///
   /// Request body:
@@ -69,7 +69,7 @@ class SuperadminFaqService {
       if (isActive != null) body['is_active'] = isActive;
 
       final response = await ApiX.put(
-        ApiConfig.superadminFaqById(id),
+        ApiConfig.faqById(id),
         body: body,
         requiresAuth: true,
       );
@@ -91,11 +91,11 @@ class SuperadminFaqService {
     }
   }
 
-  /// Delete FAQ (Superadmin only)
+  /// Delete FAQ
   Future<Map<String, dynamic>> deleteFaq(int id) async {
     try {
       final response = await ApiX.delete(
-        ApiConfig.superadminFaqById(id),
+        ApiConfig.faqById(id),
         requiresAuth: true,
       );
 

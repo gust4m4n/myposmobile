@@ -287,7 +287,7 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
                   _loadProducts();
                 });
               },
-              onProductTap: _showProductContextMenu,
+              onProductTap: _showEditProductDialog,
               isMobile: false,
               categories: _categories,
               onLoadMore: _loadMoreProducts,

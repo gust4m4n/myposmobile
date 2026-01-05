@@ -207,6 +207,7 @@ const Map<String, String> en = {
   'editProduct': 'Edit Product',
   'deleteProduct': 'Delete Product',
   'deleteProductConfirmation': 'Are you sure you want to delete this product?',
+  'confirmDeleteProduct': 'Are you sure you want to delete {productName}?',
   'productName': 'Product Name',
   'description': 'Description',
   'category': 'Category',

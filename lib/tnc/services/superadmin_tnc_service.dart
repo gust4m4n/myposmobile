@@ -2,7 +2,7 @@ import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class SuperadminTncService {
-  /// Create new Terms & Conditions (Superadmin only)
+  /// Create new Terms & Conditions
   ///
   /// Request body:
   /// - title: Judul document (required, max 255 characters)
@@ -15,7 +15,7 @@ class SuperadminTncService {
   }) async {
     try {
       final response = await ApiX.post(
-        ApiConfig.superadminTnc,
+        ApiConfig.tnc,
         body: {'title': title, 'content': content, 'version': version},
         requiresAuth: true,
       );
@@ -37,7 +37,7 @@ class SuperadminTncService {
     }
   }
 
-  /// Update Terms & Conditions (Superadmin only)
+  /// Update Terms & Conditions
   /// All fields are optional
   ///
   /// Request body:
@@ -60,7 +60,7 @@ class SuperadminTncService {
       if (isActive != null) body['is_active'] = isActive;
 
       final response = await ApiX.put(
-        ApiConfig.superadminTncById(id),
+        ApiConfig.tncById(id),
         body: body,
         requiresAuth: true,
       );
@@ -82,11 +82,11 @@ class SuperadminTncService {
     }
   }
 
-  /// Delete Terms & Conditions (Superadmin only)
+  /// Delete Terms & Conditions
   Future<Map<String, dynamic>> deleteTnc(int id) async {
     try {
       final response = await ApiX.delete(
-        ApiConfig.superadminTncById(id),
+        ApiConfig.tncById(id),
         requiresAuth: true,
       );
 

@@ -205,6 +205,7 @@ const Map<String, String> id = {
   'editProduct': 'Edit Produk',
   'deleteProduct': 'Hapus Produk',
   'deleteProductConfirmation': 'Apakah Anda yakin ingin menghapus produk ini?',
+  'confirmDeleteProduct': 'Apakah Anda yakin ingin menghapus {productName}?',
   'productName': 'Nama Produk',
   'description': 'Deskripsi',
   'category': 'Kategori',

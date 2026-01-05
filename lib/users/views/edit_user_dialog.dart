@@ -63,9 +63,9 @@ class _EditUserDialogState extends State<EditUserDialog> {
     // Prefill form with updated test data in debug mode
     if (kDebugMode) {
       _fullNameController.text =
-          'Updated ${widget.user['full_name']} ${DateTime.now().millisecondsSinceEpoch % 1000}';
-      _emailController.text = 'updated.${widget.user['email']}';
-      _passwordController.text = 'NewPassword123!';
+          '${widget.user['full_name']} (Edited ${DateTime.now().millisecondsSinceEpoch % 1000})';
+      // Keep email unchanged to avoid "email already exists" error
+      // _passwordController can be left empty or filled if you want to test password change
       print('🐛 Debug mode: Edit user form prefilled with updated test data');
     }
   }

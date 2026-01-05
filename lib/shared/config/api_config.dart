@@ -41,44 +41,24 @@ class ApiConfig {
   // Tenant endpoints (Authenticated users - accessible by all authenticated users)
   static const String tenants = '$apiPrefix/tenants';
 
-  // Superadmin Tenant endpoints (same as regular tenants endpoint)
-  static const String superadminTenants = '$apiPrefix/tenants';
+  // Dashboard endpoint (all authenticated users)
+  static const String dashboard = '$apiPrefix/dashboard';
 
-  // Superadmin endpoints
-  static const String superadminDashboard = '$apiPrefix/superadmin/dashboard';
-  static const String superadminBranches = '$apiPrefix/superadmin/branches';
-
-  // FAQ endpoints (public)
+  // FAQ endpoints (public read, authenticated write)
   static const String faq = '$apiPrefix/faq';
-
-  // Superadmin FAQ endpoints
-  static const String superadminFaq = '$apiPrefix/superadmin/faq';
 
   // Terms & Conditions endpoints (public)
   static const String tnc = '$apiPrefix/tnc';
-
-  // Superadmin TnC endpoints
-  static const String superadminTnc = '$apiPrefix/superadmin/tnc';
 
   // Dynamic endpoints
   static String devTenantBranches(int tenantId) =>
       '/dev/tenants/$tenantId/branches';
 
-  // Superadmin tenant branches endpoint - uses regular branches endpoint with tenant_id query param
-  // For superadmin to view branches of a specific tenant
-  static String superadminTenantBranches(int tenantId) =>
-      '$apiPrefix/branches?tenant_id=$tenantId';
-
-  static String superadminBranchUsers(int branchId) =>
-      '$apiPrefix/superadmin/branches/$branchId/users';
-
   // FAQ dynamic endpoints
   static String faqById(int id) => '$apiPrefix/faq/$id';
-  static String superadminFaqById(int id) => '$apiPrefix/superadmin/faq/$id';
 
   // TnC dynamic endpoints
   static String tncById(int id) => '$apiPrefix/tnc/$id';
-  static String superadminTncById(int id) => '$apiPrefix/superadmin/tnc/$id';
 
   // Branch dynamic endpoints (Tenant Admin)
   static String branchById(int id) => '$apiPrefix/branches/$id';

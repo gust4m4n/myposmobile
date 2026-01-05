@@ -11,7 +11,7 @@ class TenantsManagementService {
     int? page,
     int? pageSize,
   }) async {
-    String url = ApiConfig.superadminTenants;
+    String url = ApiConfig.tenants;
     final queryParams = <String>[];
 
     if (page != null) queryParams.add('page=$page');
@@ -41,7 +41,7 @@ class TenantsManagementService {
     File? imageFile,
   }) async {
     return await ApiX.postMultipart(
-      ApiConfig.superadminTenants,
+      ApiConfig.tenants,
       fields: {
         'name': name,
         'description': description,
@@ -71,7 +71,7 @@ class TenantsManagementService {
     File? imageFile,
   }) async {
     return await ApiX.putMultipart(
-      '${ApiConfig.superadminTenants}/$id',
+      '${ApiConfig.tenants}/$id',
       fields: {
         'name': name,
         'description': description,
@@ -90,9 +90,6 @@ class TenantsManagementService {
 
   /// Delete tenant
   Future<ApiResponse<void>> deleteTenant(int id) async {
-    return await ApiX.delete(
-      '${ApiConfig.superadminTenants}/$id',
-      requiresAuth: true,
-    );
+    return await ApiX.delete('${ApiConfig.tenants}/$id', requiresAuth: true);
   }
 }
