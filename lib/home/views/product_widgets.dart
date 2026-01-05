@@ -337,6 +337,17 @@ class _ProductItem extends StatefulWidget {
 class _ProductItemState extends State<_ProductItem> {
   bool _isClicked = false;
 
+  /// Helper function to get correct image URL
+  /// Checks if URL is already full URL or needs baseUrl prepended
+  String _getImageUrl(String imageUrl) {
+    // Check if imageUrl is already a full URL (starts with http:// or https://)
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    // If it's a relative path, prepend baseUrl
+    return '${ApiConfig.baseUrl}$imageUrl';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -375,7 +386,7 @@ class _ProductItemState extends State<_ProductItem> {
                         widget.product.image != null &&
                             widget.product.image!.isNotEmpty
                         ? Image.network(
-                            '${ApiConfig.baseUrl}${widget.product.image}',
+                            _getImageUrl(widget.product.image!),
                             width: double.infinity,
                             height: imageHeight,
                             fit: BoxFit.cover,

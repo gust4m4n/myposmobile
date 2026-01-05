@@ -29,6 +29,14 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
   final int _pageSize = 32;
   final ScrollController _scrollController = ScrollController();
 
+  /// Helper function to get correct image URL
+  String _getImageUrl(String imageUrl) {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return 'http://localhost:8080$imageUrl';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -225,7 +233,7 @@ class _BranchesManagementPageState extends State<BranchesManagementPage> {
                                           branch.image != null &&
                                               branch.image!.isNotEmpty
                                           ? Image.network(
-                                              'http://localhost:8080${branch.image}',
+                                              _getImageUrl(branch.image!),
                                               width: 40,
                                               height: 40,
                                               fit: BoxFit.cover,

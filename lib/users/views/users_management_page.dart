@@ -30,6 +30,14 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
   final int _pageSize = 32;
   final ScrollController _scrollController = ScrollController();
 
+  /// Helper function to get correct image URL
+  String _getImageUrl(String imageUrl) {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return 'http://localhost:8080$imageUrl';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -308,7 +316,7 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                                       borderRadius: BorderRadius.circular(20),
                                       child: image != null && image.isNotEmpty
                                           ? Image.network(
-                                              'http://localhost:8080$image',
+                                              _getImageUrl(image),
                                               width: 40,
                                               height: 40,
                                               fit: BoxFit.cover,

@@ -31,6 +31,19 @@ class ImageX extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Helper function to get the correct image URL
+    String? getImageUrl() {
+      if (imageUrl == null) return null;
+
+      // Check if imageUrl is already a full URL (starts with http:// or https://)
+      if (imageUrl!.startsWith('http://') || imageUrl!.startsWith('https://')) {
+        return imageUrl;
+      }
+
+      // If it's a relative path, prepend baseUrl
+      return baseUrl != null ? '$baseUrl$imageUrl' : imageUrl;
+    }
+
     return Stack(
       children: [
         // Image Container
@@ -58,11 +71,11 @@ class ImageX extends StatelessWidget {
                     },
                   ),
                 )
-              : imageUrl != null
+              : getImageUrl() != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(cornerRadius),
                   child: Image.network(
-                    baseUrl != null ? '$baseUrl$imageUrl' : imageUrl!,
+                    getImageUrl()!,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Icon(

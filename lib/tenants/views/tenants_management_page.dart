@@ -30,6 +30,14 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
   final int _pageSize = 32;
   final ScrollController _scrollController = ScrollController();
 
+  /// Helper function to get correct image URL
+  String _getImageUrl(String imageUrl) {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return 'http://localhost:8080$imageUrl';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -227,7 +235,7 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                                           tenant.image != null &&
                                               tenant.image!.isNotEmpty
                                           ? Image.network(
-                                              'http://localhost:8080${tenant.image}',
+                                              _getImageUrl(tenant.image!),
                                               width: 40,
                                               height: 40,
                                               fit: BoxFit.cover,
@@ -268,7 +276,9 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: tenant.isActive == true
-                                            ? Colors.green.withValues(alpha: 0.1)
+                                            ? Colors.green.withValues(
+                                                alpha: 0.1,
+                                              )
                                             : Colors.red.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
