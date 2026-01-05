@@ -437,17 +437,24 @@ class _ProductItemState extends State<_ProductItem> {
                         : Container(
                             width: double.infinity,
                             height: imageHeight,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.1,
-                              ),
-                            ),
-                            child: Icon(
-                              widget.product.category == 'Makanan'
-                                  ? Icons.restaurant
-                                  : Icons.local_drink,
-                              size: widget.iconSize,
-                              color: theme.colorScheme.primary,
+                            decoration: BoxDecoration(color: Colors.grey[200]),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.image_outlined,
+                                  size: widget.iconSize,
+                                  color: Colors.grey[400],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'No Image',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                   ),

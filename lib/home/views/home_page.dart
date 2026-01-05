@@ -1223,9 +1223,9 @@ class _HomePageState extends State<HomePage> {
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProductsManagementPage(
@@ -1233,6 +1233,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   );
+                  // Refresh products after returning from products management
+                  _loadProducts();
                 },
               ),
               ListTile(

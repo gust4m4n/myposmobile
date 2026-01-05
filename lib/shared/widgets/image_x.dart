@@ -13,6 +13,8 @@ class ImageX extends StatelessWidget {
   final bool isLoading;
   final Color? backgroundColor;
   final Color? iconColor;
+  final bool
+  isUserPhoto; // Determines if this is for user photo or product image
 
   const ImageX({
     super.key,
@@ -25,6 +27,7 @@ class ImageX extends StatelessWidget {
     this.isLoading = false,
     this.backgroundColor,
     this.iconColor,
+    this.isUserPhoto = true, // Default to user photo
   });
 
   @override
@@ -51,9 +54,7 @@ class ImageX extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color:
-                backgroundColor ??
-                theme.colorScheme.primary.withValues(alpha: 0.1),
+            color: backgroundColor ?? Colors.grey[200],
             borderRadius: BorderRadius.circular(cornerRadius),
           ),
           child: localImagePath != null
@@ -63,10 +64,25 @@ class ImageX extends StatelessWidget {
                     File(localImagePath!),
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.person,
-                        size: size * 0.5,
-                        color: iconColor ?? theme.colorScheme.primary,
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            isUserPhoto
+                                ? Icons.person_outline
+                                : Icons.image_outlined,
+                            size: size * 0.4,
+                            color: iconColor ?? Colors.grey[400],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            isUserPhoto ? 'No Photo' : 'No Image',
+                            style: TextStyle(
+                              fontSize: size * 0.1,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
@@ -78,18 +94,46 @@ class ImageX extends StatelessWidget {
                     getImageUrl()!,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.person,
-                        size: size * 0.5,
-                        color: iconColor ?? theme.colorScheme.primary,
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            isUserPhoto
+                                ? Icons.person_outline
+                                : Icons.image_outlined,
+                            size: size * 0.4,
+                            color: iconColor ?? Colors.grey[400],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            isUserPhoto ? 'No Photo' : 'No Image',
+                            style: TextStyle(
+                              fontSize: size * 0.1,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
                 )
-              : Icon(
-                  Icons.person,
-                  size: size * 0.5,
-                  color: iconColor ?? theme.colorScheme.primary,
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      isUserPhoto ? Icons.person_outline : Icons.image_outlined,
+                      size: size * 0.4,
+                      color: iconColor ?? Colors.grey[400],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isUserPhoto ? 'No Photo' : 'No Image',
+                      style: TextStyle(
+                        fontSize: size * 0.1,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
                 ),
         ),
         // Loading overlay

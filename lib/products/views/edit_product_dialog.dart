@@ -220,6 +220,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
         cornerRadius: 8,
         onPicked: _pickImage,
         isLoading: _isUploading,
+        isUserPhoto: false,
       ),
     );
   }
