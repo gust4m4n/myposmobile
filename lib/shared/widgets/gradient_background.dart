@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../controllers/theme_controller.dart';
 
-/// Wrapper widget that provides gradient background for light mode
+/// Wrapper widget that provides consistent background for both light and dark modes
 class GradientBackground extends StatelessWidget {
   final Widget child;
 
@@ -16,12 +16,9 @@ class GradientBackground extends StatelessWidget {
     return Obx(
       () => Container(
         decoration: BoxDecoration(
-          gradient: themeController.isDarkMode.value
-              ? null
-              : themeController.lightGradient,
           color: themeController.isDarkMode.value
               ? Theme.of(context).scaffoldBackgroundColor
-              : null,
+              : themeController.lightBackgroundColor,
         ),
         child: child,
       ),

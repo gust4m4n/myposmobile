@@ -103,9 +103,7 @@ class PaymentPerformanceChart extends StatelessWidget {
                     .map((e) => FlSpot(e.key.toDouble(), e.value.totalAmount))
                     .toList(),
                 isCurved: true,
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade700, Colors.blue.shade400],
-                ),
+                color: const Color(0xFF007AFF), // Solid iOS blue
                 barWidth: 3,
                 isStrokeCapRound: true,
                 dotData: FlDotData(
@@ -113,7 +111,7 @@ class PaymentPerformanceChart extends StatelessWidget {
                   getDotPainter: (spot, percent, barData, index) {
                     return FlDotCirclePainter(
                       radius: 4,
-                      color: Colors.blue,
+                      color: const Color(0xFF007AFF),
                       strokeWidth: 2,
                       strokeColor: Colors.white,
                     );
@@ -121,14 +119,7 @@ class PaymentPerformanceChart extends StatelessWidget {
                 ),
                 belowBarData: BarAreaData(
                   show: true,
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.blue.withValues(alpha: 0.3),
-                      Colors.blue.withValues(alpha: 0.05),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                  color: const Color(0xFF007AFF).withValues(alpha: 0.1),
                 ),
               ),
             ],

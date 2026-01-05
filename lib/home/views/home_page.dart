@@ -336,25 +336,32 @@ class _HomePageState extends State<HomePage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
         minChildSize: 0.5,
         maxChildSize: 0.95,
         expand: false,
         builder: (context, scrollController) {
-          return _buildCartContent(scrollController: scrollController);
+          return _buildCartContent(
+            context: context,
+            scrollController: scrollController,
+          );
         },
       ),
     );
   }
 
-  Widget _buildCartContent({ScrollController? scrollController}) {
+  Widget _buildCartContent({
+    required BuildContext context,
+    ScrollController? scrollController,
+  }) {
     final theme = Theme.of(context);
     TranslationService.setLanguage(widget.languageCode);
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF000000),
+        color: theme.scaffoldBackgroundColor,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -397,16 +404,20 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.shopping_cart_outlined,
                           size: 64,
-                          color: Colors.grey,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'emptyCart'.tr,
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.5,
+                            ),
                             fontSize: 16.0,
                           ),
                         ),
@@ -676,7 +687,7 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   width: 350,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF000000),
+                    color: theme.scaffoldBackgroundColor,
                     border: Border(left: BorderSide(color: theme.dividerColor)),
                   ),
                   child: Column(
@@ -704,16 +715,18 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.shopping_cart_outlined,
                                       size: 64,
-                                      color: Colors.grey,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.3),
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
                                       'emptyCart'.tr,
-                                      style: const TextStyle(
-                                        color: Colors.grey,
+                                      style: TextStyle(
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.5),
                                         fontSize: 16.0,
                                       ),
                                     ),

@@ -54,141 +54,6 @@
       ]
     },
     {
-      "name": "Dev",
-      "item": [
-        {
-          "name": "List All Tenants",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/dev/tenants",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "dev",
-                "tenants"
-              ]
-            },
-            "description": "Public endpoint untuk mendapatkan daftar semua tenant aktif. Tidak memerlukan authentication token.\n\nGunakan endpoint ini untuk:\n- Mendapatkan tenant_id untuk testing\n- Explorasi data demo tenant\n- Development & debugging"
-          },
-          "response": [
-            {
-              "name": "List Tenants Success",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/dev/tenants",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "dev",
-                    "tenants"
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Tenants retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": 17,\n      \"name\": \"Warung Makan Sejahtera\",\n      \"code\": \"resto01\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27.919739+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27.919739+07:00\"\n    },\n    {\n      \"id\": 18,\n      \"name\": \"Fashion Store\",\n      \"code\": \"fashion01\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24T19:44:27.938554+07:00\",\n      \"updated_at\": \"2025-12-24T19:44:27.938554+07:00\"\n    }\n  ]\n}"
-            }
-          ]
-        },
-        {
-          "name": "List Branches by Tenant",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/dev/tenants/17/branches",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "dev",
-                "tenants",
-                "17",
-                "branches"
-              ]
-            },
-            "description": "Public endpoint untuk mendapatkan daftar branch dari tenant tertentu. Tidak memerlukan authentication token.\n\nGanti :tenant_id dengan ID tenant yang didapat dari endpoint /dev/tenants\n\nContoh:\n- /dev/tenants/17/branches - Branches Warung Makan Sejahtera\n- /dev/tenants/18/branches - Branches Fashion Store"
-          },
-          "response": [
-            {
-              "name": "List Branches Success - Resto",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/dev/tenants/17/branches",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "dev",
-                    "tenants",
-                    "17",
-                    "branches"
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Branches retrieved successfully\",\n  \"data\": [\n    {\n      \"ID\": 25,\n      \"CreatedAt\": \"2025-12-24T19:44:27.922193+07:00\",\n      \"UpdatedAt\": \"2025-12-24T19:44:27.922193+07:00\",\n      \"DeletedAt\": null,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Pusat\",\n      \"code\": \"resto01-pusat\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta\",\n      \"phone\": \"021-12345678\",\n      \"is_active\": true\n    },\n    {\n      \"ID\": 26,\n      \"CreatedAt\": \"2025-12-24T19:44:27.922193+07:00\",\n      \"UpdatedAt\": \"2025-12-24T19:44:27.922193+07:00\",\n      \"DeletedAt\": null,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Menteng\",\n      \"code\": \"resto01-menteng\",\n      \"address\": \"Jl. Menteng Raya No. 45, Jakarta\",\n      \"phone\": \"021-87654321\",\n      \"is_active\": true\n    }\n  ]\n}"
-            },
-            {
-              "name": "List Branches Success - Fashion",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/dev/tenants/18/branches",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "dev",
-                    "tenants",
-                    "18",
-                    "branches"
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Branches retrieved successfully\",\n  \"data\": [\n    {\n      \"ID\": 29,\n      \"CreatedAt\": \"2025-12-24T19:48:10.083674+07:00\",\n      \"UpdatedAt\": \"2025-12-24T19:48:10.083674+07:00\",\n      \"DeletedAt\": null,\n      \"tenant_id\": 18,\n      \"name\": \"Cabang Mall Plaza\",\n      \"code\": \"fashion01-plaza\",\n      \"address\": \"Mall Plaza Lt. 2 No. 45, Jakarta\",\n      \"phone\": \"021-55556666\",\n      \"is_active\": true\n    },\n    {\n      \"ID\": 30,\n      \"CreatedAt\": \"2025-12-24T19:48:10.083674+07:00\",\n      \"UpdatedAt\": \"2025-12-24T19:48:10.083674+07:00\",\n      \"DeletedAt\": null,\n      \"tenant_id\": 18,\n      \"name\": \"Cabang Grand Mall\",\n      \"code\": \"fashion01-grand\",\n      \"address\": \"Grand Mall Lt. 1 No. 78, Bandung\",\n      \"phone\": \"022-77778888\",\n      \"is_active\": true\n    }\n  ]\n}"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "Authentication",
       "item": [
         {
@@ -792,7 +657,7 @@
       ]
     },
     {
-      "name": "User",
+      "name": "Profile Management",
       "item": [
         {
           "name": "Get Profile",
@@ -1354,7 +1219,12 @@
               "body": "{\n  \"code\": 0,\n  \"message\": \"Image deleted successfully\"\n}"
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "name": "Tenants",
+      "item": [
         {
           "name": "List Tenants",
           "request": {
@@ -1393,7 +1263,7 @@
                 }
               ]
             },
-            "description": "Get list of all tenants in the system with pagination support. All authenticated users can access.\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 32\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of tenants\n- total_pages: Total number of pages\n- data: Array of tenant items"
+            "description": "Get list of all tenants in the system with pagination support.\n\n**Authentication:** Required - Bearer token\n**Access:** All authenticated users\n\nQuery Parameters:\n- page (optional): Page number, default 1\n- page_size (optional): Items per page, default 32\n\nResponse includes pagination metadata:\n- page: Current page number\n- page_size: Items per page\n- total_items: Total number of tenants\n- total_pages: Total number of pages\n- data: Array of tenant items with complete details"
           },
           "response": [
             {
@@ -1470,7 +1340,7 @@
                 "1"
               ]
             },
-            "description": "Get detailed information about a specific tenant by ID. All authenticated users can access."
+            "description": "Get detailed information about a specific tenant by ID.\n\n**Authentication:** Required - Bearer token\n**Access:** All authenticated users\n\nReturns complete tenant details including:\n- Basic information (name, description, contact)\n- Image/logo URL\n- Active status\n- Audit fields (created_by, updated_by with names)\n\nReplace '1' with actual tenant ID."
           },
           "response": [
             {
@@ -1507,7 +1377,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Food Corner\",\n    \"description\": \"Restaurant tenant\",\n    \"address\": \"123 Main St\",\n    \"website\": \"https://foodcorner.com\",\n    \"email\": \"info@foodcorner.com\",\n    \"phone\": \"021-12345678\",\n    \"image\": \"/uploads/tenants/tenant_1704000000.png\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-24 10:00:00\",\n    \"updated_at\": \"2025-12-24 10:00:00\",\n    \"created_by\": 1,\n    \"created_by_name\": \"Admin\",\n    \"updated_by\": 1,\n    \"updated_by_name\": \"Admin\"\n  }\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Tenant retrieved successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Food Corner 99\",\n    \"description\": \"Restoran modern dengan berbagai pilihan menu internasional dan lokal untuk pengalaman kuliner terbaik\",\n    \"address\": \"Jl. M.H. Thamrin No. 99, Menteng, Jakarta Pusat, DKI Jakarta 10350\",\n    \"website\": \"https://www.foodcorner99.com\",\n    \"email\": \"info@foodcorner99.com\",\n    \"phone\": \"021-3199-8899\",\n    \"image\": \"/uploads/tenants/tenant_1_1704000000.png\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-24 10:00:00\",\n    \"updated_at\": \"2025-12-24 10:00:00\",\n    \"created_by\": 1,\n    \"created_by_name\": \"Super Admin\",\n    \"updated_by\": 1,\n    \"updated_by_name\": \"Super Admin\"\n  }\n}"
             }
           ]
         },
@@ -1912,6 +1782,588 @@
               ],
               "cookie": [],
               "body": "{\n  \"code\": 0,\n  \"message\": \"Tenant deleted successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Branches",
+      "item": [
+        {
+          "name": "List Branches",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/branches",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "branches"
+              ]
+            },
+            "description": "Get list of branches from the tenant where the logged-in user is registered. Branches are automatically filtered by tenant_id from JWT token.\n\n**Authentication:** Required - Bearer token\n**Access:** All authenticated users\n**Filtering:** Automatic by tenant_id from JWT\n\nReturns:\n- Array of branches with complete details\n- Branch information including name, description, address, contact info, image\n- Active status and audit information for each branch\n- Created by and updated by user names"
+          },
+          "response": [
+            {
+              "name": "List Branches Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{auth_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/branches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "branches"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Branches retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Pusat\",\n      \"description\": \"Cabang utama dengan full service\",\n      \"address\": \"Jl. Sudirman No. 123, Jakarta Pusat\",\n      \"website\": \"https://foodcorner.com/pusat\",\n      \"email\": \"pusat@foodcorner.com\",\n      \"phone\": \"021-12345678\",\n      \"image\": \"/uploads/branches/branch_1_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 17,\n      \"name\": \"Cabang Menteng\",\n      \"description\": \"Cabang di kawasan Menteng\",\n      \"address\": \"Jl. Menteng Raya No. 45, Jakarta Pusat\",\n      \"website\": \"https://foodcorner.com/menteng\",\n      \"email\": \"menteng@foodcorner.com\",\n      \"phone\": \"021-87654321\",\n      \"image\": \"/uploads/branches/branch_2_1735296100.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:05:00\",\n      \"updated_at\": \"2025-12-24 10:05:00\",\n      \"created_by\": 1,\n      \"created_by_name\": \"Super Admin\",\n      \"updated_by\": null,\n      \"updated_by_name\": null\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Branch",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/branches/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "branches",
+                "1"
+              ]
+            },
+            "description": "Get detail of a specific branch in user's tenant. Branch must belong to authenticated tenant.\n\n**Authentication:** Required - Bearer token\n**Access:** All authenticated users\n**Filtering:** Must belong to user's tenant\n\nReturns complete branch details including:\n- Basic information (name, description, address, contact)\n- Image/logo URL\n- Active status\n- Audit fields (created_by, updated_by with names)\n\nReplace '1' with actual branch ID."
+          },
+          "response": [
+            {
+              "name": "Get Branch Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{auth_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/branches/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "branches",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Cabang Pusat\",\n    \"description\": \"Cabang utama dengan full service\",\n    \"address\": \"Jl. Sudirman No. 123, Jakarta Pusat\",\n    \"website\": \"https://foodcorner.com/pusat\",\n    \"email\": \"pusat@foodcorner.com\",\n    \"phone\": \"021-12345678\",\n    \"image\": \"/uploads/branches/branch_1_1735296000.jpg\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-24 10:00:00\",\n    \"updated_at\": \"2025-12-24 10:00:00\",\n    \"created_by\": 1,\n    \"created_by_name\": \"Super Admin\",\n    \"updated_by\": null,\n    \"updated_by_name\": null\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Branch",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Cabang Baru",
+                  "type": "text",
+                  "description": "Branch name (required)"
+                },
+                {
+                  "key": "description",
+                  "value": "Cabang yang baru dibuka",
+                  "type": "text",
+                  "description": "Branch description (optional)"
+                },
+                {
+                  "key": "address",
+                  "value": "Jl. Kebon Jeruk No. 789, Jakarta",
+                  "type": "text",
+                  "description": "Branch address (optional)"
+                },
+                {
+                  "key": "website",
+                  "value": "https://foodcorner.com/baru",
+                  "type": "text",
+                  "description": "Branch website (optional)"
+                },
+                {
+                  "key": "email",
+                  "value": "baru@foodcorner.com",
+                  "type": "text",
+                  "description": "Branch email (optional)"
+                },
+                {
+                  "key": "phone",
+                  "value": "021-99887766",
+                  "type": "text",
+                  "description": "Branch phone (optional)"
+                },
+                {
+                  "key": "is_active",
+                  "value": "true",
+                  "type": "text",
+                  "description": "Is active (optional, default: true)"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "Branch image/logo (optional, jpg/jpeg/png/gif/webp, max 5MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/branches",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "branches"
+              ]
+            },
+            "description": "Create a new branch in user's tenant. Branch will be automatically assigned to tenant_id from JWT token.\n\n**Authentication:** Required - Bearer token\n**Access:** All authenticated users\n**Tenant Assignment:** Automatic from JWT token\n\nSupports:\n- Multipart form data with image upload\n- Image formats: jpg, jpeg, png, gif, webp\n- Max file size: 5MB\n- Image field is optional\n\nRequired fields:\n- name: Branch name (string, required)\n\nOptional fields:\n- description: Branch description\n- address: Physical address\n- website: Branch website URL\n- email: Contact email\n- phone: Contact phone\n- is_active: Active status (boolean, default: true)\n- image: Branch logo/image file"
+          },
+          "response": [
+            {
+              "name": "Create Branch Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{auth_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Cabang Baru",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Cabang yang baru dibuka",
+                      "type": "text"
+                    },
+                    {
+                      "key": "address",
+                      "value": "Jl. Kebon Jeruk No. 789, Jakarta",
+                      "type": "text"
+                    },
+                    {
+                      "key": "website",
+                      "value": "https://foodcorner.com/baru",
+                      "type": "text"
+                    },
+                    {
+                      "key": "email",
+                      "value": "baru@foodcorner.com",
+                      "type": "text"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "021-99887766",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": "/path/to/branch-logo.jpg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/branches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "branches"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Branch created successfully\",\n  \"data\": {\n    \"id\": 3,\n    \"tenant_id\": 17,\n    \"name\": \"Cabang Baru\",\n    \"description\": \"Cabang yang baru dibuka\",\n    \"address\": \"Jl. Kebon Jeruk No. 789, Jakarta\",\n    \"website\": \"https://foodcorner.com/baru\",\n    \"email\": \"baru@foodcorner.com\",\n    \"phone\": \"021-99887766\",\n    \"image\": \"/uploads/branches/branch_3_1735987654.jpg\",\n    \"is_active\": true,\n    \"created_at\": \"2026-01-05 10:00:00\",\n    \"updated_at\": \"2026-01-05 10:00:00\",\n    \"created_by\": 2,\n    \"created_by_name\": \"Admin User\",\n    \"updated_by\": null,\n    \"updated_by_name\": null\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Branch",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Cabang Updated",
+                  "type": "text",
+                  "description": "Branch name (optional)"
+                },
+                {
+                  "key": "description",
+                  "value": "Deskripsi yang sudah diupdate",
+                  "type": "text",
+                  "description": "Branch description (optional)"
+                },
+                {
+                  "key": "address",
+                  "value": "Alamat baru, Jakarta Selatan",
+                  "type": "text",
+                  "description": "Branch address (optional)"
+                },
+                {
+                  "key": "website",
+                  "value": "https://foodcorner.com/updated",
+                  "type": "text",
+                  "description": "Branch website (optional)"
+                },
+                {
+                  "key": "email",
+                  "value": "updated@foodcorner.com",
+                  "type": "text",
+                  "description": "Branch email (optional)"
+                },
+                {
+                  "key": "phone",
+                  "value": "021-11112222",
+                  "type": "text",
+                  "description": "Branch phone (optional)"
+                },
+                {
+                  "key": "is_active",
+                  "value": "true",
+                  "type": "text",
+                  "description": "Is active (optional)"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "New branch image (optional). Old image will be deleted if new one is uploaded."
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/branches/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "branches",
+                "1"
+              ]
+            },
+            "description": "Update branch data in user's tenant. Branch must belong to authenticated tenant.\n\nAccessible by all authenticated users.\n\nAll fields are optional - only send what you want to update.\n\nSupports:\n- Multipart form data with image upload\n- Image formats: jpg, jpeg, png, gif, webp\n- Max file size: 5MB\n- If new image is uploaded, old image will be automatically deleted\n\nReplace '1' in URL with actual branch ID."
+          },
+          "response": [
+            {
+              "name": "Update Branch Success",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{auth_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Cabang Updated",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Deskripsi yang sudah diupdate",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": "/path/to/new-logo.jpg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/branches/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "branches",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Branch updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Cabang Updated\",\n    \"description\": \"Deskripsi yang sudah diupdate\",\n    \"address\": \"Alamat baru, Jakarta Selatan\",\n    \"website\": \"https://foodcorner.com/updated\",\n    \"email\": \"updated@foodcorner.com\",\n    \"phone\": \"021-11112222\",\n    \"image\": \"/uploads/branches/branch_1_1735987999.jpg\",\n    \"is_active\": true,\n    \"created_at\": \"2025-12-24 10:00:00\",\n    \"updated_at\": \"2026-01-05 15:30:00\",\n    \"created_by\": 1,\n    \"created_by_name\": \"Super Admin\",\n    \"updated_by\": 2,\n    \"updated_by_name\": \"Admin User\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Branch",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/branches/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "branches",
+                "1"
+              ]
+            },
+            "description": "Soft delete a branch in user's tenant. Branch must belong to authenticated tenant.\n\nAccessible by all authenticated users.\n\nNote: This is a soft delete. Branch will be marked as deleted but not removed from database.\n\nReplace '1' with actual branch ID."
+          },
+          "response": [
+            {
+              "name": "Delete Branch Success",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{auth_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/branches/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "branches",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Branch deleted successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Branch Users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/branches/1/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "branches",
+                "1",
+                "users"
+              ]
+            },
+            "description": "Get list of users in a specific branch. Branch must belong to authenticated tenant.\n\nAccessible by all authenticated users.\n\nReturns:\n- Array of users in the branch\n- User information including name, email, role, status\n- No pagination (returns all users in the branch)\n\nReplace '1' with actual branch ID."
+          },
+          "response": [
+            {
+              "name": "Get Branch Users Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{auth_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/branches/1/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "branches",
+                    "1",
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Users retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": 10,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"admin.pusat@foodcorner.com\",\n      \"full_name\": \"Admin Cabang Pusat\",\n      \"image\": \"/uploads/profiles/user_10_1735296000.jpg\",\n      \"role\": \"branchadmin\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:00:00\",\n      \"updated_at\": \"2025-12-24 10:00:00\"\n    },\n    {\n      \"id\": 11,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"cashier.pusat@foodcorner.com\",\n      \"full_name\": \"Kasir Cabang Pusat\",\n      \"image\": \"\",\n      \"role\": \"staff\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:05:00\",\n      \"updated_at\": \"2025-12-24 10:05:00\"\n    },\n    {\n      \"id\": 12,\n      \"tenant_id\": 17,\n      \"branch_id\": 1,\n      \"email\": \"waiter.pusat@foodcorner.com\",\n      \"full_name\": \"Pelayan Cabang Pusat\",\n      \"image\": \"\",\n      \"role\": \"staff\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-24 10:10:00\",\n      \"updated_at\": \"2025-12-24 10:10:00\"\n    }\n  ]\n}"
             }
           ]
         }
@@ -4097,7 +4549,7 @@
       ]
     },
     {
-      "name": "Superadmin",
+      "name": "Dashboard",
       "item": [
         {
           "name": "Dashboard",
@@ -4115,18 +4567,17 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/superadmin/dashboard",
+              "raw": "{{base_url}}/api/v1/dashboard",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "superadmin",
                 "dashboard"
               ]
             },
-            "description": "Get comprehensive dashboard statistics including:\n- Total counts: tenants, branches, users, products\n- Transactions statistics (qty and total amount for all time, today, last 7/30/90/180/360 days) - for chart\n\nRequires superadmin role."
+            "description": "Get comprehensive dashboard statistics including:\n- Total counts: tenants, branches, users, products\n- Transactions statistics (qty and total amount for all time, today, last 7/30/90/180/360 days) - for chart\n\nAccessible by all authenticated users."
           },
           "response": [
             {
@@ -4141,14 +4592,13 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/superadmin/dashboard",
+                  "raw": "{{base_url}}/api/v1/dashboard",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "api",
                     "v1",
-                    "superadmin",
                     "dashboard"
                   ]
                 }
@@ -4164,92 +4614,6 @@
               ],
               "cookie": [],
               "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": {\n    \"total_tenants\": 10,\n    \"total_branches\": 25,\n    \"total_users\": 150,\n    \"total_products\": 500,\n    \"transactions\": {\n      \"all_time\": 50000000.0,\n      \"today\": 250000.0,\n      \"this_week\": 1500000.0,\n      \"this_month\": 8500000.0,\n      \"last_7_days\": 2250000.0,\n      \"last_30_days\": 10000000.0,\n      \"last_90_days\": 27500000.0,\n      \"last_180_days\": 40000000.0,\n      \"last_360_days\": 47500000.0\n    }\n  }\n}"
-            }
-          ]
-        },
-        {
-          "name": "Superadmin Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 200) {",
-                  "    var jsonData = pm.response.json();",
-                  "    pm.environment.set(\"auth_token\", jsonData.data.token);",
-                  "    pm.environment.set(\"user_id\", jsonData.data.user.id);",
-                  "    pm.environment.set(\"tenant_id\", jsonData.data.user.tenant_id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"tenant_code\": \"{{superadmin_tenant}}\",\n  \"branch_code\": \"{{superadmin_branch}}\",\n  \"email\": \"{{superadmin_username}}\",\n  \"password\": \"{{superadmin_password}}\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "auth",
-                "login"
-              ]
-            },
-            "description": "Login sebagai superadmin menggunakan credentials: supertenant/superbranch/superadmin/123456. Token akan otomatis tersimpan untuk akses endpoint superadmin."
-          },
-          "response": [
-            {
-              "name": "Superadmin Login Success",
-              "originalRequest": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"tenant_code\": \"supertenant\",\n  \"branch_code\": \"superbranch\",\n  \"email\": \"superadmin\",\n  \"password\": \"123456\"\n}"
-                },
-                "url": {
-                  "raw": "{{base_url}}/api/v1/auth/login",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "v1",
-                    "auth",
-                    "login"
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzUxOTg4MDAsInVzZXJfaWQiOjEsInRlbmFudF9pZCI6MSwiYnJhbmNoX2lkIjoxLCJyb2xlIjoic3VwZXJhZG1pbiJ9.sample\",\n    \"user\": {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"branch_name\": \"Super Branch\",\n      \"username\": \"superadmin\",\n      \"email\": \"superadmin@system.com\",\n      \"full_name\": \"Super Admin\",\n      \"role\": \"superadmin\",\n      \"is_active\": true\n    }\n  }\n}"
             }
           ]
         }
@@ -4393,18 +4757,17 @@
               "raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun.\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/superadmin/faq",
+              "raw": "{{base_url}}/api/v1/faq",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "superadmin",
                 "faq"
               ]
             },
-            "description": "Endpoint untuk membuat FAQ baru. Hanya bisa diakses oleh superadmin.\n\nRequest body:\n- question: Pertanyaan (required, min 5, max 500 characters)\n- answer: Jawaban (required)"
+            "description": "Endpoint untuk membuat FAQ baru. Accessible by all authenticated users.\n\nRequest body:\n- question: Pertanyaan (required, min 5, max 500 characters)\n- answer: Jawaban (required)"
           },
           "response": [
             {
@@ -4427,14 +4790,13 @@
                   "raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English.\",\n  \"category\": \"General\",\n  \"order\": 3\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/superadmin/faq",
+                  "raw": "{{base_url}}/api/v1/faq",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "api",
                     "v1",
-                    "superadmin",
                     "faq"
                   ]
                 }
@@ -4478,19 +4840,18 @@
               "raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun Anda.\",\n  \"is_active\": true\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/superadmin/faq/1",
+              "raw": "{{base_url}}/api/v1/faq/1",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "superadmin",
                 "faq",
                 "1"
               ]
             },
-            "description": "Endpoint untuk mengupdate FAQ. Hanya bisa diakses oleh superadmin. Semua field optional.\n\nRequest body:\n- question: Pertanyaan (optional, min 5, max 500 characters)\n- answer: Jawaban (optional)\n- is_active: Status aktif (optional)"
+            "description": "Endpoint untuk mengupdate FAQ. Accessible by all authenticated users. Semua field optional.\n\nRequest body:\n- question: Pertanyaan (optional, min 5, max 500 characters)\n- answer: Jawaban (optional)\n- is_active: Status aktif (optional)"
           },
           "response": [
             {
@@ -4513,14 +4874,13 @@
                   "raw": "{\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun Anda.\",\n  \"is_active\": true\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/superadmin/faq/1",
+                  "raw": "{{base_url}}/api/v1/faq/1",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "api",
                     "v1",
-                    "superadmin",
                     "faq",
                     "1"
                   ]
@@ -4556,19 +4916,18 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/superadmin/faq/1",
+              "raw": "{{base_url}}/api/v1/faq/1",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "superadmin",
                 "faq",
                 "1"
               ]
             },
-            "description": "Endpoint untuk menghapus FAQ. Hanya bisa diakses oleh superadmin."
+            "description": "Endpoint untuk menghapus FAQ. Accessible by all authenticated users."
           },
           "response": [
             {
@@ -4583,14 +4942,13 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/superadmin/faq/1",
+                  "raw": "{{base_url}}/api/v1/faq/1",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "api",
                     "v1",
-                    "superadmin",
                     "faq",
                     "1"
                   ]

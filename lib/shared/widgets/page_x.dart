@@ -39,30 +39,22 @@ class PageX extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
 
     return Obx(
-      () => Container(
-        decoration: BoxDecoration(
-          gradient: themeController.isDarkMode.value
-              ? null
-              : themeController.lightGradient,
-          color: themeController.isDarkMode.value
-              ? (backgroundColor ?? theme.scaffoldBackgroundColor)
-              : null,
+      () => Scaffold(
+        key: scaffoldKey,
+        backgroundColor: themeController.isDarkMode.value
+            ? (backgroundColor ?? theme.scaffoldBackgroundColor)
+            : (backgroundColor ?? theme.scaffoldBackgroundColor),
+        appBar: AppBarX(
+          title: title,
+          leading: leading,
+          actions: actions,
+          bottom: bottom,
         ),
-        child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: Colors.transparent,
-          appBar: AppBarX(
-            title: title,
-            leading: leading,
-            actions: actions,
-            bottom: bottom,
-          ),
-          body: body,
-          floatingActionButton: floatingActionButton,
-          drawer: drawer,
-          drawerScrimColor: drawerScrimColor,
-          drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-        ),
+        body: body,
+        floatingActionButton: floatingActionButton,
+        drawer: drawer,
+        drawerScrimColor: drawerScrimColor,
+        drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       ),
     );
   }

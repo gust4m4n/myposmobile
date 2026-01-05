@@ -254,11 +254,16 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildPeriodButton(String label, int days) {
     final isSelected = _selectedDays == days;
+    final theme = Theme.of(context);
     return ElevatedButton(
       onPressed: () => _onPeriodSelected(days),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Colors.blue : Colors.grey[200],
-        foregroundColor: isSelected ? Colors.white : Colors.black87,
+        backgroundColor: isSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.surfaceContainerHighest,
+        foregroundColor: isSelected
+            ? Colors.white
+            : theme.colorScheme.onSurface,
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),

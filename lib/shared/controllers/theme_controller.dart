@@ -19,22 +19,32 @@ class ThemeController extends GetxController {
 
   ThemeData get lightTheme => ThemeData(
     brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.transparent,
+    scaffoldBackgroundColor: const Color(
+      0xFFF5F5F7,
+    ), // Clean light gray background
     colorScheme: const ColorScheme.light(
-      primary: Color(0xFF0A84FF),
-      secondary: Color(0xFF32D74B),
-      error: Color(0xFFFF453A),
+      primary: Color(0xFF007AFF), // iOS-style blue
+      secondary: Color(0xFF34C759), // iOS-style green
+      error: Color(0xFFFF3B30), // iOS-style red
       surface: Colors.white,
       onSurface: Color(0xFF1C1C1E),
+      surfaceContainerHighest: Color(0xFFE5E5EA), // For elevated surfaces
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       foregroundColor: Color(0xFF1C1C1E),
       elevation: 0,
       scrolledUnderElevation: 0,
       iconTheme: IconThemeData(color: Color(0xFF1C1C1E)),
     ),
     cardColor: Colors.white,
+    cardTheme: CardThemeData(
+      elevation: 0,
+      color: Colors.white,
+      shadowColor: Colors.black.withValues(alpha: 0.05),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.all(0),
+    ),
     dividerColor: const Color(0xFFE5E5EA),
     useMaterial3: true,
     pageTransitionsTheme: const PageTransitionsTheme(
@@ -48,16 +58,8 @@ class ThemeController extends GetxController {
     ),
   );
 
-  // Light mode gradient background colors (blue gradient like in attachment)
-  LinearGradient get lightGradient => const LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Color(0xFF5B9FE3), // Bright blue at top (more vibrant)
-      Color(0xFF7EBCE6), // Medium blue
-      Color(0xFF9DD4F5), // Light cyan blue at bottom
-    ],
-  );
+  // Solid background color for light mode
+  Color get lightBackgroundColor => const Color(0xFFF5F5F7);
 
   ThemeData get darkTheme => ThemeData(
     brightness: Brightness.dark,

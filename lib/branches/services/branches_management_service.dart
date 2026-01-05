@@ -33,7 +33,9 @@ class BranchesManagementService {
     int pageSize = 20,
   }) async {
     String url = ApiConfig.superadminTenantBranches(tenantId);
-    url += '?page=$page&page_size=$pageSize';
+    // URL already contains tenant_id query param from ApiConfig
+    // Add additional query params
+    url += '&page=$page&page_size=$pageSize';
 
     return await ApiX.get(
       url,
