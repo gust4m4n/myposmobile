@@ -242,6 +242,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
               Center(
                 child: ImageX(
                   imageUrl: null,
+                  localImagePath: _uploadedImagePath,
                   baseUrl: null,
                   size: 120,
                   cornerRadius: 8,

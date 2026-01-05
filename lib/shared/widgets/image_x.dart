@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class ImageX extends StatelessWidget {
   final String? imageUrl;
   final String? baseUrl;
+  final String? localImagePath; // Path to local file for preview
   final double size;
   final double cornerRadius;
   final Function(File) onPicked;
@@ -17,6 +18,7 @@ class ImageX extends StatelessWidget {
     super.key,
     this.imageUrl,
     this.baseUrl,
+    this.localImagePath,
     this.size = 80,
     this.cornerRadius = 40,
     required this.onPicked,
@@ -41,7 +43,22 @@ class ImageX extends StatelessWidget {
                 theme.colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(cornerRadius),
           ),
-          child: imageUrl != null
+          child: localImagePath != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(cornerRadius),
+                  child: Image.file(
+                    File(localImagePath!),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.person,
+                        size: size * 0.5,
+                        color: iconColor ?? theme.colorScheme.primary,
+                      );
+                    },
+                  ),
+                )
+              : imageUrl != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(cornerRadius),
                   child: Image.network(

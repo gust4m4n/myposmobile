@@ -10,20 +10,17 @@ import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/image_x.dart';
 import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
-import '../../tenants/models/tenant_model.dart';
 import '../../translations/translation_extension.dart';
 import '../models/branch_model.dart';
 import '../services/branches_management_service.dart';
 
 class EditBranchDialog extends StatefulWidget {
   final String languageCode;
-  final TenantModel tenant;
   final BranchModel branch;
 
   const EditBranchDialog({
     super.key,
     required this.languageCode,
-    required this.tenant,
     required this.branch,
   });
 
@@ -164,7 +161,7 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
   @override
   Widget build(BuildContext context) {
     return DialogX(
-      title: '${'editBranch'.tr} - ${widget.tenant.name}',
+      title: 'editBranch'.tr,
       width: 600,
       content: Form(
         key: _formKey,
@@ -177,6 +174,7 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
               Center(
                 child: ImageX(
                   imageUrl: _existingImageUrl,
+                  localImagePath: _uploadedImagePath,
                   baseUrl: ApiConfig.baseUrl,
                   size: 120,
                   cornerRadius: 8,

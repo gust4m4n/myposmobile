@@ -9,19 +9,13 @@ import '../../shared/widgets/green_button_x.dart';
 import '../../shared/widgets/image_x.dart';
 import '../../shared/widgets/text_field_x.dart';
 import '../../shared/widgets/toast_x.dart';
-import '../../tenants/models/tenant_model.dart';
 import '../../translations/translation_extension.dart';
 import '../services/branches_management_service.dart';
 
 class AddBranchDialog extends StatefulWidget {
   final String languageCode;
-  final TenantModel tenant;
 
-  const AddBranchDialog({
-    super.key,
-    required this.languageCode,
-    required this.tenant,
-  });
+  const AddBranchDialog({super.key, required this.languageCode});
 
   @override
   State<AddBranchDialog> createState() => _AddBranchDialogState();
@@ -110,8 +104,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
 
     try {
       final service = BranchesManagementService();
-      final response = await service.createBranch(
-        tenantId: widget.tenant.id!,
+      final response = await service.createBranchForCurrentTenant(
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         address: _addressController.text.trim(),
@@ -145,7 +138,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
   @override
   Widget build(BuildContext context) {
     return DialogX(
-      title: '${'addBranch'.tr} - ${widget.tenant.name}',
+      title: 'addBranch'.tr,
       width: 600,
       content: Form(
         key: _formKey,
@@ -157,6 +150,7 @@ class _AddBranchDialogState extends State<AddBranchDialog> {
               Center(
                 child: ImageX(
                   imageUrl: null,
+                  localImagePath: _uploadedImagePath,
                   baseUrl: null,
                   size: 120,
                   cornerRadius: 8,

@@ -40,7 +40,7 @@ class ApiConfig {
 
   // Tenant endpoints (Authenticated users - accessible by all authenticated users)
   static const String tenants = '$apiPrefix/tenants';
-  
+
   // Superadmin Tenant endpoints (same as regular tenants endpoint)
   static const String superadminTenants = '$apiPrefix/tenants';
 
@@ -63,12 +63,12 @@ class ApiConfig {
   // Dynamic endpoints
   static String devTenantBranches(int tenantId) =>
       '/dev/tenants/$tenantId/branches';
-  
+
   // Superadmin tenant branches endpoint - uses regular branches endpoint with tenant_id query param
   // For superadmin to view branches of a specific tenant
   static String superadminTenantBranches(int tenantId) =>
       '$apiPrefix/branches?tenant_id=$tenantId';
-      
+
   static String superadminBranchUsers(int branchId) =>
       '$apiPrefix/superadmin/branches/$branchId/users';
 

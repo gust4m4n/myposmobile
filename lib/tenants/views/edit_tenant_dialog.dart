@@ -190,6 +190,7 @@ class _EditTenantDialogState extends State<EditTenantDialog> {
               Center(
                 child: ImageX(
                   imageUrl: _existingImageUrl,
+                  localImagePath: _uploadedImagePath,
                   baseUrl: ApiConfig.baseUrl,
                   size: 120,
                   cornerRadius: 8,

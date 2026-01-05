@@ -165,6 +165,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
     return Center(
       child: ImageX(
         imageUrl: _photoPath,
+        localImagePath: _uploadedImagePath,
         baseUrl: ApiConfig.baseUrl,
         size: 120,
         cornerRadius: 8,
