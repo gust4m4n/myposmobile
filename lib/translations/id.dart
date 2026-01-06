@@ -18,7 +18,9 @@ const Map<String, String> id = {
   'avocadoJuice': 'Jus Alpukat',
 
   // Cart
+  'products': 'Produk',
   'cart': 'Keranjang Belanja',
+  'menu': 'Menu',
   'emptyCart': 'Keranjang Kosong',
   'total': 'Total:',
   'checkout': 'Checkout',
@@ -184,7 +186,6 @@ const Map<String, String> id = {
   'done': 'Selesai',
 
   // Common
-  'menu': 'Menu',
   'user': 'Staff',
   'notAvailable': 'T/A',
   'unknown': 'Tidak Diketahui',

@@ -17,6 +17,7 @@ class PageX extends StatelessWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final Color? drawerScrimColor;
   final bool drawerEnableOpenDragGesture;
+  final Widget? bottomNavigationBar;
 
   const PageX({
     super.key,
@@ -31,6 +32,7 @@ class PageX extends StatelessWidget {
     this.scaffoldKey,
     this.drawerScrimColor,
     this.drawerEnableOpenDragGesture = true,
+    this.bottomNavigationBar,
   });
 
   @override
@@ -55,6 +57,7 @@ class PageX extends StatelessWidget {
         drawer: drawer,
         drawerScrimColor: drawerScrimColor,
         drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+        bottomNavigationBar: bottomNavigationBar,
       ),
     );
   }

@@ -18,7 +18,9 @@ const Map<String, String> en = {
   'avocadoJuice': 'Avocado Juice',
 
   // Cart
+  'products': 'Products',
   'cart': 'Shopping Cart',
+  'menu': 'Menu',
   'emptyCart': 'Empty Cart',
   'total': 'Total:',
   'checkout': 'Checkout',
@@ -185,7 +187,6 @@ const Map<String, String> en = {
   'done': 'Done',
 
   // Common
-  'menu': 'Menu',
   'user': 'Staff',
   'notAvailable': 'N/A',
   'unknown': 'Unknown',
