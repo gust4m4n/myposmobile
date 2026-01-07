@@ -5,47 +5,157 @@ import '../../shared/config/api_config.dart';
 import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/search_field_x.dart';
 import '../models/product_model.dart';
+import '../services/products_service.dart';
 
-/// Combined widget untuk menampilkan daftar produk dengan category filter dan grid
+/// Independent widget untuk menampilkan daftar produk dengan category filter dan grid
+/// Load data sendiri dari API
 class ProductsWidget extends StatefulWidget {
-  final List<ProductModel> products;
-  final String selectedCategory;
-  final ValueChanged<String> onCategorySelected;
   final Function(ProductModel) onProductTap;
   final bool isMobile;
-  final List<String> categories;
-  final ScrollController? scrollController;
-  final VoidCallback? onLoadMore;
-  final bool? isLoadingMore;
-  final bool? hasMoreData;
 
   const ProductsWidget({
     super.key,
-    required this.products,
-    required this.selectedCategory,
-    required this.onCategorySelected,
     required this.onProductTap,
     this.isMobile = false,
-    required this.categories,
-    this.scrollController,
-    this.onLoadMore,
-    this.isLoadingMore,
-    this.hasMoreData,
   });
 
   @override
   State<ProductsWidget> createState() => _ProductsWidgetState();
 }
 
-class _ProductsWidgetState extends State<ProductsWidget> {
+class _ProductsWidgetState extends State<ProductsWidget>
+    with AutomaticKeepAliveClientMixin {
   String _searchQuery = '';
+  String _selectedCategory = 'All';
+  List<ProductModel> _products = [];
+  List<String> _categories = ['All'];
+  bool _isLoading = false;
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
+  int _currentPage = 1;
+  final int _pageSize = 32;
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey<_SearchBarState> _searchBarKey = GlobalKey<_SearchBarState>();
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+    _loadAllCategories();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (!_isLoadingMore && _hasMoreData) {
+        _loadMoreProducts();
+      }
+    }
+  }
+
+  Future<void> _loadAllCategories() async {
+    final response = await ProductsService.getProducts(page: 1, pageSize: 1000);
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200 && response.data != null) {
+      final allProducts = response.data!
+          .map((json) => ProductModel.fromJson(json))
+          .toList();
+      final categorySet = allProducts.map((p) => p.category).toSet();
+      if (mounted) {
+        setState(() {
+          _categories = ['All', ...categorySet];
+        });
+      }
+    }
+  }
+
+  Future<void> _loadProducts() async {
+    _isLoading = true;
+    _currentPage = 1;
+    _hasMoreData = true;
+
+    final response = await ProductsService.getProducts(
+      category: _selectedCategory == 'All' ? null : _selectedCategory,
+      page: _currentPage,
+      pageSize: _pageSize,
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200 && response.data != null) {
+      setState(() {
+        _products = response.data!
+            .map((json) => ProductModel.fromJson(json))
+            .toList();
+        _hasMoreData = _products.length >= _pageSize;
+        _isLoading = false;
+      });
+    } else if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadMoreProducts() async {
+    if (_isLoadingMore || !_hasMoreData) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    _currentPage++;
+    final response = await ProductsService.getProducts(
+      category: _selectedCategory == 'All' ? null : _selectedCategory,
+      page: _currentPage,
+      pageSize: _pageSize,
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 200 && response.data != null) {
+      final newProducts = response.data!
+          .map((json) => ProductModel.fromJson(json))
+          .toList();
+      setState(() {
+        _products.addAll(newProducts);
+        _hasMoreData = newProducts.length >= _pageSize;
+        _isLoadingMore = false;
+      });
+    } else {
+      setState(() {
+        _isLoadingMore = false;
+        _currentPage--;
+      });
+    }
+  }
+
+  void _handleCategorySelected(String category) {
+    setState(() {
+      _selectedCategory = category;
+    });
+    _loadProducts();
+  }
 
   List<ProductModel> get _filteredProducts {
     List<ProductModel> filtered;
     if (_searchQuery.isEmpty) {
-      filtered = widget.products;
+      filtered = _products;
     } else {
-      filtered = widget.products.where((product) {
+      filtered = _products.where((product) {
         return product.name.toLowerCase().contains(_searchQuery.toLowerCase());
       }).toList();
     }
@@ -59,28 +169,41 @@ class _ProductsWidgetState extends State<ProductsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Column(
       children: [
-        _CategoryFilter(
-          selectedCategory: widget.selectedCategory,
-          onCategorySelected: widget.onCategorySelected,
+        RepaintBoundary(
+          child: _SearchBar(
+            key: _searchBarKey,
+            isMobile: widget.isMobile,
+            onSearchChanged: (query) {
+              setState(() {
+                _searchQuery = query;
+              });
+            },
+          ),
+        ),
+        _CategoryBar(
+          key: ValueKey('category_$_selectedCategory'),
+          selectedCategory: _selectedCategory,
+          onCategorySelected: _handleCategorySelected,
           isMobile: widget.isMobile,
-          categories: widget.categories,
-          onSearchChanged: (query) {
-            setState(() {
-              _searchQuery = query;
-            });
-          },
+          categories: _categories,
         ),
         Expanded(
           child: _ProductGrid(
             products: _filteredProducts,
             onProductTap: widget.onProductTap,
             isMobile: widget.isMobile,
-            scrollController: widget.scrollController,
-            onLoadMore: widget.onLoadMore,
-            isLoadingMore: widget.isLoadingMore ?? false,
-            hasMoreData: widget.hasMoreData ?? false,
+            scrollController: _scrollController,
+            onLoadMore: _loadMoreProducts,
+            isLoadingMore: _isLoadingMore,
+            hasMoreData: _hasMoreData,
           ),
         ),
       ],
@@ -89,30 +212,29 @@ class _ProductsWidgetState extends State<ProductsWidget> {
 }
 
 // ============================================================================
-// Private: Category Filter
+// Private: Search Bar
 // ============================================================================
 
-class _CategoryFilter extends StatefulWidget {
-  final String selectedCategory;
-  final ValueChanged<String> onCategorySelected;
-  final List<String> categories;
+class _SearchBar extends StatefulWidget {
   final bool isMobile;
   final ValueChanged<String> onSearchChanged;
 
-  const _CategoryFilter({
-    required this.selectedCategory,
-    required this.onCategorySelected,
-    required this.categories,
+  const _SearchBar({
+    super.key,
     this.isMobile = false,
     required this.onSearchChanged,
   });
 
   @override
-  State<_CategoryFilter> createState() => _CategoryFilterState();
+  State<_SearchBar> createState() => _SearchBarState();
 }
 
-class _CategoryFilterState extends State<_CategoryFilter> {
+class _SearchBarState extends State<_SearchBar>
+    with AutomaticKeepAliveClientMixin {
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -122,82 +244,113 @@ class _CategoryFilterState extends State<_CategoryFilter> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        widget.isMobile ? 12 : 16,
+        10,
+        widget.isMobile ? 12 : 16,
+        8,
+      ),
+      child: SearchFieldX(
+        controller: _searchController,
+        onChanged: widget.onSearchChanged,
+        width: double.infinity,
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// Private: Category Bar
+// ============================================================================
+
+class _CategoryBar extends StatefulWidget {
+  final String selectedCategory;
+  final ValueChanged<String> onCategorySelected;
+  final List<String> categories;
+  final bool isMobile;
+
+  const _CategoryBar({
+    super.key,
+    required this.selectedCategory,
+    required this.onCategorySelected,
+    required this.categories,
+    this.isMobile = false,
+  });
+
+  @override
+  State<_CategoryBar> createState() => _CategoryBarState();
+}
+
+class _CategoryBarState extends State<_CategoryBar> {
+  final ScrollController _categoryScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _categoryScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Container(
-      height: widget.isMobile ? 60 : 70,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(
-                scrollbars: false,
-                dragDevices: {
-                  PointerDeviceKind.touch,
-                  PointerDeviceKind.mouse,
-                  PointerDeviceKind.trackpad,
-                },
-              ),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const ClampingScrollPhysics(),
-                padding: EdgeInsets.symmetric(
-                  horizontal: widget.isMobile ? 12 : 16,
-                ),
-                itemCount: widget.categories.length,
-                itemBuilder: (context, index) {
-                  final category = widget.categories[index];
-                  final isSelected = widget.selectedCategory == category;
+      height: widget.isMobile ? 50 : 60,
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          scrollbars: false,
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.trackpad,
+          },
+        ),
+        child: ListView.builder(
+          key: const PageStorageKey('category_list'),
+          controller: _categoryScrollController,
+          scrollDirection: Axis.horizontal,
+          physics: const ClampingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: widget.isMobile ? 12 : 16),
+          itemCount: widget.categories.length,
+          itemBuilder: (context, index) {
+            final category = widget.categories[index];
+            final isSelected = widget.selectedCategory == category;
 
-                  return Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => widget.onCategorySelected(category),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 28,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.primary.withValues(
-                                  alpha: 0.5,
-                                ),
-                        ),
-                        child: Text(
-                          category,
-                          style: TextStyle(
-                            color: isSelected
-                                ? Colors.white
-                                : Colors.white.withValues(alpha: 0.7),
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
+            return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => widget.onCategorySelected(category),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 4.0,
+                  ),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.primary.withValues(alpha: 0.5),
+                  ),
+                  child: Text(
+                    category,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.7),
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      fontSize: 16.0,
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Padding(
-            padding: EdgeInsets.only(right: widget.isMobile ? 12 : 16),
-            child: SearchFieldX(
-              controller: _searchController,
-              onChanged: (value) {
-                widget.onSearchChanged(value);
-                setState(() {});
-              },
-              width: 168,
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }

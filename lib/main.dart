@@ -124,7 +124,7 @@ class _MyPOSMobileAppState extends State<MyPOSMobileApp>
         home: authController.isLoading.value
             ? const Scaffold(body: Center(child: CircularProgressIndicator()))
             : ConnectivityWrapper(
-                child: authController.isAuthenticated
+                child: authController.authToken.value != null
                     ? HomePage(
                         languageCode: languageController.languageCode.value,
                       )

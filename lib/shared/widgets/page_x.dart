@@ -6,7 +6,7 @@ import 'app_bar_x.dart';
 
 /// Reusable Page widget for consistent page structure across the application
 class PageX extends StatelessWidget {
-  final String title;
+  final String? title;
   final Widget body;
   final List<Widget>? actions;
   final Widget? leading;
@@ -21,7 +21,7 @@ class PageX extends StatelessWidget {
 
   const PageX({
     super.key,
-    required this.title,
+    this.title,
     required this.body,
     this.actions,
     this.leading,
@@ -46,12 +46,14 @@ class PageX extends StatelessWidget {
         backgroundColor: themeController.isDarkMode.value
             ? (backgroundColor ?? theme.scaffoldBackgroundColor)
             : (backgroundColor ?? theme.scaffoldBackgroundColor),
-        appBar: AppBarX(
-          title: title,
-          leading: leading,
-          actions: actions,
-          bottom: bottom,
-        ),
+        appBar: title != null
+            ? AppBarX(
+                title: title!,
+                leading: leading,
+                actions: actions,
+                bottom: bottom,
+              )
+            : null,
         body: body,
         floatingActionButton: floatingActionButton,
         drawer: drawer,

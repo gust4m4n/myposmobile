@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Trans;
-import 'package:myposmobile/shared/widgets/button_x.dart';
 
 import '../../audit-trails/views/audit_trails_page.dart';
 import '../../branches/views/branches_management_page.dart';
@@ -23,6 +22,7 @@ import '../../shared/controllers/language_controller.dart';
 import '../../shared/controllers/profile_controller.dart';
 import '../../shared/controllers/theme_controller.dart';
 import '../../shared/utils/currency_formatter.dart';
+import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/connectivity_indicator.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
@@ -36,8 +36,11 @@ import '../../translations/translation_extension.dart';
 import '../../users/views/users_management_page.dart';
 import '../models/product_model.dart';
 import '../services/products_service.dart';
+import 'cart_tab.dart';
 import 'checkout_dialog.dart';
+import 'menu_tab.dart';
 import 'product_widgets.dart';
+import 'products_tab.dart';
 
 class HomePage extends StatefulWidget {
   final String languageCode;
@@ -61,7 +64,6 @@ class _HomePageState extends State<HomePage> {
   final int _pageSize = 32;
   final _profileService = ProfileService();
   ProfileModel? _profile;
-  String _appTitle = 'MyPOSMobile';
   final ScrollController _scrollController = ScrollController();
   int _selectedTabIndex = 0;
 
@@ -104,7 +106,6 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200 && response.data != null) {
       setState(() {
         _profile = response.data;
-        _appTitle = '${_profile!.tenant.name} - ${_profile!.branch.name}';
       });
     }
   }
@@ -201,11 +202,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onCategoryChanged(String category) {
-    setState(() {
-      _selectedCategory = category;
-      _currentPage = 1;
-      _hasMoreData = true;
-    });
+    _selectedCategory = category;
+    _currentPage = 1;
+    _hasMoreData = true;
     _loadProducts();
   }
 
@@ -562,567 +561,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCartView() {
-    final theme = Theme.of(context);
-    TranslationService.setLanguage(widget.languageCode);
-
-    return Column(
-      children: [
-        Expanded(
-          child: _cart.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        size: 80,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.3,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'emptyCart'.tr,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.5,
-                          ),
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  padding: const EdgeInsets.all(8),
-                  itemCount: _cart.length,
-                  itemBuilder: (context, index) {
-                    final item = _cart[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        title: Text(
-                          item.product.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: CurrencyFormatter.format(
-                                    item.product.price,
-                                  ),
-                                  style: TextStyle(
-                                    color: Colors.orange.shade700,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' x ',
-                                  style: TextStyle(
-                                    color: Colors.grey.shade500,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '${item.quantity}',
-                                  style: TextStyle(
-                                    color: theme.colorScheme.primary,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              CurrencyFormatter.format(item.total),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              icon: const Icon(Icons.remove_circle_outline),
-                              color: theme.colorScheme.error,
-                              onPressed: () {
-                                setState(() {
-                                  _removeFromCart(index);
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ),
-        if (_cart.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.cardColor,
-              border: Border(
-                top: BorderSide(color: theme.dividerColor, width: 1),
-              ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'total'.tr,
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      CurrencyFormatter.format(_totalPrice),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ButtonX(
-                    onClicked: _checkout,
-                    label: 'checkout'.tr,
-                    backgroundColor: theme.colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildMenuView() {
-    final theme = Theme.of(context);
-    TranslationService.setLanguage(widget.languageCode);
-
-    return ListView(
-      padding: EdgeInsets.zero,
-      physics: const ClampingScrollPhysics(),
-      children: [
-        // Profile Header
-        InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ProfilePage(languageCode: widget.languageCode),
-              ),
-            ).then((_) => _loadProfile());
-          },
-          child: Container(
-            color: theme.colorScheme.primary,
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: Colors.white,
-                  backgroundImage:
-                      _profile?.user.image != null &&
-                          _profile!.user.image!.isNotEmpty
-                      ? NetworkImage(
-                          _profile!.user.image!.startsWith('http')
-                              ? _profile!.user.image!
-                              : 'http://localhost:8080${_profile!.user.image!}',
-                        )
-                      : null,
-                  child:
-                      _profile?.user.image == null ||
-                          _profile!.user.image!.isEmpty
-                      ? Icon(
-                          Icons.person,
-                          size: 24,
-                          color: theme.colorScheme.primary,
-                        )
-                      : null,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _profile?.user.fullName ?? 'user'.tr,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _profile?.user.email ?? '',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12.0,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 16,
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        // Dashboard
-        ListTile(
-          leading: Icon(
-            Icons.dashboard_outlined,
-            color: theme.colorScheme.onSurface,
-          ),
-          title: Text('Dashboard'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const DashboardPage()),
-            );
-          },
-        ),
-        Divider(color: theme.dividerColor, height: 1),
-        // Account Section
-        _buildSectionHeader('Account'),
-        ListTile(
-          leading: Icon(Icons.lock_outline, color: theme.colorScheme.onSurface),
-          title: Text('changePassword'.tr),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) =>
-                  ChangePasswordDialog(languageCode: widget.languageCode),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.lock_outline, color: theme.colorScheme.onSurface),
-          title: Text('changePin'.tr),
-          onTap: () async {
-            final statusResponse = await PinService.checkPinStatus();
-            final hasPin =
-                statusResponse.statusCode == 200 &&
-                statusResponse.data?['has_pin'] == true;
-            if (!mounted) return;
-            showDialog(
-              context: context,
-              builder: (context) => PinDialog(
-                languageCode: widget.languageCode,
-                hasExistingPin: hasPin,
-              ),
-            );
-          },
-        ),
-        Divider(color: theme.dividerColor, height: 1),
-        // Transactions Section
-        _buildSectionHeader('Transactions'),
-        ListTile(
-          leading: Icon(
-            Icons.shopping_bag_outlined,
-            color: theme.colorScheme.onSurface,
-          ),
-          title: Text('orders'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    OrdersPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.payment_outlined,
-            color: theme.colorScheme.onSurface,
-          ),
-          title: Text('payments'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    PaymentsPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        Divider(color: theme.dividerColor, height: 1),
-        // Management Section
-        _buildSectionHeader('Management'),
-        ListTile(
-          leading: Icon(Icons.business, color: theme.colorScheme.onSurface),
-          title: Text('tenantsManagement'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    TenantsManagementPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.store, color: theme.colorScheme.onSurface),
-          title: Text('branchesManagement'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    BranchesManagementPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.inventory_2_outlined,
-            color: theme.colorScheme.onSurface,
-          ),
-          title: Text('productsManagement'.tr),
-          onTap: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ProductsManagementPage(languageCode: widget.languageCode),
-              ),
-            );
-            _loadProducts();
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.people_outline,
-            color: theme.colorScheme.onSurface,
-          ),
-          title: Text('userManagement'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    UsersManagementPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.history, color: theme.colorScheme.onSurface),
-          title: Text('auditTrails'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    AuditTrailsPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        Divider(color: theme.dividerColor, height: 1),
-        // Help & Support Section
-        _buildSectionHeader('Help & Support'),
-        ListTile(
-          leading: Icon(Icons.help_outline, color: theme.colorScheme.onSurface),
-          title: Text('faq'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    FaqPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.description_outlined,
-            color: theme.colorScheme.onSurface,
-          ),
-          title: Text('termsAndConditions'.tr),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    TncPage(languageCode: widget.languageCode),
-              ),
-            );
-          },
-        ),
-        Divider(color: theme.dividerColor, height: 1),
-        // Settings Section
-        _buildSectionHeader('Settings'),
-        ListTile(
-          leading: Icon(Icons.language, color: theme.colorScheme.onSurface),
-          title: Row(
-            children: [
-              Text('language'.tr),
-              const SizedBox(width: 8),
-              Text(
-                widget.languageCode == 'en' ? '(English)' : '(Indonesia)',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
-              ),
-            ],
-          ),
-          onTap: () async {
-            final selectedLanguage = await showDialog<String>(
-              context: context,
-              builder: (context) => DialogX(
-                title: 'selectLanguage'.tr,
-                width: 400,
-                onClose: () => Navigator.pop(context),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: widget.languageCode == 'en'
-                          ? const Icon(Icons.check_circle, color: Colors.green)
-                          : const Icon(Icons.circle_outlined),
-                      title: Text('english'.tr),
-                      onTap: () => Navigator.pop(context, 'en'),
-                      selected: widget.languageCode == 'en',
-                    ),
-                    ListTile(
-                      leading: widget.languageCode == 'id'
-                          ? const Icon(Icons.check_circle, color: Colors.green)
-                          : const Icon(Icons.circle_outlined),
-                      title: Text('indonesian'.tr),
-                      onTap: () => Navigator.pop(context, 'id'),
-                      selected: widget.languageCode == 'id',
-                    ),
-                  ],
-                ),
-                actions: [
-                  ButtonX(
-                    onClicked: () => Navigator.pop(context),
-                    label: 'close'.tr,
-                    backgroundColor: theme.colorScheme.surface,
-                    foregroundColor: theme.colorScheme.onSurface,
-                  ),
-                ],
-              ),
-            );
-            if (selectedLanguage != null &&
-                selectedLanguage != widget.languageCode) {
-              Get.find<LanguageController>().toggleLanguage();
-            }
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.brightness_6, color: theme.colorScheme.onSurface),
-          title: Row(
-            children: [
-              const Text('Theme'),
-              const Spacer(),
-              const ThemeToggleButton(),
-            ],
-          ),
-          onTap: () {
-            Get.find<ThemeController>().toggleTheme();
-          },
-        ),
-        Divider(color: theme.dividerColor, height: 1),
-        // Logout
-        ListTile(
-          leading: Icon(Icons.logout, color: theme.colorScheme.error),
-          title: Text(
-            'logout'.tr,
-            style: TextStyle(color: theme.colorScheme.error),
-          ),
-          onTap: () async {
-            final confirmed = await showDialog<bool>(
-              context: context,
-              builder: (context) => DialogX(
-                title: 'logout'.tr,
-                width: 400,
-                onClose: () => Navigator.pop(context, false),
-                content: Text('logoutConfirmation'.tr),
-                actions: [
-                  GrayButtonX(
-                    onClicked: () => Navigator.pop(context, false),
-                    title: 'cancel'.tr,
-                  ),
-                  RedButtonX(
-                    onClicked: () => Navigator.pop(context, true),
-                    title: 'logout'.tr,
-                  ),
-                ],
-              ),
-            );
-            if (confirmed == true) {
-              final authController = Get.find<AuthController>();
-              final profileController = Get.find<ProfileController>();
-              await authController.logout();
-              profileController.clearProfile();
-            }
-          },
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 12.0,
-          fontWeight: FontWeight.bold,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -1132,57 +570,57 @@ class _HomePageState extends State<HomePage> {
 
     return PageX(
       scaffoldKey: _scaffoldKey,
-      title: _appTitle,
       backgroundColor: theme.scaffoldBackgroundColor,
       drawerScrimColor: Colors.black54,
       drawerEnableOpenDragGesture: false,
-      leading: isTabletOrDesktop
-          ? IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-              tooltip: 'menu'.tr,
-            )
-          : null,
-      actions: [
-        const ConnectivityIndicator(),
-        const ThemeToggleButton(),
-        // User Profile Photo
-        GestureDetector(
-          onTap: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ProfilePage(languageCode: widget.languageCode),
+      actions: isTabletOrDesktop
+          ? [
+              const ConnectivityIndicator(),
+              const ThemeToggleButton(),
+              // User Profile Photo
+              GestureDetector(
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfilePage(languageCode: widget.languageCode),
+                    ),
+                  );
+                  // Reload profile when returning from profile page
+                  _loadProfile();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: theme.colorScheme.primary,
+                    backgroundImage:
+                        _profile?.user.image != null &&
+                            _profile!.user.image!.isNotEmpty
+                        ? NetworkImage(
+                            _profile!.user.image!.startsWith('http')
+                                ? _profile!.user.image!
+                                : 'http://localhost:8080${_profile!.user.image!}',
+                          )
+                        : null,
+                    child:
+                        _profile?.user.image == null ||
+                            _profile!.user.image!.isEmpty
+                        ? const Icon(
+                            Icons.person,
+                            size: 20,
+                            color: Colors.white,
+                          )
+                        : null,
+                  ),
+                ),
               ),
-            );
-            // Reload profile when returning from profile page
-            _loadProfile();
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: theme.colorScheme.primary,
-              backgroundImage:
-                  _profile?.user.image != null &&
-                      _profile!.user.image!.isNotEmpty
-                  ? NetworkImage(
-                      _profile!.user.image!.startsWith('http')
-                          ? _profile!.user.image!
-                          : 'http://localhost:8080${_profile!.user.image!}',
-                    )
-                  : null,
-              child:
-                  _profile?.user.image == null || _profile!.user.image!.isEmpty
-                  ? const Icon(Icons.person, size: 20, color: Colors.white)
-                  : null,
-            ),
-          ),
-        ),
-      ],
+            ]
+          : null,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : isTabletOrDesktop
@@ -1195,20 +633,10 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: ProductsWidget(
-                          products: _filteredProducts,
-                          selectedCategory: selectedCategory,
-                          categories: _categories,
-                          onCategorySelected: _onCategoryChanged,
                           onProductTap: _addToCart,
                           isMobile: false,
-                          scrollController: _scrollController,
                         ),
                       ),
-                      if (_isLoadingMore)
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
-                        ),
                     ],
                   ),
                 ),
@@ -1402,29 +830,33 @@ class _HomePageState extends State<HomePage> {
               ],
             )
           : _selectedTabIndex == 0
-          ? Column(
-              children: [
-                Expanded(
-                  child: ProductsWidget(
-                    products: _filteredProducts,
-                    selectedCategory: selectedCategory,
-                    categories: _categories,
-                    onCategorySelected: _onCategoryChanged,
-                    onProductTap: _addToCart,
-                    isMobile: true,
-                    scrollController: _scrollController,
-                  ),
-                ),
-                if (_isLoadingMore)
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(),
-                  ),
-              ],
+          ? ProductsTab(
+              key: const PageStorageKey('products_tab'),
+              products: _filteredProducts,
+              initialCategory: selectedCategory,
+              categories: _categories,
+              onCategorySelected: _onCategoryChanged,
+              onProductTap: _addToCart,
+              scrollController: _scrollController,
+              isLoadingMore: _isLoadingMore,
             )
           : _selectedTabIndex == 1
-          ? _buildCartView()
-          : _buildMenuView(),
+          ? CartTab(
+              cart: _cart,
+              languageCode: widget.languageCode,
+              onCheckout: _checkout,
+              onRemoveFromCart: (index) {
+                setState(() {
+                  _removeFromCart(index);
+                });
+              },
+            )
+          : MenuTab(
+              languageCode: widget.languageCode,
+              profile: _profile,
+              onProfileUpdated: _loadProfile,
+              onProductsUpdated: _loadProducts,
+            ),
       bottomNavigationBar: !isTabletOrDesktop
           ? Container(
               decoration: BoxDecoration(
