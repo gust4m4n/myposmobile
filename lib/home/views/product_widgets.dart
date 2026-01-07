@@ -113,9 +113,8 @@ class _ProductsWidgetState extends State<ProductsWidget>
   Future<void> _loadMoreProducts() async {
     if (_isLoadingMore || !_hasMoreData) return;
 
-    setState(() {
-      _isLoadingMore = true;
-    });
+    // Set flag without setState to avoid build during frame
+    _isLoadingMore = true;
 
     _currentPage++;
     final response = await ProductsService.getProducts(
