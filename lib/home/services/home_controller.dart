@@ -30,7 +30,7 @@ class HomeController extends GetxController {
     final response = await ProductsService.getProducts();
 
     if (response.statusCode == 200 && response.data != null) {
-      products.value = response.data!
+      products.value = response.data!.data
           .map((json) => ProductModel.fromJson(json))
           .toList();
       extractCategories();

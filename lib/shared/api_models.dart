@@ -1,3 +1,47 @@
+// Paginated Response Model
+class PaginatedResponse<T> {
+  final int page;
+  final int pageSize;
+  final int totalItems;
+  final int totalPages;
+  final List<T> data;
+
+  PaginatedResponse({
+    required this.page,
+    required this.pageSize,
+    required this.totalItems,
+    required this.totalPages,
+    required this.data,
+  });
+
+  factory PaginatedResponse.fromJson(
+    Map<String, dynamic> json,
+    T Function(Map<String, dynamic>) fromJsonT,
+  ) {
+    return PaginatedResponse<T>(
+      page: json['page'] ?? 1,
+      pageSize: json['page_size'] ?? 20,
+      totalItems: json['total_items'] ?? 0,
+      totalPages: json['total_pages'] ?? 1,
+      data:
+          (json['data'] as List<dynamic>?)
+              ?.map((item) => fromJsonT(item as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<String, dynamic> toJson(Map<String, dynamic> Function(T) toJsonT) {
+    return {
+      'page': page,
+      'page_size': pageSize,
+      'total_items': totalItems,
+      'total_pages': totalPages,
+      'data': data.map((item) => toJsonT(item)).toList(),
+    };
+  }
+}
+
 // Base API Response
 class ApiResponse<T> {
   final int? code;

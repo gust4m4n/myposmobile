@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../../categories/services/categories_management_service.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/search_field_x.dart';
@@ -25,9 +26,9 @@ class ProductsWidget extends StatefulWidget {
 
 class _ProductsWidgetState extends State<ProductsWidget> {
   String _searchQuery = '';
-  String _selectedCategory = 'All';
+  int? _selectedCategoryId; // null means 'All'
   List<ProductModel> _products = [];
-  List<String> _categories = ['All'];
+  Map<int, String> _categories = {}; // id -> name mapping
   bool _isLoading = false;
   bool _isLoadingMore = false;
   bool _hasMoreData = true;
@@ -62,18 +63,22 @@ class _ProductsWidgetState extends State<ProductsWidget> {
   }
 
   Future<void> _loadAllCategories() async {
-    final response = await ProductsService.getProducts(page: 1, pageSize: 1000);
+    final service = CategoriesManagementService();
+    final response = await service.getCategories(
+      pageSize: 1000,
+      activeOnly: true,
+    );
 
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final allProducts = response.data!
-          .map((json) => ProductModel.fromJson(json))
-          .toList();
-      final categorySet = allProducts.map((p) => p.category).toSet();
+      final allCategories = response.data!.data;
       if (mounted) {
         setState(() {
-          _categories = ['All', ...categorySet];
+          _categories = {
+            for (var cat in allCategories)
+              if (cat.id != null) cat.id!: cat.name,
+          };
         });
       }
     }
@@ -84,20 +89,25 @@ class _ProductsWidgetState extends State<ProductsWidget> {
     _currentPage = 1;
     _hasMoreData = true;
 
-    final response = await ProductsService.getProducts(
-      category: _selectedCategory == 'All' ? null : _selectedCategory,
-      page: _currentPage,
-      pageSize: _pageSize,
-    );
+    final response = _selectedCategoryId == null
+        ? await ProductsService.getProducts(
+            page: _currentPage,
+            pageSize: _pageSize,
+          )
+        : await ProductsService.getProductsByCategory(
+            categoryId: _selectedCategoryId!,
+            page: _currentPage,
+            pageSize: _pageSize,
+          );
 
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
       setState(() {
-        _products = response.data!
+        _products = response.data!.data
             .map((json) => ProductModel.fromJson(json))
             .toList();
-        _hasMoreData = _products.length >= _pageSize;
+        _hasMoreData = response.data!.page < response.data!.totalPages;
         _isLoading = false;
       });
     } else if (mounted) {
@@ -114,21 +124,26 @@ class _ProductsWidgetState extends State<ProductsWidget> {
     _isLoadingMore = true;
 
     _currentPage++;
-    final response = await ProductsService.getProducts(
-      category: _selectedCategory == 'All' ? null : _selectedCategory,
-      page: _currentPage,
-      pageSize: _pageSize,
-    );
+    final response = _selectedCategoryId == null
+        ? await ProductsService.getProducts(
+            page: _currentPage,
+            pageSize: _pageSize,
+          )
+        : await ProductsService.getProductsByCategory(
+            categoryId: _selectedCategoryId!,
+            page: _currentPage,
+            pageSize: _pageSize,
+          );
 
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final newProducts = response.data!
+      final newProducts = response.data!.data
           .map((json) => ProductModel.fromJson(json))
           .toList();
       setState(() {
         _products.addAll(newProducts);
-        _hasMoreData = newProducts.length >= _pageSize;
+        _hasMoreData = response.data!.page < response.data!.totalPages;
         _isLoadingMore = false;
       });
     } else {
@@ -139,9 +154,9 @@ class _ProductsWidgetState extends State<ProductsWidget> {
     }
   }
 
-  void _handleCategorySelected(String category) {
+  void _handleCategorySelected(int? categoryId) {
     setState(() {
-      _selectedCategory = category;
+      _selectedCategoryId = categoryId;
     });
     _loadProducts();
   }
@@ -183,8 +198,8 @@ class _ProductsWidgetState extends State<ProductsWidget> {
           ),
         ),
         _CategoryBar(
-          key: ValueKey('category_$_selectedCategory'),
-          selectedCategory: _selectedCategory,
+          key: ValueKey('category_$_selectedCategoryId'),
+          selectedCategoryId: _selectedCategoryId,
           onCategorySelected: _handleCategorySelected,
           isMobile: widget.isMobile,
           categories: _categories,
@@ -243,14 +258,14 @@ class _SearchBar extends StatelessWidget {
 // ============================================================================
 
 class _CategoryBar extends StatefulWidget {
-  final String selectedCategory;
-  final ValueChanged<String> onCategorySelected;
-  final List<String> categories;
+  final int? selectedCategoryId;
+  final ValueChanged<int?> onCategorySelected;
+  final Map<int, String> categories;
   final bool isMobile;
 
   const _CategoryBar({
     super.key,
-    required this.selectedCategory,
+    required this.selectedCategoryId,
     required this.onCategorySelected,
     required this.categories,
     this.isMobile = false,
@@ -291,15 +306,21 @@ class _CategoryBarState extends State<_CategoryBar> {
           scrollDirection: Axis.horizontal,
           physics: const ClampingScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: widget.isMobile ? 12 : 16),
-          itemCount: widget.categories.length,
+          itemCount: widget.categories.length + 1, // +1 for 'All'
           itemBuilder: (context, index) {
-            final category = widget.categories[index];
-            final isSelected = widget.selectedCategory == category;
+            final bool isAll = index == 0;
+            final int? categoryId = isAll
+                ? null
+                : widget.categories.keys.elementAt(index - 1);
+            final String categoryName = isAll
+                ? 'All'
+                : widget.categories[categoryId]!;
+            final isSelected = widget.selectedCategoryId == categoryId;
 
             return Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => widget.onCategorySelected(category),
+                onTap: () => widget.onCategorySelected(categoryId),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 28,
@@ -312,7 +333,7 @@ class _CategoryBarState extends State<_CategoryBar> {
                         : theme.colorScheme.primary.withValues(alpha: 0.5),
                   ),
                   child: Text(
-                    category,
+                    categoryName,
                     style: TextStyle(
                       color: isSelected
                           ? Colors.white

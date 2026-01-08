@@ -329,6 +329,21 @@ const Map<String, String> id = {
   'loadBranchesFailed': 'Gagal memuat cabang',
   'failedToLoadBranches': 'Gagal memuat cabang',
 
+  // Category Management
+  'categoriesManagement': 'Manajemen Kategori',
+  'addCategory': 'Tambah Kategori',
+  'editCategory': 'Edit Kategori',
+  'deleteCategory': 'Hapus Kategori',
+  'deleteCategoryConfirmation': 'Apakah Anda yakin ingin menghapus kategori',
+  'categoryName': 'Nama Kategori',
+  'noCategoriesFound': 'Tidak ada kategori ditemukan',
+  'categoryCreatedSuccess': 'Kategori berhasil ditambahkan',
+  'categoryCreateFailed': 'Gagal menambahkan kategori',
+  'categoryUpdatedSuccess': 'Kategori berhasil diperbarui',
+  'categoryUpdateFailed': 'Gagal memperbarui kategori',
+  'categoryDeletedSuccess': 'Kategori berhasil dihapus',
+  'categoryDeleteFailed': 'Gagal menghapus kategori',
+
   // Common Fields
   'name': 'Nama',
   'phone': 'Telepon',

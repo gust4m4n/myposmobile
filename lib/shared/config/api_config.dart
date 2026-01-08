@@ -24,6 +24,9 @@ class ApiConfig {
   // Product endpoints
   static const String products = '$apiPrefix/products';
 
+  // Category endpoints
+  static const String categories = '$apiPrefix/categories';
+
   // Order endpoints
   static const String orders = '$apiPrefix/orders';
 

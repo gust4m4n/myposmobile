@@ -2,10 +2,11 @@ import 'dart:io';
 
 import '../../shared/api_models.dart';
 import '../../shared/utils/api_x.dart';
+import '../models/user_management_model.dart';
 
 class UsersManagementService {
   /// Get all users for tenant with optional pagination
-  static Future<ApiResponse<dynamic>> getUsers({
+  static Future<ApiResponse<PaginatedResponse<UserManagementModel>>> getUsers({
     int? page,
     int? pageSize,
   }) async {
@@ -19,7 +20,44 @@ class UsersManagementService {
       url += '?${queryParams.join('&')}';
     }
 
-    return await ApiX.get(url, requiresAuth: true);
+    // Get raw response without fromJson transformation
+    final response = await ApiX.get<dynamic>(url, requiresAuth: true);
+
+    // Manually transform response to PaginatedResponse
+    if (response.data != null && response.data is Map) {
+      final jsonData = response.data as Map<String, dynamic>;
+      final paginatedData = PaginatedResponse<UserManagementModel>(
+        page: jsonData['page'] ?? 1,
+        pageSize: jsonData['page_size'] ?? 20,
+        totalItems: jsonData['total_items'] ?? 0,
+        totalPages: jsonData['total_pages'] ?? 1,
+        data:
+            (jsonData['data'] as List<dynamic>?)
+                ?.map(
+                  (item) => UserManagementModel.fromJson(
+                    item as Map<String, dynamic>,
+                  ),
+                )
+                .toList() ??
+            [],
+      );
+
+      return ApiResponse<PaginatedResponse<UserManagementModel>>(
+        code: response.code,
+        message: response.message,
+        data: paginatedData,
+        error: response.error,
+        statusCode: response.statusCode,
+      );
+    }
+
+    return ApiResponse<PaginatedResponse<UserManagementModel>>(
+      code: response.code,
+      message: response.message,
+      data: null,
+      error: response.error,
+      statusCode: response.statusCode,
+    );
   }
 
   /// Get user by ID

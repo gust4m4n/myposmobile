@@ -7,7 +7,7 @@ import '../models/tenant_model.dart';
 
 class TenantsManagementService {
   /// Get list of all tenants with optional pagination
-  Future<ApiResponse<List<TenantModel>>> getTenants({
+  Future<ApiResponse<PaginatedResponse<TenantModel>>> getTenants({
     int? page,
     int? pageSize,
   }) async {
@@ -21,11 +21,41 @@ class TenantsManagementService {
       url += '?${queryParams.join('&')}';
     }
 
-    return await ApiX.get(
-      url,
-      requiresAuth: true,
-      fromJson: (data) =>
-          (data as List).map((json) => TenantModel.fromJson(json)).toList(),
+    // Get raw response without fromJson transformation
+    final response = await ApiX.get<dynamic>(url, requiresAuth: true);
+
+    // Manually transform response to PaginatedResponse
+    if (response.data != null && response.data is Map) {
+      final jsonData = response.data as Map<String, dynamic>;
+      final paginatedData = PaginatedResponse<TenantModel>(
+        page: jsonData['page'] ?? 1,
+        pageSize: jsonData['page_size'] ?? 20,
+        totalItems: jsonData['total_items'] ?? 0,
+        totalPages: jsonData['total_pages'] ?? 1,
+        data:
+            (jsonData['data'] as List<dynamic>?)
+                ?.map(
+                  (item) => TenantModel.fromJson(item as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+      );
+
+      return ApiResponse<PaginatedResponse<TenantModel>>(
+        code: response.code,
+        message: response.message,
+        data: paginatedData,
+        error: response.error,
+        statusCode: response.statusCode,
+      );
+    }
+
+    return ApiResponse<PaginatedResponse<TenantModel>>(
+      code: response.code,
+      message: response.message,
+      data: null,
+      error: response.error,
+      statusCode: response.statusCode,
     );
   }
 

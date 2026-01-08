@@ -37,7 +37,8 @@ class ProductsService {
   ///   search: 'goreng'
   /// );
   /// ```
-  static Future<ApiResponse<List<Map<String, dynamic>>>> getProducts({
+  static Future<ApiResponse<PaginatedResponse<Map<String, dynamic>>>>
+  getProducts({
     String? category,
     String? search,
     int? page,
@@ -70,11 +71,39 @@ class ProductsService {
       url = '$url?$queryString';
     }
 
-    return ApiX.get<List<Map<String, dynamic>>>(
-      url,
-      requiresAuth: true,
-      fromJson: (data) =>
-          (data as List).map((item) => item as Map<String, dynamic>).toList(),
+    // Get raw response without fromJson transformation
+    final response = await ApiX.get<dynamic>(url, requiresAuth: true);
+
+    // Manually transform response to PaginatedResponse
+    if (response.data != null && response.data is Map) {
+      final jsonData = response.data as Map<String, dynamic>;
+      final paginatedData = PaginatedResponse<Map<String, dynamic>>(
+        page: jsonData['page'] ?? 1,
+        pageSize: jsonData['page_size'] ?? 20,
+        totalItems: jsonData['total_items'] ?? 0,
+        totalPages: jsonData['total_pages'] ?? 1,
+        data:
+            (jsonData['data'] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [],
+      );
+
+      return ApiResponse<PaginatedResponse<Map<String, dynamic>>>(
+        code: response.code,
+        message: response.message,
+        data: paginatedData,
+        error: response.error,
+        statusCode: response.statusCode,
+      );
+    }
+
+    return ApiResponse<PaginatedResponse<Map<String, dynamic>>>(
+      code: response.code,
+      message: response.message,
+      data: null,
+      error: response.error,
+      statusCode: response.statusCode,
     );
   }
 
@@ -147,6 +176,7 @@ class ProductsService {
     required String name,
     String? description,
     required String category,
+    int? categoryId,
     required String sku,
     required double price,
     required int stock,
@@ -158,6 +188,7 @@ class ProductsService {
         'name': name,
         if (description != null) 'description': description,
         'category': category,
+        if (categoryId != null) 'category_id': categoryId,
         'sku': sku,
         'price': price,
         'stock': stock,
@@ -196,6 +227,7 @@ class ProductsService {
     String? name,
     String? description,
     String? category,
+    int? categoryId,
     String? sku,
     double? price,
     int? stock,
@@ -205,6 +237,7 @@ class ProductsService {
     if (name != null) body['name'] = name;
     if (description != null) body['description'] = description;
     if (category != null) body['category'] = category;
+    if (categoryId != null) body['category_id'] = categoryId;
     if (sku != null) body['sku'] = sku;
     if (price != null) body['price'] = price;
     if (stock != null) body['stock'] = stock;
@@ -274,6 +307,81 @@ class ProductsService {
     return await ApiX.delete(
       '${ApiConfig.products}/$productId/photo',
       requiresAuth: true,
+    );
+  }
+
+  /// Get products filtered by category ID
+  ///
+  /// Parameters:
+  /// - categoryId: ID of the category
+  /// - page: Page number (optional)
+  /// - pageSize: Items per page (optional)
+  ///
+  /// Returns:
+  /// - List<Map<String, dynamic>> berisi data products in the category
+  ///
+  /// Example:
+  /// ```dart
+  /// final result = await ProductsService.getProductsByCategory(
+  ///   categoryId: 13,
+  ///   page: 1,
+  ///   pageSize: 20,
+  /// );
+  /// ```
+  static Future<ApiResponse<PaginatedResponse<Map<String, dynamic>>>>
+  getProductsByCategory({
+    required int categoryId,
+    int? page,
+    int? pageSize,
+  }) async {
+    final queryParams = <String, String>{};
+    if (page != null) queryParams['page'] = page.toString();
+    if (pageSize != null) queryParams['page_size'] = pageSize.toString();
+
+    var url = '${ApiConfig.products}/by-category/$categoryId';
+    if (queryParams.isNotEmpty) {
+      final queryString = queryParams.entries
+          .map(
+            (e) =>
+                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+          )
+          .join('&');
+      url = '$url?$queryString';
+    }
+
+    // Get raw response without fromJson transformation
+    final response = await ApiX.get<dynamic>(url, requiresAuth: true);
+
+    // Manually transform response to PaginatedResponse
+    if (response.data != null && response.data is Map) {
+      final jsonData = response.data as Map<String, dynamic>;
+      final paginatedData = PaginatedResponse<Map<String, dynamic>>(
+        page: jsonData['page'] ?? 1,
+        pageSize: jsonData['page_size'] ?? 20,
+        totalItems: jsonData['total_items'] ?? 0,
+        totalPages: jsonData['total_pages'] ?? 1,
+        data:
+            (jsonData['data'] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [],
+      );
+
+      return ApiResponse<PaginatedResponse<Map<String, dynamic>>>(
+        code: response.code,
+        message: response.message,
+        data: paginatedData,
+        error: response.error,
+        statusCode: response.statusCode,
+      );
+    }
+
+    return ApiResponse<PaginatedResponse<Map<String, dynamic>>>(
+      code: response.code,
+      message: response.message,
+      data: null,
+      error: response.error,
+      statusCode: response.statusCode,
     );
   }
 }

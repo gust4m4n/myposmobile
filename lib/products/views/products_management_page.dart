@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../categories/views/categories_management_page.dart';
 import '../../home/models/product_model.dart';
 import '../../home/views/product_widgets.dart';
-import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/page_x.dart';
-import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import 'add_product_dialog.dart';
 import 'edit_product_dialog.dart';
@@ -66,30 +65,23 @@ class _ProductsManagementPageState extends State<ProductsManagementPage> {
         onPressed: () => Navigator.pop(context),
       ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: SizedBox(
-            width: 160,
-            child: ButtonX(
-              onClicked: () {
-                // TODO: Navigate to category management
-                ToastX.error(context, 'Category management coming soon');
-              },
-              label: 'Manage Categories',
-              backgroundColor: const Color(0xFF007AFF),
-            ),
-          ),
+        IconButton(
+          icon: const Icon(Icons.category),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    CategoriesManagementPage(languageCode: widget.languageCode),
+              ),
+            );
+          },
+          tooltip: 'Manage Categories',
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16),
-          child: SizedBox(
-            width: 160,
-            child: ButtonX(
-              onClicked: _showAddProductDialog,
-              label: 'addProduct'.tr,
-              backgroundColor: const Color(0xFF34C759),
-            ),
-          ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: _showAddProductDialog,
+          tooltip: 'addProduct'.tr,
         ),
       ],
       body: ProductsWidget(

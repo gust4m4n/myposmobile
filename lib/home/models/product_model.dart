@@ -3,6 +3,8 @@ class ProductModel {
   final String name;
   final double price;
   final String category;
+  final int? categoryId;
+  final Map<String, dynamic>? categoryDetail;
   final String? description;
   final String? sku;
   final int? stock;
@@ -14,6 +16,8 @@ class ProductModel {
     required this.name,
     required this.price,
     required this.category,
+    this.categoryId,
+    this.categoryDetail,
     this.description,
     this.sku,
     this.stock,
@@ -29,6 +33,8 @@ class ProductModel {
           ? (json['price'] as int).toDouble()
           : json['price'] as double,
       category: json['category'] as String,
+      categoryId: json['category_id'] as int?,
+      categoryDetail: json['category_detail'] as Map<String, dynamic>?,
       description: json['description'] as String?,
       sku: json['sku'] as String?,
       stock: json['stock'] as int?,
@@ -43,6 +49,7 @@ class ProductModel {
       'name': name,
       'price': price,
       'category': category,
+      if (categoryId != null) 'category_id': categoryId,
       if (description != null) 'description': description,
       if (sku != null) 'sku': sku,
       if (stock != null) 'stock': stock,

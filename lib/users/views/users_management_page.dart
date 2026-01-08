@@ -71,19 +71,24 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final data = response.data;
-      if (data is List) {
-        setState(() {
-          _users = data.cast<Map<String, dynamic>>();
-          _hasMoreData = data.length >= _pageSize;
-        });
-      } else if (data is Map && data['data'] is List) {
-        final dataList = data['data'] as List;
-        setState(() {
-          _users = dataList.cast<Map<String, dynamic>>();
-          _hasMoreData = dataList.length >= _pageSize;
-        });
-      }
+      final users = response.data!.data
+          .map(
+            (user) => {
+              'id': user.id,
+              'email': user.email,
+              'full_name': user.fullName,
+              'role': user.role,
+              'branch_id': user.branchId,
+              'branch_name': user.branchName,
+              'is_active': user.isActive,
+              'image': user.image,
+            },
+          )
+          .toList();
+      setState(() {
+        _users = users;
+        _hasMoreData = response.data!.page < response.data!.totalPages;
+      });
     }
 
     if (mounted) {
@@ -109,18 +114,24 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final data = response.data;
-      List<Map<String, dynamic>> newUsers = [];
-
-      if (data is List) {
-        newUsers = data.cast<Map<String, dynamic>>();
-      } else if (data is Map && data['data'] is List) {
-        newUsers = (data['data'] as List).cast<Map<String, dynamic>>();
-      }
+      final newUsers = response.data!.data
+          .map(
+            (user) => {
+              'id': user.id,
+              'email': user.email,
+              'full_name': user.fullName,
+              'role': user.role,
+              'branch_id': user.branchId,
+              'branch_name': user.branchName,
+              'is_active': user.isActive,
+              'image': user.image,
+            },
+          )
+          .toList();
 
       setState(() {
         _users.addAll(newUsers);
-        _hasMoreData = newUsers.length >= _pageSize;
+        _hasMoreData = response.data!.page < response.data!.totalPages;
         _isLoadingMore = false;
       });
     } else {

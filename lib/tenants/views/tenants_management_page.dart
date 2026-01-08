@@ -78,10 +78,10 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final tenants = response.data!.cast<TenantModel>();
+      final tenants = response.data!.data;
       setState(() {
         _tenants = tenants;
-        _hasMoreData = tenants.length >= _pageSize;
+        _hasMoreData = response.data!.page < response.data!.totalPages;
         _isLoading = false;
       });
     } else {
@@ -108,10 +108,10 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
     if (!mounted) return;
 
     if (response.statusCode == 200 && response.data != null) {
-      final newTenants = response.data!.cast<TenantModel>();
+      final newTenants = response.data!.data;
       setState(() {
         _tenants.addAll(newTenants);
-        _hasMoreData = newTenants.length >= _pageSize;
+        _hasMoreData = response.data!.page < response.data!.totalPages;
         _isLoadingMore = false;
       });
     } else {

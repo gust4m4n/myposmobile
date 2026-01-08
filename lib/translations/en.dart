@@ -328,6 +328,21 @@ const Map<String, String> en = {
   'branchUpdateFailed': 'Failed to update branch',
   'branchDeletedSuccess': 'Branch deleted successfully',
   'branchDeleteFailed': 'Failed to delete branch',
+
+  // Category Management
+  'categoriesManagement': 'Categories Management',
+  'addCategory': 'Add Category',
+  'editCategory': 'Edit Category',
+  'deleteCategory': 'Delete Category',
+  'deleteCategoryConfirmation': 'Are you sure you want to delete category',
+  'categoryName': 'Category Name',
+  'noCategoriesFound': 'No categories found',
+  'categoryCreatedSuccess': 'Category created successfully',
+  'categoryCreateFailed': 'Failed to create category',
+  'categoryUpdatedSuccess': 'Category updated successfully',
+  'categoryUpdateFailed': 'Failed to update category',
+  'categoryDeletedSuccess': 'Category deleted successfully',
+  'categoryDeleteFailed': 'Failed to delete category',
   'loadBranchesFailed': 'Failed to load branches',
   'failedToLoadBranches': 'Failed to load branches',
 
