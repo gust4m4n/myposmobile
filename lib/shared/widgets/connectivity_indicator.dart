@@ -36,10 +36,10 @@ class _ConnectivityIndicatorState extends State<ConnectivityIndicator> {
       child: Container(
         width: 12,
         height: 12,
-        margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: _isConnected ? Colors.green : Colors.red,
+          border: Border.all(color: Colors.white, width: 2),
         ),
       ),
     );

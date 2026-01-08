@@ -66,55 +66,6 @@ class MenuTab extends StatelessWidget {
       padding: EdgeInsets.zero,
       physics: const ClampingScrollPhysics(),
       children: [
-        // Connectivity & Theme Section
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: theme.cardColor,
-            border: Border(
-              bottom: BorderSide(color: theme.dividerColor, width: 0.5),
-            ),
-          ),
-          child: Row(
-            children: [
-              const ConnectivityIndicator(),
-              const Spacer(),
-              const ThemeToggleButton(),
-              const SizedBox(width: 8),
-              // User Profile Photo
-              GestureDetector(
-                onTap: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProfilePage(languageCode: languageCode),
-                    ),
-                  );
-                  onProfileUpdated();
-                },
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: theme.colorScheme.primary,
-                  backgroundImage:
-                      profile?.user.image != null &&
-                          profile!.user.image!.isNotEmpty
-                      ? NetworkImage(
-                          profile!.user.image!.startsWith('http')
-                              ? profile!.user.image!
-                              : 'http://localhost:8080${profile!.user.image!}',
-                        )
-                      : null,
-                  child:
-                      profile?.user.image == null ||
-                          profile!.user.image!.isEmpty
-                      ? const Icon(Icons.person, size: 20, color: Colors.white)
-                      : null,
-                ),
-              ),
-            ],
-          ),
-        ),
         // Profile Header
         InkWell(
           onTap: () {
@@ -130,27 +81,37 @@ class MenuTab extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: Colors.white,
-                  backgroundImage:
-                      profile?.user.image != null &&
-                          profile!.user.image!.isNotEmpty
-                      ? NetworkImage(
-                          profile!.user.image!.startsWith('http')
-                              ? profile!.user.image!
-                              : 'http://localhost:8080${profile!.user.image!}',
-                        )
-                      : null,
-                  child:
-                      profile?.user.image == null ||
-                          profile!.user.image!.isEmpty
-                      ? Icon(
-                          Icons.person,
-                          size: 24,
-                          color: theme.colorScheme.primary,
-                        )
-                      : null,
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor: Colors.white,
+                      backgroundImage:
+                          profile?.user.image != null &&
+                              profile!.user.image!.isNotEmpty
+                          ? NetworkImage(
+                              profile!.user.image!.startsWith('http')
+                                  ? profile!.user.image!
+                                  : 'http://localhost:8080${profile!.user.image!}',
+                            )
+                          : null,
+                      child:
+                          profile?.user.image == null ||
+                              profile!.user.image!.isEmpty
+                          ? Icon(
+                              Icons.person,
+                              size: 24,
+                              color: theme.colorScheme.primary,
+                            )
+                          : null,
+                    ),
+                    const Positioned(
+                      right: -2,
+                      bottom: -2,
+                      child: ConnectivityIndicator(),
+                    ),
+                  ],
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -177,11 +138,6 @@ class MenuTab extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 16,
                 ),
               ],
             ),
