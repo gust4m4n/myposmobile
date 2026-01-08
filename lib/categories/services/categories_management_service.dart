@@ -69,33 +69,71 @@ class CategoriesManagementService {
     );
   }
 
-  /// Create new category
+  /// Create new category with optional image upload
+  /// Uses multipart/form-data when image is provided, JSON otherwise
   Future<ApiResponse<CategoryModel>> createCategory({
     required String name,
     required String description,
     required bool isActive,
+    String? imagePath,
   }) async {
-    return await ApiX.post(
-      ApiConfig.categories,
-      body: {'name': name, 'description': description, 'is_active': isActive},
-      requiresAuth: true,
-      fromJson: (data) => CategoryModel.fromJson(data),
-    );
+    if (imagePath != null) {
+      // Use multipart/form-data for image upload
+      return await ApiX.postMultipart<CategoryModel>(
+        ApiConfig.categories,
+        fields: {
+          'name': name,
+          'description': description,
+          'is_active': isActive.toString(),
+        },
+        filePath: imagePath,
+        fileFieldName: 'image',
+        requiresAuth: true,
+        fromJson: (data) => CategoryModel.fromJson(data),
+      );
+    } else {
+      // Use JSON body when no image
+      return await ApiX.post(
+        ApiConfig.categories,
+        body: {'name': name, 'description': description, 'is_active': isActive},
+        requiresAuth: true,
+        fromJson: (data) => CategoryModel.fromJson(data),
+      );
+    }
   }
 
-  /// Update existing category
+  /// Update existing category with optional image upload
+  /// Uses multipart/form-data when image is provided, JSON otherwise
   Future<ApiResponse<CategoryModel>> updateCategory({
     required int id,
     required String name,
     required String description,
     required bool isActive,
+    String? imagePath,
   }) async {
-    return await ApiX.put(
-      '${ApiConfig.categories}/$id',
-      body: {'name': name, 'description': description, 'is_active': isActive},
-      requiresAuth: true,
-      fromJson: (data) => CategoryModel.fromJson(data),
-    );
+    if (imagePath != null) {
+      // Use multipart/form-data for image upload
+      return await ApiX.putMultipart<CategoryModel>(
+        '${ApiConfig.categories}/$id',
+        fields: {
+          'name': name,
+          'description': description,
+          'is_active': isActive.toString(),
+        },
+        filePath: imagePath,
+        fileFieldName: 'image',
+        requiresAuth: true,
+        fromJson: (data) => CategoryModel.fromJson(data),
+      );
+    } else {
+      // Use JSON body when no image (Postman also supports this)
+      return await ApiX.put(
+        '${ApiConfig.categories}/$id',
+        body: {'name': name, 'description': description, 'is_active': isActive},
+        requiresAuth: true,
+        fromJson: (data) => CategoryModel.fromJson(data),
+      );
+    }
   }
 
   /// Delete category

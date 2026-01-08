@@ -156,9 +156,6 @@ class _OrdersPageState extends State<OrdersPage> {
 
     return PageX(
       title: 'orders'.tr,
-      actions: [
-        IconButton(icon: const Icon(Icons.refresh), onPressed: _loadOrders),
-      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _orders.isEmpty

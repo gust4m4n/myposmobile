@@ -153,7 +153,7 @@ class ProductsService {
   /// Parameters:
   /// - name: Product name (required)
   /// - description: Product description (optional)
-  /// - category: Product category (required)
+  /// - categoryId: Category ID (required)
   /// - sku: Product SKU (required)
   /// - price: Product price (required)
   /// - stock: Product stock (required)
@@ -166,7 +166,7 @@ class ProductsService {
   /// ```dart
   /// final result = await ProductsService.createProduct(
   ///   name: 'Produk Baru',
-  ///   category: 'Makanan Utama',
+  ///   categoryId: 13,
   ///   sku: 'SKU-001',
   ///   price: 50000,
   ///   stock: 100,
@@ -175,8 +175,7 @@ class ProductsService {
   static Future<ApiResponse<Map<String, dynamic>>> createProduct({
     required String name,
     String? description,
-    required String category,
-    int? categoryId,
+    required int categoryId,
     required String sku,
     required double price,
     required int stock,
@@ -187,8 +186,7 @@ class ProductsService {
       body: {
         'name': name,
         if (description != null) 'description': description,
-        'category': category,
-        if (categoryId != null) 'category_id': categoryId,
+        'category_id': categoryId,
         'sku': sku,
         'price': price,
         'stock': stock,
@@ -205,7 +203,7 @@ class ProductsService {
   /// - productId: ID of the product to update
   /// - name: Product name (optional)
   /// - description: Product description (optional)
-  /// - category: Product category (optional)
+  /// - categoryId: Category ID (optional)
   /// - sku: Product SKU (optional)
   /// - price: Product price (optional)
   /// - stock: Product stock (optional)
@@ -226,7 +224,6 @@ class ProductsService {
     required int productId,
     String? name,
     String? description,
-    String? category,
     int? categoryId,
     String? sku,
     double? price,
@@ -236,7 +233,6 @@ class ProductsService {
     final body = <String, dynamic>{};
     if (name != null) body['name'] = name;
     if (description != null) body['description'] = description;
-    if (category != null) body['category'] = category;
     if (categoryId != null) body['category_id'] = categoryId;
     if (sku != null) body['sku'] = sku;
     if (price != null) body['price'] = price;

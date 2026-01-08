@@ -40,7 +40,10 @@ class HomeController extends GetxController {
   }
 
   void extractCategories() {
-    final categorySet = products.map((p) => p.category).toSet();
+    final categorySet = products
+        .where((p) => p.categoryDetail != null)
+        .map((p) => p.categoryDetail!['name'] as String)
+        .toSet();
     categories.value = ['All', ...categorySet];
   }
 
@@ -48,7 +51,13 @@ class HomeController extends GetxController {
     if (selectedCategory.value == null || selectedCategory.value == 'All') {
       return products;
     }
-    return products.where((p) => p.category == selectedCategory.value).toList();
+    return products
+        .where(
+          (p) =>
+              p.categoryDetail != null &&
+              p.categoryDetail!['name'] == selectedCategory.value,
+        )
+        .toList();
   }
 
   void addToCart(ProductModel product) {

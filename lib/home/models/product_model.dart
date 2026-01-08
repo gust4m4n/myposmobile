@@ -2,7 +2,6 @@ class ProductModel {
   final int? id;
   final String name;
   final double price;
-  final String category;
   final int? categoryId;
   final Map<String, dynamic>? categoryDetail;
   final String? description;
@@ -15,7 +14,6 @@ class ProductModel {
     this.id,
     required this.name,
     required this.price,
-    required this.category,
     this.categoryId,
     this.categoryDetail,
     this.description,
@@ -32,7 +30,6 @@ class ProductModel {
       price: (json['price'] is int)
           ? (json['price'] as int).toDouble()
           : json['price'] as double,
-      category: json['category'] as String,
       categoryId: json['category_id'] as int?,
       categoryDetail: json['category_detail'] as Map<String, dynamic>?,
       description: json['description'] as String?,
@@ -48,7 +45,6 @@ class ProductModel {
       if (id != null) 'id': id,
       'name': name,
       'price': price,
-      'category': category,
       if (categoryId != null) 'category_id': categoryId,
       if (description != null) 'description': description,
       if (sku != null) 'sku': sku,

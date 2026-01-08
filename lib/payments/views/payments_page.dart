@@ -157,9 +157,6 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
     return PageX(
       title: 'payments'.tr,
-      actions: [
-        IconButton(icon: const Icon(Icons.refresh), onPressed: _loadPayments),
-      ],
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _payments.isEmpty

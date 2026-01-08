@@ -551,7 +551,8 @@ class _ProductItemState extends State<_ProductItem> {
                                   ),
                                 ),
                                 child: Icon(
-                                  widget.product.category == 'Makanan'
+                                  widget.product.categoryDetail?['name'] ==
+                                          'Makanan'
                                       ? Icons.restaurant
                                       : Icons.local_drink,
                                   size: widget.iconSize,

@@ -8,7 +8,7 @@ class ProductsManagementService {
   static Future<ApiResponse<Map<String, dynamic>>> createProduct({
     required String name,
     required String description,
-    required String category,
+    required int categoryId,
     required String sku,
     required double price,
     required int stock,
@@ -19,7 +19,7 @@ class ProductsManagementService {
       body: {
         'name': name,
         'description': description,
-        'category': category,
+        'category_id': categoryId,
         'sku': sku,
         'price': price,
         'stock': stock,
@@ -33,7 +33,7 @@ class ProductsManagementService {
     required int id,
     required String name,
     required String description,
-    required String category,
+    required int categoryId,
     required String sku,
     required double price,
     required int stock,
@@ -44,7 +44,7 @@ class ProductsManagementService {
       body: {
         'name': name,
         'description': description,
-        'category': category,
+        'category_id': categoryId,
         'sku': sku,
         'price': price,
         'stock': stock,

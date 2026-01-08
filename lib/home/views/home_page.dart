@@ -186,7 +186,10 @@ class _HomePageState extends State<HomePage> {
         final allProducts = response.data!.data
             .map((json) => ProductModel.fromJson(json))
             .toList();
-        final categorySet = allProducts.map((p) => p.category).toSet();
+        final categorySet = allProducts
+            .where((p) => p.categoryDetail != null)
+            .map((p) => p.categoryDetail!['name'] as String)
+            .toSet();
         if (mounted) {
           setState(() {
             _categories = ['all'.tr, ...categorySet];

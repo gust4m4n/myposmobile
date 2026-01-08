@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../categories/models/category_model.dart';
+import '../../categories/services/categories_management_service.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
@@ -26,26 +28,43 @@ class _AddProductDialogState extends State<AddProductDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _categoryController = TextEditingController();
   final _skuController = TextEditingController();
   final _priceController = TextEditingController();
   final _stockController = TextEditingController();
   bool _isActive = true;
   bool _isSubmitting = false;
   bool _isUploading = false;
+  bool _isLoadingCategories = true;
   String? _uploadedImagePath;
+  List<CategoryModel> _categories = [];
+  int? _selectedCategoryId;
 
   @override
   void initState() {
     super.initState();
     TranslationService.setLanguage(widget.languageCode);
+    _loadCategories();
+  }
+
+  Future<void> _loadCategories() async {
+    final service = CategoriesManagementService();
+    final response = await service.getCategories(activeOnly: true);
+    if (mounted && response.data != null) {
+      setState(() {
+        _categories = response.data!.data;
+        _isLoadingCategories = false;
+      });
+    } else {
+      setState(() {
+        _isLoadingCategories = false;
+      });
+    }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
-    _categoryController.dispose();
     _skuController.dispose();
     _priceController.dispose();
     _stockController.dispose();
@@ -84,6 +103,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
       return;
     }
 
+    if (_selectedCategoryId == null) {
+      ToastX.error(context, 'pleaseSelectCategory'.tr);
+      return;
+    }
+
     setState(() {
       _isSubmitting = true;
     });
@@ -91,7 +115,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
     final response = await ProductsManagementService.createProduct(
       name: _nameController.text.trim(),
       description: _descriptionController.text.trim(),
-      category: _categoryController.text.trim(),
+      categoryId: _selectedCategoryId!,
       sku: _skuController.text.trim(),
       price: double.parse(_priceController.text.trim()),
       stock: int.parse(_stockController.text.trim()),
@@ -203,17 +227,33 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ),
                 const SizedBox(height: 16),
 
-                // Category
-                TextFieldX(
-                  controller: _categoryController,
-                  hintText: 'category'.tr,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'categoryRequired'.tr;
-                    }
-                    return null;
-                  },
-                ),
+                // Category Dropdown
+                _isLoadingCategories
+                    ? const Center(child: CircularProgressIndicator())
+                    : DropdownButtonFormField<int>(
+                        value: _selectedCategoryId,
+                        decoration: InputDecoration(
+                          labelText: 'category'.tr,
+                          border: const OutlineInputBorder(),
+                        ),
+                        items: _categories.map((category) {
+                          return DropdownMenuItem<int>(
+                            value: category.id,
+                            child: Text(category.name),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedCategoryId = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'categoryRequired'.tr;
+                          }
+                          return null;
+                        },
+                      ),
                 const SizedBox(height: 16),
 
                 // SKU

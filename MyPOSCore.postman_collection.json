@@ -3026,7 +3026,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Products retrieved successfully\",\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 3,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 223,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng\",\n      \"description\": \"Nasi goreng dengan bumbu spesial\",\n      \"category\": \"Main Course\",\n      \"category_id\": 17,\n      \"category_detail\": {\n        \"id\": 17,\n        \"name\": \"Main Course\",\n        \"description\": \"Menu makanan utama\",\n        \"image\": null\n      },\n      \"sku\": \"FOOD-002\",\n      \"price\": 22000,\n      \"stock\": 40,\n      \"image\": \"\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25 10:00:00\",\n      \"updated_at\": \"2025-12-25 10:00:00\"\n    }\n  ]\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Products retrieved successfully\",\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 3,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 223,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng\",\n      \"description\": \"Nasi goreng dengan bumbu spesial\",\n      \"category_id\": 17,\n      \"category_detail\": {\n        \"id\": 17,\n        \"name\": \"Main Course\",\n        \"description\": \"Menu makanan utama\",\n        \"image\": null\n      },\n      \"sku\": \"FOOD-002\",\n      \"price\": 22000,\n      \"stock\": 40,\n      \"image\": \"\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25 10:00:00\",\n      \"updated_at\": \"2025-12-25 10:00:00\"\n    }\n  ]\n}"
             }
           ]
         },
@@ -3120,7 +3120,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Products retrieved successfully\",\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 3,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 223,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category\": \"Makanan Utama\",\n      \"category_id\": 17,\n      \"category_detail\": {\n        \"id\": 17,\n        \"name\": \"Main Course\",\n        \"description\": \"Menu makanan utama dan hidangan pokok\",\n        \"image\": null\n      },\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"image\": \"/uploads/products/product_223_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25 10:00:00\",\n      \"updated_at\": \"2025-12-25 10:00:00\"\n    }\n  ]\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Products retrieved successfully\",\n  \"page\": 1,\n  \"page_size\": 32,\n  \"total_items\": 3,\n  \"total_pages\": 1,\n  \"data\": [\n    {\n      \"id\": 223,\n      \"tenant_id\": 17,\n      \"name\": \"Nasi Goreng Spesial\",\n      \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n      \"category_id\": 17,\n      \"category_detail\": {\n        \"id\": 17,\n        \"name\": \"Main Course\",\n        \"description\": \"Menu makanan utama dan hidangan pokok\",\n        \"image\": null\n      },\n      \"sku\": \"FOOD-001\",\n      \"price\": 25000,\n      \"stock\": 50,\n      \"image\": \"/uploads/products/product_223_1735296000.jpg\",\n      \"is_active\": true,\n      \"created_at\": \"2025-12-25 10:00:00\",\n      \"updated_at\": \"2025-12-25 10:00:00\"\n    }\n  ]\n}"
             }
           ]
         },
@@ -3188,7 +3188,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Nasi Goreng Spesial\",\n    \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"FOOD-001\",\n    \"price\": 25000,\n    \"stock\": 50,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\",\n    \"category_id\": 13,\n    \"category_detail\": {\n      \"id\": 13,\n      \"name\": \"Makanan Utama\",\n      \"description\": \"Menu makanan utama dan hidangan pokok\",\n      \"image\": null\n    }\n  }\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Nasi Goreng Spesial\",\n    \"description\": \"Nasi goreng dengan telur, ayam, dan sayuran\",\n    \"sku\": \"FOOD-001\",\n    \"price\": 25000,\n    \"stock\": 50,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\",\n    \"category_id\": 13,\n    \"category_detail\": {\n      \"id\": 13,\n      \"name\": \"Makanan Utama\",\n      \"description\": \"Menu makanan utama dan hidangan pokok\",\n      \"image\": null\n    }\n  }\n}"
             }
           ]
         },
@@ -3214,7 +3214,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"category\": \"Makanan Utama\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
+              "raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products",
@@ -3247,7 +3247,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"category\": \"Makanan Utama\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true\n}"
+                  "raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/api/v1/products",
@@ -3271,7 +3271,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Product created successfully\",\n  \"data\": {\n    \"id\": 25,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Baru\",\n    \"description\": \"Deskripsi produk baru\",\n    \"category\": \"Makanan Utama\",\n    \"sku\": \"SKU-NEW-001\",\n    \"price\": 50000,\n    \"stock\": 100,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\",\n    \"category_id\": 13,\n    \"category_detail\": {\n      \"id\": 13,\n      \"name\": \"Makanan Utama\",\n      \"description\": \"Menu makanan utama dan hidangan pokok\",\n      \"image\": null\n    }\n  }\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Product created successfully\",\n  \"data\": {\n    \"id\": 25,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Baru\",\n    \"description\": \"Deskripsi produk baru\",\n    \"sku\": \"SKU-NEW-001\",\n    \"price\": 50000,\n    \"stock\": 100,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T10:00:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\",\n    \"category_id\": 13,\n    \"category_detail\": {\n      \"id\": 13,\n      \"name\": \"Makanan Utama\",\n      \"description\": \"Menu makanan utama dan hidangan pokok\",\n      \"image\": null\n    }\n  }\n}"
             }
           ]
         },
@@ -3297,7 +3297,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"category\": \"Minuman\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
+              "raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/products/1",
@@ -3331,7 +3331,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"category\": \"Minuman\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true\n}"
+                  "raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/api/v1/products/1",
@@ -3356,7 +3356,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Product updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Updated\",\n    \"description\": \"Deskripsi produk yang sudah diupdate\",\n    \"category\": \"Minuman\",\n    \"sku\": \"SKU-UPD-001\",\n    \"price\": 75000,\n    \"stock\": 150,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T11:30:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\",\n    \"category_id\": 13,\n    \"category_detail\": {\n      \"id\": 13,\n      \"name\": \"Minuman\",\n      \"description\": \"Menu makanan utama dan hidangan pokok\",\n      \"image\": null\n    }\n  }\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Product updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 17,\n    \"name\": \"Produk Updated\",\n    \"description\": \"Deskripsi produk yang sudah diupdate\",\n    \"sku\": \"SKU-UPD-001\",\n    \"price\": 75000,\n    \"stock\": 150,\n    \"is_active\": true,\n    \"created_at\": \"2025-12-25T10:00:00+07:00\",\n    \"updated_at\": \"2025-12-25T11:30:00+07:00\",\n    \"image\": \"/uploads/products/product_1_1735296000.jpg\",\n    \"category_id\": 13,\n    \"category_detail\": {\n      \"id\": 13,\n      \"name\": \"Minuman\",\n      \"description\": \"Menu makanan utama dan hidangan pokok\",\n      \"image\": null\n    }\n  }\n}"
             }
           ]
         },
