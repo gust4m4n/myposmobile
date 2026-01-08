@@ -218,7 +218,6 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                           child: DataTableX(
                             maxHeight: double.infinity,
                             columns: [
-                              DataColumn(label: Text('image'.tr)),
                               DataColumn(label: Text('tenantName'.tr)),
                               DataColumn(label: Text('email'.tr)),
                               DataColumn(label: Text('phone'.tr)),
@@ -229,43 +228,61 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                               return DataRow(
                                 cells: [
                                   DataCell(
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child:
-                                          tenant.image != null &&
-                                              tenant.image!.isNotEmpty
-                                          ? Image.network(
-                                              _getImageUrl(tenant.image!),
-                                              width: 40,
-                                              height: 40,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                    return Container(
-                                                      width: 40,
-                                                      height: 40,
-                                                      color: Colors.grey[300],
-                                                      child: Icon(
-                                                        Icons.business,
-                                                        size: 24,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    );
-                                                  },
-                                            )
-                                          : Container(
-                                              width: 40,
-                                              height: 40,
-                                              color: Colors.grey[300],
-                                              child: Icon(
-                                                Icons.business,
-                                                size: 24,
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          child:
+                                              tenant.image != null &&
+                                                  tenant.image!.isNotEmpty
+                                              ? Image.network(
+                                                  _getImageUrl(tenant.image!),
+                                                  width: 40,
+                                                  height: 40,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder:
+                                                      (
+                                                        context,
+                                                        error,
+                                                        stackTrace,
+                                                      ) {
+                                                        return Container(
+                                                          width: 40,
+                                                          height: 40,
+                                                          color:
+                                                              Colors.grey[300],
+                                                          child: Icon(
+                                                            Icons.business,
+                                                            size: 24,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        );
+                                                      },
+                                                )
+                                              : Container(
+                                                  width: 40,
+                                                  height: 40,
+                                                  color: Colors.grey[300],
+                                                  child: Icon(
+                                                    Icons.business,
+                                                    size: 24,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            tenant.name,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  DataCell(Text(tenant.name)),
                                   DataCell(Text(tenant.email ?? '-')),
                                   DataCell(Text(tenant.phone ?? '-')),
                                   DataCell(
