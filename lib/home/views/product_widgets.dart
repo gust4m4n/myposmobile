@@ -23,8 +23,7 @@ class ProductsWidget extends StatefulWidget {
   State<ProductsWidget> createState() => _ProductsWidgetState();
 }
 
-class _ProductsWidgetState extends State<ProductsWidget>
-    with AutomaticKeepAliveClientMixin {
+class _ProductsWidgetState extends State<ProductsWidget> {
   String _searchQuery = '';
   String _selectedCategory = 'All';
   List<ProductModel> _products = [];
@@ -35,10 +34,7 @@ class _ProductsWidgetState extends State<ProductsWidget>
   int _currentPage = 1;
   final int _pageSize = 32;
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey<_SearchBarState> _searchBarKey = GlobalKey<_SearchBarState>();
-
-  @override
-  bool get wantKeepAlive => true;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -52,6 +48,7 @@ class _ProductsWidgetState extends State<ProductsWidget>
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -168,8 +165,6 @@ class _ProductsWidgetState extends State<ProductsWidget>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Required for AutomaticKeepAliveClientMixin
-
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -178,7 +173,7 @@ class _ProductsWidgetState extends State<ProductsWidget>
       children: [
         RepaintBoundary(
           child: _SearchBar(
-            key: _searchBarKey,
+            controller: _searchController,
             isMobile: widget.isMobile,
             onSearchChanged: (query) {
               setState(() {
@@ -214,46 +209,29 @@ class _ProductsWidgetState extends State<ProductsWidget>
 // Private: Search Bar
 // ============================================================================
 
-class _SearchBar extends StatefulWidget {
+class _SearchBar extends StatelessWidget {
+  final TextEditingController controller;
   final bool isMobile;
   final ValueChanged<String> onSearchChanged;
 
   const _SearchBar({
-    super.key,
+    required this.controller,
     this.isMobile = false,
     required this.onSearchChanged,
   });
 
   @override
-  State<_SearchBar> createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<_SearchBar>
-    with AutomaticKeepAliveClientMixin {
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        widget.isMobile ? 12 : 16,
+        isMobile ? 12 : 16,
         10,
-        widget.isMobile ? 12 : 16,
+        isMobile ? 12 : 16,
         8,
       ),
       child: SearchFieldX(
-        controller: _searchController,
-        onChanged: widget.onSearchChanged,
+        controller: controller,
+        onChanged: onSearchChanged,
         width: double.infinity,
       ),
     );

@@ -98,82 +98,122 @@ class _DashboardPageState extends State<DashboardPage> {
             )
           : RefreshIndicator(
               onRefresh: _loadDashboard,
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Summary Cards
-                    _buildSummaryCards(),
-                    const SizedBox(height: 24),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Use 768px breakpoint - tablets in landscape mode
+                  // This ensures all phones (portrait and landscape) get single column
+                  final isTablet = constraints.maxWidth >= 768;
 
-                    // Performance & Transactions (2 columns)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Performance Chart (Left Column)
-                        Expanded(
-                          child: Column(
+                        // Summary Cards
+                        _buildSummaryCards(isTablet),
+                        const SizedBox(height: 24),
+
+                        // Performance & Transactions - Responsive layout
+                        if (isTablet)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Performance Chart (Left Column)
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _buildSectionTitle('Performance'),
+                                    const SizedBox(height: 12),
+                                    _buildPaymentPerformanceSection(),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              // Transactions (Right Column)
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _buildSectionTitle('Transactions'),
+                                    const SizedBox(height: 12),
+                                    _buildTransactionsStats(),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
+                              // Performance Chart
                               _buildSectionTitle('Performance'),
                               const SizedBox(height: 12),
                               _buildPaymentPerformanceSection(),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        // Transactions (Right Column)
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
+                              const SizedBox(height: 24),
+                              // Transactions
                               _buildSectionTitle('Transactions'),
                               const SizedBox(height: 12),
                               _buildTransactionsStats(),
                             ],
                           ),
-                        ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
     );
   }
 
-  Widget _buildSummaryCards() {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: [
-        _buildSummaryCard(
-          'Tenants',
-          _dashboard!.totalTenants.toString(),
-          Icons.business,
-          Colors.blue,
-        ),
-        _buildSummaryCard(
-          'Branches',
-          _dashboard!.totalBranches.toString(),
-          Icons.store,
-          Colors.green,
-        ),
-        _buildSummaryCard(
-          'Users',
-          _dashboard!.totalUsers.toString(),
-          Icons.people,
-          Colors.orange,
-        ),
-        _buildSummaryCard(
-          'Products',
-          _dashboard!.totalProducts.toString(),
-          Icons.shopping_bag,
-          Colors.purple,
-        ),
-      ],
+  Widget _buildSummaryCards(bool isTablet) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate card width based on available width
+        final spacing = 16.0;
+        final cardsPerRow = isTablet ? 4 : 2;
+        final totalSpacing = spacing * (cardsPerRow - 1);
+        final cardWidth = (constraints.maxWidth - totalSpacing) / cardsPerRow;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          children: [
+            _buildSummaryCard(
+              'Tenants',
+              _dashboard!.totalTenants.toString(),
+              Icons.business,
+              Colors.blue,
+              cardWidth,
+            ),
+            _buildSummaryCard(
+              'Branches',
+              _dashboard!.totalBranches.toString(),
+              Icons.store,
+              Colors.green,
+              cardWidth,
+            ),
+            _buildSummaryCard(
+              'Users',
+              _dashboard!.totalUsers.toString(),
+              Icons.people,
+              Colors.orange,
+              cardWidth,
+            ),
+            _buildSummaryCard(
+              'Products',
+              _dashboard!.totalProducts.toString(),
+              Icons.shopping_bag,
+              Colors.purple,
+              cardWidth,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -182,9 +222,10 @@ class _DashboardPageState extends State<DashboardPage> {
     String value,
     IconData icon,
     Color color,
+    double width,
   ) {
     return Container(
-      width: (MediaQuery.of(context).size.width - 48) / 2,
+      width: width,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
@@ -193,6 +234,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: color, size: 32),
           const SizedBox(height: 12),
@@ -203,9 +245,14 @@ class _DashboardPageState extends State<DashboardPage> {
               fontWeight: FontWeight.bold,
               color: color,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
-          Text(title, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+          Text(
+            title,
+            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );
@@ -226,7 +273,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Period Selection Buttons
+            // Period Selection Buttons - Using Wrap for responsive layout
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -276,7 +323,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Card(
       elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           children: [
             _buildStatRow(
@@ -331,14 +378,27 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildStatRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 15)),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+            ),
           ),
         ],
       ),
