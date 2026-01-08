@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myposmobile/shared/widgets/red_button_x.dart';
 
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/dialog_x.dart';
@@ -261,23 +262,6 @@ class _EditUserDialogState extends State<EditUserDialog> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
-
-              // Active Status Switch
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('activeStatus'.tr, style: const TextStyle(fontSize: 16)),
-                  Switch(
-                    value: _isActive,
-                    onChanged: (value) {
-                      setState(() {
-                        _isActive = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -286,11 +270,72 @@ class _EditUserDialogState extends State<EditUserDialog> {
         Row(
           children: [
             Expanded(
-              child: GrayButtonX(
+              child: RedButtonX(
                 onClicked: _isSubmitting
                     ? null
-                    : () => Navigator.of(context).pop(),
-                title: 'cancel'.tr,
+                    : () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => DialogX(
+                            title: 'deleteUser'.tr,
+                            content: Text(
+                              'confirmDeleteUser'.tr.replaceAll(
+                                '{username}',
+                                widget.user['email'] ?? '',
+                              ),
+                            ),
+                            actions: [
+                              GrayButtonX(
+                                onClicked: () => Navigator.pop(context, false),
+                                title: 'cancel'.tr,
+                              ),
+                              RedButtonX(
+                                onClicked: () => Navigator.pop(context, true),
+                                title: 'delete'.tr,
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirm == true && mounted) {
+                          setState(() {
+                            _isSubmitting = true;
+                          });
+
+                          try {
+                            final response =
+                                await UsersManagementService.deleteUser(
+                                  widget.user['id'] as int,
+                                );
+
+                            if (!mounted) return;
+
+                            if (response.statusCode == 200) {
+                              ToastX.success(context, 'userDeletedSuccess'.tr);
+                              Navigator.of(context).pop();
+                              widget.onSuccess();
+                            } else {
+                              ToastX.error(
+                                context,
+                                response.message ?? 'userDeleteFailed'.tr,
+                              );
+                            }
+                          } catch (e) {
+                            if (!mounted) return;
+                            ToastX.error(
+                              context,
+                              '${'userDeleteFailed'.tr}: $e',
+                            );
+                          } finally {
+                            if (mounted) {
+                              setState(() {
+                                _isSubmitting = false;
+                              });
+                            }
+                          }
+                        }
+                      },
+                title: 'delete'.tr,
               ),
             ),
             const SizedBox(width: 12),

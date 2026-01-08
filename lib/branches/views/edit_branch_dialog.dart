@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myposmobile/shared/widgets/red_button_x.dart';
 
 import '../../shared/config/api_config.dart';
 import '../../shared/widgets/dialog_x.dart';
@@ -163,6 +164,7 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
     return DialogX(
       title: 'editBranch'.tr,
       width: 600,
+      onClose: _isSubmitting ? null : () => Navigator.of(context).pop(),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -265,26 +267,70 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
-
-              // Is Active
-              SwitchListTile(
-                title: Text('active'.tr),
-                value: _isActive,
-                onChanged: (value) {
-                  setState(() {
-                    _isActive = value;
-                  });
-                },
-              ),
             ],
           ),
         ),
       ),
       actions: [
-        GrayButtonX(
-          onClicked: _isSubmitting ? null : () => Navigator.of(context).pop(),
-          title: 'cancel'.tr,
+        RedButtonX(
+          onClicked: _isSubmitting
+              ? null
+              : () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => DialogX(
+                      title: 'deleteBranch'.tr,
+                      content: Text(
+                        '${'deleteBranchConfirmation'.tr} "${widget.branch.name}"?',
+                      ),
+                      actions: [
+                        GrayButtonX(
+                          onClicked: () => Navigator.pop(context, false),
+                          title: 'cancel'.tr,
+                        ),
+                        RedButtonX(
+                          onClicked: () => Navigator.pop(context, true),
+                          title: 'delete'.tr,
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirm == true && mounted) {
+                    setState(() {
+                      _isSubmitting = true;
+                    });
+
+                    try {
+                      final service = BranchesManagementService();
+                      final response = await service.deleteBranch(
+                        widget.branch.id!,
+                      );
+
+                      if (!mounted) return;
+
+                      if (response.statusCode == 200) {
+                        ToastX.success(context, 'branchDeletedSuccess'.tr);
+                        Navigator.of(context).pop(true);
+                      } else {
+                        ToastX.error(
+                          context,
+                          response.message ?? 'branchDeleteFailed'.tr,
+                        );
+                      }
+                    } catch (e) {
+                      if (!mounted) return;
+                      ToastX.error(context, '${'branchDeleteFailed'.tr}: $e');
+                    } finally {
+                      if (mounted) {
+                        setState(() {
+                          _isSubmitting = false;
+                        });
+                      }
+                    }
+                  }
+                },
+          title: 'delete'.tr,
           enabled: !_isSubmitting,
         ),
         GreenButtonX(

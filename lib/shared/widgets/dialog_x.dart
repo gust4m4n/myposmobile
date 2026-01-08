@@ -4,6 +4,7 @@ class DialogX extends StatelessWidget {
   final String title;
   final Widget content;
   final List<Widget>? actions;
+  final List<Widget>? secondaryActions;
   final VoidCallback? onClose;
   final double? width;
 
@@ -12,6 +13,7 @@ class DialogX extends StatelessWidget {
     required this.title,
     required this.content,
     this.actions,
+    this.secondaryActions,
     this.onClose,
     this.width,
   });
@@ -53,16 +55,18 @@ class DialogX extends StatelessWidget {
       ),
       titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
       content: SizedBox(width: width ?? 600, child: content),
-      actions: actions != null
+      actions: actions != null || secondaryActions != null
           ? [
-              Row(
-                children: [
-                  for (int i = 0; i < actions!.length; i++) ...[
-                    Expanded(child: actions![i]),
-                    if (i < actions!.length - 1) const SizedBox(width: 8),
+              if (secondaryActions != null) ...secondaryActions!,
+              if (actions != null)
+                Row(
+                  children: [
+                    for (int i = 0; i < actions!.length; i++) ...[
+                      Expanded(child: actions![i]),
+                      if (i < actions!.length - 1) const SizedBox(width: 8),
+                    ],
                   ],
-                ],
-              ),
+                ),
             ]
           : null,
     );

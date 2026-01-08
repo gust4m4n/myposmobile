@@ -221,11 +221,21 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                               DataColumn(label: Text('tenantName'.tr)),
                               DataColumn(label: Text('email'.tr)),
                               DataColumn(label: Text('phone'.tr)),
-                              DataColumn(label: Text('status'.tr)),
-                              DataColumn(label: Text('actions'.tr)),
                             ],
                             rows: _tenants.map((tenant) {
                               return DataRow(
+                                onSelectChanged: (_) async {
+                                  final result = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => EditTenantDialog(
+                                      languageCode: widget.languageCode,
+                                      tenant: tenant,
+                                    ),
+                                  );
+                                  if (result == true) {
+                                    _loadTenants();
+                                  }
+                                },
                                 cells: [
                                   DataCell(
                                     Row(
@@ -285,73 +295,6 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
                                   ),
                                   DataCell(Text(tenant.email ?? '-')),
                                   DataCell(Text(tenant.phone ?? '-')),
-                                  DataCell(
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: tenant.isActive == true
-                                            ? Colors.green.withValues(
-                                                alpha: 0.1,
-                                              )
-                                            : Colors.red.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        tenant.isActive == true
-                                            ? 'active'.tr
-                                            : 'inactive'.tr,
-                                        style: TextStyle(
-                                          color: tenant.isActive == true
-                                              ? Colors.green
-                                              : Colors.red,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            size: 20,
-                                          ),
-                                          onPressed: () async {
-                                            final result =
-                                                await showDialog<bool>(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      EditTenantDialog(
-                                                        languageCode:
-                                                            widget.languageCode,
-                                                        tenant: tenant,
-                                                      ),
-                                                );
-                                            if (result == true) {
-                                              _loadTenants();
-                                            }
-                                          },
-                                          tooltip: 'edit'.tr,
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            size: 20,
-                                          ),
-                                          onPressed: () =>
-                                              _showDeleteConfirmation(tenant),
-                                          tooltip: 'delete'.tr,
-                                          color: Colors.red,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 ],
                               );
                             }).toList(),

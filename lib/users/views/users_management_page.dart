@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/widgets/data_table_x.dart';
-import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/page_x.dart';
-import '../../shared/widgets/red_button_x.dart';
-import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../services/users_management_service.dart';
 import 'add_user_dialog.dart';
@@ -160,39 +156,6 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
     );
   }
 
-  Future<void> _deleteUser(int userId, String email) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => DialogX(
-        title: 'deleteUser'.tr,
-        content: Text('confirmDeleteUser'.tr.replaceAll('{username}', email)),
-        actions: [
-          GrayButtonX(
-            onClicked: () => Navigator.pop(context, false),
-            title: 'cancel'.tr,
-          ),
-          RedButtonX(
-            onClicked: () => Navigator.pop(context, true),
-            title: 'delete'.tr,
-          ),
-        ],
-      ),
-    );
-
-    if (confirm != true) return;
-
-    final response = await UsersManagementService.deleteUser(userId);
-
-    if (!mounted) return;
-
-    if (response.statusCode == 200) {
-      ToastX.success(context, 'userDeletedSuccess'.tr);
-      _loadUsers();
-    } else {
-      ToastX.error(context, response.message ?? 'userDeleteFailed'.tr);
-    }
-  }
-
   String _getRoleBadgeColor(String role) {
     switch (role.toLowerCase()) {
       case 'superadmin':
@@ -267,24 +230,17 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                             context: context,
                             label: 'role'.tr,
                           ),
-                          DataTableColumn.buildColumn(
-                            context: context,
-                            label: 'status'.tr,
-                          ),
-                          DataTableColumn.buildColumn(
-                            context: context,
-                            label: 'actions'.tr,
-                          ),
                         ],
                         rows: _users.map((user) {
                           final fullName = user['full_name'] ?? '';
                           final email = user['email'] ?? '';
                           final role = user['role'] ?? 'user';
-                          final isActive = user['is_active'] ?? false;
-                          final userId = user['id'] as int;
                           final image = user['image'] as String?;
 
                           return DataRow(
+                            onSelectChanged: (_) {
+                              _showEditUserDialog(user);
+                            },
                             cells: [
                               DataCell(
                                 Row(
@@ -362,56 +318,6 @@ class _UsersManagementPageState extends State<UsersManagementPage> {
                                       fontSize: 12,
                                     ),
                                   ),
-                                ),
-                              ),
-                              DataCell(
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isActive
-                                        ? Colors.green.shade100
-                                        : Colors.red.shade100,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    isActive ? 'active'.tr : 'inactive'.tr,
-                                    style: TextStyle(
-                                      color: isActive
-                                          ? Colors.green.shade700
-                                          : Colors.red.shade700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        size: 20,
-                                        color: Colors.blue,
-                                      ),
-                                      onPressed: () =>
-                                          _showEditUserDialog(user),
-                                      tooltip: 'edit'.tr,
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        size: 20,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () =>
-                                          _deleteUser(userId, email),
-                                      tooltip: 'delete'.tr,
-                                    ),
-                                  ],
                                 ),
                               ),
                             ],
