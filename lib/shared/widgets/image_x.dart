@@ -32,8 +32,6 @@ class ImageX extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     // Helper function to get the correct image URL
     String? getImageUrl() {
       if (imageUrl == null) return null;

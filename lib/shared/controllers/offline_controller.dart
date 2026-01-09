@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../services/offline_service.dart';
+import '../utils/logger_x.dart';
 
 class OfflineController extends GetxController {
   final OfflineService _offlineService = Get.find<OfflineService>();
@@ -27,7 +28,7 @@ class OfflineController extends GetxController {
       final stats = await _offlineService.getDatabaseStats();
       databaseStats.value = stats;
     } catch (e) {
-      print('Error loading database stats: $e');
+      LoggerX.log('❌ Error loading database stats: $e');
     }
   }
 

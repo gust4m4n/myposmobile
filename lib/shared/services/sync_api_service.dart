@@ -1,6 +1,7 @@
 import '../models/sync_download_model.dart';
 import '../models/sync_upload_model.dart';
 import '../utils/api_x.dart';
+import '../utils/logger_x.dart';
 
 class SyncApiService {
   // Upload data to server
@@ -28,7 +29,7 @@ class SyncApiService {
         );
       }
     } catch (e) {
-      print('Error uploading data: $e');
+      LoggerX.log('❌ Error uploading data: $e');
       rethrow;
     }
   }
@@ -45,8 +46,10 @@ class SyncApiService {
       if (response.statusCode >= 200 &&
           response.statusCode < 300 &&
           response.error == null) {
-        print('🔍 DEBUG - Response data type: ${response.data.runtimeType}');
-        print('🔍 DEBUG - Parsing response.data directly');
+        LoggerX.log(
+          '🔍 DEBUG - Response data type: ${response.data.runtimeType}',
+        );
+        LoggerX.log('🔍 DEBUG - Parsing response.data directly');
 
         // response.data already contains {code, message, data} structure
         // No need to wrap it again - that was causing double nesting!
@@ -57,7 +60,7 @@ class SyncApiService {
         );
       }
     } catch (e) {
-      print('Error downloading data: $e');
+      LoggerX.log('❌ Error downloading data: $e');
       rethrow;
     }
   }
@@ -85,7 +88,7 @@ class SyncApiService {
         );
       }
     } catch (e) {
-      print('Error getting sync status: $e');
+      LoggerX.log('❌ Error getting sync status: $e');
       rethrow;
     }
   }
@@ -116,7 +119,7 @@ class SyncApiService {
         );
       }
     } catch (e) {
-      print('Error getting sync logs: $e');
+      LoggerX.log('❌ Error getting sync logs: $e');
       rethrow;
     }
   }
@@ -152,7 +155,7 @@ class SyncApiService {
         );
       }
     } catch (e) {
-      print('Error resolving conflict: $e');
+      LoggerX.log('❌ Error resolving conflict: $e');
       rethrow;
     }
   }
@@ -170,14 +173,14 @@ class SyncApiService {
         if (serverTime != null) {
           return DateTime.parse(serverTime);
         } else {
-          print('⚠️ server_time is null, using local time');
+          LoggerX.log('⚠️ server_time is null, using local time');
           return DateTime.now();
         }
       } else {
         throw Exception('Failed to get server time: ${response.error}');
       }
     } catch (e) {
-      print('Error getting server time: $e');
+      LoggerX.log('❌ Error getting server time: $e');
       // Fallback to local time if server time fails
       return DateTime.now();
     }

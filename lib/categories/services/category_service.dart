@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../categories/models/category_model.dart';
 import '../../shared/services/sync_integration_service.dart';
+import '../../shared/utils/logger_x.dart';
 import 'category_offline_service.dart';
 
 /// Main Category Service with offline-first approach and auto-sync
@@ -46,7 +47,7 @@ class CategoryService {
 
       return id;
     } catch (e) {
-      print('❌ Error saving category: $e');
+      LoggerX.log('❌ Error saving category: $e');
       rethrow;
     }
   }
@@ -62,7 +63,7 @@ class CategoryService {
 
       return result;
     } catch (e) {
-      print('❌ Error updating category: $e');
+      LoggerX.log('❌ Error updating category: $e');
       rethrow;
     }
   }
@@ -78,7 +79,7 @@ class CategoryService {
 
       return result;
     } catch (e) {
-      print('❌ Error deleting category: $e');
+      LoggerX.log('❌ Error deleting category: $e');
       rethrow;
     }
   }
@@ -90,11 +91,11 @@ class CategoryService {
     // Run sync in background without blocking UI
     Future.delayed(const Duration(milliseconds: 500), () async {
       try {
-        print('🔄 Auto-syncing categories...');
+        LoggerX.log('🔄 Auto-syncing categories...');
         await _syncService.performFullSync();
-        print('✅ Auto-sync completed');
+        LoggerX.log('✅ Auto-sync completed');
       } catch (e) {
-        print('⚠️ Auto-sync failed (will retry later): $e');
+        LoggerX.log('⚠️ Auto-sync failed (will retry later): $e');
         // Silent fail - sync will happen later
       }
     });
@@ -103,11 +104,11 @@ class CategoryService {
   /// Manual sync - force sync now
   Future<void> syncNow() async {
     try {
-      print('🔄 Manual sync triggered...');
+      LoggerX.log('🔄 Manual sync triggered...');
       await _syncService.performFullSync();
-      print('✅ Manual sync completed');
+      LoggerX.log('✅ Manual sync completed');
     } catch (e) {
-      print('❌ Manual sync failed: $e');
+      LoggerX.log('❌ Manual sync failed: $e');
       rethrow;
     }
   }

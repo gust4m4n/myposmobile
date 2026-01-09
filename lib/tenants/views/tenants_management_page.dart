@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/widgets/data_table_x.dart';
-import '../../shared/widgets/dialog_x.dart';
-import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/page_x.dart';
-import '../../shared/widgets/red_button_x.dart';
-import '../../shared/widgets/toast_x.dart';
 import '../../translations/translation_extension.dart';
 import '../models/tenant_model.dart';
 import '../services/tenants_management_service.dart';
@@ -120,49 +116,6 @@ class _TenantsManagementPageState extends State<TenantsManagementPage> {
         _currentPage--;
       });
     }
-  }
-
-  void _showDeleteConfirmation(TenantModel tenant) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => DialogX(
-        title: 'deleteTenant'.tr,
-        content: Text('${'deleteTenantConfirmation'.tr} "${tenant.name}"?'),
-        actions: [
-          GrayButtonX(
-            onClicked: () => Navigator.pop(context, false),
-            title: 'cancel'.tr,
-          ),
-          RedButtonX(
-            onClicked: () => Navigator.pop(context, true),
-            title: 'delete'.tr,
-          ),
-        ],
-      ),
-    );
-
-    if (confirm == true) {
-      await _deleteTenant(tenant.id!);
-    }
-  }
-
-  Future<void> _deleteTenant(int id) async {
-    final service = TenantsManagementService();
-    final response = await service.deleteTenant(id);
-
-    if (!mounted) return;
-
-    if (response.statusCode == 200) {
-      ToastX.success(context, 'tenantDeletedSuccess'.tr);
-      _loadTenants();
-    } // else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text(response.message ?? 'tenantDeleteFailed'.tr),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-    // }
   }
 
   @override

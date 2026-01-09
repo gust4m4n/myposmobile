@@ -4,13 +4,13 @@
 Aplikasi menggunakan **offline-first architecture** dimana semua data disimpan di **local SQLite database** dan otomatis sync ke server ketika online.
 
 ## Entity yang Dikelola
-- ✅ **Products** - ProductService
-- ✅ **Categories** - CategoryService
-- ✅ **Tenants** - (gunakan TenantOfflineService)
-- ✅ **Branches** - (gunakan BranchOfflineService)
-- ✅ **Users** - (gunakan UserOfflineService)
-- ✅ **Orders** - (gunakan OrderOfflineService)
-- ✅ **Audit Trails** - (gunakan AuditOfflineService)
+- ✅ **Products** - ProductService (with auto-sync) ← **READY TO USE**
+- ✅ **Categories** - CategoryService (with auto-sync) ← **READY TO USE**
+- ⚠️ **Tenants** - TenantsService (API only, no offline)
+- ⚠️ **Branches** - BranchesService (API only, no offline)
+- ⚠️ **Users** - UsersService (API only, no offline)
+- ⚠️ **Orders** - OrderOfflineService (offline only, belum ada wrapper dengan auto-sync)
+- ⚠️ **Audit Trails** - AuditTrailService (API only untuk compliance)
 
 ## Cara Kerja
 
@@ -186,25 +186,66 @@ await _loadData(); // Refresh UI
 lib/
 ├── products/
 │   └── services/
-│       ├── product_service.dart          ← Use this (with auto-sync)
+│       ├── product_service.dart          ← ✅ Use this (with auto-sync)
 │       └── product_offline_service.dart  ← Low-level DB operations
 ├── categories/
 │   └── services/
-│       ├── category_service.dart         ← Use this (with auto-sync)
+│       ├── category_service.dart         ← ✅ Use this (with auto-sync)
 │       └── category_offline_service.dart ← Low-level DB operations
+├── tenants/
+│   └── services/
+│       └── tenants_service.dart          ← ⚠️ API only (no offline)
+├── branches/
+│   └── services/
+│       └── branches_service.dart         ← ⚠️ API only (no offline)
+├── users/
+│   └── services/
+│       └── users_service.dart            ← ⚠️ API only (no offline)
+├── orders/
+│   └── services/
+│       └── order_offline_service.dart    ← ⚠️ Offline only (no auto-sync wrapper yet)
+├── audit-trails/
+│   └── services/
+│       └── audit_trail_service.dart      ← ⚠️ API only (direct to server)
 └── shared/
     └── services/
         └── sync_integration_service.dart ← Sync orchestrator
 ```
 
+## Status Implementation
+
+**✅ COMPLETED & READY:**
+- ProductService with auto-sync
+- CategoryService with auto-sync
+
+**⚠️ NEEDS WORK:**
+- Tenants, Branches, Users - Need offline service layer + wrapper
+- Orders - Has offline service, needs auto-sync wrapper
+- Audit Trails - Currently API only, decide if needs offline
+
 ## Next Steps
 
-1. ✅ Products & Categories - **DONE** (auto-sync enabled)
-2. ⏳ Create similar wrappers for:
-   - TenantService
-   - BranchService
-   - UserService
-   - OrderService
-   - AuditService
-3. ⏳ Update all UI to use new services
-4. ⏳ Remove direct API calls from UI components
+1. ✅ **COMPLETED** - ProductService with auto-sync
+2. ✅ **COMPLETED** - CategoryService with auto-sync
+3. ⏳ **TODO** - Create offline service layers for Tenants, Branches, Users
+4. ⏳ **TODO** - Create OrderService wrapper dengan auto-sync
+5. ⏳ **TODO** - Update UI components untuk gunakan services yang sudah siap
+6. ⏳ **TODO** - Test offline → online sync workflow
+
+## Summary
+
+**Offline-First Architecture sekarang tersedia untuk 2 entity:**
+- Products ✅
+- Categories ✅
+
+**Pattern yang sudah di-implement:**
+1. Load data dari local DB (instant, no network)
+2. Create/Update/Delete di local DB dulu
+3. Auto-sync di background (500ms delay)
+4. Silent fail jika offline (retry later)
+5. Manual syncNow() tersedia jika perlu force sync
+
+**Selanjutnya:** 
+- Gunakan ProductService dan CategoryService yang sudah ready
+- Untuk entity lain (Tenants, Branches, Users, Orders), gunakan service yang ada sementara waktu
+- Tambahkan offline layer secara bertahap jika diperlukan

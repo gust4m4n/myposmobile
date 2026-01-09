@@ -10,6 +10,7 @@ import '../../orders/services/order_offline_service.dart';
 import '../../products/services/product_offline_service.dart';
 import '../models/sync_download_model.dart';
 import '../models/sync_upload_model.dart';
+import '../utils/logger_x.dart';
 import 'sync_api_service.dart';
 
 class SyncIntegrationService extends GetxController {
@@ -41,7 +42,7 @@ class SyncIntegrationService extends GetxController {
       }
     } catch (e) {
       _clientId = 'device_${DateTime.now().millisecondsSinceEpoch}';
-      print('Error getting device ID: $e');
+      LoggerX.log('Error getting device ID: $e');
     }
 
     return _clientId!;
@@ -96,7 +97,9 @@ class SyncIntegrationService extends GetxController {
     final request = SyncDownloadRequest(
       clientId: clientId,
       lastSyncAt: lastSyncAt,
-      entityTypes: entityTypes ?? ['categories', 'products'],
+      entityTypes:
+          entityTypes ??
+          ['categories', 'products', 'orders', 'tenants', 'branches', 'users'],
     );
 
     final response = await _syncApiService.downloadData(request);
@@ -209,50 +212,54 @@ class SyncIntegrationService extends GetxController {
 
   // Save downloaded data to local database
   Future<void> _saveDownloadedDataToLocal(SyncDownloadData data) async {
-    print('🔄 Saving downloaded data to local database...');
-    print(
+    LoggerX.log('🔄 Saving downloaded data to local database...');
+    LoggerX.log(
       '📊 Data received - Products: ${data.products?.length ?? 0}, Categories: ${data.categories?.length ?? 0}',
     );
 
     // Save categories
     if (data.categories != null && data.categories!.isNotEmpty) {
-      print('📁 Saving ${data.categories!.length} categories...');
+      LoggerX.log('📁 Saving ${data.categories!.length} categories...');
       try {
         final categories = data.categories!
             .map((cat) => CategoryModel.fromJson(cat as Map<String, dynamic>))
             .toList();
         await _categoryService.saveCategories(categories);
-        print('✅ Categories saved successfully');
+        LoggerX.log('✅ Categories saved successfully');
       } catch (e, stackTrace) {
-        print('❌ Error saving categories: $e');
-        print('Stack trace: $stackTrace');
+        LoggerX.log('❌ Error saving categories: $e');
+        LoggerX.log('Stack trace: $stackTrace');
       }
     } else {
-      print(
+      LoggerX.log(
         '⚠️ No categories to save (null: ${data.categories == null}, empty: ${data.categories?.isEmpty})',
       );
     }
 
     // Save products
     if (data.products != null && data.products!.isNotEmpty) {
-      print('📦 Saving ${data.products!.length} products...');
+      LoggerX.log('📦 Saving ${data.products!.length} products...');
       try {
         final products = data.products!
             .map((prod) => ProductModel.fromJson(prod as Map<String, dynamic>))
             .toList();
         await _productService.saveProducts(products);
-        print('✅ Products saved successfully');
+        LoggerX.log('✅ Products saved successfully');
       } catch (e, stackTrace) {
-        print('❌ Error saving products: $e');
-        print('Stack trace: $stackTrace');
+        LoggerX.log('❌ Error saving products: $e');
+        LoggerX.log('Stack trace: $stackTrace');
       }
     } else {
-      print(
+      LoggerX.log(
         '⚠️ No products to save (null: ${data.products == null}, empty: ${data.products?.isEmpty})',
       );
     }
 
-    // Additional entity types can be added here
+    // TODO: Add support for saving tenants, branches, users, and orders when offline services are ready
+    // Currently only categories and products have offline support with auto-sync
+    LoggerX.log(
+      '📋 Other entities (tenants, branches, users, orders) will be synced once offline services are implemented',
+    );
   }
 
   // Full bidirectional sync
@@ -299,7 +306,7 @@ class SyncIntegrationService extends GetxController {
       }
     } catch (e) {
       // If parsing fails, return current time in UTC
-      print('Error parsing timestamp: $timestamp, using current time');
+      LoggerX.log('Error parsing timestamp: $timestamp, using current time');
       return DateTime.now().toUtc().toIso8601String();
     }
   }

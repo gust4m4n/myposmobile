@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../home/models/product_model.dart';
 import '../../shared/services/sync_integration_service.dart';
+import '../../shared/utils/logger_x.dart';
 import 'product_offline_service.dart';
 
 /// Main Product Service with offline-first approach and auto-sync
@@ -68,7 +69,7 @@ class ProductService {
 
       return id;
     } catch (e) {
-      print('❌ Error saving product: $e');
+      LoggerX.log('❌ Error saving product: $e');
       rethrow;
     }
   }
@@ -84,7 +85,7 @@ class ProductService {
 
       return result;
     } catch (e) {
-      print('❌ Error updating product: $e');
+      LoggerX.log('❌ Error updating product: $e');
       rethrow;
     }
   }
@@ -100,7 +101,7 @@ class ProductService {
 
       return result;
     } catch (e) {
-      print('❌ Error deleting product: $e');
+      LoggerX.log('❌ Error deleting product: $e');
       rethrow;
     }
   }
@@ -116,7 +117,7 @@ class ProductService {
 
       return result;
     } catch (e) {
-      print('❌ Error updating stock: $e');
+      LoggerX.log('❌ Error updating stock: $e');
       rethrow;
     }
   }
@@ -134,7 +135,7 @@ class ProductService {
 
       return success;
     } catch (e) {
-      print('❌ Error decreasing stock: $e');
+      LoggerX.log('❌ Error decreasing stock: $e');
       rethrow;
     }
   }
@@ -146,11 +147,11 @@ class ProductService {
     // Run sync in background without blocking UI
     Future.delayed(const Duration(milliseconds: 500), () async {
       try {
-        print('🔄 Auto-syncing products...');
+        LoggerX.log('🔄 Auto-syncing products...');
         await _syncService.performFullSync();
-        print('✅ Auto-sync completed');
+        LoggerX.log('✅ Auto-sync completed');
       } catch (e) {
-        print('⚠️ Auto-sync failed (will retry later): $e');
+        LoggerX.log('⚠️ Auto-sync failed (will retry later): $e');
         // Silent fail - sync will happen later
       }
     });
@@ -159,11 +160,11 @@ class ProductService {
   /// Manual sync - force sync now
   Future<void> syncNow() async {
     try {
-      print('🔄 Manual sync triggered...');
+      LoggerX.log('🔄 Manual sync triggered...');
       await _syncService.performFullSync();
-      print('✅ Manual sync completed');
+      LoggerX.log('✅ Manual sync completed');
     } catch (e) {
-      print('❌ Manual sync failed: $e');
+      LoggerX.log('❌ Manual sync failed: $e');
       rethrow;
     }
   }

@@ -3,8 +3,10 @@ import 'package:get/get.dart' hide Trans;
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'categories/services/category_service.dart';
 import 'home/views/home_page.dart';
 import 'login/views/login_page.dart';
+import 'products/services/product_service.dart';
 import 'shared/controllers/auth_controller.dart';
 import 'shared/controllers/language_controller.dart';
 import 'shared/controllers/profile_controller.dart';
@@ -32,9 +34,13 @@ void main() async {
   Get.put(ProfileController());
   Get.put(ThemeController(initialIsDarkMode: isDarkMode));
 
-  // Initialize Offline & Sync services
+  // Initialize Offline & Sync services (base layer)
   Get.put(OfflineService());
   Get.put(SyncIntegrationService());
+
+  // Initialize offline-first services with auto-sync
+  Get.put(ProductService());
+  Get.put(CategoryService());
 
   // Restore window size or calculate 80% of screen
   final savedWidth = storage.getWindowWidth();

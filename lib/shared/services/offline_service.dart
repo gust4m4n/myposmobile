@@ -8,6 +8,7 @@ import '../../categories/services/category_offline_service.dart';
 import '../../orders/services/order_offline_service.dart';
 import '../../products/services/product_offline_service.dart';
 import '../database/database_helper.dart';
+import '../utils/logger_x.dart';
 
 class OfflineService extends GetxController {
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -43,7 +44,7 @@ class OfflineService extends GetxController {
       final result = await _connectivity.checkConnectivity();
       _updateConnectionStatus(result);
     } catch (e) {
-      print('Error checking connectivity: $e');
+      LoggerX.log('Error checking connectivity: $e');
     }
   }
 
@@ -59,7 +60,7 @@ class OfflineService extends GetxController {
     final wasOffline = !isOnline.value;
     isOnline.value = !result.contains(ConnectivityResult.none);
 
-    print(
+    LoggerX.log(
       'Connection status changed: ${isOnline.value ? "Online" : "Offline"}',
     );
 
@@ -75,7 +76,7 @@ class OfflineService extends GetxController {
   Future<void> _autoSyncWhenOnline() async {
     await Future.delayed(const Duration(seconds: 2)); // Delay sedikit
     if (isOnline.value && pendingSyncCount.value > 0) {
-      print('Device is back online, starting auto sync...');
+      LoggerX.log('Device is back online, starting auto sync...');
       await syncAll();
     }
   }
@@ -90,7 +91,7 @@ class OfflineService extends GetxController {
       final count = result.first['count'] as int? ?? 0;
       pendingSyncCount.value = count;
     } catch (e) {
-      print('Error updating pending sync count: $e');
+      LoggerX.log('Error updating pending sync count: $e');
     }
   }
 
@@ -120,7 +121,7 @@ class OfflineService extends GetxController {
             .getUnsyncedCategories();
         results['categories'] = unsyncedCategories.length;
         // TODO: Implement actual API sync
-        print('Found ${unsyncedCategories.length} unsynced categories');
+        LoggerX.log('Found ${unsyncedCategories.length} unsynced categories');
       } catch (e) {
         (results['errors'] as List).add('Categories sync error: $e');
       }
@@ -131,7 +132,7 @@ class OfflineService extends GetxController {
             .getUnsyncedProducts();
         results['products'] = unsyncedProducts.length;
         // TODO: Implement actual API sync
-        print('Found ${unsyncedProducts.length} unsynced products');
+        LoggerX.log('Found ${unsyncedProducts.length} unsynced products');
       } catch (e) {
         (results['errors'] as List).add('Products sync error: $e');
       }
@@ -141,7 +142,7 @@ class OfflineService extends GetxController {
         final unsyncedOrders = await _orderOfflineService.getUnsyncedOrders();
         results['orders'] = unsyncedOrders.length;
         // TODO: Implement actual API sync
-        print('Found ${unsyncedOrders.length} unsynced orders');
+        LoggerX.log('Found ${unsyncedOrders.length} unsynced orders');
       } catch (e) {
         (results['errors'] as List).add('Orders sync error: $e');
       }
@@ -172,7 +173,7 @@ class OfflineService extends GetxController {
     for (var item in queueItems) {
       try {
         // TODO: Implement actual API calls based on table_name and operation
-        print(
+        LoggerX.log(
           'Processing sync queue item: ${item['table_name']} - ${item['operation']}',
         );
 
@@ -208,7 +209,7 @@ class OfflineService extends GetxController {
       // 4. Save to local database
       // etc.
 
-      print('Downloading fresh data from server...');
+      LoggerX.log('Downloading fresh data from server...');
 
       return {'success': true, 'message': 'Data downloaded successfully'};
     } catch (e) {
@@ -251,7 +252,7 @@ class OfflineService extends GetxController {
       if (result.isEmpty) return null;
       return result.first['value'] as String?;
     } catch (e) {
-      print('Error getting last sync time: $e');
+      LoggerX.log('Error getting last sync time: $e');
       return null;
     }
   }
@@ -266,7 +267,7 @@ class OfflineService extends GetxController {
         'updated_at': DateTime.now().toIso8601String(),
       }, conflictAlgorithm: ConflictAlgorithm.replace);
     } catch (e) {
-      print('Error saving last sync time: $e');
+      LoggerX.log('Error saving last sync time: $e');
     }
   }
 
