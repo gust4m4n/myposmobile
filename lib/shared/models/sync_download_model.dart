@@ -33,7 +33,7 @@ class SyncDownloadResponse {
   factory SyncDownloadResponse.fromJson(Map<String, dynamic> json) {
     return SyncDownloadResponse(
       code: json['code'] as int,
-      message: json['message'] as String,
+      message: json['message'] as String? ?? '',
       data: SyncDownloadData.fromJson(json['data'] as Map<String, dynamic>),
     );
   }
@@ -65,7 +65,9 @@ class SyncDownloadData {
       users: json['users'] as List<dynamic>?,
       products: json['products'] as List<dynamic>?,
       categories: json['categories'] as List<dynamic>?,
-      syncTimestamp: json['sync_timestamp'] as String,
+      syncTimestamp:
+          json['sync_timestamp'] as String? ??
+          DateTime.now().toUtc().toIso8601String(),
       hasMore: json['has_more'] as bool? ?? false,
     );
   }
@@ -92,7 +94,7 @@ class SyncStatusResponse {
   factory SyncStatusResponse.fromJson(Map<String, dynamic> json) {
     return SyncStatusResponse(
       code: json['code'] as int,
-      message: json['message'] as String,
+      message: json['message'] as String? ?? '',
       data: SyncStatusData.fromJson(json['data'] as Map<String, dynamic>),
     );
   }
@@ -115,7 +117,7 @@ class SyncStatusData {
 
   factory SyncStatusData.fromJson(Map<String, dynamic> json) {
     return SyncStatusData(
-      clientId: json['client_id'] as String,
+      clientId: json['client_id'] as String? ?? '',
       lastSyncAt: json['last_sync_at'] as String?,
       pendingUploads: json['pending_uploads'] as int? ?? 0,
       pendingDownloads: json['pending_downloads'] as int? ?? 0,

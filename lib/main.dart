@@ -9,6 +9,8 @@ import 'shared/controllers/auth_controller.dart';
 import 'shared/controllers/language_controller.dart';
 import 'shared/controllers/profile_controller.dart';
 import 'shared/controllers/theme_controller.dart';
+import 'shared/services/offline_service.dart';
+import 'shared/services/sync_integration_service.dart';
 import 'shared/utils/api_x.dart';
 import 'shared/utils/connectivity_service.dart';
 import 'shared/utils/storage_service.dart';
@@ -29,6 +31,10 @@ void main() async {
   Get.put(LanguageController());
   Get.put(ProfileController());
   Get.put(ThemeController(initialIsDarkMode: isDarkMode));
+
+  // Initialize Offline & Sync services
+  Get.put(OfflineService());
+  Get.put(SyncIntegrationService());
 
   // Restore window size or calculate 80% of screen
   final savedWidth = storage.getWindowWidth();

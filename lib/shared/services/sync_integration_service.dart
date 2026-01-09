@@ -70,7 +70,7 @@ class SyncIntegrationService extends GetxController {
     // Create request
     final request = SyncUploadRequest(
       clientId: clientId,
-      clientTimestamp: DateTime.now().toIso8601String(),
+      clientTimestamp: DateTime.now().toUtc().toIso8601String(),
       categories: categoriesJson.isNotEmpty ? categoriesJson : null,
       products: productsJson.isNotEmpty ? productsJson : null,
       orders: ordersJson.isNotEmpty ? ordersJson : null,
@@ -121,7 +121,9 @@ class SyncIntegrationService extends GetxController {
       'name': category.name,
       'description': category.description,
       'is_active': category.isActive,
-      'local_timestamp': category.updatedAt ?? category.createdAt,
+      'local_timestamp': _formatTimestamp(
+        category.updatedAt ?? category.createdAt,
+      ),
       'version': 1,
     };
   }
@@ -137,7 +139,7 @@ class SyncIntegrationService extends GetxController {
       'price': product.price,
       'stock': product.stock,
       'is_active': product.isActive,
-      'local_timestamp': DateTime.now().toIso8601String(),
+      'local_timestamp': DateTime.now().toUtc().toIso8601String(),
       'version': 1,
     };
   }
@@ -172,7 +174,7 @@ class SyncIntegrationService extends GetxController {
             },
           )
           .toList(),
-      'local_timestamp': order.createdAt,
+      'local_timestamp': _formatTimestamp(order.createdAt),
       'version': 1,
     };
   }
@@ -244,10 +246,34 @@ class SyncIntegrationService extends GetxController {
         'downloaded': downloadResponse.data.totalDownloaded,
         'failed': uploadResponse.data.totalFailed,
         'has_conflicts': uploadResponse.data.hasConflicts,
-        'sync_timestamp': serverTime.toIso8601String(),
+        'sync_timestamp': serverTime.toUtc().toIso8601String(),
       };
     } catch (e) {
       return {'success': false, 'error': e.toString()};
+    }
+  }
+
+  // Helper method to ensure timestamps have timezone information
+  String _formatTimestamp(String? timestamp) {
+    if (timestamp == null) {
+      return DateTime.now().toUtc().toIso8601String();
+    }
+
+    try {
+      // Try to parse the timestamp
+      final dt = DateTime.parse(timestamp);
+
+      // If it's already UTC or has timezone, convert to UTC and format
+      // Otherwise assume local time and convert to UTC
+      if (dt.isUtc) {
+        return dt.toIso8601String();
+      } else {
+        return dt.toUtc().toIso8601String();
+      }
+    } catch (e) {
+      // If parsing fails, return current time in UTC
+      print('Error parsing timestamp: $timestamp, using current time');
+      return DateTime.now().toUtc().toIso8601String();
     }
   }
 }

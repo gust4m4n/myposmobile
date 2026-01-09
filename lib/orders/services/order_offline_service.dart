@@ -217,7 +217,7 @@ class OrderOfflineService {
         'record_id': orderId,
         'operation': 'CREATE',
         'data': jsonEncode(order.toJson()),
-        'created_at': DateTime.now().toIso8601String(),
+        'created_at': DateTime.now().toUtc().toIso8601String(),
         'retry_count': 0,
       });
 
@@ -362,7 +362,7 @@ class OrderOfflineService {
       'orders',
       {
         'order_status': newStatus,
-        'updated_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toUtc().toIso8601String(),
         'synced': 0,
       },
       where: 'id = ?',
@@ -378,7 +378,7 @@ class OrderOfflineService {
       {
         'synced': 1,
         'server_id': serverId,
-        'last_synced_at': DateTime.now().toIso8601String(),
+        'last_synced_at': DateTime.now().toUtc().toIso8601String(),
       },
       where: 'id = ?',
       whereArgs: [localOrderId],

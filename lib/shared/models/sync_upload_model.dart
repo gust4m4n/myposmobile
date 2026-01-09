@@ -52,7 +52,7 @@ class SyncUploadResponse {
   factory SyncUploadResponse.fromJson(Map<String, dynamic> json) {
     return SyncUploadResponse(
       code: json['code'] as int,
-      message: json['message'] as String,
+      message: json['message'] as String? ?? '',
       data: SyncUploadData.fromJson(json['data'] as Map<String, dynamic>),
     );
   }
@@ -117,7 +117,7 @@ class SyncUploadData {
 
   factory SyncUploadData.fromJson(Map<String, dynamic> json) {
     return SyncUploadData(
-      syncId: json['sync_id'] as String,
+      syncId: json['sync_id'] as String? ?? '',
       processedUsers: json['processed_users'] as int? ?? 0,
       processedProducts: json['processed_products'] as int? ?? 0,
       processedCategories: json['processed_categories'] as int? ?? 0,
@@ -147,7 +147,9 @@ class SyncUploadData {
         json['payment_mapping'] as Map? ?? {},
       ),
       auditMapping: Map<String, int>.from(json['audit_mapping'] as Map? ?? {}),
-      syncTimestamp: json['sync_timestamp'] as String,
+      syncTimestamp:
+          json['sync_timestamp'] as String? ??
+          DateTime.now().toUtc().toIso8601String(),
       errors: List<String>.from(json['errors'] as List? ?? []),
     );
   }

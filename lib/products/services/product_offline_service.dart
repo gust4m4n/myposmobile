@@ -26,7 +26,7 @@ class ProductOfflineService {
           ? jsonEncode(product.categoryDetail)
           : null,
       'synced': 1,
-      'last_synced_at': DateTime.now().toIso8601String(),
+      'last_synced_at': DateTime.now().toUtc().toIso8601String(),
     };
 
     return await db.insert(
@@ -56,7 +56,7 @@ class ProductOfflineService {
             ? jsonEncode(product.categoryDetail)
             : null,
         'synced': 1,
-        'last_synced_at': DateTime.now().toIso8601String(),
+        'last_synced_at': DateTime.now().toUtc().toIso8601String(),
       };
 
       batch.insert(
@@ -238,7 +238,7 @@ class ProductOfflineService {
     final db = await _dbHelper.database;
     await db.update(
       'products',
-      {'synced': 1, 'last_synced_at': DateTime.now().toIso8601String()},
+      {'synced': 1, 'last_synced_at': DateTime.now().toUtc().toIso8601String()},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -304,7 +304,7 @@ class ProductOfflineService {
       'record_id': recordId,
       'operation': operation,
       'data': data != null ? jsonEncode(data) : null,
-      'created_at': DateTime.now().toIso8601String(),
+      'created_at': DateTime.now().toUtc().toIso8601String(),
       'retry_count': 0,
     });
   }

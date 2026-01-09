@@ -58,6 +58,20 @@ class ApiResponse<T> {
     required this.statusCode,
   });
 
+  // Check if response is successful (2xx status code and no error)
+  bool get isSuccess => statusCode >= 200 && statusCode < 300 && error == null;
+
+  // Convert to JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      if (code != null) 'code': code,
+      if (message != null) 'message': message,
+      if (data != null) 'data': data,
+      if (error != null) 'error': error,
+      'statusCode': statusCode,
+    };
+  }
+
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,
     T Function(dynamic)? fromJsonT,

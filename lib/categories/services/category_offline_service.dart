@@ -26,7 +26,7 @@ class CategoryOfflineService {
       'updated_by': category.updatedBy,
       'updated_by_name': category.updatedByName,
       'synced': 1,
-      'last_synced_at': DateTime.now().toIso8601String(),
+      'last_synced_at': DateTime.now().toUtc().toIso8601String(),
     };
 
     return await db.insert(
@@ -56,7 +56,7 @@ class CategoryOfflineService {
         'updated_by': category.updatedBy,
         'updated_by_name': category.updatedByName,
         'synced': 1,
-        'last_synced_at': DateTime.now().toIso8601String(),
+        'last_synced_at': DateTime.now().toUtc().toIso8601String(),
       };
 
       batch.insert(
@@ -133,7 +133,7 @@ class CategoryOfflineService {
       'description': category.description,
       'image': category.image,
       'is_active': category.isActive == true ? 1 : 0,
-      'updated_at': DateTime.now().toIso8601String(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
       'synced': 0, // Mark as not synced
     };
 
@@ -175,7 +175,7 @@ class CategoryOfflineService {
     final db = await _dbHelper.database;
     await db.update(
       'categories',
-      {'synced': 1, 'last_synced_at': DateTime.now().toIso8601String()},
+      {'synced': 1, 'last_synced_at': DateTime.now().toUtc().toIso8601String()},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -217,7 +217,7 @@ class CategoryOfflineService {
       'record_id': recordId,
       'operation': operation,
       'data': data != null ? jsonEncode(data) : null,
-      'created_at': DateTime.now().toIso8601String(),
+      'created_at': DateTime.now().toUtc().toIso8601String(),
       'retry_count': 0,
     });
   }
