@@ -18,11 +18,14 @@ class OrdersManagementService {
         List<dynamic>? orders;
 
         // Try to extract orders list from response
-        if (data.containsKey('items')) {
-          // Response format: {"data": {"items": [...], "pagination": {...}}}
+        // Response format: {"data": {"items": [...], "pagination": {...}}}
+        if (data.containsKey('data') && data['data'] is Map) {
+          final nestedData = data['data'] as Map<String, dynamic>;
+          if (nestedData.containsKey('items')) {
+            orders = nestedData['items'] as List<dynamic>?;
+          }
+        } else if (data.containsKey('items')) {
           orders = data['items'] as List<dynamic>?;
-        } else if (data.containsKey('data') && data['data'] is List) {
-          orders = data['data'] as List<dynamic>?;
         }
 
         if (orders != null && orders.isNotEmpty) {

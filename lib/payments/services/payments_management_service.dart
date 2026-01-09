@@ -23,11 +23,14 @@ class PaymentsManagementService {
         List<dynamic>? payments;
 
         // Try to extract payments list from response
-        if (data.containsKey('items')) {
-          // Response format: {"data": {"items": [...], "pagination": {...}}}
+        // Response format: {"data": {"items": [...], "pagination": {...}}}
+        if (data.containsKey('data') && data['data'] is Map) {
+          final nestedData = data['data'] as Map<String, dynamic>;
+          if (nestedData.containsKey('items')) {
+            payments = nestedData['items'] as List<dynamic>?;
+          }
+        } else if (data.containsKey('items')) {
           payments = data['items'] as List<dynamic>?;
-        } else if (data.containsKey('data') && data['data'] is List) {
-          payments = data['data'] as List<dynamic>?;
         }
 
         if (payments != null && payments.isNotEmpty) {

@@ -15,14 +15,13 @@ class PaymentOfflineService {
     for (var paymentJson in paymentsData) {
       // Prepare payment data
       final paymentData = {
-        if (paymentJson['id'] != null) 'remote_id': paymentJson['id'] as int,
         'order_id': paymentJson['order_id'] as int?,
         'tenant_id': paymentJson['tenant_id'] as int?,
         'branch_id': paymentJson['branch_id'] as int?,
         'user_id': paymentJson['user_id'] as int?,
         'amount': (paymentJson['amount'] as num?)?.toDouble() ?? 0.0,
         'payment_method': paymentJson['payment_method'] as String? ?? '',
-        'payment_status': paymentJson['payment_status'] as String? ?? 'pending',
+        'payment_status': paymentJson['status'] as String? ?? 'pending',
         'reference_number': paymentJson['reference_number'] as String?,
         'notes': paymentJson['notes'] as String?,
         'paid_at': paymentJson['paid_at'] as String?,

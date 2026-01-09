@@ -425,16 +425,16 @@ class SyncIntegrationService extends GetxController {
         '✅ Upload complete: ${uploadResponse.data.totalProcessed} items processed',
       );
 
-      // Step 3: Download fresh data
-      LoggerX.log('⬇️  Downloading data from server...');
-      final downloadResponse = await downloadDataFromServer();
-
-      // Step 4: Save to local DB and get counts
-      final savedCounts = await _saveDownloadedDataToLocal(
-        downloadResponse.data,
-      );
-
-      // Step 5: Fallback - sync directly from management services if sync API didn't provide data
+      // Step 3: Sync directly from management services
+      final savedCounts = <String, int>{
+        'tenants': 0,
+        'branches': 0,
+        'users': 0,
+        'categories': 0,
+        'products': 0,
+        'orders': 0,
+        'payments': 0,
+      };
       await _syncFromManagementServices(savedCounts);
 
       // Display summary
@@ -483,7 +483,6 @@ class SyncIntegrationService extends GetxController {
       return {
         'success': true,
         'uploaded': uploadResponse.data.totalProcessed,
-        'downloaded': downloadResponse.data.totalDownloaded,
         'saved_counts': savedCounts,
         'total_saved': totalSaved,
         'failed': uploadResponse.data.totalFailed,
@@ -551,24 +550,35 @@ class SyncIntegrationService extends GetxController {
       // Sync orders if none were saved
       if (savedCounts['orders'] == 0) {
         LoggerX.log('📋 Syncing orders directly from management API...');
-        await _ordersManagement.syncOrdersFromServer();
-        final count = await _orderService.getOrdersCount();
-        savedCounts['orders'] = count;
-        LoggerX.log('✅ Synced $count orders');
+        try {
+          await _ordersManagement.syncOrdersFromServer();
+          final count = await _orderService.getOrdersCount();
+          savedCounts['orders'] = count;
+          LoggerX.log('✅ Synced $count orders');
+        } catch (e, stackTrace) {
+          LoggerX.log('❌ Error syncing orders: $e');
+          LoggerX.log('Stack trace: $stackTrace');
+        }
       }
 
       // Sync payments if none were saved
       if (savedCounts['payments'] == 0) {
         LoggerX.log('💳 Syncing payments directly from management API...');
-        await _paymentsManagement.syncPaymentsFromServer();
-        final count = await _paymentService.getPaymentsCount();
-        savedCounts['payments'] = count;
-        LoggerX.log('✅ Synced $count payments');
+        try {
+          await _paymentsManagement.syncPaymentsFromServer();
+          final count = await _paymentService.getPaymentsCount();
+          savedCounts['payments'] = count;
+          LoggerX.log('✅ Synced $count payments');
+        } catch (e, stackTrace) {
+          LoggerX.log('❌ Error syncing payments: $e');
+          LoggerX.log('Stack trace: $stackTrace');
+        }
       }
 
       LoggerX.log('✅ Fallback sync completed\n');
-    } catch (e) {
+    } catch (e, stackTrace) {
       LoggerX.log('⚠️  Fallback sync error: $e');
+      LoggerX.log('Stack trace: $stackTrace');
     }
   }
 
