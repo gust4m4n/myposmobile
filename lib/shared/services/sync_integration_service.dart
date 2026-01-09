@@ -209,20 +209,47 @@ class SyncIntegrationService extends GetxController {
 
   // Save downloaded data to local database
   Future<void> _saveDownloadedDataToLocal(SyncDownloadData data) async {
+    print('🔄 Saving downloaded data to local database...');
+    print(
+      '📊 Data received - Products: ${data.products?.length ?? 0}, Categories: ${data.categories?.length ?? 0}',
+    );
+
     // Save categories
     if (data.categories != null && data.categories!.isNotEmpty) {
-      final categories = data.categories!
-          .map((cat) => CategoryModel.fromJson(cat as Map<String, dynamic>))
-          .toList();
-      await _categoryService.saveCategories(categories);
+      print('📁 Saving ${data.categories!.length} categories...');
+      try {
+        final categories = data.categories!
+            .map((cat) => CategoryModel.fromJson(cat as Map<String, dynamic>))
+            .toList();
+        await _categoryService.saveCategories(categories);
+        print('✅ Categories saved successfully');
+      } catch (e, stackTrace) {
+        print('❌ Error saving categories: $e');
+        print('Stack trace: $stackTrace');
+      }
+    } else {
+      print(
+        '⚠️ No categories to save (null: ${data.categories == null}, empty: ${data.categories?.isEmpty})',
+      );
     }
 
     // Save products
     if (data.products != null && data.products!.isNotEmpty) {
-      final products = data.products!
-          .map((prod) => ProductModel.fromJson(prod as Map<String, dynamic>))
-          .toList();
-      await _productService.saveProducts(products);
+      print('📦 Saving ${data.products!.length} products...');
+      try {
+        final products = data.products!
+            .map((prod) => ProductModel.fromJson(prod as Map<String, dynamic>))
+            .toList();
+        await _productService.saveProducts(products);
+        print('✅ Products saved successfully');
+      } catch (e, stackTrace) {
+        print('❌ Error saving products: $e');
+        print('Stack trace: $stackTrace');
+      }
+    } else {
+      print(
+        '⚠️ No products to save (null: ${data.products == null}, empty: ${data.products?.isEmpty})',
+      );
     }
 
     // Additional entity types can be added here

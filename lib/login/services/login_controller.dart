@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../shared/controllers/auth_controller.dart';
 import '../../shared/controllers/profile_controller.dart';
+import '../../shared/services/sync_integration_service.dart';
 import 'login_service.dart';
 
 class LoginController extends GetxController {
@@ -47,6 +48,27 @@ class LoginController extends GetxController {
       // Fetch profile
       final profileController = Get.find<ProfileController>();
       await profileController.fetchProfile();
+
+      // Perform initial sync after successful login
+      try {
+        final syncService = Get.find<SyncIntegrationService>();
+        // Run sync in background without blocking UI
+        syncService
+            .performFullSync()
+            .then((result) {
+              if (result['success'] == true) {
+                print(
+                  'Initial sync completed: ${result['uploaded']} uploaded, ${result['downloaded']} downloaded',
+                );
+              }
+            })
+            .catchError((error) {
+              print('Initial sync failed: $error');
+              // Don't show error to user, sync will retry later
+            });
+      } catch (e) {
+        print('Sync service not available: $e');
+      }
 
       // Navigation will be handled automatically by GetX bindings
     } else {

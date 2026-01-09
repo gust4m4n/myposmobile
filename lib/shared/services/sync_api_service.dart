@@ -45,12 +45,12 @@ class SyncApiService {
       if (response.statusCode >= 200 &&
           response.statusCode < 300 &&
           response.error == null) {
-        final jsonData = {
-          'code': response.code,
-          'message': response.message,
-          'data': response.data,
-        };
-        return SyncDownloadResponse.fromJson(jsonData);
+        print('🔍 DEBUG - Response data type: ${response.data.runtimeType}');
+        print('🔍 DEBUG - Parsing response.data directly');
+
+        // response.data already contains {code, message, data} structure
+        // No need to wrap it again - that was causing double nesting!
+        return SyncDownloadResponse.fromJson(response.data);
       } else {
         throw Exception(
           'Failed to download data: ${response.statusCode} - ${response.error}',
@@ -166,8 +166,13 @@ class SyncApiService {
           response.statusCode < 300 &&
           response.error == null &&
           response.data != null) {
-        final serverTime = response.data['server_time'] as String;
-        return DateTime.parse(serverTime);
+        final serverTime = response.data['server_time'] as String?;
+        if (serverTime != null) {
+          return DateTime.parse(serverTime);
+        } else {
+          print('⚠️ server_time is null, using local time');
+          return DateTime.now();
+        }
       } else {
         throw Exception('Failed to get server time: ${response.error}');
       }

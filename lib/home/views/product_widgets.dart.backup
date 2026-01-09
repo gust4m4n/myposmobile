@@ -38,8 +38,8 @@ class _ProductsWidgetState extends State<ProductsWidget> {
   @override
   void initState() {
     super.initState();
-    _loadAllCategories();
     _loadProducts();
+    _loadAllCategories();
   }
 
   @override
@@ -49,96 +49,76 @@ class _ProductsWidgetState extends State<ProductsWidget> {
     super.dispose();
   }
 
-  // Load categories from local database
   Future<void> _loadAllCategories() async {
-    try {
-      debugPrint('📁 Loading categories from database...');
-      final categories = await _categoryService.getAllCategories();
-      debugPrint('📁 Found ${categories.length} categories');
-      if (!mounted) return;
-      setState(() {
-        _categories = {
-          for (var cat in categories)
-            if (cat.id != null) cat.id!: cat.name,
-        };
-      });
-      debugPrint('📁 Categories map size: ${_categories.length}');
-    } catch (e) {
-      debugPrint('❌ Error loading categories: $e');
-    }
-  }
-
-  // Load products from local database
-  Future<void> _loadProducts() async {
-    if (_isLoading) return;
+    final allCategories = await _categoryService.getAllCategories();
 
     if (!mounted) return;
+
+    setState(() {
+      _categories = {
+        for (var cat in allCategories)
+          if (cat.id != null) cat.id!: cat.name,
+      };
+    });
+  }
+
+  Future<void> _loadProducts() async {
+    if (!mounted) return;
+    
     setState(() {
       _isLoading = true;
     });
 
     try {
-      List<ProductModel> results;
-
-      if (_selectedCategoryId != null) {
-        results = await _productService.getProductsByCategory(
-          _selectedCategoryId!,
-        );
+      List<ProductModel> products;
+      
+      if (_selectedCategoryId == null) {
+        // Load all products from local DB
+        products = await _productService.getAllProducts();
       } else {
-        results = await _productService.getAllProducts();
-      }
-
-      // Filter by search query if exists
-      if (_searchQuery.isNotEmpty) {
-        final query = _searchQuery.toLowerCase();
-        results = results.where((p) {
-          final name = p.name.toLowerCase();
-          final description = (p.description ?? '').toLowerCase();
-          final sku = (p.sku ?? '').toLowerCase();
-          return name.contains(query) ||
-              description.contains(query) ||
-              sku.contains(query);
-        }).toList();
-        debugPrint('📦 After search filter: ${results.length} products');
+        // Load products by category from local DB
+        products = await _productService.getProductsByCategory(_selectedCategoryId!);
       }
 
       if (!mounted) return;
+
       setState(() {
-        _products = results;
+        _products = products;
         _isLoading = false;
       });
-      debugPrint('✅ Products loaded: ${_products.length} products displayed');
     } catch (e) {
-      debugPrint('❌ Error loading products: $e');
-      if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-      });
+      print('Error loading products from local DB: $e');
+      if (mounted) {
+        setState(() {
+          _products = [];
+          _isLoading = false;
+        });
+      }
     }
   }
 
-  void _onCategorySelected(int? categoryId) {
-    if (!mounted) return;
+  void _handleCategorySelected(int? categoryId) {
     setState(() {
       _selectedCategoryId = categoryId;
     });
     _loadProducts();
   }
 
-  void _onSearchChanged(String query) {
-    if (!mounted) return;
-    setState(() {
-      _searchQuery = query;
-    });
-    _loadProducts();
-  }
-
   List<ProductModel> get _filteredProducts {
+    List<ProductModel> filtered;
+    if (_searchQuery.isEmpty) {
+      filtered = _products;
+    } else {
+      filtered = _products.where((product) {
+        return product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      }).toList();
+    }
+
     // Sort by name
-    _products.sort(
+    filtered.sort(
       (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
     );
-    return _products;
+    return filtered;
   }
 
   @override
@@ -153,13 +133,17 @@ class _ProductsWidgetState extends State<ProductsWidget> {
           child: _SearchBar(
             controller: _searchController,
             isMobile: widget.isMobile,
-            onSearchChanged: _onSearchChanged,
+            onSearchChanged: (query) {
+              setState(() {
+                _searchQuery = query;
+              });
+            },
           ),
         ),
         _CategoryBar(
           key: ValueKey('category_$_selectedCategoryId'),
           selectedCategoryId: _selectedCategoryId,
-          onCategorySelected: _onCategorySelected,
+          onCategorySelected: _handleCategorySelected,
           isMobile: widget.isMobile,
           categories: _categories,
         ),
@@ -169,6 +153,9 @@ class _ProductsWidgetState extends State<ProductsWidget> {
             onProductTap: widget.onProductTap,
             isMobile: widget.isMobile,
             scrollController: _scrollController,
+            onLoadMore: _loadMoreProducts,
+            isLoadingMore: _isLoadingMore,
+            hasMoreData: _hasMoreData,
           ),
         ),
       ],
@@ -176,11 +163,16 @@ class _ProductsWidgetState extends State<ProductsWidget> {
   }
 }
 
-// ============================================================================
-// Private: Search Bar
-// ============================================================================
-
-class _SearchBar extends StatelessWidget {
+// =
+    // Apply search filter
+    if (_searchQuery.isEmpty) {
+      filtered = _products;
+    } else {
+      final query = _searchQuery.toLowerCase();
+      filtered = _products.where((product) {
+        return product.name.toLowerCase().contains(query) ||
+            (product.description?.toLowerCase().contains(query) ?? false) ||
+            (product.sku?.toLowerCase().contains(query) ?? false
   final TextEditingController controller;
   final bool isMobile;
   final ValueChanged<String> onSearchChanged;
@@ -218,10 +210,7 @@ class _CategoryBar extends StatefulWidget {
   final ValueChanged<int?> onCategorySelected;
   final Map<int, String> categories;
   final bool isMobile;
-
-  const _CategoryBar({
-    super.key,
-    required this.selectedCategoryId,
+ed this.selectedCategoryId,
     required this.onCategorySelected,
     required this.categories,
     this.isMobile = false,
@@ -319,12 +308,18 @@ class _ProductGrid extends StatelessWidget {
   final Function(ProductModel) onProductTap;
   final bool isMobile;
   final ScrollController? scrollController;
+  final VoidCallback? onLoadMore;
+  final bool isLoadingMore;
+  final bool hasMoreData;
 
   const _ProductGrid({
     required this.products,
     required this.onProductTap,
     this.isMobile = false,
     this.scrollController,
+    this.onLoadMore,
+    this.isLoadingMore = false,
+    this.hasMoreData = false,
   });
 
   @override
@@ -359,7 +354,62 @@ class _ProductGrid extends StatelessWidget {
           padding = 12;
         }
 
-        return GridView.builder(
+        return NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (onLoadMore != null &&
+                scrollInfo.metrics.pixels >=
+                    scrollInfo.metrics.maxScrollExtent - 200) {
+              if (!isLoadingMore && hasMoreData) {
+                onLoadMore!();
+              }
+            }
+
+  const _ProductGrid({
+    required this.products,
+    required this.onProductTap,
+    this.isMobile = false,
+    this.scrollControllerectRatio: 0.85,
+                    crossAxisSpacing: 0,
+                    mainAxisSpacing: 0,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return _ProductItem(
+                      product: product,
+                      onClicked: () => onProductTap(product),
+                      iconSize: iconSize,
+                      fontSize: fontSize,
+                      priceSize: priceSize,
+                      padding: padding,
+                    );
+                  },
+                ),
+              ),
+              if (isLoadingMore)
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ============================================================================
+// Private: Product Item
+// ============================================================================
+
+class _ProductItem extends StatefulWidget {
+  final ProductModel product;
+  final VoidCallback onClicked;
+  final double iconSize;
+  final double fontSize;
+  final double priceSize;
+  final double GridView.builder(
           controller: scrollController,
           padding: EdgeInsets.zero,
           physics: const ClampingScrollPhysics(),
@@ -380,68 +430,7 @@ class _ProductGrid extends StatelessWidget {
               priceSize: priceSize,
               padding: padding,
             );
-          },
-        );
-      },
-    );
-  }
-}
-
-// ============================================================================
-// Private: Product Item
-// ============================================================================
-
-class _ProductItem extends StatefulWidget {
-  final ProductModel product;
-  final VoidCallback onClicked;
-  final double iconSize;
-  final double fontSize;
-  final double priceSize;
-  final double padding;
-
-  const _ProductItem({
-    required this.product,
-    required this.onClicked,
-    this.iconSize = 36,
-    this.fontSize = 16.0,
-    this.priceSize = 16.0,
-    this.padding = 12,
-  });
-
-  @override
-  State<_ProductItem> createState() => _ProductItemState();
-}
-
-class _ProductItemState extends State<_ProductItem> {
-  bool _isClicked = false;
-
-  /// Helper function to get correct image URL
-  /// Checks if URL is already full URL or needs baseUrl prepended
-  String _getImageUrl(String imageUrl) {
-    // Check if imageUrl is already a full URL (starts with http:// or https://)
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return imageUrl;
-    }
-    // If it's a relative path, prepend baseUrl
-    return '${ApiConfig.baseUrl}$imageUrl';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isClicked = true),
-      onTapUp: (_) => setState(() => _isClicked = false),
-      onTapCancel: () => setState(() => _isClicked = false),
-      onTap: widget.onClicked,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        transform: Matrix4.identity()..scale(_isClicked ? 0.95 : 1.0),
-        decoration: BoxDecoration(
-          color: _isClicked
-              ? theme.colorScheme.primary.withValues(alpha: 0.1)
-              : theme.cardColor,
+          }   : theme.cardColor,
           border: Border.all(
             color: _isClicked ? theme.colorScheme.primary : theme.dividerColor,
             width: _isClicked ? 2 : 1,
