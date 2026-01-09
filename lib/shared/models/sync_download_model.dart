@@ -45,6 +45,8 @@ class SyncDownloadData {
   final List<dynamic>? users;
   final List<dynamic>? products;
   final List<dynamic>? categories;
+  final List<dynamic>? orders;
+  final List<dynamic>? payments;
   final String syncTimestamp;
   final bool hasMore;
 
@@ -54,6 +56,8 @@ class SyncDownloadData {
     this.users,
     this.products,
     this.categories,
+    this.orders,
+    this.payments,
     required this.syncTimestamp,
     required this.hasMore,
   });
@@ -65,6 +69,8 @@ class SyncDownloadData {
       users: json['users'] as List<dynamic>?,
       products: json['products'] as List<dynamic>?,
       categories: json['categories'] as List<dynamic>?,
+      orders: json['orders'] as List<dynamic>?,
+      payments: json['payments'] as List<dynamic>?,
       syncTimestamp:
           json['sync_timestamp'] as String? ??
           DateTime.now().toUtc().toIso8601String(),
@@ -77,7 +83,9 @@ class SyncDownloadData {
       (branches?.length ?? 0) +
       (users?.length ?? 0) +
       (products?.length ?? 0) +
-      (categories?.length ?? 0);
+      (categories?.length ?? 0) +
+      (orders?.length ?? 0) +
+      (payments?.length ?? 0);
 }
 
 class SyncStatusResponse {

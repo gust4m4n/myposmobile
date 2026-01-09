@@ -1,5 +1,6 @@
 class CategoryModel {
   final int? id;
+  final int? remoteId;
   final int? tenantId;
   final String name;
   final String? description;
@@ -14,6 +15,7 @@ class CategoryModel {
 
   CategoryModel({
     this.id,
+    this.remoteId,
     this.tenantId,
     required this.name,
     this.description,
@@ -30,6 +32,7 @@ class CategoryModel {
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
       id: json['id'] as int?,
+      remoteId: json['remote_id'] as int? ?? json['id'] as int?,
       tenantId: json['tenant_id'] as int?,
       name: json['name'] as String,
       description: json['description'] as String?,
@@ -47,6 +50,7 @@ class CategoryModel {
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
       if (tenantId != null) 'tenant_id': tenantId,
       'name': name,
       if (description != null) 'description': description,

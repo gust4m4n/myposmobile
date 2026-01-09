@@ -4,8 +4,11 @@ import '../../shared/api_models.dart' hide TenantModel;
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/tenant_model.dart';
+import 'tenant_offline_service.dart';
 
 class TenantsManagementService {
+  final TenantOfflineService _offlineService = TenantOfflineService();
+
   /// Get list of all tenants with optional pagination
   Future<ApiResponse<PaginatedResponse<TenantModel>>> getTenants({
     int? page,
@@ -121,5 +124,29 @@ class TenantsManagementService {
   /// Delete tenant
   Future<ApiResponse<void>> deleteTenant(int id) async {
     return await ApiX.delete('${ApiConfig.tenants}/$id', requiresAuth: true);
+  }
+
+  /// Sync tenants from server to local DB
+  Future<void> syncTenantsFromServer() async {
+    try {
+      final response = await getTenants(page: 1, pageSize: 999999);
+      if (response.statusCode == 200 && response.data != null) {
+        final tenants = response.data!.data;
+        await _offlineService.saveTenants(tenants);
+      }
+    } catch (e) {
+      print('Error syncing tenants: $e');
+      rethrow;
+    }
+  }
+
+  /// Get tenants from local DB
+  Future<List<TenantModel>> getTenantsFromLocal() async {
+    return await _offlineService.getAllTenants();
+  }
+
+  /// Get active tenants from local DB
+  Future<List<TenantModel>> getActiveTenantsFromLocal() async {
+    return await _offlineService.getActiveTenants();
   }
 }

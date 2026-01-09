@@ -1,5 +1,6 @@
 class BranchModel {
   final int? id;
+  final int? remoteId;
   final int tenantId;
   final String name;
   final String? code;
@@ -19,6 +20,7 @@ class BranchModel {
 
   BranchModel({
     this.id,
+    this.remoteId,
     required this.tenantId,
     required this.name,
     this.code,
@@ -41,6 +43,7 @@ class BranchModel {
     // Support both GORM format (uppercase) and snake_case format
     return BranchModel(
       id: json['ID'] ?? json['id'],
+      remoteId: json['remote_id'] ?? json['ID'] ?? json['id'],
       tenantId: json['tenant_id'],
       name: json['name'] ?? '',
       code: json['code'],
@@ -63,6 +66,7 @@ class BranchModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'remote_id': remoteId,
       'tenant_id': tenantId,
       'name': name,
       'code': code,

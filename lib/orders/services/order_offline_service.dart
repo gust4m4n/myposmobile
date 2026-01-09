@@ -438,4 +438,79 @@ class OrderOfflineService {
       await txn.delete('orders');
     });
   }
+
+  /// Save multiple orders (bulk insert for sync)
+  Future<void> saveOrders(List<Map<String, dynamic>> ordersData) async {
+    if (ordersData.isEmpty) return;
+
+    final db = await _dbHelper.database;
+    final batch = db.batch();
+
+    for (var orderJson in ordersData) {
+      // Prepare order data
+      final orderData = {
+        'order_number': orderJson['order_number'] as String?,
+        'tenant_id': orderJson['tenant_id'] as int?,
+        'branch_id': orderJson['branch_id'] as int?,
+        'user_id': orderJson['user_id'] as int?,
+        'customer_name': orderJson['customer_name'] as String?,
+        'customer_phone': orderJson['customer_phone'] as String?,
+        'total_amount': (orderJson['total_amount'] as num?)?.toDouble() ?? 0.0,
+        'discount': (orderJson['discount'] as num?)?.toDouble() ?? 0.0,
+        'tax': (orderJson['tax'] as num?)?.toDouble() ?? 0.0,
+        'grand_total': (orderJson['grand_total'] as num?)?.toDouble() ?? 0.0,
+        'payment_method': orderJson['payment_method'] as String? ?? '',
+        'payment_status': orderJson['payment_status'] as String? ?? 'pending',
+        'order_status': orderJson['order_status'] as String? ?? 'pending',
+        'notes': orderJson['notes'] as String?,
+        'created_at':
+            orderJson['created_at'] as String? ??
+            DateTime.now().toUtc().toIso8601String(),
+        'updated_at': orderJson['updated_at'] as String?,
+        'synced': 1,
+        'last_synced_at': DateTime.now().toUtc().toIso8601String(),
+        'server_id': orderJson['id'] as int?,
+      };
+
+      batch.insert(
+        'orders',
+        orderData,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      // Save order items if available
+      final items =
+          orderJson['order_items'] as List? ?? orderJson['items'] as List?;
+      if (items != null && items.isNotEmpty) {
+        for (var itemJson in items) {
+          final itemData = {
+            'order_id':
+                orderJson['id'] as int?, // Use server order id temporarily
+            'product_id': itemJson['product_id'] as int?,
+            'product_name': itemJson['product_name'] as String? ?? '',
+            'quantity': itemJson['quantity'] as int? ?? 0,
+            'price': (itemJson['price'] as num?)?.toDouble() ?? 0.0,
+            'subtotal': (itemJson['subtotal'] as num?)?.toDouble() ?? 0.0,
+            'notes': itemJson['notes'] as String?,
+            'synced': 1,
+          };
+
+          batch.insert(
+            'order_items',
+            itemData,
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+      }
+    }
+
+    await batch.commit(noResult: true);
+  }
+
+  /// Get total orders count
+  Future<int> getOrdersCount() async {
+    final db = await _dbHelper.database;
+    final result = await db.rawQuery('SELECT COUNT(*) as count FROM orders');
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
 }

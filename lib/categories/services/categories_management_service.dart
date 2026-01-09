@@ -2,8 +2,11 @@ import '../../shared/api_models.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/category_model.dart';
+import 'category_offline_service.dart';
 
 class CategoriesManagementService {
+  final CategoryOfflineService _offlineService = CategoryOfflineService();
+
   /// Get list of all categories with optional pagination
   Future<ApiResponse<PaginatedResponse<CategoryModel>>> getCategories({
     int? page,
@@ -139,5 +142,29 @@ class CategoriesManagementService {
   /// Delete category
   Future<ApiResponse<void>> deleteCategory(int id) async {
     return await ApiX.delete('${ApiConfig.categories}/$id', requiresAuth: true);
+  }
+
+  /// Sync categories from server to local DB
+  Future<void> syncCategoriesFromServer() async {
+    try {
+      final response = await getCategories(page: 1, pageSize: 999999);
+      if (response.statusCode == 200 && response.data != null) {
+        final categories = response.data!.data;
+        await _offlineService.saveCategories(categories);
+      }
+    } catch (e) {
+      print('Error syncing categories: $e');
+      rethrow;
+    }
+  }
+
+  /// Get categories from local DB
+  Future<List<CategoryModel>> getCategoriesFromLocal() async {
+    return await _offlineService.getAllCategories();
+  }
+
+  /// Get active categories from local DB
+  Future<List<CategoryModel>> getActiveCategoriesFromLocal() async {
+    return await _offlineService.getActiveCategories();
   }
 }

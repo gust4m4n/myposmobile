@@ -893,47 +893,94 @@ class _HomePageState extends State<HomePage> {
                   });
                 },
                 enableFeedback: false,
+                showSelectedLabels: true,
+                showUnselectedLabels: true,
+                selectedItemColor: theme.colorScheme.primary,
+                unselectedItemColor: theme.colorScheme.onSurface.withOpacity(
+                  0.6,
+                ),
+                selectedFontSize: 14,
+                unselectedFontSize: 14,
+                iconSize: 24,
+                backgroundColor: theme.bottomNavigationBarTheme.backgroundColor,
+                elevation: 0,
                 items: [
                   BottomNavigationBarItem(
-                    icon: const Icon(Icons.inventory_2),
+                    icon: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _selectedTabIndex == 0
+                            ? theme.colorScheme.primary.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.inventory_2),
+                    ),
                     label: 'products'.tr,
                   ),
                   BottomNavigationBarItem(
-                    icon: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        const Icon(Icons.shopping_cart),
-                        if (_cart.isNotEmpty)
-                          Positioned(
-                            right: -6,
-                            top: -6,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.error,
-                                shape: BoxShape.circle,
-                              ),
-                              constraints: const BoxConstraints(
-                                minWidth: 18,
-                                minHeight: 18,
-                              ),
-                              child: Text(
-                                '${_cart.length}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
+                    icon: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _selectedTabIndex == 1
+                            ? theme.colorScheme.primary.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          const Icon(Icons.shopping_cart),
+                          if (_cart.isNotEmpty)
+                            Positioned(
+                              right: -6,
+                              top: -6,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.error,
+                                  shape: BoxShape.circle,
                                 ),
-                                textAlign: TextAlign.center,
+                                constraints: const BoxConstraints(
+                                  minWidth: 18,
+                                  minHeight: 18,
+                                ),
+                                child: Text(
+                                  '${_cart.length}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                     label: 'cart'.tr,
                   ),
                   BottomNavigationBarItem(
-                    icon: const Icon(Icons.menu),
+                    icon: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _selectedTabIndex == 2
+                            ? theme.colorScheme.primary.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.menu),
+                    ),
                     label: 'menu'.tr,
                   ),
                 ],

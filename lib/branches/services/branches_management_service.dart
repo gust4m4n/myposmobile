@@ -4,8 +4,11 @@ import '../../shared/api_models.dart' hide BranchModel;
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/branch_model.dart';
+import 'branch_offline_service.dart';
 
 class BranchesManagementService {
+  final BranchOfflineService _offlineService = BranchOfflineService();
+
   /// Get list of branches for current tenant (from JWT token) with pagination
   ///
   /// Parameters:
@@ -131,5 +134,37 @@ class BranchesManagementService {
       '${ApiConfig.branches}/$branchId',
       requiresAuth: true,
     );
+  }
+
+  /// Sync branches from server to local DB
+  Future<void> syncBranchesFromServer() async {
+    try {
+      final response = await getBranchesForCurrentTenant(
+        page: 1,
+        pageSize: 999999,
+      );
+      if (response.statusCode == 200 && response.data != null) {
+        final branches = response.data!.data;
+        await _offlineService.saveBranches(branches);
+      }
+    } catch (e) {
+      print('Error syncing branches: $e');
+      rethrow;
+    }
+  }
+
+  /// Get branches from local DB
+  Future<List<BranchModel>> getBranchesFromLocal() async {
+    return await _offlineService.getAllBranches();
+  }
+
+  /// Get active branches from local DB
+  Future<List<BranchModel>> getActiveBranchesFromLocal() async {
+    return await _offlineService.getActiveBranches();
+  }
+
+  /// Get branches by tenant ID from local DB
+  Future<List<BranchModel>> getBranchesByTenantIdFromLocal(int tenantId) async {
+    return await _offlineService.getBranchesByTenantId(tenantId);
   }
 }

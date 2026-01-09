@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import '../../home/models/product_model.dart';
+import '../../home/services/products_service.dart';
 import '../../shared/api_models.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
+import 'product_offline_service.dart';
 
 class ProductsManagementService {
+  static final ProductOfflineService _offlineService = ProductOfflineService();
   static Future<ApiResponse<Map<String, dynamic>>> createProduct({
     required String name,
     required String description,
@@ -82,5 +86,25 @@ class ProductsManagementService {
       '${ApiConfig.products}/$productId/photo',
       requiresAuth: true,
     );
+  }
+
+  /// Sync products from server to local DB with large pagination
+  static Future<void> syncProductsFromServer() async {
+    try {
+      final response = await ProductsService.getProducts(
+        page: 1,
+        pageSize: 999999,
+      );
+      if (response.statusCode == 200 && response.data != null) {
+        // Convert Map<String, dynamic> to ProductModel
+        final products = response.data!.data
+            .map((json) => ProductModel.fromJson(json))
+            .toList();
+        await _offlineService.saveProducts(products);
+      }
+    } catch (e) {
+      print('Error syncing products: $e');
+      rethrow;
+    }
   }
 }

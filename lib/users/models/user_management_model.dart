@@ -1,10 +1,14 @@
 class UserManagementModel {
   final int id;
+  final int? remoteId;
   final int tenantId;
   final int branchId;
   final String? branchName;
   final String email;
+  final String? password;
+  final String? pin;
   final String fullName;
+  final String? phone;
   final String role;
   final bool isActive;
   final String? image;
@@ -17,11 +21,15 @@ class UserManagementModel {
 
   UserManagementModel({
     required this.id,
+    this.remoteId,
     required this.tenantId,
     required this.branchId,
     this.branchName,
     required this.email,
+    this.password,
+    this.pin,
     required this.fullName,
+    this.phone,
     required this.role,
     required this.isActive,
     this.image,
@@ -36,11 +44,15 @@ class UserManagementModel {
   factory UserManagementModel.fromJson(Map<String, dynamic> json) {
     return UserManagementModel(
       id: json['id'] ?? 0,
+      remoteId: json['remote_id'] ?? json['id'],
       tenantId: json['tenant_id'] ?? 0,
       branchId: json['branch_id'] ?? 0,
       branchName: json['branch_name'],
       email: json['email'] ?? '',
+      password: json['password'],
+      pin: json['pin'],
       fullName: json['full_name'] ?? '',
+      phone: json['phone'],
       role: json['role'] ?? '',
       isActive: json['is_active'] ?? true,
       image: json['image'],
@@ -56,11 +68,15 @@ class UserManagementModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'remote_id': remoteId,
       'tenant_id': tenantId,
       'branch_id': branchId,
       'branch_name': branchName,
       'email': email,
+      'password': password,
+      'pin': pin,
       'full_name': fullName,
+      'phone': phone,
       'role': role,
       'is_active': isActive,
       'image': image,

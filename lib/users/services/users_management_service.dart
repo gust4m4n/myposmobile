@@ -3,8 +3,11 @@ import 'dart:io';
 import '../../shared/api_models.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/user_management_model.dart';
+import 'user_offline_service.dart';
 
 class UsersManagementService {
+  static final UserOfflineService _offlineService = UserOfflineService();
+
   /// Get all users for tenant with optional pagination
   static Future<ApiResponse<PaginatedResponse<UserManagementModel>>> getUsers({
     int? page,
@@ -122,5 +125,43 @@ class UsersManagementService {
   /// Delete user (soft delete)
   static Future<ApiResponse<Map<String, dynamic>>> deleteUser(int id) async {
     return await ApiX.delete('/api/v1/users/$id', requiresAuth: true);
+  }
+
+  /// Sync users from server to local DB
+  static Future<void> syncUsersFromServer() async {
+    try {
+      final response = await getUsers(page: 1, pageSize: 999999);
+      if (response.statusCode == 200 && response.data != null) {
+        final users = response.data!.data;
+        await _offlineService.saveUsers(users);
+      }
+    } catch (e) {
+      print('Error syncing users: $e');
+      rethrow;
+    }
+  }
+
+  /// Get users from local DB
+  static Future<List<UserManagementModel>> getUsersFromLocal() async {
+    return await _offlineService.getAllUsers();
+  }
+
+  /// Get active users from local DB
+  static Future<List<UserManagementModel>> getActiveUsersFromLocal() async {
+    return await _offlineService.getActiveUsers();
+  }
+
+  /// Get users by branch ID from local DB
+  static Future<List<UserManagementModel>> getUsersByBranchIdFromLocal(
+    int branchId,
+  ) async {
+    return await _offlineService.getUsersByBranchId(branchId);
+  }
+
+  /// Get user by email from local DB (for offline login)
+  static Future<UserManagementModel?> getUserByEmailFromLocal(
+    String email,
+  ) async {
+    return await _offlineService.getUserByEmail(email);
   }
 }

@@ -1,5 +1,6 @@
 class ProductModel {
   final int? id;
+  final int? remoteId;
   final String name;
   final double price;
   final int? categoryId;
@@ -12,6 +13,7 @@ class ProductModel {
 
   ProductModel({
     this.id,
+    this.remoteId,
     required this.name,
     required this.price,
     this.categoryId,
@@ -26,6 +28,7 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
       id: json['id'] as int?,
+      remoteId: json['remote_id'] as int? ?? json['id'] as int?,
       name: json['name'] as String,
       price: (json['price'] is int)
           ? (json['price'] as int).toDouble()
@@ -43,6 +46,7 @@ class ProductModel {
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
+      if (remoteId != null) 'remote_id': remoteId,
       'name': name,
       'price': price,
       if (categoryId != null) 'category_id': categoryId,

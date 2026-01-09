@@ -1,5 +1,6 @@
 class TenantModel {
   final int? id;
+  final int? remoteId;
   final String name;
   final String? code;
   final String? description;
@@ -18,6 +19,7 @@ class TenantModel {
 
   TenantModel({
     this.id,
+    this.remoteId,
     required this.name,
     this.code,
     this.description,
@@ -38,6 +40,7 @@ class TenantModel {
   factory TenantModel.fromJson(Map<String, dynamic> json) {
     return TenantModel(
       id: json['id'],
+      remoteId: json['remote_id'] ?? json['id'],
       name: json['name'] ?? '',
       code: json['code'],
       description: json['description'],
@@ -59,6 +62,7 @@ class TenantModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'remote_id': remoteId,
       'name': name,
       'code': code,
       'description': description,

@@ -14,6 +14,7 @@ class CategoryOfflineService {
 
     final data = {
       if (category.id != null) 'id': category.id,
+      if (category.remoteId != null) 'remote_id': category.remoteId,
       'tenant_id': category.tenantId,
       'name': category.name,
       'description': category.description,
@@ -93,13 +94,27 @@ class CategoryOfflineService {
     return maps.map((map) => _mapToCategory(map)).toList();
   }
 
-  // Get category by ID
+  // Get category by local ID
   Future<CategoryModel?> getCategoryById(int id) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'categories',
       where: 'id = ?',
       whereArgs: [id],
+      limit: 1,
+    );
+
+    if (maps.isEmpty) return null;
+    return _mapToCategory(maps.first);
+  }
+
+  // Get category by remote ID (from server)
+  Future<CategoryModel?> getCategoryByRemoteId(int remoteId) async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'categories',
+      where: 'remote_id = ?',
+      whereArgs: [remoteId],
       limit: 1,
     );
 
@@ -128,6 +143,7 @@ class CategoryOfflineService {
 
     final db = await _dbHelper.database;
     final data = {
+      if (category.remoteId != null) 'remote_id': category.remoteId,
       'tenant_id': category.tenantId,
       'name': category.name,
       'description': category.description,
@@ -187,10 +203,20 @@ class CategoryOfflineService {
     await db.delete('categories');
   }
 
+  // Count total categories
+  Future<int> getCategoryCount() async {
+    final db = await _dbHelper.database;
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM categories',
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
   // Helper: Convert map to CategoryModel
   CategoryModel _mapToCategory(Map<String, dynamic> map) {
     return CategoryModel(
       id: map['id'] as int?,
+      remoteId: map['remote_id'] as int?,
       tenantId: map['tenant_id'] as int?,
       name: map['name'] as String,
       description: map['description'] as String?,

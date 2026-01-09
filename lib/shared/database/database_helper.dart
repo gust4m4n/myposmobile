@@ -33,7 +33,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 5,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -43,7 +43,8 @@ class DatabaseHelper {
     // Tabel Tenants
     await db.execute('''
       CREATE TABLE tenants (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        remote_id INTEGER UNIQUE,
         name TEXT NOT NULL,
         email TEXT,
         phone TEXT,
@@ -63,7 +64,8 @@ class DatabaseHelper {
     // Tabel Branches
     await db.execute('''
       CREATE TABLE branches (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        remote_id INTEGER UNIQUE,
         tenant_id INTEGER,
         name TEXT NOT NULL,
         code TEXT,
@@ -89,13 +91,17 @@ class DatabaseHelper {
     // Tabel Users
     await db.execute('''
       CREATE TABLE users (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        remote_id INTEGER UNIQUE,
         tenant_id INTEGER,
         branch_id INTEGER,
-        name TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
+        password TEXT,
+        pin TEXT,
+        full_name TEXT NOT NULL,
         phone TEXT,
         role TEXT,
+        image TEXT,
         is_active INTEGER DEFAULT 1,
         created_at TEXT,
         updated_at TEXT,
@@ -113,7 +119,8 @@ class DatabaseHelper {
     // Tabel Categories
     await db.execute('''
       CREATE TABLE categories (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        remote_id INTEGER UNIQUE,
         tenant_id INTEGER,
         name TEXT NOT NULL,
         description TEXT,
@@ -133,7 +140,8 @@ class DatabaseHelper {
     // Tabel Products
     await db.execute('''
       CREATE TABLE products (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        remote_id INTEGER UNIQUE,
         name TEXT NOT NULL,
         price REAL NOT NULL,
         category_id INTEGER,
@@ -196,6 +204,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE payments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        remote_id INTEGER UNIQUE,
         order_id INTEGER NOT NULL,
         tenant_id INTEGER,
         branch_id INTEGER,
@@ -322,13 +331,17 @@ class DatabaseHelper {
 
       await db.execute('''
         CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY,
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          remote_id INTEGER UNIQUE,
           tenant_id INTEGER,
           branch_id INTEGER,
-          name TEXT NOT NULL,
           email TEXT UNIQUE NOT NULL,
+          password TEXT,
+          pin TEXT,
+          full_name TEXT NOT NULL,
           phone TEXT,
           role TEXT,
+          image TEXT,
           is_active INTEGER DEFAULT 1,
           created_at TEXT,
           updated_at TEXT,
@@ -408,6 +421,53 @@ class DatabaseHelper {
       await db.execute(
         'CREATE INDEX IF NOT EXISTS idx_payments_synced ON payments(synced)',
       );
+    }
+
+    // Upgrade from version 2/3/4 to 5: Add password, pin, and full_name columns to users table if they don't exist
+    if (oldVersion < 5) {
+      // Check if password column exists, if not add it
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN password TEXT');
+      } catch (e) {
+        // Column already exists, ignore
+      }
+
+      // Check if pin column exists, if not add it
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN pin TEXT');
+      } catch (e) {
+        // Column already exists, ignore
+      }
+
+      // Check if full_name column exists, if not add it
+      try {
+        await db.execute(
+          'ALTER TABLE users ADD COLUMN full_name TEXT NOT NULL DEFAULT ""',
+        );
+      } catch (e) {
+        // Column already exists, ignore
+      }
+
+      // Check if phone column exists, if not add it
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN phone TEXT');
+      } catch (e) {
+        // Column already exists, ignore
+      }
+
+      // Check if role column exists, if not add it
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN role TEXT');
+      } catch (e) {
+        // Column already exists, ignore
+      }
+
+      // Check if image column exists, if not add it
+      try {
+        await db.execute('ALTER TABLE users ADD COLUMN image TEXT');
+      } catch (e) {
+        // Column already exists, ignore
+      }
     }
   }
 

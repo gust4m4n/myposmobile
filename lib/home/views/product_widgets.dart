@@ -365,7 +365,7 @@ class _ProductGrid extends StatelessWidget {
           physics: const ClampingScrollPhysics(),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: maxExtent,
-            childAspectRatio: 0.85,
+            childAspectRatio: 0.67,
             crossAxisSpacing: 0,
             mainAxisSpacing: 0,
           ),
@@ -451,121 +451,117 @@ class _ProductItemState extends State<_ProductItem> {
           builder: (context, constraints) {
             final imageHeight = constraints.maxHeight * 0.5;
 
-            return SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: imageHeight,
-                    width: double.infinity,
-                    child:
-                        widget.product.image != null &&
-                            widget.product.image!.isNotEmpty
-                        ? Image.network(
-                            _getImageUrl(widget.product.image!),
-                            width: double.infinity,
-                            height: imageHeight,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                width: double.infinity,
-                                height: imageHeight,
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.1,
-                                  ),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: imageHeight,
+                  width: double.infinity,
+                  child:
+                      widget.product.image != null &&
+                          widget.product.image!.isNotEmpty
+                      ? Image.network(
+                          _getImageUrl(widget.product.image!),
+                          width: double.infinity,
+                          height: imageHeight,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: double.infinity,
+                              height: imageHeight,
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.1,
                                 ),
-                                child: Icon(
-                                  widget.product.categoryDetail?['name'] ==
-                                          'Makanan'
-                                      ? Icons.restaurant
-                                      : Icons.local_drink,
-                                  size: widget.iconSize,
-                                  color: theme.colorScheme.primary,
+                              ),
+                              child: Icon(
+                                widget.product.categoryDetail?['name'] ==
+                                        'Makanan'
+                                    ? Icons.restaurant
+                                    : Icons.local_drink,
+                                size: widget.iconSize,
+                                color: theme.colorScheme.primary,
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              width: double.infinity,
+                              height: imageHeight,
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.1,
                                 ),
-                              );
-                            },
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                width: double.infinity,
-                                height: imageHeight,
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.1,
-                                  ),
+                              ),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  value:
+                                      loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                      : null,
+                                  strokeWidth: 2,
                                 ),
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    value:
-                                        loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                  .cumulativeBytesLoaded /
-                                              loadingProgress
-                                                  .expectedTotalBytes!
-                                        : null,
-                                    strokeWidth: 2,
-                                  ),
+                              ),
+                            );
+                          },
+                        )
+                      : Container(
+                          width: double.infinity,
+                          height: imageHeight,
+                          decoration: BoxDecoration(color: Colors.grey[200]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.image_outlined,
+                                size: widget.iconSize,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'No Image',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[500],
                                 ),
-                              );
-                            },
-                          )
-                        : Container(
-                            width: double.infinity,
-                            height: imageHeight,
-                            decoration: BoxDecoration(color: Colors.grey[200]),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.image_outlined,
-                                  size: widget.iconSize,
-                                  color: Colors.grey[400],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'No Image',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[500],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: widget.padding),
-                    child: Column(
-                      children: [
-                        Text(
-                          widget.product.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: widget.fontSize,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: widget.padding / 3),
-                        Text(
-                          CurrencyFormatter.format(widget.product.price),
-                          style: TextStyle(
-                            color: theme.colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: widget.priceSize,
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: widget.padding),
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.product.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: widget.fontSize,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: widget.padding / 3),
+                      Text(
+                        CurrencyFormatter.format(widget.product.price),
+                        style: TextStyle(
+                          color: theme.colorScheme.secondary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: widget.priceSize,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
