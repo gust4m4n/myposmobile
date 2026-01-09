@@ -17,12 +17,14 @@ import '../../shared/controllers/auth_controller.dart';
 import '../../shared/controllers/language_controller.dart';
 import '../../shared/controllers/profile_controller.dart';
 import '../../shared/controllers/theme_controller.dart';
+import '../../shared/services/sync_integration_service.dart';
 import '../../shared/widgets/button_x.dart';
 import '../../shared/widgets/connectivity_indicator.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/red_button_x.dart';
 import '../../shared/widgets/theme_toggle_button.dart';
+import '../../shared/widgets/toast_x.dart';
 import '../../tenants/views/tenants_management_page.dart';
 import '../../tnc/views/tnc_page.dart';
 import '../../translations/translation_extension.dart';
@@ -329,6 +331,71 @@ class MenuTab extends StatelessWidget {
         Divider(color: theme.dividerColor, height: 1),
         // Settings Section
         _buildSectionHeader(context, 'Settings'),
+        ListTile(
+          leading: Icon(Icons.sync, color: theme.colorScheme.onSurface),
+          title: Row(children: [Text('syncData'.tr), const SizedBox(width: 8)]),
+          trailing: Icon(Icons.cloud_upload, color: theme.colorScheme.primary),
+          onTap: () async {
+            try {
+              // Check if service exists
+              final syncService = Get.find<SyncIntegrationService>();
+
+              // Show loading dialog
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => DialogX(
+                  title: 'syncData'.tr,
+                  width: 400,
+                  onClose: () {},
+                  content: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text('Syncing data with server...'),
+                    ],
+                  ),
+                  actions: [],
+                ),
+              );
+
+              // Perform sync
+              final result = await syncService.performFullSync();
+
+              // Close loading dialog
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
+
+              // Show result
+              if (result['success'] == true) {
+                if (context.mounted) {
+                  ToastX.success(
+                    context,
+                    'Sync successful! Uploaded: ${result['uploaded']}, Downloaded: ${result['downloaded']}',
+                  );
+                }
+              } else {
+                if (context.mounted) {
+                  ToastX.error(
+                    context,
+                    'Sync failed: ${result['error'] ?? 'Unknown error'}',
+                  );
+                }
+              }
+            } catch (e) {
+              // Close loading dialog if open
+              if (context.mounted && Navigator.canPop(context)) {
+                Navigator.of(context).pop();
+              }
+
+              if (context.mounted) {
+                ToastX.error(context, 'Sync service not available: $e');
+              }
+            }
+          },
+        ),
         ListTile(
           leading: Icon(Icons.language, color: theme.colorScheme.onSurface),
           title: Row(

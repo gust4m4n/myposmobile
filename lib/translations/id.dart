@@ -41,6 +41,7 @@ const Map<String, String> id = {
   'language': 'Bahasa',
   'english': 'English',
   'indonesian': 'Indonesia',
+  'syncData': 'Sinkronisasi Data',
 
   // Sidebar
   'profile': 'Profil',

@@ -33,6 +33,9 @@ class ApiConfig {
   // Payment endpoints
   static const String payments = '$apiPrefix/payments';
 
+  // Audit Trails endpoints
+  static const String auditTrails = '$apiPrefix/audit-trails';
+
   // PIN endpoints
   static const String pinCreate = '$apiPrefix/pin/create';
   static const String pinChange = '$apiPrefix/pin/change';

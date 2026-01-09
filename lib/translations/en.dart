@@ -41,6 +41,7 @@ const Map<String, String> en = {
   'language': 'Language',
   'english': 'English',
   'indonesian': 'Indonesian',
+  'syncData': 'Sync Data',
 
   // Sidebar
   'profile': 'Profile',
