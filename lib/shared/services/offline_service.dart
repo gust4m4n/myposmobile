@@ -25,6 +25,9 @@ class OfflineService extends GetxController {
   final RxString lastSyncTime = ''.obs;
   final RxInt pendingSyncCount = 0.obs;
 
+  // Offline mode - when enabled, forces app to work offline
+  bool _isOfflineModeEnabled = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -58,6 +61,14 @@ class OfflineService extends GetxController {
   // Update connection status
   void _updateConnectionStatus(List<ConnectivityResult> result) {
     final wasOffline = !isOnline.value;
+
+    // If offline mode is enabled, always stay offline
+    if (_isOfflineModeEnabled) {
+      isOnline.value = false;
+      LoggerX.log('Offline mode is enabled - staying offline');
+      return;
+    }
+
     isOnline.value = !result.contains(ConnectivityResult.none);
 
     LoggerX.log(
@@ -70,6 +81,19 @@ class OfflineService extends GetxController {
     }
 
     _updatePendingSyncCount();
+  }
+
+  // Set offline mode - force app to work offline
+  void setOfflineMode(bool enabled) {
+    _isOfflineModeEnabled = enabled;
+    if (enabled) {
+      isOnline.value = false;
+      LoggerX.log('🔴 Offline mode enabled - app will work offline');
+    } else {
+      // Re-check connectivity when offline mode is disabled
+      _initConnectivity();
+      LoggerX.log('🟢 Offline mode disabled - checking connectivity');
+    }
   }
 
   // Auto sync when back online

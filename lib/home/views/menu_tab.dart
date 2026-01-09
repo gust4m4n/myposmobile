@@ -15,6 +15,7 @@ import '../../profile/views/profile_page.dart';
 import '../../shared/api_models.dart';
 import '../../shared/controllers/auth_controller.dart';
 import '../../shared/controllers/language_controller.dart';
+import '../../shared/controllers/offline_controller.dart';
 import '../../shared/controllers/profile_controller.dart';
 import '../../shared/controllers/theme_controller.dart';
 import '../../shared/services/sync_integration_service.dart';
@@ -396,6 +397,66 @@ class MenuTab extends StatelessWidget {
             }
           },
         ),
+        Obx(() {
+          final offlineController = Get.find<OfflineController>();
+          return SwitchListTile(
+            secondary: Icon(
+              offlineController.isOfflineModeEnabled.value
+                  ? Icons.cloud_off
+                  : Icons.cloud_queue,
+              color: theme.colorScheme.onSurface,
+            ),
+            title: Row(
+              children: [
+                const Text('Offline Mode'),
+                const SizedBox(width: 8),
+                if (offlineController.isOfflineModeEnabled.value)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.error.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      'Active',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.error,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            subtitle: Text(
+              offlineController.isOfflineModeEnabled.value
+                  ? 'App is working offline only'
+                  : 'Enable to work without internet',
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            value: offlineController.isOfflineModeEnabled.value,
+            onChanged: (value) async {
+              await offlineController.toggleOfflineMode(value);
+              if (value) {
+                ToastX.success(
+                  context,
+                  'Offline mode enabled. App will work without internet.',
+                );
+              } else {
+                ToastX.success(
+                  context,
+                  'Offline mode disabled. App will sync with server.',
+                );
+              }
+            },
+          );
+        }),
         ListTile(
           leading: Icon(Icons.language, color: theme.colorScheme.onSurface),
           title: Row(

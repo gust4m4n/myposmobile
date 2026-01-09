@@ -6,6 +6,7 @@ class StorageService {
   static const String _keyDarkMode = 'dark_mode';
   static const String _keyWindowWidth = 'window_width';
   static const String _keyWindowHeight = 'window_height';
+  static const String _keyOfflineMode = 'offline_mode';
 
   static StorageService? _instance;
   static SharedPreferences? _prefs;
@@ -63,6 +64,15 @@ class StorageService {
 
   double? getWindowHeight() {
     return _prefs?.getDouble(_keyWindowHeight);
+  }
+
+  // Offline Mode
+  Future<void> saveOfflineMode(bool isOfflineMode) async {
+    await _prefs?.setBool(_keyOfflineMode, isOfflineMode);
+  }
+
+  bool getOfflineMode() {
+    return _prefs?.getBool(_keyOfflineMode) ?? false;
   }
 
   // Clear all data

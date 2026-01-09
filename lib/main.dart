@@ -6,9 +6,12 @@ import 'package:window_manager/window_manager.dart';
 import 'categories/services/category_service.dart';
 import 'home/views/home_page.dart';
 import 'login/views/login_page.dart';
+import 'orders/services/order_service.dart';
+import 'payments/services/payment_service.dart';
 import 'products/services/product_service.dart';
 import 'shared/controllers/auth_controller.dart';
 import 'shared/controllers/language_controller.dart';
+import 'shared/controllers/offline_controller.dart';
 import 'shared/controllers/profile_controller.dart';
 import 'shared/controllers/theme_controller.dart';
 import 'shared/services/offline_service.dart';
@@ -36,11 +39,14 @@ void main() async {
 
   // Initialize Offline & Sync services (base layer)
   Get.put(OfflineService());
+  Get.put(OfflineController()); // Controller for UI interactions
   Get.put(SyncIntegrationService());
 
   // Initialize offline-first services with auto-sync
   Get.put(ProductService());
   Get.put(CategoryService());
+  Get.put(OrderService());
+  Get.put(PaymentService());
 
   // Restore window size or calculate 80% of screen
   final savedWidth = storage.getWindowWidth();

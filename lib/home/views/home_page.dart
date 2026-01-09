@@ -6,13 +6,14 @@ import '../../branches/views/branches_management_page.dart';
 import '../../change-password/views/change_password_dialog.dart';
 import '../../dashboard/views/dashboard_page.dart';
 import '../../faq/views/faq_page.dart';
-import '../../orders/services/orders_service.dart';
+import '../../orders/services/order_service.dart';
 import '../../orders/views/orders_page.dart';
-import '../../payments/services/payments_service.dart';
+import '../../payments/services/payment_service.dart';
 import '../../payments/views/payment_detail_dialog.dart';
 import '../../payments/views/payments_page.dart';
 import '../../pin/services/pin_service.dart';
 import '../../pin/views/pin_dialog.dart';
+import '../../products/services/product_service.dart';
 import '../../products/views/products_management_page.dart';
 import '../../profile/services/profile_service.dart';
 import '../../profile/views/profile_page.dart';
@@ -99,14 +100,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadProfile() async {
-    final response = await _profileService.getProfile();
+    // Use ProfileController instead of direct API call
+    final profileController = Get.find<ProfileController>();
 
-    if (!mounted) return;
-
-    if (response.statusCode == 200 && response.data != null) {
+    // Profile sudah di-load saat login, cukup ambil dari controller
+    if (profileController.profile.value != null) {
       setState(() {
-        _profile = response.data;
+        _profile = profileController.profile.value;
       });
+    } else {
+      // Jika belum ada, fetch dari API (ini hanya untuk fallback)
+      final response = await _profileService.getProfile();
+
+      if (!mounted) return;
+
+      if (response.statusCode == 200 && response.data != null) {
+        setState(() {
+          _profile = response.data;
+        });
+      }
     }
   }
 
@@ -117,32 +129,31 @@ class _HomePageState extends State<HomePage> {
       _hasMoreData = true;
     });
 
-    final response = await ProductsService.getProducts(
-      category: _selectedCategory == 'all'.tr ? null : _selectedCategory,
-      page: _currentPage,
-      pageSize: _pageSize,
-    );
+    // Use ProductService for offline-first approach
+    final productService = Get.find<ProductService>();
+    List<ProductModel> products;
+
+    if (_selectedCategory == 'all'.tr || _selectedCategory == null) {
+      products = await productService.getAllProducts();
+    } else {
+      // Filter by category name (need to find category ID first)
+      final allProducts = await productService.getAllProducts();
+      products = allProducts
+          .where((p) => p.categoryDetail?['name'] == _selectedCategory)
+          .toList();
+    }
 
     if (!mounted) return;
 
-    if (response.statusCode == 200 && response.data != null) {
-      setState(() {
-        _products = response.data!.data
-            .map((json) => ProductModel.fromJson(json))
-            .toList();
-        _hasMoreData = response.data!.page < response.data!.totalPages;
-        // Only extract categories on first load (when category list is empty)
-        if (_categories.isEmpty) {
-          _extractCategories();
-        }
-      });
-    }
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    setState(() {
+      _products = products.take(_pageSize).toList();
+      _hasMoreData = products.length > _pageSize;
+      // Only extract categories on first load (when category list is empty)
+      if (_categories.isEmpty) {
+        _extractCategories();
+      }
+      _isLoading = false;
+    });
   }
 
   Future<void> _loadMoreProducts() async {
@@ -153,29 +164,33 @@ class _HomePageState extends State<HomePage> {
     });
 
     _currentPage++;
-    final response = await ProductsService.getProducts(
-      category: _selectedCategory == 'all'.tr ? null : _selectedCategory,
-      page: _currentPage,
-      pageSize: _pageSize,
-    );
+
+    // Use ProductService for offline-first approach
+    final productService = Get.find<ProductService>();
+    List<ProductModel> allProducts;
+
+    if (_selectedCategory == 'all'.tr || _selectedCategory == null) {
+      allProducts = await productService.getAllProducts();
+    } else {
+      // Filter by category name
+      final products = await productService.getAllProducts();
+      allProducts = products
+          .where((p) => p.categoryDetail?['name'] == _selectedCategory)
+          .toList();
+    }
 
     if (!mounted) return;
 
-    if (response.statusCode == 200 && response.data != null) {
-      final newProducts = response.data!.data
-          .map((json) => ProductModel.fromJson(json))
-          .toList();
-      setState(() {
-        _products.addAll(newProducts);
-        _hasMoreData = response.data!.page < response.data!.totalPages;
-        _isLoadingMore = false;
-      });
-    } else {
-      setState(() {
-        _isLoadingMore = false;
-        _currentPage--;
-      });
-    }
+    // Simple pagination from local data
+    final startIndex = (_currentPage - 1) * _pageSize;
+    final endIndex = startIndex + _pageSize;
+    final newProducts = allProducts.skip(startIndex).take(_pageSize).toList();
+
+    setState(() {
+      _products.addAll(newProducts);
+      _hasMoreData = endIndex < allProducts.length;
+      _isLoadingMore = false;
+    });
   }
 
   void _extractCategories() {
@@ -276,8 +291,9 @@ class _HomePageState extends State<HomePage> {
       return {'product_id': cartItem.product.id, 'quantity': cartItem.quantity};
     }).toList();
 
-    // Create order
-    final orderResponse = await OrdersService.createOrder(
+    // Create order using OrderService (supports offline mode)
+    final orderService = OrderService();
+    final orderResponse = await orderService.createOrder(
       items: items,
       notes: 'POS Order',
     );
@@ -290,8 +306,9 @@ class _HomePageState extends State<HomePage> {
       final orderId = orderResponse.data!['id'];
       final totalAmount = _totalPrice;
 
-      // Create payment
-      final paymentResponse = await PaymentsService.createPayment(
+      // Create payment using PaymentService (supports offline mode)
+      final paymentService = PaymentService();
+      final paymentResponse = await paymentService.createPayment(
         orderId: orderId,
         amount: totalAmount,
         paymentMethod: paymentMethod,

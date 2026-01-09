@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../services/offline_service.dart';
 import '../utils/logger_x.dart';
+import '../utils/storage_service.dart';
 
 class OfflineController extends GetxController {
   final OfflineService _offlineService = Get.find<OfflineService>();
@@ -13,13 +14,30 @@ class OfflineController extends GetxController {
   RxInt get pendingSyncCount => _offlineService.pendingSyncCount;
   RxString get lastSyncTime => _offlineService.lastSyncTime;
 
+  // Offline mode toggle - when enabled, forces app to work offline
+  final RxBool isOfflineModeEnabled = false.obs;
+
   // Database stats
   final RxMap<String, dynamic> databaseStats = <String, dynamic>{}.obs;
 
   @override
   void onInit() {
     super.onInit();
+    _loadOfflineModeState();
     loadDatabaseStats();
+  }
+
+  // Load offline mode state from preferences
+  Future<void> _loadOfflineModeState() async {
+    try {
+      final storage = await StorageService.getInstance();
+      final savedState = storage.getOfflineMode();
+      isOfflineModeEnabled.value = savedState;
+      _offlineService.setOfflineMode(savedState);
+      LoggerX.log('📱 Loaded offline mode state: $savedState');
+    } catch (e) {
+      LoggerX.log('❌ Error loading offline mode state: $e');
+    }
   }
 
   // Load database statistics
@@ -30,6 +48,23 @@ class OfflineController extends GetxController {
     } catch (e) {
       LoggerX.log('❌ Error loading database stats: $e');
     }
+  }
+
+  // Toggle offline mode
+  Future<void> toggleOfflineMode(bool value) async {
+    isOfflineModeEnabled.value = value;
+    _offlineService.setOfflineMode(value);
+
+    // Save state to preferences
+    try {
+      final storage = await StorageService.getInstance();
+      await storage.saveOfflineMode(value);
+      LoggerX.log('💾 Saved offline mode state: $value');
+    } catch (e) {
+      LoggerX.log('❌ Error saving offline mode state: $e');
+    }
+
+    LoggerX.log('🔄 Offline mode ${value ? "enabled" : "disabled"}');
   }
 
   // Manual sync

@@ -1,47 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../utils/connectivity_service.dart';
+import '../controllers/offline_controller.dart';
 
-class ConnectivityIndicator extends StatefulWidget {
+class ConnectivityIndicator extends StatelessWidget {
   const ConnectivityIndicator({super.key});
 
   @override
-  State<ConnectivityIndicator> createState() => _ConnectivityIndicatorState();
-}
-
-class _ConnectivityIndicatorState extends State<ConnectivityIndicator> {
-  bool _isConnected = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _isConnected = ConnectivityService().isConnected;
-    _listenToConnectivity();
-  }
-
-  void _listenToConnectivity() {
-    ConnectivityService().connectivityStream.listen((isConnected) {
-      if (mounted) {
-        setState(() {
-          _isConnected = isConnected;
-        });
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: _isConnected ? 'Internet Connected' : 'No Internet Connection',
-      child: Container(
-        width: 12,
-        height: 12,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: _isConnected ? Colors.green : Colors.red,
-          border: Border.all(color: Colors.white, width: 2),
+    return Obx(() {
+      final offlineController = Get.find<OfflineController>();
+      final isConnected = offlineController.isOnline.value;
+
+      String tooltipMessage;
+      if (offlineController.isOfflineModeEnabled.value) {
+        tooltipMessage = 'Offline Mode Enabled';
+      } else {
+        tooltipMessage = isConnected
+            ? 'Internet Connected'
+            : 'No Internet Connection';
+      }
+
+      return Tooltip(
+        message: tooltipMessage,
+        child: Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isConnected ? Colors.green : Colors.red,
+            border: Border.all(color: Colors.white, width: 2),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
