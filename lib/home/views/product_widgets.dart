@@ -1,15 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../categories/services/category_offline_service.dart';
-import '../../products/services/product_offline_service.dart';
+import '../../categories/services/category_service.dart';
+import '../../products/services/product_service.dart';
 import '../../shared/config/api_config.dart';
 import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/search_field_x.dart';
 import '../models/product_model.dart';
 
 /// Independent widget untuk menampilkan daftar produk dengan category filter dan grid
-/// Load data dari local database (offline-first)
+/// Load data dari local database (offline-first) dengan auto-sync
 class ProductsWidget extends StatefulWidget {
   final Function(ProductModel) onProductTap;
   final bool isMobile;
@@ -32,8 +32,8 @@ class _ProductsWidgetState extends State<ProductsWidget> {
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
-  final ProductOfflineService _productService = ProductOfflineService();
-  final CategoryOfflineService _categoryService = CategoryOfflineService();
+  final ProductService _productService = ProductService();
+  final CategoryService _categoryService = CategoryService();
 
   @override
   void initState() {
