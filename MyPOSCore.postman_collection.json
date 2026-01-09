@@ -6295,7 +6295,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    }\n  ]\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Audit trails retrieved successfully\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 43,\n        \"tenant_id\": 17,\n        \"branch_id\": 25,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"payment\",\n        \"entity_id\": 58,\n        \"action\": \"create\",\n        \"changes\": \"{\\\"notes\\\": \\\"POS Payment - transfer\\\", \\\"amount\\\": 560000, \\\"status\\\": \\\"completed\\\", \\\"order_id\\\": 77, \\\"payment_method\\\": \\\"transfer\\\"}\",\n        \"created_at\": \"2026-01-08 19:10:44\"\n      },\n      {\n        \"id\": 42,\n        \"tenant_id\": 17,\n        \"branch_id\": 25,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"order\",\n        \"entity_id\": 77,\n        \"action\": \"create\",\n        \"changes\": \"{\\\"items\\\": [{\\\"price\\\": 32000, \\\"quantity\\\": 4, \\\"subtotal\\\": 128000, \\\"product_id\\\": 225}], \\\"status\\\": \\\"pending\\\", \\\"order_number\\\": \\\"ORD-17-1767874244\\\", \\\"total_amount\\\": 560000}\",\n        \"created_at\": \"2026-01-08 19:10:44\"\n      },\n      {\n        \"id\": 41,\n        \"tenant_id\": 17,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"product\",\n        \"entity_id\": 234,\n        \"action\": \"update\",\n        \"changes\": \"{\\\"sku\\\": {\\\"new\\\": \\\"CF-AMR-002\\\", \\\"old\\\": \\\"CF-AMR-002\\\"}, \\\"name\\\": {\\\"new\\\": \\\"Americano\\\", \\\"old\\\": \\\"Americano\\\"}, \\\"price\\\": {\\\"new\\\": 20000, \\\"old\\\": 20000}}\",\n        \"created_at\": \"2026-01-08 19:09:14\"\n      }\n    ],\n    \"pagination\": {\n      \"limit\": 20,\n      \"page\": 1,\n      \"total\": 39,\n      \"total_pages\": 2\n    }\n  }\n}"
             }
           ]
         },
@@ -6379,7 +6379,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": {\n    \"id\": 1,\n    \"tenant_id\": 1,\n    \"branch_id\": 1,\n    \"user_id\": 2,\n    \"user_name\": \"John Doe\",\n    \"entity_type\": \"product\",\n    \"entity_id\": 5,\n    \"action\": \"update\",\n    \"changes\": {\n      \"name\": {\n        \"old\": \"Nasi Goreng\",\n        \"new\": \"Nasi Goreng Special\"\n      },\n      \"price\": {\n        \"old\": 25000,\n        \"new\": 30000\n      },\n      \"description\": {\n        \"old\": \"Nasi goreng biasa\",\n        \"new\": \"Nasi goreng dengan telur dan ayam\"\n      }\n    },\n    \"ip_address\": \"192.168.1.100\",\n    \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    \"created_at\": \"2025-12-30T10:30:00+07:00\"\n  }\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Audit trail retrieved successfully\",\n  \"data\": {\n    \"id\": 41,\n    \"tenant_id\": 17,\n    \"user_id\": 60,\n    \"user_name\": \"Admin Food Corner\",\n    \"entity_type\": \"product\",\n    \"entity_id\": 234,\n    \"action\": \"update\",\n    \"changes\": \"{\\\"sku\\\": {\\\"new\\\": \\\"CF-AMR-002\\\", \\\"old\\\": \\\"CF-AMR-002\\\"}, \\\"name\\\": {\\\"new\\\": \\\"Americano\\\", \\\"old\\\": \\\"Americano\\\"}, \\\"price\\\": {\\\"new\\\": 20000, \\\"old\\\": 20000}, \\\"stock\\\": {\\\"new\\\": 100, \\\"old\\\": 100}, \\\"is_active\\\": {\\\"new\\\": true, \\\"old\\\": true}, \\\"category_id\\\": {\\\"new\\\": 18, \\\"old\\\": 18}, \\\"description\\\": {\\\"new\\\": \\\"Espresso with hot water\\\", \\\"old\\\": \\\"Espresso with hot water\\\"}}\",\n    \"created_at\": \"2026-01-08 19:09:14\"\n  }\n}"
             }
           ]
         },
@@ -6489,7 +6489,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": [\n    {\n      \"id\": 5,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 30000,\n          \"new\": 35000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T14:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 3,\n      \"user_name\": \"Jane Smith\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"create\",\n      \"changes\": {\n        \"name\": \"Nasi Goreng\",\n        \"price\": 25000,\n        \"category_id\": 1\n      },\n      \"ip_address\": \"192.168.1.105\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-29T09:00:00+07:00\"\n    }\n  ]\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Entity audit history retrieved successfully\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 41,\n        \"tenant_id\": 17,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"product\",\n        \"entity_id\": 234,\n        \"action\": \"update\",\n        \"changes\": \"{\\\"sku\\\": {\\\"new\\\": \\\"CF-AMR-002\\\", \\\"old\\\": \\\"CF-AMR-002\\\"}, \\\"name\\\": {\\\"new\\\": \\\"Americano\\\", \\\"old\\\": \\\"Americano\\\"}, \\\"price\\\": {\\\"new\\\": 20000, \\\"old\\\": 20000}}\",\n        \"created_at\": \"2026-01-08 19:09:14\"\n      },\n      {\n        \"id\": 38,\n        \"tenant_id\": 17,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"product\",\n        \"entity_id\": 33,\n        \"action\": \"update\",\n        \"changes\": \"{\\\"sku\\\": {\\\"new\\\": \\\"RESTO-MKN-007\\\", \\\"old\\\": \\\"RESTO-MKN-007\\\"}, \\\"name\\\": {\\\"new\\\": \\\"Cap Cay\\\", \\\"old\\\": \\\"Cap Cay\\\"}, \\\"price\\\": {\\\"new\\\": 28000, \\\"old\\\": 28000}}\",\n        \"created_at\": \"2026-01-06 00:27:53\"\n      }\n    ],\n    \"pagination\": {\n      \"limit\": 20,\n      \"page\": 1,\n      \"total\": 5,\n      \"total_pages\": 1\n    }\n  }\n}"
             }
           ]
         },
@@ -6597,7 +6597,477 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"code\": 0,\n  \"message\": \"Operation successful\",\n  \"data\": [\n    {\n      \"id\": 15,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"payment\",\n      \"entity_id\": 8,\n      \"action\": \"create\",\n      \"changes\": {\n        \"order_id\": 10,\n        \"amount\": 150000,\n        \"payment_method\": \"cash\"\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T11:00:00+07:00\"\n    },\n    {\n      \"id\": 12,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    },\n    {\n      \"id\": 8,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"user\",\n      \"entity_id\": 2,\n      \"action\": \"login\",\n      \"changes\": {},\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T09:00:00+07:00\"\n    }\n  ]\n}"
+              "body": "{\n  \"code\": 0,\n  \"message\": \"User activity log retrieved successfully\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 43,\n        \"tenant_id\": 17,\n        \"branch_id\": 25,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"payment\",\n        \"entity_id\": 58,\n        \"action\": \"create\",\n        \"changes\": \"{\\\"notes\\\": \\\"POS Payment - transfer\\\", \\\"amount\\\": 560000, \\\"status\\\": \\\"completed\\\", \\\"order_id\\\": 77, \\\"payment_method\\\": \\\"transfer\\\"}\",\n        \"created_at\": \"2026-01-08 19:10:44\"\n      },\n      {\n        \"id\": 42,\n        \"tenant_id\": 17,\n        \"branch_id\": 25,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"order\",\n        \"entity_id\": 77,\n        \"action\": \"create\",\n        \"changes\": \"{\\\"items\\\": [{\\\"price\\\": 32000, \\\"quantity\\\": 4}], \\\"status\\\": \\\"pending\\\", \\\"order_number\\\": \\\"ORD-17-1767874244\\\", \\\"total_amount\\\": 560000}\",\n        \"created_at\": \"2026-01-08 19:10:44\"\n      },\n      {\n        \"id\": 41,\n        \"tenant_id\": 17,\n        \"user_id\": 60,\n        \"user_name\": \"Admin Food Corner\",\n        \"entity_type\": \"product\",\n        \"entity_id\": 234,\n        \"action\": \"update\",\n        \"changes\": \"{\\\"name\\\": {\\\"new\\\": \\\"Americano\\\", \\\"old\\\": \\\"Americano\\\"}, \\\"price\\\": {\\\"new\\\": 20000, \\\"old\\\": 20000}}\",\n        \"created_at\": \"2026-01-08 19:09:14\"\n      }\n    ],\n    \"pagination\": {\n      \"limit\": 20,\n      \"page\": 1,\n      \"total\": 15,\n      \"total_pages\": 1\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sync (Offline Mode)",
+      "item": [
+        {
+          "name": "Upload Data from Client",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"client_timestamp\": \"2026-01-09T10:30:00Z\",\n  \"users\": [\n    {\n      \"local_id\": \"user_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"branch_id\": 3,\n      \"full_name\": \"John Cashier\",\n      \"email\": \"john@example.com\",\n      \"phone\": \"081234567890\",\n      \"role\": \"staff\",\n      \"is_active\": true,\n      \"local_timestamp\": \"2026-01-09T10:20:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"products\": [\n    {\n      \"local_id\": \"product_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"category_id\": 13,\n      \"name\": \"Espresso Coffee\",\n      \"description\": \"Strong black coffee\",\n      \"sku\": \"BV-ESP-001\",\n      \"price\": 25000,\n      \"stock\": 100,\n      \"is_active\": true,\n      \"local_timestamp\": \"2026-01-09T10:21:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"categories\": [\n    {\n      \"local_id\": \"category_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"name\": \"Hot Beverages\",\n      \"description\": \"Hot drinks category\",\n      \"is_active\": true,\n      \"local_timestamp\": \"2026-01-09T10:22:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"orders\": [\n    {\n      \"local_id\": \"order_local_uuid_1\",\n      \"order_number\": \"ORD-20260109-001\",\n      \"total_amount\": 150000,\n      \"status\": \"completed\",\n      \"notes\": \"Table 5\",\n      \"items\": [\n        {\n          \"product_id\": 27,\n          \"quantity\": 2,\n          \"price\": 50000,\n          \"subtotal\": 100000\n        },\n        {\n          \"product_id\": 42,\n          \"quantity\": 1,\n          \"price\": 50000,\n          \"subtotal\": 50000\n        }\n      ],\n      \"local_timestamp\": \"2026-01-09T10:25:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"payments\": [\n    {\n      \"local_id\": \"payment_local_uuid_1\",\n      \"order_local_id\": \"order_local_uuid_1\",\n      \"amount\": 150000,\n      \"payment_method\": \"cash\",\n      \"status\": \"completed\",\n      \"notes\": \"Cash received\",\n      \"local_timestamp\": \"2026-01-09T10:26:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"audit_trails\": [\n    {\n      \"local_id\": \"audit_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"user_id\": 5,\n      \"action\": \"create\",\n      \"table_name\": \"orders\",\n      \"record_id\": 123,\n      \"new_values\": \"{\\\"total_amount\\\": 150000}\",\n      \"ip_address\": \"192.168.1.100\",\n      \"local_timestamp\": \"2026-01-09T10:27:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"last_sync_at\": \"2026-01-09T09:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/sync/upload",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sync",
+                "upload"
+              ]
+            },
+            "description": "Upload all entities (tenants, branches, users, products, categories, orders, payments, audit trails) from mobile app (offline mode) to server. Supports batch upload and conflict detection for all entity types."
+          },
+          "response": [
+            {
+              "name": "Upload Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"client_timestamp\": \"2026-01-09T10:30:00Z\",\n  \"orders\": [\n    {\n      \"local_id\": \"order_local_uuid_1\",\n      \"total_amount\": 150000,\n      \"status\": \"completed\",\n      \"notes\": \"Table 5\",\n      \"items\": [\n        {\n          \"product_id\": 27,\n          \"quantity\": 2,\n          \"price\": 50000,\n          \"subtotal\": 100000\n        }\n      ],\n      \"local_timestamp\": \"2026-01-09T10:25:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"payments\": [\n    {\n      \"local_id\": \"payment_local_uuid_1\",\n      \"order_local_id\": \"order_local_uuid_1\",\n      \"amount\": 150000,\n      \"payment_method\": \"cash\",\n      \"status\": \"completed\",\n      \"local_timestamp\": \"2026-01-09T10:26:00Z\",\n      \"version\": 1\n    }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/sync/upload",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sync",
+                    "upload"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Data synced successfully\",\n  \"data\": {\n    \"sync_id\": \"sync_123\",\n    \"processed_users\": 1,\n    \"processed_products\": 1,\n    \"processed_categories\": 1,\n    \"processed_orders\": 1,\n    \"processed_payments\": 1,\n    \"processed_audits\": 1,\n    \"processed_tenants\": 0,\n    \"processed_branches\": 0,\n    \"failed_users\": 0,\n    \"failed_products\": 0,\n    \"failed_categories\": 0,\n    \"failed_orders\": 0,\n    \"failed_payments\": 0,\n    \"failed_audits\": 0,\n    \"failed_tenants\": 0,\n    \"failed_branches\": 0,\n    \"conflicts\": [],\n    \"user_mapping\": {\n      \"user_local_uuid_1\": 25\n    },\n    \"product_mapping\": {\n      \"product_local_uuid_1\": 150\n    },\n    \"category_mapping\": {\n      \"category_local_uuid_1\": 15\n    },\n    \"order_mapping\": {\n      \"order_local_uuid_1\": 456\n    },\n    \"payment_mapping\": {\n      \"payment_local_uuid_1\": 789\n    },\n    \"audit_mapping\": {\n      \"audit_local_uuid_1\": 1001\n    },\n    \"sync_timestamp\": \"2026-01-09T10:30:15Z\",\n    \"errors\": []\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Download Master Data",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"last_sync_at\": \"2026-01-09T09:00:00Z\",\n  \"entity_types\": [\"tenants\", \"branches\", \"users\", \"products\", \"categories\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/sync/download",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sync",
+                "download"
+              ]
+            },
+            "description": "Download all master data (tenants, branches, users, products, categories) from server to mobile app. Supports delta sync (only updated data since last_sync_at). All entities are optional - omit entity_types to get all master data."
+          },
+          "response": [
+            {
+              "name": "Download Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"last_sync_at\": \"2026-01-09T09:00:00Z\",\n  \"entity_types\": [\"tenants\", \"branches\", \"users\", \"products\", \"categories\"]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/sync/download",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sync",
+                    "download"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Data downloaded successfully\",\n  \"data\": {\n    \"sync_id\": \"sync_124\",\n    \"tenants\": [\n      {\n        \"id\": 17,\n        \"name\": \"Food Corner Restaurant\",\n        \"address\": \"456 Restaurant Ave\",\n        \"city\": \"Jakarta\",\n        \"country\": \"Indonesia\",\n        \"postal_code\": \"12345\",\n        \"phone\": \"021-9876543\",\n        \"email\": \"info@foodcorner.com\",\n        \"is_active\": true,\n        \"created_at\": \"2026-01-01T08:00:00Z\",\n        \"updated_at\": \"2026-01-09T08:00:00Z\"\n      }\n    ],\n    \"branches\": [\n      {\n        \"id\": 3,\n        \"tenant_id\": 17,\n        \"name\": \"Main Branch\",\n        \"address\": \"123 Main St\",\n        \"city\": \"Jakarta\",\n        \"country\": \"Indonesia\",\n        \"postal_code\": \"10110\",\n        \"phone\": \"021-1234567\",\n        \"is_active\": true,\n        \"created_at\": \"2026-01-08T08:00:00Z\",\n        \"updated_at\": \"2026-01-09T09:00:00Z\"\n      }\n    ],\n    \"users\": [\n      {\n        \"id\": 25,\n        \"tenant_id\": 17,\n        \"branch_id\": 3,\n        \"full_name\": \"Staff User\",\n        \"email\": \"staff@example.com\",\n        \"phone\": \"081234567890\",\n        \"role\": \"staff\",\n        \"is_active\": true\n      }\n    ],\n    \"products\": [\n      {\n        \"id\": 27,\n        \"name\": \"Nasi Goreng Spesial\",\n        \"description\": \"Nasi goreng dengan telur dan ayam\",\n        \"sku\": \"FD-NGS-001\",\n        \"price\": 50000,\n        \"stock\": 100,\n        \"category_id\": 13,\n        \"category_detail\": {\n          \"id\": 13,\n          \"name\": \"Makanan Utama\"\n        },\n        \"image\": \"uploads/products/product_27.jpg\",\n        \"is_active\": true,\n        \"created_at\": \"2026-01-08T10:00:00Z\",\n        \"updated_at\": \"2026-01-09T10:00:00Z\"\n      },\n      {\n        \"id\": 42,\n        \"name\": \"Es Teh Manis\",\n        \"description\": \"Teh manis dingin segar\",\n        \"sku\": \"BV-ETM-001\",\n        \"price\": 8000,\n        \"stock\": 200,\n        \"category_id\": 14,\n        \"category_detail\": {\n          \"id\": 14,\n          \"name\": \"Minuman\"\n        },\n        \"image\": \"\",\n        \"is_active\": true,\n        \"created_at\": \"2026-01-08T10:00:00Z\",\n        \"updated_at\": \"2026-01-09T10:05:00Z\"\n      }\n    ],\n    \"categories\": [\n      {\n        \"id\": 13,\n        \"name\": \"Makanan Utama\",\n        \"description\": \"Kategori untuk makanan utama\",\n        \"image\": \"uploads/categories/category_13.jpg\",\n        \"is_active\": true,\n        \"created_at\": \"2026-01-08T09:00:00Z\",\n        \"updated_at\": \"2026-01-08T15:00:00Z\"\n      },\n      {\n        \"id\": 14,\n        \"name\": \"Minuman\",\n        \"description\": \"Kategori untuk minuman\",\n        \"image\": \"\",\n        \"is_active\": true,\n        \"created_at\": \"2026-01-08T09:00:00Z\",\n        \"updated_at\": \"2026-01-08T15:00:00Z\"\n      }\n    ],\n    \"sync_timestamp\": \"2026-01-09T10:30:20Z\",\n    \"has_more\": false\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Sync Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sync/status?client_id=device_uuid_12345",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sync",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "device_uuid_12345",
+                  "description": "Client device UUID"
+                }
+              ]
+            },
+            "description": "Get current sync status for a mobile device including last sync time, pending uploads, and unresolved conflicts."
+          },
+          "response": [
+            {
+              "name": "Status Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/sync/status?client_id=device_uuid_12345",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sync",
+                    "status"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "device_uuid_12345"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Sync status retrieved successfully\",\n  \"data\": {\n    \"client_id\": \"device_uuid_12345\",\n    \"last_sync_at\": \"2026-01-09T10:30:15Z\",\n    \"pending_uploads\": 0,\n    \"pending_conflicts\": 0,\n    \"total_syncs\": 25,\n    \"last_sync_success\": true,\n    \"server_timestamp\": \"2026-01-09T10:35:00Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Sync Logs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sync/logs?client_id=device_uuid_12345&page=1&page_size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sync",
+                "logs"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "device_uuid_12345",
+                  "description": "Client device UUID"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "page_size",
+                  "value": "20",
+                  "description": "Items per page (max 100)"
+                }
+              ]
+            },
+            "description": "Get paginated sync history logs for debugging and monitoring sync operations."
+          },
+          "response": [
+            {
+              "name": "Logs Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/sync/logs?client_id=device_uuid_12345&page=1&page_size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sync",
+                    "logs"
+                  ],
+                  "query": [
+                    {
+                      "key": "client_id",
+                      "value": "device_uuid_12345"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Sync logs retrieved successfully\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 123,\n        \"client_id\": \"device_uuid_12345\",\n        \"sync_type\": \"upload\",\n        \"entity_type\": \"orders\",\n        \"records_uploaded\": 5,\n        \"records_downloaded\": 0,\n        \"conflicts_detected\": 0,\n        \"status\": \"completed\",\n        \"error_message\": \"\",\n        \"duration_ms\": 1250,\n        \"created_at\": \"2026-01-09T10:30:15Z\",\n        \"completed_at\": \"2026-01-09T10:30:16Z\"\n      },\n      {\n        \"id\": 122,\n        \"client_id\": \"device_uuid_12345\",\n        \"sync_type\": \"download\",\n        \"entity_type\": \"products\",\n        \"records_uploaded\": 0,\n        \"records_downloaded\": 150,\n        \"conflicts_detected\": 0,\n        \"status\": \"completed\",\n        \"error_message\": \"\",\n        \"duration_ms\": 2340,\n        \"created_at\": \"2026-01-09T09:00:00Z\",\n        \"completed_at\": \"2026-01-09T09:00:02Z\"\n      },\n      {\n        \"id\": 121,\n        \"client_id\": \"device_uuid_12345\",\n        \"sync_type\": \"upload\",\n        \"entity_type\": \"orders\",\n        \"records_uploaded\": 3,\n        \"records_downloaded\": 0,\n        \"conflicts_detected\": 1,\n        \"status\": \"completed\",\n        \"error_message\": \"\",\n        \"duration_ms\": 980,\n        \"created_at\": \"2026-01-08T18:45:00Z\",\n        \"completed_at\": \"2026-01-08T18:45:01Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 1,\n      \"per_page\": 20,\n      \"total\": 25,\n      \"total_pages\": 2\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Resolve Conflict",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conflict_id\": 45,\n  \"resolution_strategy\": \"server_wins\",\n  \"resolved_data\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/sync/conflicts/resolve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sync",
+                "conflicts",
+                "resolve"
+              ]
+            },
+            "description": "Manually resolve sync conflict with chosen strategy: server_wins (use server data), client_wins (use client data), or manual (provide custom merged data)."
+          },
+          "response": [
+            {
+              "name": "Resolve Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"conflict_id\": 45,\n  \"resolution_strategy\": \"server_wins\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/sync/conflicts/resolve",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sync",
+                    "conflicts",
+                    "resolve"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Conflict resolved successfully\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Server Time",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sync/time",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sync",
+                "time"
+              ]
+            },
+            "description": "Get current server timestamp for time synchronization between client and server. Public endpoint, no authentication required."
+          },
+          "response": [
+            {
+              "name": "Server Time Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/sync/time",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "sync",
+                    "time"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Server time retrieved successfully\",\n  \"data\": {\n    \"server_time\": \"2026-01-09T10:35:45.123+07:00\",\n    \"unix_time\": 1736420145\n  }\n}"
             }
           ]
         }
