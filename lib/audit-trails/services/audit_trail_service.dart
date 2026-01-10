@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/audit_trail_model.dart';
 
@@ -51,11 +50,11 @@ class AuditTrailService {
     if (dateTo != null) queryParams['date_to'] = dateTo;
 
     final uri = Uri.parse(
-      '${ApiConfig.baseUrl}${ApiConfig.auditTrails}',
+      'http://localhost:8080/api/v1/audit-trails',
     ).replace(queryParameters: queryParams);
 
     return ApiX.get<AuditTrailListResponse>(
-      uri.toString().replaceFirst(ApiConfig.baseUrl, ''),
+      uri.toString().replaceFirst('http://localhost:8080', ''),
       requiresAuth: true,
       fromJson: (data) =>
           AuditTrailListResponse.fromJson(data as Map<String, dynamic>),
@@ -76,7 +75,7 @@ class AuditTrailService {
   /// ```
   static Future<ApiResponse<AuditTrailModel>> getAuditTrailById(int id) async {
     return ApiX.get<AuditTrailModel>(
-      '${ApiConfig.auditTrails}/$id',
+      '/audit-trails/$id',
       requiresAuth: true,
       fromJson: (data) =>
           AuditTrailModel.fromJson(data as Map<String, dynamic>),
@@ -118,11 +117,11 @@ class AuditTrailService {
     };
 
     final uri = Uri.parse(
-      '${ApiConfig.baseUrl}${ApiConfig.auditTrails}/entity/$entityType/$entityId',
+      'http://localhost:8080/api/v1/audit-trails/entity/$entityType/$entityId',
     ).replace(queryParameters: queryParams);
 
     return ApiX.get<AuditTrailListResponse>(
-      uri.toString().replaceFirst(ApiConfig.baseUrl, ''),
+      uri.toString().replaceFirst('http://localhost:8080', ''),
       requiresAuth: true,
       fromJson: (data) =>
           AuditTrailListResponse.fromJson(data as Map<String, dynamic>),
@@ -161,11 +160,11 @@ class AuditTrailService {
     };
 
     final uri = Uri.parse(
-      '${ApiConfig.baseUrl}${ApiConfig.auditTrails}/user/$userId',
+      'http://localhost:8080/api/v1/audit-trails/user/$userId',
     ).replace(queryParameters: queryParams);
 
     return ApiX.get<AuditTrailListResponse>(
-      uri.toString().replaceFirst(ApiConfig.baseUrl, ''),
+      uri.toString().replaceFirst('http://localhost:8080', ''),
       requiresAuth: true,
       fromJson: (data) =>
           AuditTrailListResponse.fromJson(data as Map<String, dynamic>),

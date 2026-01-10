@@ -16,14 +16,14 @@ class CategoriesService {
     final queryString = queryParams.isNotEmpty
         ? '?${queryParams.join('&')}'
         : '';
-    return await ApiX.get('/api/v1/categories$queryString', requiresAuth: true);
+    return await ApiX.get('/categories$queryString', requiresAuth: true);
   }
 
   /// Get category by ID
   static Future<ApiResponse<Map<String, dynamic>>> getCategoryById(
     int id,
   ) async {
-    return await ApiX.get('/api/v1/categories/$id', requiresAuth: true);
+    return await ApiX.get('/categories/$id', requiresAuth: true);
   }
 
   /// Create new category
@@ -33,7 +33,7 @@ class CategoriesService {
     required bool isActive,
   }) async {
     return await ApiX.post(
-      '/api/v1/categories',
+      '/categories',
       requiresAuth: true,
       body: {'name': name, 'description': description, 'is_active': isActive},
     );
@@ -47,7 +47,7 @@ class CategoriesService {
     required bool isActive,
   }) async {
     return await ApiX.put(
-      '/api/v1/categories/$id',
+      '/categories/$id',
       requiresAuth: true,
       body: {'name': name, 'description': description, 'is_active': isActive},
     );
@@ -57,6 +57,6 @@ class CategoriesService {
   static Future<ApiResponse<Map<String, dynamic>>> deleteCategory(
     int id,
   ) async {
-    return await ApiX.delete('/api/v1/categories/$id', requiresAuth: true);
+    return await ApiX.delete('/categories/$id', requiresAuth: true);
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../categories/models/category_model.dart';
 import '../../categories/services/categories_management_service.dart';
 import '../../home/models/product_model.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/image_upload_service.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
@@ -235,7 +234,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
       child: ImageX(
         imageUrl: _photoPath,
         localImagePath: _uploadedImagePath,
-        baseUrl: ApiConfig.baseUrl,
+        baseUrl: 'http://localhost:8080',
         size: 120,
         cornerRadius: 8,
         onPicked: _pickImage,

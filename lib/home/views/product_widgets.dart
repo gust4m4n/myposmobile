@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../categories/services/category_service.dart';
 import '../../products/services/product_service.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/currency_formatter.dart';
 import '../../shared/widgets/search_field_x.dart';
 import '../models/product_model.dart';
@@ -423,7 +422,7 @@ class _ProductItemState extends State<_ProductItem> {
       return imageUrl;
     }
     // If it's a relative path, prepend baseUrl
-    return '${ApiConfig.baseUrl}$imageUrl';
+    return 'http://localhost:8080$imageUrl';
   }
 
   @override

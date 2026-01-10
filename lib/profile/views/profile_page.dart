@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/image_upload_service.dart';
 import '../../shared/widgets/image_x.dart';
 import '../../shared/widgets/page_x.dart';
@@ -205,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 // Profile Photo
                                 ImageX(
                                   imageUrl: _profile!.user.image,
-                                  baseUrl: ApiConfig.baseUrl,
+                                  baseUrl: 'http://localhost:8080',
                                   size: 80,
                                   cornerRadius: 40,
                                   onPicked: _pickAndUploadPhoto,

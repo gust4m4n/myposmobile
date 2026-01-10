@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 /// Service untuk mendapatkan daftar semua tenant aktif (dev endpoint).
@@ -15,7 +14,7 @@ class DevTenantsService {
   /// - Contoh: [{id: 17, name: "Warung Makan Sejahtera", code: "resto01", ...}]
   static Future<ApiResponse<List<Map<String, dynamic>>>> getDevTenants() async {
     return ApiX.get<List<Map<String, dynamic>>>(
-      ApiConfig.devTenants,
+      '/dev/tenants',
       requiresAuth: false,
       fromJson: (data) =>
           (data as List).map((item) => item as Map<String, dynamic>).toList(),

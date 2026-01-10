@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class RegisterService {
@@ -24,7 +23,7 @@ class RegisterService {
     required String fullName,
   }) async {
     return await ApiX.post(
-      ApiConfig.register,
+      '/auth/register',
       body: {
         'tenant_code': tenantCode,
         'branch_code': branchCode,

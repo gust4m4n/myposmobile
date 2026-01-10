@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart' hide DashboardModel;
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/dashboard_model.dart';
 
@@ -11,7 +10,7 @@ class DashboardService {
   /// Returns: DashboardModel with all statistics
   Future<ApiResponse<DashboardModel>> getDashboard() async {
     return await ApiX.get(
-      ApiConfig.dashboard,
+      '/dashboard',
       requiresAuth: true,
       fromJson: (data) => DashboardModel.fromJson(data),
     );

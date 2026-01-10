@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class TenantsService {
@@ -11,7 +10,7 @@ class TenantsService {
     int page = 1,
     int pageSize = 32,
   }) async {
-    final url = '${ApiConfig.tenants}?page=$page&page_size=$pageSize';
+    final url = '/tenants?page=$page&page_size=$pageSize';
 
     return await ApiX.get(url, requiresAuth: true);
   }
@@ -20,7 +19,7 @@ class TenantsService {
   static Future<ApiResponse<Map<String, dynamic>>> getTenantById(
     int tenantId,
   ) async {
-    return await ApiX.get(ApiConfig.tenantById(tenantId), requiresAuth: true);
+    return await ApiX.get('/tenants/$tenantId', requiresAuth: true);
   }
 
   /// Create new tenant (Authenticated users)
@@ -48,7 +47,7 @@ class TenantsService {
     };
 
     return await ApiX.postMultipart(
-      ApiConfig.tenants,
+      '/tenants',
       fields: fields,
       filePath: imageFile?.path,
       fileFieldName: 'image',
@@ -82,7 +81,7 @@ class TenantsService {
     };
 
     return await ApiX.putMultipart(
-      ApiConfig.tenantById(tenantId),
+      '/tenants/$tenantId',
       fields: fields,
       filePath: imageFile?.path,
       fileFieldName: 'image',
@@ -95,9 +94,6 @@ class TenantsService {
   static Future<ApiResponse<Map<String, dynamic>>> deleteTenant({
     required int tenantId,
   }) async {
-    return await ApiX.delete(
-      ApiConfig.tenantById(tenantId),
-      requiresAuth: true,
-    );
+    return await ApiX.delete('/tenants/$tenantId', requiresAuth: true);
   }
 }

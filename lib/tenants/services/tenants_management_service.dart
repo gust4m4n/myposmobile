@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import '../../shared/api_models.dart' hide TenantModel;
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/tenant_model.dart';
 import 'tenant_offline_service.dart';
@@ -14,7 +13,7 @@ class TenantsManagementService {
     int? page,
     int? pageSize,
   }) async {
-    String url = ApiConfig.tenants;
+    String url = '/tenants';
     final queryParams = <String>[];
 
     if (page != null) queryParams.add('page=$page');
@@ -74,7 +73,7 @@ class TenantsManagementService {
     File? imageFile,
   }) async {
     return await ApiX.postMultipart(
-      ApiConfig.tenants,
+      '/tenants',
       fields: {
         'name': name,
         'description': description,
@@ -104,7 +103,7 @@ class TenantsManagementService {
     File? imageFile,
   }) async {
     return await ApiX.putMultipart(
-      '${ApiConfig.tenants}/$id',
+      '/tenants/$id',
       fields: {
         'name': name,
         'description': description,
@@ -123,7 +122,7 @@ class TenantsManagementService {
 
   /// Delete tenant
   Future<ApiResponse<void>> deleteTenant(int id) async {
-    return await ApiX.delete('${ApiConfig.tenants}/$id', requiresAuth: true);
+    return await ApiX.delete('/tenants/$id', requiresAuth: true);
   }
 
   /// Sync tenants from server to local DB

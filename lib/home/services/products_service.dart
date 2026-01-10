@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 /// Service untuk operasi produk (CRUD dan categories).
@@ -60,7 +59,7 @@ class ProductsService {
     }
 
     // Build URL with query params
-    var url = ApiConfig.products;
+    var url = '/products';
     if (queryParams.isNotEmpty) {
       final queryString = queryParams.entries
           .map(
@@ -123,7 +122,7 @@ class ProductsService {
     int productId,
   ) async {
     return ApiX.get<Map<String, dynamic>>(
-      '${ApiConfig.products}/$productId',
+      '/products/$productId',
       requiresAuth: true,
       fromJson: (data) => data as Map<String, dynamic>,
     );
@@ -141,7 +140,7 @@ class ProductsService {
   /// ```
   static Future<ApiResponse<List<String>>> getCategories() async {
     return ApiX.get<List<String>>(
-      '${ApiConfig.products}/categories',
+      '/products/categories',
       requiresAuth: true,
       fromJson: (data) =>
           (data as List).map((item) => item.toString()).toList(),
@@ -182,7 +181,7 @@ class ProductsService {
     bool isActive = true,
   }) async {
     return ApiX.post<Map<String, dynamic>>(
-      ApiConfig.products,
+      '/products',
       body: {
         'name': name,
         if (description != null) 'description': description,
@@ -240,7 +239,7 @@ class ProductsService {
     if (isActive != null) body['is_active'] = isActive;
 
     return ApiX.put<Map<String, dynamic>>(
-      '${ApiConfig.products}/$productId',
+      '/products/$productId',
       body: body,
       requiresAuth: true,
       fromJson: (data) => data as Map<String, dynamic>,
@@ -261,7 +260,7 @@ class ProductsService {
   /// ```
   static Future<ApiResponse<bool>> deleteProduct(int productId) async {
     return ApiX.delete<bool>(
-      '${ApiConfig.products}/$productId',
+      '/products/$productId',
       requiresAuth: true,
       fromJson: (data) => true,
     );
@@ -281,7 +280,7 @@ class ProductsService {
     required File imageFile,
   }) async {
     return await ApiX.postMultipart(
-      '${ApiConfig.products}/$productId/photo',
+      '/products/$productId/photo',
       fields: {},
       filePath: imageFile.path,
       fileFieldName: 'image',
@@ -301,7 +300,7 @@ class ProductsService {
     required int productId,
   }) async {
     return await ApiX.delete(
-      '${ApiConfig.products}/$productId/photo',
+      '/products/$productId/photo',
       requiresAuth: true,
     );
   }
@@ -334,7 +333,7 @@ class ProductsService {
     if (page != null) queryParams['page'] = page.toString();
     if (pageSize != null) queryParams['page_size'] = pageSize.toString();
 
-    var url = '${ApiConfig.products}/by-category/$categoryId';
+    var url = '/products/by-category/$categoryId';
     if (queryParams.isNotEmpty) {
       final queryString = queryParams.entries
           .map(

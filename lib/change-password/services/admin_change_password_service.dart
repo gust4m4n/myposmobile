@@ -18,7 +18,7 @@ class AdminChangePasswordService {
     required String confirmPassword,
   }) async {
     return await ApiX.put(
-      '/api/v1/admin/change-password',
+      '/admin/change-password',
       body: {
         'email': email,
         'password': password,

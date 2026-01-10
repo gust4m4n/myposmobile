@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class BranchesService {
@@ -10,14 +9,14 @@ class BranchesService {
   /// Get list of branches in user's tenant (Tenant Admin)
   /// Automatically uses tenant from JWT token
   static Future<ApiResponse<List<dynamic>>> getBranches() async {
-    return await ApiX.get(ApiConfig.branches, requiresAuth: true);
+    return await ApiX.get('/branches', requiresAuth: true);
   }
 
   /// Get branch detail by ID (Tenant Admin)
   static Future<ApiResponse<Map<String, dynamic>>> getBranchById(
     int branchId,
   ) async {
-    return await ApiX.get(ApiConfig.branchById(branchId), requiresAuth: true);
+    return await ApiX.get('/branches/$branchId', requiresAuth: true);
   }
 
   /// Create new branch in user's tenant (Tenant Admin)
@@ -41,7 +40,7 @@ class BranchesService {
     };
 
     return await ApiX.postMultipart(
-      ApiConfig.branches,
+      '/branches',
       fields: fields,
       filePath: imageFile?.path,
       fileFieldName: 'image',
@@ -71,7 +70,7 @@ class BranchesService {
     };
 
     return await ApiX.putMultipart(
-      ApiConfig.branchById(branchId),
+      '/branches/$branchId',
       fields: fields,
       filePath: imageFile?.path,
       fileFieldName: 'image',
@@ -83,16 +82,16 @@ class BranchesService {
   static Future<ApiResponse<Map<String, dynamic>>> deleteBranch({
     required int branchId,
   }) async {
-    return await ApiX.delete(
-      ApiConfig.branchById(branchId),
-      requiresAuth: true,
-    );
+    return await ApiX.delete('/branches/$branchId', requiresAuth: true);
   }
 
   /// Get users in a branch (Tenant Admin)
   static Future<ApiResponse<Map<String, dynamic>>> getBranchUsers(
     int branchId,
   ) async {
-    return await ApiX.get(ApiConfig.branchUsers(branchId), requiresAuth: true);
+    return await ApiX.get(
+      '/branches/$branchId/users',
+      requiresAuth: true,
+    );
   }
 }

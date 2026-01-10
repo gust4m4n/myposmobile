@@ -21,6 +21,10 @@ import 'shared/utils/connectivity_service.dart';
 import 'shared/utils/storage_service.dart';
 import 'shared/widgets/connectivity_wrapper.dart';
 
+class AppConfig {
+  static const String baseUrl = 'http://localhost:8080/api';
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();

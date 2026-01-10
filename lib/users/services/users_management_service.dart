@@ -13,7 +13,7 @@ class UsersManagementService {
     int? page,
     int? pageSize,
   }) async {
-    String url = '/api/v1/users';
+    String url = '/users';
     final queryParams = <String>[];
 
     if (page != null) queryParams.add('page=$page');
@@ -65,7 +65,7 @@ class UsersManagementService {
 
   /// Get user by ID
   static Future<ApiResponse<Map<String, dynamic>>> getUserById(int id) async {
-    return await ApiX.get('/api/v1/users/$id', requiresAuth: true);
+    return await ApiX.get('/users/$id', requiresAuth: true);
   }
 
   /// Create new user with optional image upload
@@ -79,7 +79,7 @@ class UsersManagementService {
     File? imageFile,
   }) async {
     return await ApiX.postMultipart(
-      '/api/v1/users',
+      '/users',
       fields: {
         'email': email,
         'password': password,
@@ -114,7 +114,7 @@ class UsersManagementService {
     if (isActive != null) fields['is_active'] = isActive.toString();
 
     return await ApiX.putMultipart(
-      '/api/v1/users/$id',
+      '/users/$id',
       fields: fields,
       filePath: imageFile?.path,
       fileFieldName: 'image',
@@ -124,7 +124,7 @@ class UsersManagementService {
 
   /// Delete user (soft delete)
   static Future<ApiResponse<Map<String, dynamic>>> deleteUser(int id) async {
-    return await ApiX.delete('/api/v1/users/$id', requiresAuth: true);
+    return await ApiX.delete('/users/$id', requiresAuth: true);
   }
 
   /// Sync users from server to local DB

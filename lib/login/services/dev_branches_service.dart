@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 /// Service untuk mendapatkan daftar branches dari tenant tertentu (dev endpoint).
@@ -26,7 +25,7 @@ class DevBranchesService {
     int tenantId,
   ) async {
     return ApiX.get<List<Map<String, dynamic>>>(
-      ApiConfig.devTenantBranches(tenantId),
+      '/dev/tenants/$tenantId/branches',
       requiresAuth: false,
       fromJson: (data) =>
           (data as List).map((item) => item as Map<String, dynamic>).toList(),

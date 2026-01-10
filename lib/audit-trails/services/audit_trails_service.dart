@@ -31,7 +31,7 @@ class AuditTrailsService {
       queryParams['date_to'] = dateTo;
     }
 
-    final uri = Uri(path: '/api/v1/audit-trails', queryParameters: queryParams);
+    final uri = Uri(path: '/audit-trails', queryParameters: queryParams);
 
     return await ApiX.get(uri.toString(), requiresAuth: true);
   }
@@ -40,7 +40,7 @@ class AuditTrailsService {
   static Future<ApiResponse<Map<String, dynamic>>> getAuditTrailById(
     int id,
   ) async {
-    return await ApiX.get('/api/v1/audit-trails/$id', requiresAuth: true);
+    return await ApiX.get('/audit-trails/$id', requiresAuth: true);
   }
 
   /// Get audit history for specific entity
@@ -56,7 +56,7 @@ class AuditTrailsService {
     };
 
     final uri = Uri(
-      path: '/api/v1/audit-trails/entity/$entityType/$entityId',
+      path: '/audit-trails/entity/$entityType/$entityId',
       queryParameters: queryParams,
     );
 
@@ -75,7 +75,7 @@ class AuditTrailsService {
     };
 
     final uri = Uri(
-      path: '/api/v1/audit-trails/user/$userId',
+      path: '/audit-trails/user/$userId',
       queryParameters: queryParams,
     );
 

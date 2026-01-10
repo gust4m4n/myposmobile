@@ -3,7 +3,6 @@ import 'dart:io';
 import '../../home/models/product_model.dart';
 import '../../home/services/products_service.dart';
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import 'product_offline_service.dart';
 
@@ -19,7 +18,7 @@ class ProductsManagementService {
     required bool isActive,
   }) async {
     return await ApiX.post(
-      ApiConfig.products,
+      '/products',
       body: {
         'name': name,
         'description': description,
@@ -44,7 +43,7 @@ class ProductsManagementService {
     required bool isActive,
   }) async {
     return await ApiX.put(
-      '${ApiConfig.products}/$id',
+      '/products/$id',
       body: {
         'name': name,
         'description': description,
@@ -61,7 +60,7 @@ class ProductsManagementService {
   static Future<ApiResponse<Map<String, dynamic>>> deleteProduct({
     required int id,
   }) async {
-    return await ApiX.delete('${ApiConfig.products}/$id', requiresAuth: true);
+    return await ApiX.delete('/products/$id', requiresAuth: true);
   }
 
   /// Upload product image
@@ -70,7 +69,7 @@ class ProductsManagementService {
     required File imageFile,
   }) async {
     return await ApiX.postMultipart(
-      '${ApiConfig.products}/$productId/photo',
+      '/products/$productId/photo',
       fields: {},
       filePath: imageFile.path,
       fileFieldName: 'image',
@@ -83,7 +82,7 @@ class ProductsManagementService {
     required int productId,
   }) async {
     return await ApiX.delete(
-      '${ApiConfig.products}/$productId/photo',
+      '/products/$productId/photo',
       requiresAuth: true,
     );
   }

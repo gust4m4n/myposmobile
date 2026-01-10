@@ -8,7 +8,7 @@ class SyncApiService {
   Future<SyncUploadResponse> uploadData(SyncUploadRequest request) async {
     try {
       final response = await ApiX.post(
-        '/api/v1/sync/upload',
+        '/sync/upload',
         body: request.toJson(),
         requiresAuth: true,
       );
@@ -38,7 +38,7 @@ class SyncApiService {
   Future<SyncDownloadResponse> downloadData(SyncDownloadRequest request) async {
     try {
       final response = await ApiX.post(
-        '/api/v1/sync/download',
+        '/sync/download',
         body: request.toJson(),
         requiresAuth: true,
       );
@@ -69,7 +69,7 @@ class SyncApiService {
   Future<SyncStatusResponse> getSyncStatus(String clientId) async {
     try {
       final response = await ApiX.get(
-        '/api/v1/sync/status?client_id=$clientId',
+        '/sync/status?client_id=$clientId',
         requiresAuth: true,
       );
 
@@ -101,7 +101,7 @@ class SyncApiService {
   }) async {
     try {
       final response = await ApiX.get(
-        '/api/v1/sync/logs?client_id=$clientId&page=$page&page_size=$pageSize',
+        '/sync/logs?client_id=$clientId&page=$page&page_size=$pageSize',
         requiresAuth: true,
       );
 
@@ -132,7 +132,7 @@ class SyncApiService {
   }) async {
     try {
       final response = await ApiX.post(
-        '/api/v1/sync/conflicts/resolve',
+        '/sync/conflicts/resolve',
         body: {
           'conflict_id': conflictId,
           'resolution': resolution,
@@ -163,7 +163,7 @@ class SyncApiService {
   // Get server time
   Future<DateTime> getServerTime() async {
     try {
-      final response = await ApiX.get('/api/v1/sync/time', requiresAuth: true);
+      final response = await ApiX.get('/sync/time', requiresAuth: true);
 
       if (response.statusCode >= 200 &&
           response.statusCode < 300 &&

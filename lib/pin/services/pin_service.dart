@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class PinService {
@@ -9,7 +8,7 @@ class PinService {
     required String confirmPin,
   }) async {
     return await ApiX.post(
-      ApiConfig.pinCreate,
+      '/pin/create',
       body: {'pin': pin, 'confirm_pin': confirmPin},
       requiresAuth: true,
     );
@@ -22,7 +21,7 @@ class PinService {
     required String confirmPin,
   }) async {
     return await ApiX.put(
-      ApiConfig.pinChange,
+      '/pin/change',
       body: {'old_pin': oldPin, 'new_pin': newPin, 'confirm_pin': confirmPin},
       requiresAuth: true,
     );
@@ -30,7 +29,7 @@ class PinService {
 
   /// Check if user has set a PIN
   static Future<ApiResponse<Map<String, dynamic>>> checkPinStatus() async {
-    return await ApiX.get(ApiConfig.pinCheck, requiresAuth: true);
+    return await ApiX.get('/pin/check', requiresAuth: true);
   }
 
   /// Admin change PIN for another user (Admin only)
@@ -40,7 +39,7 @@ class PinService {
     required String confirmPin,
   }) async {
     return await ApiX.put(
-      '/api/v1/admin/change-pin',
+      '/admin/change-pin',
       body: {'username': username, 'pin': pin, 'confirm_pin': confirmPin},
       requiresAuth: true,
     );

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../login/views/login_page.dart';
+import '../../main.dart';
 import '../api_models.dart';
-import '../config/api_config.dart';
 import 'logger_x.dart';
 import 'storage_service.dart';
 
@@ -77,7 +77,7 @@ class ApiX {
     bool requiresAuth = false,
   }) async {
     final headers = _getHeaders(includeAuth: requiresAuth);
-    final url = '${ApiConfig.baseUrl}$endpoint';
+    final url = '${AppConfig.baseUrl}$endpoint';
     final bodyString = body != null ? json.encode(body) : null;
 
     // Log request
@@ -97,22 +97,22 @@ class ApiX {
         case 'GET':
           response = await http
               .get(uri, headers: headers)
-              .timeout(ApiConfig.connectTimeout);
+              .timeout(const Duration(seconds: 30));
           break;
         case 'POST':
           response = await http
               .post(uri, headers: headers, body: bodyString)
-              .timeout(ApiConfig.connectTimeout);
+              .timeout(const Duration(seconds: 30));
           break;
         case 'PUT':
           response = await http
               .put(uri, headers: headers, body: bodyString)
-              .timeout(ApiConfig.connectTimeout);
+              .timeout(const Duration(seconds: 30));
           break;
         case 'DELETE':
           response = await http
               .delete(uri, headers: headers)
-              .timeout(ApiConfig.connectTimeout);
+              .timeout(const Duration(seconds: 30));
           break;
         default:
           throw Exception('Unsupported HTTP method: $method');
@@ -378,7 +378,7 @@ class ApiX {
     bool requiresAuth = true,
   }) async {
     try {
-      final url = '${ApiConfig.baseUrl}$endpoint';
+      final url = '${AppConfig.baseUrl}$endpoint';
       final uri = Uri.parse(url);
 
       final request = http.MultipartRequest('POST', uri);
@@ -409,7 +409,7 @@ class ApiX {
       appLog('📤 Request headers: ${request.headers}');
 
       final streamedResponse = await request.send().timeout(
-        ApiConfig.connectTimeout,
+        const Duration(seconds: 30),
       );
       final response = await http.Response.fromStream(streamedResponse);
 
@@ -468,7 +468,7 @@ class ApiX {
     T Function(dynamic)? fromJson,
   }) async {
     try {
-      final url = '${ApiConfig.baseUrl}$endpoint';
+      final url = '${AppConfig.baseUrl}$endpoint';
       final uri = Uri.parse(url);
 
       final request = http.MultipartRequest('POST', uri);
@@ -497,7 +497,7 @@ class ApiX {
       }
 
       final streamedResponse = await request.send().timeout(
-        ApiConfig.connectTimeout,
+        const Duration(seconds: 30),
       );
       final response = await http.Response.fromStream(streamedResponse);
 
@@ -558,7 +558,7 @@ class ApiX {
     T Function(dynamic)? fromJson,
   }) async {
     try {
-      final url = '${ApiConfig.baseUrl}$endpoint';
+      final url = '${AppConfig.baseUrl}$endpoint';
       final uri = Uri.parse(url);
 
       final request = http.MultipartRequest('PUT', uri);
@@ -587,7 +587,7 @@ class ApiX {
       }
 
       final streamedResponse = await request.send().timeout(
-        ApiConfig.connectTimeout,
+        const Duration(seconds: 30),
       );
       final response = await http.Response.fromStream(streamedResponse);
 

@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/category_model.dart';
 import 'category_offline_service.dart';
@@ -13,7 +12,7 @@ class CategoriesManagementService {
     int? pageSize,
     bool? activeOnly,
   }) async {
-    String url = ApiConfig.categories;
+    String url = '/categories';
     final queryParams = <String>[];
 
     if (page != null) queryParams.add('page=$page');
@@ -66,7 +65,7 @@ class CategoriesManagementService {
   /// Get single category by ID
   Future<ApiResponse<CategoryModel>> getCategory(int id) async {
     return await ApiX.get(
-      '${ApiConfig.categories}/$id',
+      '/categories/$id',
       requiresAuth: true,
       fromJson: (data) => CategoryModel.fromJson(data),
     );
@@ -83,7 +82,7 @@ class CategoriesManagementService {
     if (imagePath != null) {
       // Use multipart/form-data for image upload
       return await ApiX.postMultipart<CategoryModel>(
-        ApiConfig.categories,
+        '/categories',
         fields: {
           'name': name,
           'description': description,
@@ -97,7 +96,7 @@ class CategoriesManagementService {
     } else {
       // Use JSON body when no image
       return await ApiX.post(
-        ApiConfig.categories,
+        '/categories',
         body: {'name': name, 'description': description, 'is_active': isActive},
         requiresAuth: true,
         fromJson: (data) => CategoryModel.fromJson(data),
@@ -117,7 +116,7 @@ class CategoriesManagementService {
     if (imagePath != null) {
       // Use multipart/form-data for image upload
       return await ApiX.putMultipart<CategoryModel>(
-        '${ApiConfig.categories}/$id',
+        '/categories/$id',
         fields: {
           'name': name,
           'description': description,
@@ -131,7 +130,7 @@ class CategoriesManagementService {
     } else {
       // Use JSON body when no image (Postman also supports this)
       return await ApiX.put(
-        '${ApiConfig.categories}/$id',
+        '/categories/$id',
         body: {'name': name, 'description': description, 'is_active': isActive},
         requiresAuth: true,
         fromJson: (data) => CategoryModel.fromJson(data),
@@ -141,7 +140,7 @@ class CategoriesManagementService {
 
   /// Delete category
   Future<ApiResponse<void>> deleteCategory(int id) async {
-    return await ApiX.delete('${ApiConfig.categories}/$id', requiresAuth: true);
+    return await ApiX.delete('/categories/$id', requiresAuth: true);
   }
 
   /// Sync categories from server to local DB

@@ -1,4 +1,3 @@
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class FaqService {
@@ -13,7 +12,7 @@ class FaqService {
     bool activeOnly = false,
   }) async {
     try {
-      String endpoint = ApiConfig.faq;
+      String endpoint = '/faq';
 
       // Add query parameters if provided
       List<String> queryParams = [];
@@ -47,10 +46,7 @@ class FaqService {
   /// Public endpoint - tidak perlu authentication
   Future<Map<String, dynamic>> getFaqById(int id) async {
     try {
-      final response = await ApiX.get(
-        ApiConfig.faqById(id),
-        requiresAuth: false,
-      );
+      final response = await ApiX.get('/faq/$id', requiresAuth: false);
 
       if (response.statusCode == 200) {
         return {'success': true, 'data': response.data};

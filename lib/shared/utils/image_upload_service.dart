@@ -9,7 +9,7 @@ class ImageUploadService {
     required String filePath,
   }) async {
     return await ApiX.uploadFile(
-      '/api/v1/profile/photo',
+      '/profile/photo',
       filePath: filePath,
       fieldName: 'image',
     );
@@ -18,7 +18,7 @@ class ImageUploadService {
   /// Delete profile photo
   /// DELETE /api/v1/profile/photo
   static Future<ApiResponse<Map<String, dynamic>>> deleteProfilePhoto() async {
-    return await ApiX.delete('/api/v1/profile/photo');
+    return await ApiX.delete('/profile/photo');
   }
 
   /// Upload product photo
@@ -28,7 +28,7 @@ class ImageUploadService {
     required String filePath,
   }) async {
     return await ApiX.uploadFile(
-      '/api/v1/products/$productId/photo',
+      '/products/$productId/photo',
       filePath: filePath,
       fieldName: 'image',
     );
@@ -39,6 +39,6 @@ class ImageUploadService {
   static Future<ApiResponse<Map<String, dynamic>>> deleteProductPhoto({
     required int productId,
   }) async {
-    return await ApiX.delete('/api/v1/products/$productId/photo');
+    return await ApiX.delete('/products/$productId/photo');
   }
 }

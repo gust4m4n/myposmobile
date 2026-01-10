@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class ProfileService {
@@ -12,7 +11,7 @@ class ProfileService {
   /// Returns: ProfileModel with user profile information
   Future<ApiResponse<ProfileModel>> getProfile() async {
     return ApiX.get<ProfileModel>(
-      ApiConfig.profile,
+      '/profile',
       requiresAuth: true,
       fromJson: (data) {
         return ProfileModel.fromJson(data);
@@ -41,7 +40,7 @@ class ProfileService {
     if (pin != null) body['pin'] = pin;
 
     return ApiX.put<ProfileModel>(
-      ApiConfig.profile,
+      '/profile',
       requiresAuth: true,
       body: body,
       fromJson: (data) {
@@ -62,7 +61,7 @@ class ProfileService {
     required File imageFile,
   }) async {
     return await ApiX.postMultipart<ProfileModel>(
-      '${ApiConfig.profile}/photo',
+      '/profile/photo',
       fields: {},
       filePath: imageFile.path,
       fileFieldName: 'image',
@@ -78,7 +77,7 @@ class ProfileService {
   /// Returns: Updated ProfileModel without photo
   Future<ApiResponse<ProfileModel>> deleteProfileImage() async {
     return ApiX.delete<ProfileModel>(
-      '${ApiConfig.profile}/photo',
+      '/profile/photo',
       requiresAuth: true,
       fromJson: (data) {
         return ProfileModel.fromJson(data);

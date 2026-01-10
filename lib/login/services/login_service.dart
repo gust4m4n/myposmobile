@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class LoginService {
@@ -16,7 +15,7 @@ class LoginService {
     required String password,
   }) async {
     final response = await ApiX.post<AuthResponseData>(
-      ApiConfig.login,
+      '/auth/login',
       body: {'email': email, 'password': password},
       fromJson: (data) => AuthResponseData.fromJson(data),
     );

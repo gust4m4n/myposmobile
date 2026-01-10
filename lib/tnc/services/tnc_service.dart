@@ -1,4 +1,3 @@
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class TncService {
@@ -7,7 +6,7 @@ class TncService {
   /// Returns TnC content with title and markdown content
   Future<Map<String, dynamic>> getAllTnc() async {
     try {
-      final response = await ApiX.get(ApiConfig.tnc, requiresAuth: false);
+      final response = await ApiX.get('/tnc', requiresAuth: false);
 
       if (response.statusCode == 200) {
         return {'success': true, 'data': response.data};
@@ -26,10 +25,7 @@ class TncService {
   /// Public endpoint - tidak perlu authentication
   Future<Map<String, dynamic>> getTncById(int id) async {
     try {
-      final response = await ApiX.get(
-        ApiConfig.tncById(id),
-        requiresAuth: false,
-      );
+      final response = await ApiX.get('/tnc/$id', requiresAuth: false);
 
       if (response.statusCode == 200) {
         return {'success': true, 'data': response.data};

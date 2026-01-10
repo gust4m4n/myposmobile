@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 /// Service untuk operasi orders (Create, List, Get by ID, Get Payments).
@@ -34,7 +33,7 @@ class OrdersService {
     }
 
     return ApiX.post<Map<String, dynamic>>(
-      ApiConfig.orders,
+      '/orders',
       body: body,
       requiresAuth: true,
       fromJson: (data) => data as Map<String, dynamic>,
@@ -61,7 +60,7 @@ class OrdersService {
     int perPage = 32,
   }) async {
     return ApiX.get<Map<String, dynamic>>(
-      '${ApiConfig.orders}?page=$page&per_page=$perPage',
+      '/orders?page=$page&per_page=$perPage',
       requiresAuth: true,
     );
   }
@@ -82,7 +81,7 @@ class OrdersService {
     int orderId,
   ) async {
     return ApiX.get<Map<String, dynamic>>(
-      '${ApiConfig.orders}/$orderId',
+      '/orders/$orderId',
       requiresAuth: true,
       fromJson: (data) => data as Map<String, dynamic>,
     );
@@ -104,7 +103,7 @@ class OrdersService {
     int orderId,
   ) async {
     return ApiX.get<List<Map<String, dynamic>>>(
-      '${ApiConfig.orders}/$orderId/payments',
+      '/orders/$orderId/payments',
       requiresAuth: true,
       fromJson: (data) =>
           (data as List).map((item) => item as Map<String, dynamic>).toList(),

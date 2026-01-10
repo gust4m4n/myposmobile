@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../categories/models/category_model.dart';
 import '../../categories/services/categories_management_service.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
@@ -167,7 +166,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
       child: ImageX(
         imageUrl: null,
         localImagePath: _uploadedImagePath,
-        baseUrl: ApiConfig.baseUrl,
+        baseUrl: 'http://localhost:8080',
         size: 120,
         cornerRadius: 8,
         onPicked: _pickImage,

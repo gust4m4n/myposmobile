@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import '../../shared/api_models.dart' hide BranchModel;
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/branch_model.dart';
 import 'branch_offline_service.dart';
@@ -35,7 +34,7 @@ class BranchesManagementService {
     int page = 1,
     int pageSize = 20,
   }) async {
-    String url = '${ApiConfig.branches}?page=$page&page_size=$pageSize';
+    String url = '/branches?page=$page&page_size=$pageSize';
 
     return await ApiX.get(
       url,
@@ -88,7 +87,7 @@ class BranchesManagementService {
     };
 
     return await ApiX.postMultipart(
-      ApiConfig.branches,
+      '/branches',
       fields: fields,
       filePath: image?.path,
       requiresAuth: true,
@@ -120,7 +119,7 @@ class BranchesManagementService {
     };
 
     return await ApiX.putMultipart(
-      '${ApiConfig.branches}/$branchId',
+      '/branches/$branchId',
       fields: fields,
       filePath: image?.path,
       requiresAuth: true,
@@ -130,10 +129,7 @@ class BranchesManagementService {
 
   /// Delete branch by ID
   Future<ApiResponse<void>> deleteBranch(int branchId) async {
-    return await ApiX.delete(
-      '${ApiConfig.branches}/$branchId',
-      requiresAuth: true,
-    );
+    return await ApiX.delete('/branches/$branchId', requiresAuth: true);
   }
 
   /// Sync branches from server to local DB

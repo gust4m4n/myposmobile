@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class ChangePasswordService {
@@ -17,7 +16,7 @@ class ChangePasswordService {
     required String newPassword,
   }) async {
     return ApiX.put<void>(
-      ApiConfig.changePassword,
+      '/change-password',
       body: {'old_password': oldPassword, 'new_password': newPassword},
       requiresAuth: true,
     );

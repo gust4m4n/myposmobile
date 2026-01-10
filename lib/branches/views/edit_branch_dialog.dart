@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myposmobile/shared/widgets/red_button_x.dart';
 
-import '../../shared/config/api_config.dart';
 import '../../shared/widgets/dialog_x.dart';
 import '../../shared/widgets/gray_button_x.dart';
 import '../../shared/widgets/green_button_x.dart';
@@ -177,7 +176,7 @@ class _EditBranchDialogState extends State<EditBranchDialog> {
                 child: ImageX(
                   imageUrl: _existingImageUrl,
                   localImagePath: _uploadedImagePath,
-                  baseUrl: ApiConfig.baseUrl,
+                  baseUrl: 'http://localhost:8080',
                   size: 120,
                   cornerRadius: 8,
                   onPicked: _pickImage,

@@ -1,4 +1,3 @@
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class SuperadminFaqService {
@@ -21,7 +20,7 @@ class SuperadminFaqService {
       if (order != null) body['order'] = order;
 
       final response = await ApiX.post(
-        ApiConfig.faq,
+        '/faq',
         body: body,
         requiresAuth: true,
       );
@@ -69,7 +68,7 @@ class SuperadminFaqService {
       if (isActive != null) body['is_active'] = isActive;
 
       final response = await ApiX.put(
-        ApiConfig.faqById(id),
+        '/faq/$id',
         body: body,
         requiresAuth: true,
       );
@@ -94,10 +93,7 @@ class SuperadminFaqService {
   /// Delete FAQ
   Future<Map<String, dynamic>> deleteFaq(int id) async {
     try {
-      final response = await ApiX.delete(
-        ApiConfig.faqById(id),
-        requiresAuth: true,
-      );
+      final response = await ApiX.delete('/faq/$id', requiresAuth: true);
 
       if (response.statusCode == 200) {
         return {'success': true, 'message': 'FAQ deleted successfully'};

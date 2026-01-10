@@ -1,4 +1,3 @@
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 
 class SuperadminTncService {
@@ -15,7 +14,7 @@ class SuperadminTncService {
   }) async {
     try {
       final response = await ApiX.post(
-        ApiConfig.tnc,
+        '/tnc',
         body: {'title': title, 'content': content, 'version': version},
         requiresAuth: true,
       );
@@ -60,7 +59,7 @@ class SuperadminTncService {
       if (isActive != null) body['is_active'] = isActive;
 
       final response = await ApiX.put(
-        ApiConfig.tncById(id),
+        '/tnc/$id',
         body: body,
         requiresAuth: true,
       );
@@ -85,10 +84,7 @@ class SuperadminTncService {
   /// Delete Terms & Conditions
   Future<Map<String, dynamic>> deleteTnc(int id) async {
     try {
-      final response = await ApiX.delete(
-        ApiConfig.tncById(id),
-        requiresAuth: true,
-      );
+      final response = await ApiX.delete('/tnc/$id', requiresAuth: true);
 
       if (response.statusCode == 200) {
         return {

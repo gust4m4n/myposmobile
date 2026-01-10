@@ -1,5 +1,4 @@
 import '../../shared/api_models.dart';
-import '../../shared/config/api_config.dart';
 import '../../shared/utils/api_x.dart';
 import '../models/payment_performance_model.dart';
 
@@ -47,7 +46,7 @@ class PaymentsService {
     }
 
     return ApiX.post<Map<String, dynamic>>(
-      ApiConfig.payments,
+      '/payments',
       body: body,
       requiresAuth: true,
       fromJson: (data) => data as Map<String, dynamic>,
@@ -74,7 +73,7 @@ class PaymentsService {
     int perPage = 32,
   }) async {
     return ApiX.get<Map<String, dynamic>>(
-      '${ApiConfig.payments}?page=$page&per_page=$perPage',
+      '/payments?page=$page&per_page=$perPage',
       requiresAuth: true,
     );
   }
@@ -95,7 +94,7 @@ class PaymentsService {
     int paymentId,
   ) async {
     return ApiX.get<Map<String, dynamic>>(
-      '${ApiConfig.payments}/$paymentId',
+      '/payments/$paymentId',
       requiresAuth: true,
       fromJson: (data) => data as Map<String, dynamic>,
     );
@@ -116,7 +115,7 @@ class PaymentsService {
   static Future<ApiResponse<List<PaymentPerformanceModel>>>
   getPaymentPerformance({int days = 7}) async {
     return ApiX.get<List<PaymentPerformanceModel>>(
-      '${ApiConfig.payments}/performance?days=$days',
+      '/payments/performance?days=$days',
       requiresAuth: true,
       fromJson: (data) => (data as List)
           .map((item) => PaymentPerformanceModel.fromJson(item))
